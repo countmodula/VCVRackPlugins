@@ -41,11 +41,11 @@
 </tr>
 </table>
 
-<h3>Inverter</h3>
+<h3>Comparator</h3>
 <table>
 <tr valign="top">
-<td width=100><img src="./img/Inverter.png"></td> 
-<td>A quad voltage inverter. Unlike the Boolean Logic Inverter, this module inverts around zero. Positive voltage in become a negative voltage out and vice-versa.</td>
+<td width=140><img src="./img/Comparator.png"></td> 
+<td>Compares the input signal with either an internal or external threshold value and outouts gate signals indicating if it is under or over that threshold.</td>
 </tr>
 </table>
 
@@ -64,6 +64,22 @@ Each switch corresponds to a bit in a binary counter and can be "mixed" into the
 <tr valign="top">
 <td width=240><img src="./img/GateDelay.png"></td> 
 <td>A dual gate delay line giving up to 40 seconds of delay with voltage control over the delay time. Note that switching from a shorter delay time range to a longer one may introduce time travel artefacts were a gate that has already been output may be output again at the end of the new longer delay time depending on where it is in the pipeline. This is due to the way the delay line functions and is normal behaviour. Three gate outputs are available with the Direct output following the gate input, the Delay output providing only the delayed gates middle output providing a logical mix of the two.</td>
+</tr>
+</table>
+
+<h3>G2T</h3>
+<table>
+<tr valign="top">
+<td width=100><img src="./img/G2T.png"></td> 
+<td>A gate converter module. Converts any signal into a gate. The gate output will be at 0V unless the voltage presented at the input is greater than 0.1V in which case the Gate oputput will be high (10V). The Inv Gate output functions the other way around, 10V unless the input voltage is over 0,.1V in which case the output will be 0V. The Start trigger output will fire a 10ms pulse at the start or leading edge (i.e. on the transition from low to high) of the generated gate and the End trigger output will fire a 10ms pulse at the end or trailing edge (i.e. on the transition from high to low) of the genereated gate.</td>
+</tr>
+</table>
+
+<h3>Inverter</h3>
+<table>
+<tr valign="top">
+<td width=100><img src="./img/Inverter.png"></td> 
+<td>A quad voltage inverter. Unlike the Boolean Logic Inverter, this module inverts around zero. Positive voltage in become a negative voltage out and vice-versa.</td>
 </tr>
 </table>
 
@@ -114,6 +130,15 @@ Each switch corresponds to a bit in a binary counter and can be "mixed" into the
 </tr>
 </table>
 
+[//]: <> (Need to work out the blurb for this first)
+[//]: <> (<h3>Multiplexer</h3>)
+[//]: <> (<table>)
+[//]: <> (<tr valign="top">)
+[//]: <> (<td width=300><img src="./img/Multiplexer.png"></td> )
+[//]: <> (<td>An 8 way Multiplexer.</td>)
+[//]: <> (</tr>)
+[//]: <> (</table>)
+
 <h3>Mute-iple</h3>
 <table>
 <tr valign="top">
@@ -125,7 +150,7 @@ Each switch corresponds to a bit in a binary counter and can be "mixed" into the
 <h3>Polyrhythmic Generator</h3>
 <table>
 <tr valign="top">
-<td width=300><img src="./img/PolyrhythmicGenerator.png"></td> 
+<td width=340><img src="./img/PolyrhythmicGenerator.png"></td> 
 <td>A set of 8 voltage controlled clock dividers that can be used to generate polyrhythms by clocking and/or dividing at different rates. The individual clock, reset and division CV  inputs of each channel are normalled to the previous channel allowing for global or segmented/individual control. Plugging a cable into the clock, reset or CV input a given channel will break the normalling input and inputs on subsequent channels from the input on the previous channel. Normalling is applied per input (breaking the CV input  does not break the clock normalling for example) so it is possible to have individual CV control over the divisions on each channel  whilst maintaining a common clock. Along with a global mute button which also has voltage control, each channel can be manually muted individually.
 </p>
 The outputs can be set globally to one of 4 modes:
@@ -161,6 +186,45 @@ The “On The 1” beat mode control and associated CV input set whether the gen
 <tr valign="top">
 <td width=100><img src="./img/VCFrequencyDivider.png"></td> 
 <td>A frequency divider with a variable and voltage controlled division ratio from 1 to around 20. Can be used with VCOs to create suboctaves or clocks to divide down to lower rates.</td>
+</tr>
+</table>
+
+<h3>Voltage Controled Polarizer </h3>
+<table>
+<tr valign="top">
+<td width=180><img src="./img/VCPolarizer.png"></td> 
+<td>A dual voltage controlled polariser. Inverts the the incoming signal under manual/voltage control. A negative control voltage at the CV input will invert the input signal and the amplitude of the CV sgnal will control the output amplitude. The manual amount is summed with CV amount before being applied.</td>
+</tr>
+</table>
+
+<h3>Voltage Controlled Switch</h3>
+<table>
+<tr valign="top">
+<td width=100><img src="./img/VCSwitch.png"></td> 
+<td>Selects between 2 inputs or routes 1 input to one two outputs based on the level of the signal at the CV input.</td>
+</tr>
+</table>
+
+
+<h2>CGS Based Modules</h2>
+A nod to the genius of Ken stone, these are some of my favourite CGS designs realised in VCV Rack format.
+
+<h3>CV Spreader</h3>
+<table>
+<tr valign="top">
+<td width=200><img src="./img/CV Spreader.png"></td> 
+<td>This module accepts two CV inputs, “Base” and “Spread” and creates a set of new CV values that are “spread” either side of the base value by an amount determined by the spread value. The Odd/Even switch determines whether the spread occurs around the base value (odd spread) or not (even spread). With the spread value at 0, each output merely reflects the value at the base input however as the spread value increases or decreases, the spread outputs will increase or decrease by 1/5th  of the spread value. A 5 volt spread input with a 0 volt base input will produce outputs that are  1 volt apart ranging from -5 to +5 volts.
+</td>
+</tr>
+</table>
+
+<h3>Burst Generator</h3>
+<table>
+<tr valign="top">
+<td width=200><img src="./img/BurstGenerator.png"></td> 
+<td>
+This module generates bursts of 1-16 pulses whenever a trigger is received at the trigger input. The pulses can be generated internally or via an external clock at the Ext. Clock input. Where the internal clock is used, the pulses are synchronised to start when the trigger is received however when using an external clock, the pulses will start at the next rising edge of the incoming clock. The number of pulses per burst  and internal burst rate and can both be independently controlled via CV with the Range switch determining whether the internal burst rate is slow or fast. The retrigger switch sets whether or not the burst generator must wait until the current burst of pulses is complete before it can be triggered again or if it can interrupt the current burst and start again immediately. Two outputs, Start and  End, each give a pulse at the start of the burst and end of the burst respectively whilst a third output, Duration,  offers a gate signal that lasts for the duration of the burst.
+</td>
 </tr>
 </table>
 
