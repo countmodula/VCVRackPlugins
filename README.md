@@ -12,7 +12,6 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 
 <a href="MANUAL.md">Module Manual</a>
 
-<h3>Modules</h3>
 <ul>
 <li>Analogue Shift Register
 <li>Attenuator
