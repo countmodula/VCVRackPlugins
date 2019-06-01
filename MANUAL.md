@@ -1,4 +1,4 @@
-<table>![alt text](./img/CountModulaLogo.png "Count Modula")
+![alt text](./img/CountModulaLogo.png "Count Modula")
 <h1>Count Modula</h1>
 <h2>Plugin modules for VCV Rack by Adam Verspaget (Count Modula)</h2>
 <hr/>
