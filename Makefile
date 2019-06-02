@@ -41,12 +41,6 @@ else
 	DISTRIBUTABLES += res/AnalogueShiftRegister.svg
 	DISTRIBUTABLES += res/Attenuator.svg
 	DISTRIBUTABLES += res/BinarySequencer.svg
-	DISTRIBUTABLES += res/Blank12HP.svg
-	DISTRIBUTABLES += res/Blank16HP.svg
-	DISTRIBUTABLES += res/Blank20HP.svg
-	DISTRIBUTABLES += res/Blank24HP.svg
-	DISTRIBUTABLES += res/Blank4HP.svg
-	DISTRIBUTABLES += res/Blank8HP.svg
 	DISTRIBUTABLES += res/BooleanAND.svg
 	DISTRIBUTABLES += res/BooleanOR.svg
 	DISTRIBUTABLES += res/BooleanVCNOT.svg
