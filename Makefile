@@ -33,43 +33,7 @@ endif
 
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
-ifdef DEVBUILD
-	#add all of the resources
-	DISTRIBUTABLES += $(wildcard LICENSE*) res
-else
-	#only add the ones that we want to publish
-	DISTRIBUTABLES += res/AnalogueShiftRegister.svg
-	DISTRIBUTABLES += res/Attenuator.svg
-	DISTRIBUTABLES += res/BinarySequencer.svg
-	DISTRIBUTABLES += res/BooleanAND.svg
-	DISTRIBUTABLES += res/BooleanOR.svg
-	DISTRIBUTABLES += res/BooleanVCNOT.svg
-	DISTRIBUTABLES += res/BooleanXOR.svg
-	DISTRIBUTABLES += res/BurstGenerator.svg
-	DISTRIBUTABLES += res/Comparator.svg
-	DISTRIBUTABLES += res/CVSpreader.svg
-	DISTRIBUTABLES += res/EventArranger.svg
-	DISTRIBUTABLES += res/G2T.svg
-	DISTRIBUTABLES += res/GateDelay.svg
-	DISTRIBUTABLES += res/GateDelayMT.svg
-	DISTRIBUTABLES += res/ManualCV.svg
-	DISTRIBUTABLES += res/ManualGate.svg
-	DISTRIBUTABLES += res/MatrixMixer.svg
-	DISTRIBUTABLES += res/MinimusMaximus.svg
-	DISTRIBUTABLES += res/MorphShaper.svg
-	DISTRIBUTABLES += res/Multiplexer.svg
-	DISTRIBUTABLES += res/Mute-iple.svg
-	DISTRIBUTABLES += res/PolyrhythmicGenerator.svg
-	DISTRIBUTABLES += res/ShepardGenerator.svg
-	DISTRIBUTABLES += res/SRFlipFlop.svg
-	DISTRIBUTABLES += res/VCFrequencyDivider.svg
-	DISTRIBUTABLES += res/VCPolarizer.svg
-	DISTRIBUTABLES += res/VoltageControlledSwitch.svg
-	DISTRIBUTABLES += res/VoltageInverter.svg
-	
-	#and the components
-	DISTRIBUTABLES += res/Components
-endif
+DISTRIBUTABLES += $(wildcard LICENSE*) res
 
 # Include the VCV Rack plugin Makefile framework
 include $(RACK_DIR)/plugin.mk
