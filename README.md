@@ -8,7 +8,7 @@ All source code in this repository is licensed under BSD-3-Clause by Adam Verspa
 
 All graphics including the Count Modula logo, panels and components are copyright © 2019 Adam Verspaget/Count Modula and may not be used in derivative works.
 
-<h3>Modules</h3>
+<h3>Modules - Release 0.6.1</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
@@ -47,6 +47,26 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 	</ul>
 </ul>
 
+<h3>Release Log</h3>
+<table>
+	<tr valign="top">
+		<th align="center">Date</th>
+		<th align="center">Release</th>
+		<th align="left">Notes</th>
+	</tr>
+	<tr valign="top">
+		<td align="center">03-Jun-2019</td>
+		<td align="center">v0.6.0</td>
+		<td>Initial Release</td></tr>
+	<tr valign="top">
+		<td align="center">04-Jun-2019</td>
+		<td align="center">v0.6.1</td>
+		<td align="left">
+			<b>Issues Resolved:</b><br/>
+			Issue #3 svgs incorrectly packaged.<br/>
+		</td>
+	</tr>
+</table>
 
 
 
