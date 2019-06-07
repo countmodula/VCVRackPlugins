@@ -25,7 +25,7 @@
 <table>
 <tr valign="top">
 <td width=220><img src="./img/BinarySequencer.png"></td> 
-<td>Similar to a now discontinued Frac format module, this is a binary counter based sequencer where the individual bits of the counter are mixed together in varying  proportions to produce a repeating CV pattern. The output can be smoothed into slowly varying voltages with the Lag and Lag Shape controls and the outpur range cab be set to 2, 5 or 10 volts. The sequencer can be internally or externally clocked and offers both gate and trigger outputs</td>
+<td>Similar to a now discontinued Frac format module, this is a binary counter based sequencer where the individual bits of the counter are mixed together in varying  proportions to produce a repeating CV pattern. The output can be smoothed into slowly varying voltages with the Lag and Lag Shape controls and the output range can be set to 2, 5 or 10 volts. The selected output range indicates the maximum voltage that can be produced when all of the knobs are fully clockwise. i.e the selected value is divided equally across the bit knobs. The sequencer can be internally or externally clocked and offers both gate and trigger outputs</td>
 </tr>
 </table>
 
