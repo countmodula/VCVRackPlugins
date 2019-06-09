@@ -2,6 +2,11 @@
 <h1>Count Modula</h1>
 <h2>Plugin modules for VCV Rack by Adam Verspaget (Count Modula)</h2>
 <hr/>
+Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
+<p>&nbsp;</p>
+<a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
+<hr/>
+
 <a id="ASR">
 <h3>Analogue Shift Register</h3>
 <table>
