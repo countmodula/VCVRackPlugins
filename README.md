@@ -63,7 +63,7 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 		<td align="left">
 			<b>New Modules</b><br/>
 			<ul>
-				<li>Multiplpexer
+				<li>Multipexer
 				<li>8 Step Trigger Sequencer
 				<li>16 Step Trigger Sequencer
 			</ul>
