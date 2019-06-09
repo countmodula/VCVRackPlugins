@@ -59,7 +59,7 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 	</tr>
 	<tr valign="top">
 		<td align="center">09-Jun-2019</td>
-		<td align="center">v0.6.2</td>
+		<td align="center">v0.6.2 and v0.6.3</td>
 		<td align="left">
 			<b>New Modules</b><br/>
 			<ul>
