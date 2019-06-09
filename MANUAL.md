@@ -199,7 +199,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 
 <a id="Multiplexer">
 <h3>Multiplexer</h3>
-<table>)
+<table>
 	<tr valign="top">
 		<td width=300><img src="./img/Multiplexer.png"></td> 
 		<td>
@@ -223,12 +223,12 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 			<ul>
 				<li>IN: Router Input - The output will follow the raw input (i.e the router mode is ignored) of the router section for the duration of the step.
 				<li>0V: 0V Mode - 0V will be output for the duration of the step
-				<li>A: Assocated Output - The value of the associated router step output is used (i.i. if the selector is at step 7 then the value of router output 7 is used regardless of the length and current step of the router)
+				<li>A: Assocated Output - The value of the associated router step output is used (i.e. if the selector is at step 7 then the value of router output 7 is used regardless of the length and current step of the router)
 				<li>M: Multiplex - The value of the currently selected router output is used , taking the router mode into consideration.
 			</ul>
-		</td>)
-	</tr>)
-</table>)
+		</td>
+	</tr>
+</table>
 
 <a id="Mute-iple">
 <h3>Mute-iple</h3>
@@ -295,15 +295,15 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 <h3>Trigger Sequencer - 8 Step</h3>
 <table>
 	<tr valign="top">
-		<td width=300>
-			<img src="./img/Trigger8.png">
+		<td width=340>
+			<img src="./img/TriggerSequencer8.png">
 		</td> 
 		<td>
 			A set of four 8 Step trigger sequencers in a single panel each with voltage control over the sequence length and two independent outputs.<br/>
 			The Reset input restarts the sequence at step one on th next clock cycle.<br/>
 			The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
 			The Run, Clock and Reset inputs of each channel are normalled to the previous channel.<br/>
-			With a cable plugged into CV input, the length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input.
+			With a cable plugged into CV input, the length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input. The CV inputs are NOT normalled.
 		</td>
 	</tr>
 </table>
@@ -313,7 +313,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 <table>
 	<tr valign="top">
 		<td >
-			<img src="./img/Trigger16.png">
+			<img src="./img/TriggerSequencer16.png">
 		</td>
 	</tr>
 	<tr>
@@ -322,7 +322,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 			The Reset input restarts the sequence at step one on th next clock cycle.<br/>
 			The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
 			The Run, Clock and Reset inputs of each channel are normalled to the previous channel.<br/>
-			With a cable plugged into CV input, the length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input.
+			With a cable plugged into CV input, the length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input. The CV inputs are NOT normalled. 
 		</td>
 	</tr>
 </table>
