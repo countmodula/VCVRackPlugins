@@ -13,6 +13,11 @@ Whilst these modules are offered free of charge, if you like them or are using t
 <p>&nbsp</p>
 <a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
 
+<h3>Stay Informed</h3>
+Follow Count Modula on facebook:
+<p>&nbsp</p>
+<a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
+
 <h3>Modules - Release 0.6.2 and 0.6.3</h3>
 
 <a href="MANUAL.md">Module Manual</a>
