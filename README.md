@@ -8,7 +8,11 @@ All source code in this repository is licensed under BSD-3-Clause by Adam Verspa
 
 All graphics including the Count Modula logo, panels and components are copyright © 2019 Adam Verspaget/Count Modula and may not be used in derivative works.
 
-<h3>Modules - Release 0.6.2</h3>
+<h3>Donate</h3>
+Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.<br/>
+<a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
+
+<h3>Modules - Release 0.6.2 and 0.6.3</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
@@ -33,13 +37,13 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 <li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
 <li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a>
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
-<li><a href="./MANUAL.md#Multiplexer">Multiplexer</a> *NEW in v0.6.2
+<li><a href="./MANUAL.md#Multiplexer">Multiplexer</a> * NEW in v0.6.2
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
-<li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a> *NEW in v0.6.2
-<li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a> *NEW in v0.6.2
+<li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a> * NEW in v0.6.2
+<li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a> * NEW in v0.6.2
 <li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a>
 <li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a>
 <li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>
