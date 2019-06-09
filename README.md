@@ -33,7 +33,7 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 <li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
 <li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a>
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
-<li><a href="./MANUAL.md#Multiplexer">Muliplexer</a> *NEW in v0.6.2
+<li><a href="./MANUAL.md#Multiplexer">Multiplexer</a> *NEW in v0.6.2
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
