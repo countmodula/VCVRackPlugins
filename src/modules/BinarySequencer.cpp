@@ -25,6 +25,7 @@ struct BinarySequencer : Module {
 	enum InputIds {
 		CLOCK_INPUT,
 		RESET_INPUT,
+		RUN_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -44,6 +45,7 @@ struct BinarySequencer : Module {
 	float clockFreq = 1.0f;
 	
 	GateProcessor gateClock;
+	GateProcessor gateRun;
 	GateProcessor gateReset;
 	PulseGenerator  pgTrig;
 	ClockOscillator clock;
@@ -55,6 +57,7 @@ struct BinarySequencer : Module {
 	
 	void onReset() override {
 		gateClock.reset();
+		gateRun.reset();
 		gateReset.reset();
 		pgTrig.reset();
 		clock.reset();
@@ -75,16 +78,32 @@ void BinarySequencer::step() {
 	clock.setPitch(params[CLOCKRATE_PARAM].value);
 	clock.step(engineGetSampleTime());
 	
-	// handle the reset/run input
-	gateReset.set(inputs[RESET_INPUT].normalize(10.0f));
+	// handle the run input
+	gateRun.set(inputs[RUN_INPUT].normalize(10.0f));
+	
+	
+	// handle the reset input
+	if (inputs[RESET_INPUT].active) {
+		// reset really is reset
+		gateReset.set(inputs[RESET_INPUT].value);
+	}
+	else {
+		// reset is derived from the leading edge of the run input
+		if (gateRun.leadingEdge()) {
+			gateReset.set(10.0f);
+		}
+	}
+
+	// reset on reset input or run leading edge
+	if (gateReset.leadingEdge())
+		counter = 0;
 	
 	// grab the clock input value
 	float internalClock = 5.0f * clock.sqr();
 	float clockState = inputs[CLOCK_INPUT].normalize(internalClock);
 	gateClock.set(clockState);
-
 	
-	if (gateReset.high()) {
+	if (gateRun.high()) {
 		// is it a transition from low to high?
 		if (gateClock.leadingEdge()) {
 			
@@ -114,7 +133,7 @@ void BinarySequencer::step() {
 
 	// calculate the CV value
 	float cv = 0.0f;
-	if (gateReset.high())
+	if (gateRun.high())
 	{
 		if ((counter & 0x01) == 0x01) cv += params[DIV01_PARAM].value;
 		if ((counter & 0x02) == 0x02) cv += params[DIV02_PARAM].value;
@@ -168,7 +187,8 @@ struct BinarySequencerWidget : ModuleWidget {
 		
 		// clock and reset input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, BinarySequencer::CLOCK_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1]), module, BinarySequencer::RESET_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1]), module, BinarySequencer::RUN_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, BinarySequencer::RESET_INPUT));
 		
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, BinarySequencer::CLOCK_OUTPUT));
@@ -176,7 +196,7 @@ struct BinarySequencerWidget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, BinarySequencer::CV_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, BinarySequencer::INV_OUTPUT));
 		
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, BinarySequencer::CLOCK_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)), module, BinarySequencer::CLOCK_LIGHT));
 	}
 };
 

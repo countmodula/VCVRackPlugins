@@ -38,7 +38,8 @@ struct Multiplexer : Module {
 	enum NormallingMode {
 		INPUT_MODE,
 		ZERO_MODE,
-		ASSOC_MODE
+		ASSOC_MODE,
+		MULTI_MODE
 	};
 	
 	enum sampleMode {
@@ -91,7 +92,7 @@ void Multiplexer::step() {
 	linkedClock = !inputs[CLOCK_R_INPUT].active;
 	
 	// what hold and normalling modes are selected?
-	normallingMode = (int)(params[NORMAL_PARAM].value);
+	normallingMode = ((int)(params[NORMAL_PARAM].value)) - 1;
 	holdMode = (int)(params[HOLD_PARAM].value);
 	bool doSample = holdMode != SAMPLEANDHOLD_MODE;
 	
@@ -180,6 +181,9 @@ void Multiplexer::step() {
 		if (i == indexR) {
 			float normalVal = 0.0f;
 			switch (normallingMode) {
+				case MULTI_MODE:
+					normalVal = sendOutputs[indexS];
+					break;
 				case ASSOC_MODE:
 					normalVal = sendOutputs[i];
 					break;
@@ -215,7 +219,7 @@ struct MultiplexerWidget : ModuleWidget {
 		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		//--------------------------------------------------------
-		// send section
+		// router section
 		//--------------------------------------------------------
 		addParam(createParamCentered<CountModulaRotarySwitchWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW7)), module, Multiplexer::LENGTH_S_PARAM, 1.0f, 7.0f, 7.0f));
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW2)), module, Multiplexer::HOLD_PARAM, 0.0f, 2.0f, 1.0f));
@@ -231,7 +235,7 @@ struct MultiplexerWidget : ModuleWidget {
 		}
 	
 		//--------------------------------------------------------
-		// receive section
+		// selector section
 		//--------------------------------------------------------
 		for (int i = 0; i < 8; i++) {
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::RECEIVE_INPUTS + i));
@@ -239,7 +243,7 @@ struct MultiplexerWidget : ModuleWidget {
 		}
 
 		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS8(STD_ROW2)), module, Multiplexer::LENGTH_R_PARAM, 1.0f, 8.0f, 8.0f));
-		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS8(STD_ROW6)), module, Multiplexer::NORMAL_PARAM, 0.0f, 2.0f, 0.0f));
+		addParam(createParamCentered<CountModulaRotarySwitch5PosYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS8(STD_ROW6)), module, Multiplexer::NORMAL_PARAM, 1.0f, 4.0f, 1.0f));
 		
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW1]), module, Multiplexer::LENGTH_R_INPUT));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW4]), module, Multiplexer::CLOCK_R_INPUT));

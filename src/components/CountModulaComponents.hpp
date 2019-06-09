@@ -85,11 +85,18 @@ struct CountModulaKnobWhite : CountModulaKnob {
 // rotary switches
 //-------------------------------------------------------------------
 // TODO: parameterise the colour
+
 struct CountModulaRotarySwitchRed : CountModulaKnobRed {
 	CountModulaRotarySwitchRed() {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 struct CountModulaRotarySwitchOrange : CountModulaKnobOrange {
@@ -97,6 +104,12 @@ struct CountModulaRotarySwitchOrange : CountModulaKnobOrange {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 struct CountModulaRotarySwitchYellow : CountModulaKnobYellow {
@@ -104,6 +117,12 @@ struct CountModulaRotarySwitchYellow : CountModulaKnobYellow {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 struct CountModulaRotarySwitchGreen : CountModulaKnobGreen {
@@ -111,6 +130,12 @@ struct CountModulaRotarySwitchGreen : CountModulaKnobGreen {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 struct CountModulaRotarySwitchBlue : CountModulaKnobBlue {
@@ -118,6 +143,12 @@ struct CountModulaRotarySwitchBlue : CountModulaKnobBlue {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 
@@ -126,6 +157,12 @@ struct CountModulaRotarySwitchGrey : CountModulaKnobGrey {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 struct CountModulaRotarySwitchWhite : CountModulaKnobWhite {
@@ -133,6 +170,12 @@ struct CountModulaRotarySwitchWhite : CountModulaKnobWhite {
 		snap = true;
 		smooth = false;
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+			setValue(roundf(value));
+	}	
 };
 
 //-------------------------------------------------------------------
@@ -197,6 +240,15 @@ struct CountModulaToggle2P : SVGSwitch, ToggleSwitch {
 		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_0.svg")));
 		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_2.svg")));
 	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGSwitch::randomize();
+		if (value > 0.5f)
+			setValue(1.0f);
+		else
+			setValue(0.0f);
+	}	
 };
 
 //-------------------------------------------------------------------
@@ -207,6 +259,17 @@ struct CountModulaToggle3P : SVGSwitch, ToggleSwitch {
 		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_0.svg")));
 		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_1.svg")));
 		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_2.svg")));
+	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGSwitch::randomize();
+		if (value > 1.33f)
+			setValue (2.0f);
+		else if (value > 0.67f)
+			setValue(1.0f);
+		else
+			setValue(0.0f);
 	}
 };
 

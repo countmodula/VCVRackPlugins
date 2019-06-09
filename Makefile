@@ -3,7 +3,7 @@ RACK_DIR ?= ../..
 
 SLUG = CountModula
 
-VERSION = 0.6.1
+VERSION = 0.6.2
 
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS +=

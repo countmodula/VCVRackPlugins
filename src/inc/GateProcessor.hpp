@@ -14,7 +14,9 @@ class GateProcessor {
 	public:
 		// set the gate with the given value
 		bool set(float value) {
-			st.process(rescale(value, 0.1f, 2.f, 0.f, 1.f));
+			// standard Schmitt trigger with 0.1 and 2 Volt thresholds
+			st.process(rescale(value, 0.1f, 2.0f, 0.f, 1.f));
+			
 			prevState = currentState;
 			currentState = st.isHigh();
 			

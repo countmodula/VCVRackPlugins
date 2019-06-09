@@ -8,7 +8,7 @@ All source code in this repository is licensed under BSD-3-Clause by Adam Verspa
 
 All graphics including the Count Modula logo, panels and components are copyright © 2019 Adam Verspaget/Count Modula and may not be used in derivative works.
 
-<h3>Modules - Release 0.6.1</h3>
+<h3>Modules - Release 0.6.2</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
@@ -33,10 +33,13 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 <li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
 <li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a>
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
+<li><a href="./MANUAL.md#Multiplexer">Muliplexer</a> *NEW in v0.6.2
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
+<li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a> *NEW in v0.6.2
+<li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a> *NEW in v0.6.2
 <li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a>
 <li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a>
 <li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>
@@ -55,9 +58,22 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 		<th align="left">Notes</th>
 	</tr>
 	<tr valign="top">
-		<td align="center">03-Jun-2019</td>
-		<td align="center">v0.6.0</td>
-		<td>Initial Release</td></tr>
+		<td align="center">09-Jun-2019</td>
+		<td align="center">v0.6.2</td>
+		<td align="left">
+			<b>New Modules</b><br/>
+			<ul>
+				<li>Multiplpexer
+				<li>8 Step Trigger Sequencer
+				<li>16 Step Trigger Sequencer
+			</ul>
+			<b>Issues Resolved:</b><br/>
+			<ul>
+				<li>Issue #6 Binary Sequencer enhanced to split run and reset inputs.
+				<li>Issue #7 Randomize not setting switch values correctly.
+			</ul>
+		</td>
+	</tr>
 	<tr valign="top">
 		<td align="center">04-Jun-2019</td>
 		<td align="center">v0.6.1</td>
@@ -66,6 +82,10 @@ All graphics including the Count Modula logo, panels and components are copyrigh
 			Issue #3 svgs incorrectly packaged.<br/>
 		</td>
 	</tr>
+	<tr valign="top">
+		<td align="center">03-Jun-2019</td>
+		<td align="center">v0.6.0</td>
+		<td>Initial Release</td></tr>
 </table>
 
 

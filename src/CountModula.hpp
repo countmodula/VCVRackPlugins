@@ -33,6 +33,8 @@ extern Model *modelMuteIple;
 extern Model *modelPolyrhythmicGenerator;
 extern Model *modelBooleanVCNOT;
 extern Model *modelBurstGenerator;
+extern Model *modelTriggerSequencer16;
+extern Model *modelTriggerSequencer8;
 
 #ifdef DEV
 #include "dev/forwardDec.hpp"

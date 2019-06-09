@@ -4,7 +4,7 @@
 // Standard column definitions
 //------------------------------------------------------------------------
 // column positions
-const int STD_COLUMN_POSITIONS[16] = {
+const int STD_COLUMN_POSITIONS[32] = {
 	30,
 	60,
 	90, // 8 HP
@@ -20,7 +20,23 @@ const int STD_COLUMN_POSITIONS[16] = {
 	390,
 	420,
 	450,
-	480
+	480,
+	510,
+	540,
+	570,
+	600,
+	630,
+	660,
+	690,
+	720,
+	750,
+	780,
+	810,
+	840,
+	870,
+	900,
+	930,
+	960
 };
 
 // column indices
@@ -40,6 +56,22 @@ const int STD_COL13 = 12;
 const int STD_COL14 = 13;
 const int STD_COL15 = 14;
 const int STD_COL16 = 15;
+const int STD_COL17 = 16;
+const int STD_COL18 = 17;
+const int STD_COL19 = 18;
+const int STD_COL20 = 19;
+const int STD_COL21 = 20;
+const int STD_COL22 = 21;
+const int STD_COL23 = 22;
+const int STD_COL24 = 23;
+const int STD_COL25 = 24;
+const int STD_COL26 = 25;
+const int STD_COL27 = 26;
+const int STD_COL28 = 27;
+const int STD_COL29 = 28;
+const int STD_COL30 = 29;
+const int STD_COL31 = 30;
+const int STD_COL32 = 31;
 
 
 //------------------------------------------------------------------------

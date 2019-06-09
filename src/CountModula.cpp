@@ -32,6 +32,8 @@ void init(Plugin *p) {
 	p->addModel(modelPolyrhythmicGenerator);
 	p->addModel(modelShepardGenerator);
 	p->addModel(modelSRFlipFlop);
+	p->addModel(modelTriggerSequencer8);
+	p->addModel(modelTriggerSequencer16);
 	p->addModel(modelVCFrequencyDivider);
 	p->addModel(modelVCPolarizer);
 	p->addModel(modelVoltageControlledSwitch);
