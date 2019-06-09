@@ -9,7 +9,8 @@ All source code in this repository is licensed under BSD-3-Clause by Adam Verspa
 All graphics including the Count Modula logo, panels and components are copyright © 2019 Adam Verspaget/Count Modula and may not be used in derivative works.
 
 <h3>Donate</h3>
-Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.<br/>
+Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
+<p>&nbsp</p>
 <a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
 
 <h3>Modules - Release 0.6.2 and 0.6.3</h3>
