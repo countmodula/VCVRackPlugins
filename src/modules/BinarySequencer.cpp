@@ -89,12 +89,13 @@ void BinarySequencer::step() {
 	}
 	else {
 		// reset is derived from the leading edge of the run input
-		if (gateRun.leadingEdge()) {
+		if (gateRun.leadingEdge())
 			gateReset.set(10.0f);
-		}
+		else
+			gateReset.set(0.0f);
 	}
-
-	// reset on reset input or run leading edge
+	
+	// reset on reset input 
 	if (gateReset.leadingEdge())
 		counter = 0;
 	
