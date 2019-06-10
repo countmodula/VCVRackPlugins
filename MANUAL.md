@@ -296,7 +296,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="Trigger8">
+<a id="TriggerSequencer8">
 <h3>Trigger Sequencer - 8 Step</h3>
 <table>
 	<tr valign="top">
@@ -313,7 +313,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="Trigger16">
+<a id="TriggerSequencer16">
 <h3>Trigger Sequencer - 16 Step</h3>
 <table>
 	<tr valign="top">
