@@ -76,7 +76,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 			<img src="./img/Comparator.png">
 		</td> 
 		<td>
-			Compares the input signal with either an internal or external threshold value and outouts gate signals indicating if it is under or over that threshold.
+			Compares the input signal with either an internal or external threshold value and outputs gate signals indicating if it is under or over that threshold.
 		</td>
 	</tr>
 </table>
@@ -116,7 +116,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 			<img src="./img/G2T.png">
 		</td> 
 		<td>
-			A gate converter module. Converts any signal into a gate. The gate output will be at 0V unless the voltage presented at the input is greater than 0.1V in which case the Gate output will be high (10V). The Inv Gate output functions the other way around, 10V unless the input voltage is over 0,.1V in which case the output will be 0V. The Start trigger output will fire a 10ms pulse at the start or leading edge (i.e. on the transition from low to high) of the generated gate and the End trigger output will fire a 10ms pulse at the end or trailing edge (i.e. on the transition from high to low) of the generated gate.
+			A gate converter module. Converts any signal into a gate. The gate output will be at 0V unless the voltage presented at the input is greater than 2.0V in which case the Gate output will be high (10V). The Inv Gate output functions the other way around, 10V unless the input voltage is over 2.0V in which case the output will be 0V. The Start trigger output will fire a 10ms pulse at the start or leading edge (i.e. on the transition from low to high) of the generated gate and the End trigger output will fire a 10ms pulse at the end or trailing edge (i.e. on the transition from high to low) of the generated gate.
 		</td>
 	</tr>
 </table>
