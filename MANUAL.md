@@ -15,7 +15,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 			<img src="./img/ASR.png">
 		</td> 
 		<td>
-			A dual 4 output or single 8 output shift register. On each the rising edge at the shidt input, the signal present at each output is propagated to the next successive output and the input is simultaneously sampled and sent to the first output. The shift input on channel 2 is normalled to the shift input on channel 1 and the signal input on channel 2 is normalled to output 4 of channel 1 so that, with no cables connected to channel 2, the module functions as a single 8 output shift register.
+			A dual 4 output or single 8 output shift register. On each the rising edge at the shift input, the signal present at each output is propagated to the next successive output and the input is simultaneously sampled and sent to the first output. The shift input on channel 2 is normalled to the shift input on channel 1 and the signal input on channel 2 is normalled to output 4 of channel 1 so that, with no cables connected to channel 2, the module functions as a single 8 output shift register.
 		</td>
 	</tr>
 </table>
@@ -282,6 +282,21 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		</td>
 	</tr>
 </table>
+
+
+<a id="SRFlipFlop">
+<h3>SR Flip Flop</h3>
+<table>
+	<tr valign="top">
+		<td width=180>
+			<img src="./img/SRFlipFLop.png">
+		</td> 
+		<td>
+			A dual Set/Reset flip flop with optional enable. A high gate signal at the S input whilst the flip flop is enabled sets the Q output high and the NOTQ output low. A high gate signal at the R resets the Q outout to low and thre NOTW output to high. Both inouts high at the same result in an invalid state causing both outputs to also be high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be pesent atthe input in order to set or reset the flip flop.
+		</td>
+	</tr>
+</table>
+
 
 <a id="TappedGateDelay">
 <h3>Tapped Gate Delay</h3>
