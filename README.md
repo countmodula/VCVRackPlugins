@@ -47,6 +47,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
+<li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
 <li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a> * NEW in v0.6.2
 <li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a> * NEW in v0.6.2
