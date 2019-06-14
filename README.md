@@ -18,6 +18,10 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
+<h3>Package Download</h3>
+The version 0.6.3 release packages are not available in the plugin manager however they can be downloaded via the link below:
+<a href="https://github.com/countmodula/VCVRackPlugins/tree/V0.6">Download</a>
+
 <h3>Modules - Release 0.6.2 and 0.6.3</h3>
 
 <a href="MANUAL.md">Module Manual</a>
