@@ -21,7 +21,7 @@ Follow Count Modula on facebook:
 <h3>Package Download</h3>
 The version 0.6.3 release packages are not available in the plugin manager however they can be downloaded via the link below:
 
-<a href="https://github.com/countmodula/VCVRackPlugins/tree/V0.6">Download</a>
+<a href="https://github.com/countmodula/VCVRackPlugins/tree/V0.6/release">Download</a>
 
 <h3>Modules - Release 0.6.2 and 0.6.3</h3>
 
