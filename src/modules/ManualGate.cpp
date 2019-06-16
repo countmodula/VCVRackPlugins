@@ -32,13 +32,16 @@ struct ManualGate : Module {
 	};
 
 	GateProcessor gate;
-	PulseGenerator  pgTrig;
-	PulseGenerator  pgGate;
+	dsp::PulseGenerator  pgTrig;
+	dsp::PulseGenerator  pgGate;
 	bool latch = false;
 	
-	ManualGate() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	
-	void step() override;
+	ManualGate() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		
+		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Output Gate Length");
+		configParam(GATE_PARAM, 0.0f, 1.0f, 0.0f);
+	}
 	
 	void onReset() override {
 		latch = false;
@@ -47,15 +50,9 @@ struct ManualGate : Module {
 		pgGate.reset();
 	}	
 	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
-};
-
-void ManualGate::step() {
-	
-		gate.set(params[GATE_PARAM].value * 10.0f);
+	void process(const ProcessArgs &args) override {
+		
+		gate.set(params[GATE_PARAM].getValue() * 10.0f);
 		
 		if (gate.leadingEdge()) {
 			latch = !latch;
@@ -66,38 +63,38 @@ void ManualGate::step() {
 		
 		if (gate.high()) {
 			// keep resetting the pulse extender until such time as the gate button goes low
-			pgGate.trigger(params[LENGTH_PARAM].value);
+			pgGate.trigger(params[LENGTH_PARAM].getValue());
 		}
 		
-		float st = engineGetSampleTime();
-		outputs[TRIG_OUTPUT].value = boolToGate(pgTrig.process(st));
+		outputs[TRIG_OUTPUT].setVoltage(boolToGate(pgTrig.process(args.sampleTime)));
 		
 		
-		outputs[GATE_OUTPUT].value = gate.value();
-		outputs[IGATE_OUTPUT].value = gate.notValue();
+		outputs[GATE_OUTPUT].setVoltage(gate.value());
+		outputs[IGATE_OUTPUT].setVoltage(gate.notValue());
 		
-		outputs[LATCH_OUTPUT].value = boolToGate(latch);
-		outputs[ILATCH_OUTPUT].value = boolToGate(!latch);
+		outputs[LATCH_OUTPUT].setVoltage(boolToGate(latch));
+		outputs[ILATCH_OUTPUT].setVoltage(boolToGate(!latch));
 		
-		bool ext = (gate.high() || pgGate.process(st));
-		outputs[EXTENDED_OUTPUT].value = boolToGate(ext);
-		outputs[IEXT_OUTPUT].value = boolToGate(!ext);
+		bool ext = (gate.high() || pgGate.process(args.sampleTime));
+		outputs[EXTENDED_OUTPUT].setVoltage(boolToGate(ext));
+		outputs[IEXT_OUTPUT].setVoltage(boolToGate(!ext));
 		
-		lights[LATCH_LIGHT].setBrightnessSmooth(boolToLight(latch));
-		
-}
+		lights[LATCH_LIGHT].setSmoothBrightness(boolToLight(latch), args.sampleTime);
+	}
+};
 
 struct ManualGateWidget : ModuleWidget {
-	ManualGateWidget(ManualGate *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/ManualGate.svg")));
+	ManualGateWidget(ManualGate *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ManualGate.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		// knobs
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, ManualGate::LENGTH_PARAM, 0.0f, 10.0f, 0.0f));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, ManualGate::LENGTH_PARAM));
 
 	
 		// outputs
@@ -113,12 +110,8 @@ struct ManualGateWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW2]), module, ManualGate::LATCH_LIGHT));
 
 		// Mega manual button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMegaMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, ManualGate::GATE_PARAM, 0.0f, 1.0f, 0.0f));
+		addParam(createParamCentered<CountModulaPBSwitchMegaMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, ManualGate::GATE_PARAM));
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelManualGate = Model::create<ManualGate, ManualGateWidget>("Count Modula", "ManualGate", "Manual Gate", CONTROLLER_TAG);
+Model *modelManualGate = createModel<ManualGate, ManualGateWidget>("ManualGate");

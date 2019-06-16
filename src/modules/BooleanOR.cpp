@@ -62,42 +62,39 @@ struct BooleanOR : Module {
 	OrGate gate;
 	Inverter inverter;
 	
-	BooleanOR() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	BooleanOR() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 	
-	void step() override;
-
 	void onReset() override {
 		gate.reset();
 		inverter.reset();
 	}
+
+	void process(const ProcessArgs &args) override {
+		// grab and normalise the inputs
+		float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
+		float inB = inputs[B_INPUT].getNormalVoltage(inA);
+		float inC = inputs[C_INPUT].getNormalVoltage(inB);
+		float inD = inputs[D_INPUT].getNormalVoltage(inC);
+		
+		//perform the logic
+		float out =  gate.process(inA, inB, inC, inD);
+		outputs[OR_OUTPUT].setVoltage(out);
+		
+		float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
+		outputs[INV_OUTPUT].setVoltage(notOut);
+	}
 	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
 };
 
-void BooleanOR::step() {
-	// grab and normalise the inputs
-	float inA = inputs[A_INPUT].normalize(0.0f);
-	float inB = inputs[B_INPUT].normalize(inA);
-	float inC = inputs[C_INPUT].normalize(inB);
-	float inD = inputs[D_INPUT].normalize(inC);
-	
-	//perform the logic
-	float out =  gate.process(inA, inB, inC, inD);
-	outputs[OR_OUTPUT].value = out;
-	
-	float notOut = inverter.process(inputs[I_INPUT].normalize(out));
-	outputs[INV_OUTPUT].value = notOut;
-}
-
 struct BooleanORWidget : ModuleWidget {
-BooleanORWidget(BooleanOR *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/BooleanOR.svg")));
+BooleanORWidget(BooleanOR *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanOR.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		// clock and reset input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW1]),module, BooleanOR::A_INPUT));
@@ -112,8 +109,4 @@ BooleanORWidget(BooleanOR *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelBooleanOR = Model::create<BooleanOR, BooleanORWidget>("Count Modula", "BooleanOR", "Logical OR Gate", LOGIC_TAG);
+Model *modelBooleanOR = createModel<BooleanOR, BooleanORWidget>("BooleanOR");

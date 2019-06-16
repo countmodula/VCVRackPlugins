@@ -36,45 +36,47 @@ struct VCPolarizer : Module {
 	Polarizer polarizer1;
 	Polarizer polarizer2;
 
-	VCPolarizer() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	VCPolarizer() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		
+		configParam(CH1_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount");
+		configParam(CH1_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
+		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount");
+		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
+	}
 	
-	void step() override;
-
 	void onReset() override {
 		polarizer1.reset();
 		polarizer2.reset();
 	}	
 	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+
+		// channel 1
+		outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer1.process(inputs[CH1_SIGNAL_INPUT].getVoltage(), params[CH1_MANUAL_PARAM].getValue(), inputs[CH1_CV_INPUT].getVoltage(), params[CH1_CVAMOUNT_PARAM].getValue()));
+		lights[CH1_POS_LIGHT].setSmoothBrightness(polarizer1.positiveLevel, args.sampleTime);
+		lights[CH1_NEG_LIGHT].setSmoothBrightness(polarizer1.negativeLevel, args.sampleTime);
+		
+		// channel 2
+		outputs[CH2_SIGNAL_OUTPUT].setVoltage(polarizer2.process(inputs[CH2_SIGNAL_INPUT].getVoltage(), params[CH2_MANUAL_PARAM].getValue(), inputs[CH2_CV_INPUT].getVoltage(), params[CH2_CVAMOUNT_PARAM].getValue()));
+		lights[CH2_POS_LIGHT].setSmoothBrightness(polarizer2.positiveLevel, args.sampleTime);
+		lights[CH2_NEG_LIGHT].setSmoothBrightness(polarizer2.negativeLevel, args.sampleTime);
+	}
 };
 
-void VCPolarizer::step() {
-	// channel 1
-	outputs[CH1_SIGNAL_OUTPUT].value = polarizer1.process(inputs[CH1_SIGNAL_INPUT].value, params[CH1_MANUAL_PARAM].value, inputs[CH1_CV_INPUT].value, params[CH1_CVAMOUNT_PARAM].value);
-	lights[CH1_POS_LIGHT].setBrightnessSmooth(polarizer1.positiveLevel);
-	lights[CH1_NEG_LIGHT].setBrightnessSmooth(polarizer1.negativeLevel);
-	
-	// channel 2
-	outputs[CH2_SIGNAL_OUTPUT].value = polarizer2.process(inputs[CH2_SIGNAL_INPUT].value, params[CH2_MANUAL_PARAM].value, inputs[CH2_CV_INPUT].value, params[CH2_CVAMOUNT_PARAM].value);
-	lights[CH2_POS_LIGHT].setBrightnessSmooth(polarizer2.positiveLevel);
-	lights[CH2_NEG_LIGHT].setBrightnessSmooth(polarizer2.negativeLevel);
-}
-
 struct VCPolarizerWidget : ModuleWidget {
-VCPolarizerWidget(VCPolarizer *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/VCPolarizer.svg")));
+	VCPolarizerWidget(VCPolarizer *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VCPolarizer.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 	
 		// knobs
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, VCPolarizer::CH1_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, VCPolarizer::CH1_MANUAL_PARAM, -2.0f, 2.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, VCPolarizer::CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, VCPolarizer::CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, VCPolarizer::CH1_CVAMOUNT_PARAM));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, VCPolarizer::CH1_MANUAL_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, VCPolarizer::CH2_CVAMOUNT_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, VCPolarizer::CH2_MANUAL_PARAM));
 		
 		// clock and reset input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, VCPolarizer::CH1_SIGNAL_INPUT));
@@ -94,8 +96,4 @@ VCPolarizerWidget(VCPolarizer *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelVCPolarizer = Model::create<VCPolarizer, VCPolarizerWidget>("Count Modula", "VCPolarizer", "VC Polarizer", UTILITY_TAG);
+Model *modelVCPolarizer = createModel<VCPolarizer, VCPolarizerWidget>("VCPolarizer");

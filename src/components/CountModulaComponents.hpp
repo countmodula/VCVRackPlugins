@@ -2,16 +2,16 @@
 //	Count Modula - Custom components
 //----------------------------------------------------------------------------
 #include "componentlibrary.hpp"
-//#include "rack.hpp"
 
 using namespace rack;
+
 
 //-------------------------------------------------------------------
 // screws
 //-------------------------------------------------------------------
 struct CountModulaScrew : SVGScrew {
 	CountModulaScrew() {
-		sw->setSVG(SVG::load(assetPlugin(plugin, "res/Components/ScrewHex.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/ScrewHex.svg")));
 		box.size = sw->box.size;
 	}
 };
@@ -21,7 +21,7 @@ struct CountModulaScrew : SVGScrew {
 //-------------------------------------------------------------------
 struct CountModulaJack : SVGPort {
 	CountModulaJack() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/Jack.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Jack.svg")));
 	}
 };
 
@@ -41,43 +41,43 @@ struct CountModulaKnob : SVGKnob {
 // coloured knobs
 struct CountModulaKnobRed : CountModulaKnob {
 	CountModulaKnobRed() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobRed.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobRed.svg")));
 	}
 };
 
 struct CountModulaKnobOrange : CountModulaKnob {
 	CountModulaKnobOrange() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobOrange.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobOrange.svg")));
 	}
 };
 
 struct CountModulaKnobYellow : CountModulaKnob {
 	CountModulaKnobYellow() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobYellow.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobYellow.svg")));
 	}
 };
 
 struct CountModulaKnobGreen : CountModulaKnob {
 	CountModulaKnobGreen() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobGreen.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobGreen.svg")));
 	}
 };
 
 struct CountModulaKnobBlue : CountModulaKnob {
 	CountModulaKnobBlue() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobBlue.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobBlue.svg")));
 	}
 };
 
 struct CountModulaKnobGrey : CountModulaKnob {
 	CountModulaKnobGrey() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobGrey.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobGrey.svg")));
 	}
 };
 
 struct CountModulaKnobWhite : CountModulaKnob {
 	CountModulaKnobWhite() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/Components/KnobWhite.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobWhite.svg")));
 	}
 };
 
@@ -95,7 +95,8 @@ struct CountModulaRotarySwitchRed : CountModulaKnobRed {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -108,7 +109,8 @@ struct CountModulaRotarySwitchOrange : CountModulaKnobOrange {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -121,7 +123,8 @@ struct CountModulaRotarySwitchYellow : CountModulaKnobYellow {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -134,7 +137,8 @@ struct CountModulaRotarySwitchGreen : CountModulaKnobGreen {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -147,7 +151,8 @@ struct CountModulaRotarySwitchBlue : CountModulaKnobBlue {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -161,7 +166,8 @@ struct CountModulaRotarySwitchGrey : CountModulaKnobGrey {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -174,7 +180,8 @@ struct CountModulaRotarySwitchWhite : CountModulaKnobWhite {
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
-			setValue(roundf(value));
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
 };
 
@@ -235,58 +242,69 @@ struct CountModulaRotarySwitch5PosWhite : CountModulaRotarySwitchWhite {
 //-------------------------------------------------------------------
 // on-off toggle switch
 //-------------------------------------------------------------------
-struct CountModulaToggle2P : SVGSwitch, ToggleSwitch {
+struct CountModulaToggle2P : SvgSwitch {
 	CountModulaToggle2P() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_2.svg")));
-	}
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_2.svg")));
+
+		// no shadow for switches
+		shadow->opacity = 0.0f;
+}
 	
-	// override the base randomizer as it sets switches to invalid values.
+	// // override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGSwitch::randomize();
-		if (value > 0.5f)
-			setValue(1.0f);
+
+		if (paramQuantity->getValue() > 0.5f)
+			paramQuantity->setValue(1.0f);
 		else
-			setValue(0.0f);
+			paramQuantity->setValue(0.0f);
 	}	
 };
 
 //-------------------------------------------------------------------
 // on-off-on toggle switch
 //-------------------------------------------------------------------
-struct CountModulaToggle3P : SVGSwitch, ToggleSwitch {
+struct CountModulaToggle3P : SvgSwitch {
 	CountModulaToggle3P() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Components/SW_Toggle_2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_2.svg")));
+		
+		// no shadow for switches
+		shadow->opacity = 0.0f;
 	}
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGSwitch::randomize();
-		if (value > 1.33f)
-			setValue (2.0f);
-		else if (value > 0.67f)
-			setValue(1.0f);
+		
+		if (paramQuantity->getValue() > 1.33f)
+			paramQuantity->setValue(2.0f);
+		else if (paramQuantity->getValue() > 0.67f)
+			paramQuantity->setValue(1.0f);
 		else
-			setValue(0.0f);
+			paramQuantity->setValue(0.0f);
 	}
 };
 
 //-------------------------------------------------------------------
 // push button base
 //-------------------------------------------------------------------
-struct CountModulaPB :  SVGSwitch, ToggleSwitch {
+struct CountModulaPB :  SvgSwitch {
 	CountModulaPB() {
+		// no shadow for switches or buttons
+		shadow->opacity = 0.0f;
 	}
 
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGSwitch::randomize();
-		if (value > 0.5f)
-			setValue(1.0f);
+		
+		if (paramQuantity->getValue() > 0.5f)
+			paramQuantity->setValue(1.0f);
 		else
-			setValue(0.0f);
+			paramQuantity->setValue(0.0f);
 	}
 };
 
@@ -295,15 +313,17 @@ struct CountModulaPB :  SVGSwitch, ToggleSwitch {
 //-------------------------------------------------------------------
 struct CountModulaPBSwitch : CountModulaPB {
     CountModulaPBSwitch() {
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButton_0.svg")));
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButton_1.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_1.svg")));
     }
 };
 
-struct CountModulaPBSwitchMomentary : SVGSwitch, MomentarySwitch {
+struct CountModulaPBSwitchMomentary : CountModulaPB {
     CountModulaPBSwitchMomentary() {
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButton_0.svg")));
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButton_1.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_1.svg")));
+
+		momentary = true;
     }
 };
  
@@ -312,15 +332,17 @@ struct CountModulaPBSwitchMomentary : SVGSwitch, MomentarySwitch {
 //-------------------------------------------------------------------
 struct CountModulaPBSwitchBig : CountModulaPB {
     CountModulaPBSwitchBig() {
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonBig_0.svg")));
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonBig_1.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_1.svg")));
     }
 };
 
-struct CountModulaPBSwitchBigMomentary : SVGSwitch, MomentarySwitch {
+struct CountModulaPBSwitchBigMomentary : CountModulaPB {
     CountModulaPBSwitchBigMomentary() {
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonBig_0.svg")));
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonBig_1.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_1.svg")));
+		
+ 		momentary = true;
     }
 };
  
@@ -329,14 +351,16 @@ struct CountModulaPBSwitchBigMomentary : SVGSwitch, MomentarySwitch {
 //-------------------------------------------------------------------
 struct CountModulaPBSwitchMega : CountModulaPB {
     CountModulaPBSwitchMega() {
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonMega_0.svg")));
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonMega_1.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_1.svg")));
     }
 };
 
-struct CountModulaPBSwitchMegaMomentary : SVGSwitch, MomentarySwitch {
+struct CountModulaPBSwitchMegaMomentary : CountModulaPB {
     CountModulaPBSwitchMegaMomentary() {
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonMega_0.svg")));
-        addFrame(SVG::load(assetPlugin(plugin, "res/Components/PushButtonMega_1.svg")));
-    }
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_1.svg")));
+
+ 		momentary = true;
+   }
 };

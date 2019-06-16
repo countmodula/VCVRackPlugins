@@ -27,55 +27,55 @@ struct Comparator : Module {
 
 	bool state = 0;
 
-	Comparator() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	Comparator() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		
+		configParam(THRESHOLD_PARAM, -10.0, 10.0, 0.0, "Threshold");
+	}
 	
-	void step() override;
-	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+
+		// Compute the threshold from the pitch parameter and input
+		float threshold = params[THRESHOLD_PARAM].getValue();
+		threshold += inputs[THRESHOLD_INPUT].getVoltage();
+
+		float compare = inputs[COMPARE_INPUT].getVoltage();
+		
+		// compare
+		state = (compare > threshold);
+		
+		if (state) {
+			// set the output high
+			outputs[COMPARE_OUTPUT].setVoltage(10.0f);
+			outputs[INV_OUTPUT].setVoltage(0.0f);
+
+			// Set light off
+			lights[OVER_LIGHT].setBrightness(1.0f);
+			lights[UNDER_LIGHT].setBrightness(0.0f);
+		}
+		else {
+			// set the output low
+			outputs[COMPARE_OUTPUT].setVoltage(0.0f);
+			outputs[INV_OUTPUT].setVoltage(10.0f);
+
+			// Set light off
+			lights[UNDER_LIGHT].setBrightness(1.0f);
+			lights[OVER_LIGHT].setBrightness(0.0f);
+		}
+	}
 };
 
-void Comparator::step() {
 
-	// Compute the threshold from the pitch parameter and input
-	float threshold = params[THRESHOLD_PARAM].value;
-	threshold += inputs[THRESHOLD_INPUT].value;
-
-	float compare = inputs[COMPARE_INPUT].value;
-	
-	// compare
-	state = (compare > threshold);
-	
-	if (state) {
-		// set the output high
-		outputs[COMPARE_OUTPUT].value = 10.0f;
-		outputs[INV_OUTPUT].value = 0.0f;
-
-		// Set light off
-		lights[OVER_LIGHT].value = 1.0f;
-		lights[UNDER_LIGHT].value = 0.0f;
-		}
-	else {
-		// set the output low
-		outputs[COMPARE_OUTPUT].value = 0.0f;
-		outputs[INV_OUTPUT].value = 10.0f;
-
-		// Set light off
-		lights[UNDER_LIGHT].value = 1.0f;
-		lights[OVER_LIGHT].value = 0.0f;
-	}
-}
 
 struct ComparatorWidget : ModuleWidget {
-ComparatorWidget(Comparator *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/Comparator.svg")));
+ComparatorWidget(Comparator *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Comparator.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(45, 75), module, Comparator::THRESHOLD_PARAM, -10.0, 10.0, 0.0));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(45, 75), module, Comparator::THRESHOLD_PARAM));
 
 		addInput(createInputCentered<CountModulaJack>(Vec(45, 130), module, Comparator::THRESHOLD_INPUT));
 		addInput(createInputCentered<CountModulaJack>(Vec(45, 180), module, Comparator::COMPARE_INPUT));
@@ -88,8 +88,4 @@ ComparatorWidget(Comparator *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelComparator = Model::create<Comparator, ComparatorWidget>("Count Modula", "Comparator", "Comparator", UTILITY_TAG);
+Model *modelComparator = createModel<Comparator, ComparatorWidget>("Comparator");

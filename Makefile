@@ -1,18 +1,10 @@
 # If RACK_DIR is not defined when calling the Makefile, default to two directories above
 RACK_DIR ?= ../..
 
-SLUG = CountModula
-
-VERSION = 0.6.3
-
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS +=
 CFLAGS +=
 CXXFLAGS +=
-
-ifdef DEVBUILD
-	FLAGS += -DDEV
-endif
 
 # Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
 # Static libraries are fine.
@@ -23,13 +15,6 @@ SOURCES += $(wildcard src/*.cpp)
 SOURCES += $(wildcard src/modules/*.cpp)
 SOURCES += $(wildcard src/lib/*.cpp)
 SOURCES += $(wildcard src/components/*.cpp)
-
-ifdef DEVBUILD
-	# include any modules that are in development
-	SOURCES += $(wildcard src/dev/*.cpp)
-else
-	
-endif
 
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.

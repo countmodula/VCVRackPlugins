@@ -38,7 +38,28 @@ struct GateDelayMT : Module {
 	}; 
 
 	GateDelayLine delayLine;
-	GateDelayMT() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	GateDelayMT() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// parameters 
+		configParam(CVLEVEL_PARAM, -5.0f, 5.0f, 0.0f, "Delay Time CV Amount");
+		configParam(TIME_PARAM, 0.0f, 10.0f, 5.0f, "Delay Time");
+		configParam(RANGE_PARAM, 0.0f, 2.0f, 2.0f, "Delay Range");
+		
+		// direct output
+		configParam(MIXDIR_PARAM, 0.0f, 1.0f, 1.0f, "Mute From Mix Output");
+			
+		// tapped outputs
+		int k = 0;
+		for (int i = 0; i < 5; i += 4) {
+			for (int j = 0; j < 4; j++) {
+				configParam(MIXDEL_PARAMS + k, 0.0f, 1.0f, 1.0f, "Mute From Mix Output");
+			
+				k++;
+			}
+		}
+
+	}
 
 	int range = 0;
 	
@@ -48,69 +69,69 @@ struct GateDelayMT : Module {
 		{ 1,  2,  3,  4,  5,  6,  7,  8}
 	};
 	
-	void step() override;
-	
 	void onReset() override {
 		delayLine.reset();
 	}
+	
+	void process(const ProcessArgs &args) override {
+
+		// determine the range option 
+		int t = (int)(params[RANGE_PARAM].value);
+		if (range != t) {
+#ifdef NO_TIME_TRAVEL		
+			// range has changed - clear out the delay line otherwise we can get some undesirable time travel artefacts
+			delayLine.reset();
+#endif
+			range = t;
+		}
+
+		// compute delay time in seconds
+		float delay = params[TIME_PARAM].getValue();
+		if (inputs[TIME_INPUT].getVoltage())
+			 delay += (inputs[TIME_INPUT].getVoltage() * params[CVLEVEL_PARAM].getValue());
+
+		 // process the delay and grab the input gate level
+		delayLine.process(inputs[GATE_INPUT].getVoltage(), delay);
+
+		float mix = 0.0f;
+		
+		// direct output
+		outputs[DIRECT_OUTPUT].setVoltage(boolToGate(delayLine.gateValue()));
+		lights[DIRECT_LIGHT].setBrightness(outputs[DIRECT_OUTPUT].getVoltage() / 10.0f);
+		
+		// mix direct in if we want it
+		mix += (params[MIXDIR_PARAM].getValue() * outputs[DIRECT_OUTPUT].getVoltage());
+		
+		for (int i = 0; i < 8; i++) {
+			outputs[DELAYED_OUTPUTS + i].setVoltage(boolToGate(delayLine.tapValue(taps[range][i])));
+			lights[DELAYED_LIGHTS + i].setBrightness(outputs[DELAYED_OUTPUTS + i].getVoltage() / 10.0f);
+			
+			// add this tap to the mix
+			mix += (params[MIXDEL_PARAMS + i].getValue() * outputs[DELAYED_OUTPUTS + i].getVoltage());
+		}
+		
+		// finally output the mix 
+		outputs[MIX_OUTPUT].setVoltage(boolToGate(mix > 0.1f));
+		lights[MIX_LIGHT].setBrightness(boolToLight(mix > 0.1f));
+	}
 };
 
-void GateDelayMT::step() {
-
-	// determine the range option 
-	int t = (int)(params[RANGE_PARAM].value);
-	if (range != t) {
-#ifdef NO_TIME_TRAVEL		
-		// range has changed - clear out the delay line otherwise we can get some undesirable time travel artefacts
-		delayLine.reset();
-#endif
-		range = t;
-	}
-
-	// compute delay time in seconds
-	float delay = params[TIME_PARAM].value;
-	if (inputs[TIME_INPUT].active)
-		 delay += (inputs[TIME_INPUT].value * params[CVLEVEL_PARAM].value);
-
-	 // process the delay and grab the input gate level
-	delayLine.process(inputs[GATE_INPUT].value, delay);
-
-	float mix = 0.0f;
-	
-	// direct output
-	outputs[DIRECT_OUTPUT].value = boolToGate(delayLine.gateValue());
-	lights[DIRECT_LIGHT].setBrightnessSmooth(outputs[DIRECT_OUTPUT].value / 10.0f);
-	
-	// mix direct in if we want it
-	mix += (params[MIXDIR_PARAM].value * outputs[DIRECT_OUTPUT].value);
-	
-	for (int i = 0; i < 8; i++) {
-		outputs[DELAYED_OUTPUTS + i].value = boolToGate(delayLine.tapValue(taps[range][i]));
-		lights[DELAYED_LIGHTS + i].setBrightnessSmooth(outputs[DELAYED_OUTPUTS + i].value / 10.0f);
-		
-		// add this tap to the mix
-		mix += (params[MIXDEL_PARAMS + i].value * outputs[DELAYED_OUTPUTS + i].value);
-	}
-	
-	// finally output the mix 
-	outputs[MIX_OUTPUT].value = boolToGate(mix > 0.1f);
-	lights[MIX_LIGHT].setBrightnessSmooth(boolToLight(mix > 0.1f));
-}
 
 struct GateDelayMTWidget : ModuleWidget { 
-	GateDelayMTWidget(GateDelayMT *module) : ModuleWidget(module) {
+	GateDelayMTWidget(GateDelayMT *module) {
+		setModule(module);
 
-		setPanel(SVG::load(assetPlugin(plugin, "res/GateDelayMT.svg")));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/GateDelayMT.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		// parameters 
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1]), module, GateDelayMT::CVLEVEL_PARAM, -5.0f, 5.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]), module, GateDelayMT::TIME_PARAM, 0.0f, 10.0f, 5.0f));
-		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW2]), module, GateDelayMT::RANGE_PARAM, 0.0f, 2.0f, 2.0f));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1]), module, GateDelayMT::CVLEVEL_PARAM));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]), module, GateDelayMT::TIME_PARAM));
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW2]), module, GateDelayMT::RANGE_PARAM));
 		
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1]), module, GateDelayMT::TIME_INPUT));
@@ -119,7 +140,7 @@ struct GateDelayMTWidget : ModuleWidget {
 		// direct output
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, GateDelayMT::DIRECT_OUTPUT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW2]), module, GateDelayMT::DIRECT_LIGHT));
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, GateDelayMT::MIXDIR_PARAM, 0.0f, 1.0f, 1.0f));
+		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, GateDelayMT::MIXDIR_PARAM));
 			
 		// mix output
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2]), module, GateDelayMT::MIX_OUTPUT));
@@ -131,7 +152,7 @@ struct GateDelayMTWidget : ModuleWidget {
 			for (int j = 0; j < 4; j++) {
 				addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::DELAYED_OUTPUTS + k));
 				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::DELAYED_LIGHTS + k));
-				addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::MIXDEL_PARAMS + k, 0.0f, 1.0f, 1.0f));
+				addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::MIXDEL_PARAMS + k));
 			
 				k++;
 			}
@@ -139,4 +160,4 @@ struct GateDelayMTWidget : ModuleWidget {
 	}
 };
 
-Model *modelGateDelayMT = Model::create<GateDelayMT, GateDelayMTWidget>("Count Modula", "GateDelayMT", "Multi-tapped Gate Delay", DELAY_TAG);
+Model *modelGateDelayMT = createModel<GateDelayMT, GateDelayMTWidget>("GateDelayMT");

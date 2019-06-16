@@ -29,79 +29,73 @@ struct G2T : Module {
 	};
 
 	GateProcessor gate;
-	PulseGenerator pgStart;
-	PulseGenerator pgEnd;
+	dsp::PulseGenerator pgStart;
+	dsp::PulseGenerator pgEnd;
 
-	G2T() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	G2T() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 	
-	void step() override;
-
 	void onReset() override {
 		gate.reset();
 		pgStart.reset();
 		pgEnd.reset();
 	}
 	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+		
+		// process the input
+		gate.set(inputs[GATE_INPUT].getVoltage());
+
+			// leading edge - fire the start trigger
+		if (gate.leadingEdge())
+			pgStart.trigger(1e-3f);
+
+		// find leading/trailing edge
+		if (gate.trailingEdge())
+			pgEnd.trigger(1e-3f);
+		
+		// process the gate outputs
+		if (gate.high()) {
+			outputs[GATE_OUTPUT].setVoltage(10.0f); 
+			outputs[INV_OUTPUT].setVoltage(0.0);
+			lights[GATE_LIGHT].setBrightness(10.0f);
+		}
+		else {
+			outputs[GATE_OUTPUT].setVoltage(0.0f); 
+			outputs[INV_OUTPUT].setVoltage(10.0); 
+			lights[GATE_LIGHT].setBrightness(0.0f);
+		}
+		
+		// process the start trigger
+		if (pgStart.process(args.sampleTime)) {
+			outputs[START_OUTPUT].setVoltage(10.0f);
+			lights[START_LIGHT].setSmoothBrightness(10.0f, args.sampleTime);
+		}
+		else {
+			outputs[START_OUTPUT].setVoltage(0.0f);
+			lights[START_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
+		}
+
+		// process the end trigger
+		if (pgEnd.process(args.sampleTime)) {
+			outputs[END_OUTPUT].setVoltage(10.0f);
+			lights[END_LIGHT].setSmoothBrightness(10.0f, args.sampleTime);
+		}
+		else {
+			outputs[END_OUTPUT].setVoltage(0.0f);
+			lights[END_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
+		}
+	}
 };
 
-void G2T::step() {
-	
-	float sampleTime = engineGetSampleTime();
-	
-	// process the input
-	gate.set(inputs[GATE_INPUT].value);
-
-		// leading edge - fire the start trigger
-	if (gate.leadingEdge())
-		pgStart.trigger(1e-3f);
-
-	// find leading/trailing edge
-	if (gate.trailingEdge())
-		pgEnd.trigger(1e-3f);
-	
-	// process the gate outputs
-	if (gate.high()) {
-		outputs[GATE_OUTPUT].value = 10.0f; 
-		outputs[INV_OUTPUT].value = 0.0;
-		lights[GATE_INPUT].setBrightnessSmooth(10.0f);
-	}
-	else {
-		outputs[GATE_OUTPUT].value = 0.0f; 
-		outputs[INV_OUTPUT].value = 10.0; 
-		lights[GATE_INPUT].setBrightnessSmooth(0.0f);
-	}
-	
-	// process the start trigger
-	if (pgStart.process(sampleTime)) {
-		outputs[START_OUTPUT].value = 10.0f;
-		lights[START_LIGHT].setBrightnessSmooth(10.0f);
-	}
-	else {
-		outputs[START_OUTPUT].value = 0.0f;
-		lights[START_LIGHT].setBrightnessSmooth(0.0f);
-	}
-
-	// process the end trigger
-	if (pgEnd.process(sampleTime)) {
-		outputs[END_OUTPUT].value = 10.0f;
-		lights[END_LIGHT].setBrightnessSmooth(10.0f);
-	}
-	else {
-		outputs[END_OUTPUT].value = 0.0f;
-		lights[END_LIGHT].setBrightnessSmooth(0.0f);
-	}
-}
-
 struct G2TWidget : ModuleWidget {
-G2TWidget(G2T *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/G2T.svg")));
+G2TWidget(G2T *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/G2T.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1] + 12), module, G2T::GATE_INPUT));
@@ -119,8 +113,4 @@ G2TWidget(G2T *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelG2T = Model::create<G2T, G2TWidget>("Count Modula", "G2T", "Gate To Trigger", LOGIC_TAG);
+Model *modelG2T = createModel<G2T, G2TWidget>("G2T");

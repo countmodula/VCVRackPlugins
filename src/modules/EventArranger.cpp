@@ -5,7 +5,6 @@
 //	With a twist...
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
-#include "dsp/digital.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
 
@@ -53,11 +52,27 @@ struct EventArranger : Module {
 	GateProcessor gateReset;
 	GateProcessor gateRun;
 	
-	PulseGenerator  pgTrig;
+	dsp::PulseGenerator  pgTrig;
 	
-	EventArranger() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	
-	void step() override;
+	EventArranger() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		
+		// add the bit switches
+		int z;
+		char bitDesc[20];
+		for (int i = 0; i < 3; i++) {
+			
+			for (int j = 0; j < 5; j++) {
+				z = (i * 5) + j;
+				sprintf(bitDesc, "Bit %d Select", 14 - z);
+				configParam(BIT_PARAM + z, 0.0f, 2.0f, 1.0f, bitDesc);
+			}
+		}
+		
+		// buttons
+		configParam(RUN_PARAM, 0.0f, 1.0f, 1.0f, "Run");
+		configParam(RESET_PARAM, 0.0f, 1.0f, 0.0f, "Reset");
+	}
 	
 	void onReset() override {
 		count = 0;
@@ -71,120 +86,118 @@ struct EventArranger : Module {
 		pgTrig.reset();
 	}
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
-};
+	void process(const ProcessArgs &args) override {
 
-void EventArranger::step() {
-
-	// process the reset input/button
-	float reset = fmaxf(inputs[RESET_INPUT].normalize(0.0f), params[RESET_PARAM].value * 10.0f);
-	gateReset.set(reset);
-	
-	// process the run input/button -- jack takes precedence over the button
-	float run = inputs[RUN_INPUT].normalize(params[RUN_PARAM].value * 10.0f);
-	gateRun.set(run);
-	
-	// process the clock
-	float clock = inputs[CLOCK_INPUT].value; 
-	//stClock.process(rescale(clock, 0.1f, 2.f, 0.f, 1.f));
-	gateClock.set(clock);
-	
-	if (gateReset.high()) {
-		// hold the count at zero and stop it advancing until we release the reset
-		count = 0;
-	}
-	else {
-		if (gateRun.high())
-		{
-			// force a reset on positive edge of run
-			if (gateRun.leadingEdge())
-				count = 0;
-			
-			// increment count on positive clock edge
-			if (gateClock.leadingEdge()){
-				count++;
-				
-				if (count > maxnum)
-					count = 0;
-			}
-		}
-	}
-	
-	// reset the bit mask to the first bit on the left and 
-	long b = bitmask;
-
-	// 	start off with a clean slate for the output
-	bool gotbits = false;
-	out = true;
-	
-	// process each bit in turn
-	for (int i = 0; i < NUMBITS; i++) {
-		int switchValue = (int)(params[BIT_PARAM + i].value);
+		// process the reset input/button
+		float reset = fmaxf(inputs[RESET_INPUT].getNormalVoltage(0.0f), params[RESET_PARAM].getValue() * 10.0f);
+		gateReset.set(reset);
 		
-		// determine if current bit is set and act accordingly
-		if ((count & b) == b ) {
-			// current bit is high
-			lights[BIT_LIGHT + i].setBrightnessSmooth(1.0f);
-			
-			// is the switch high or any?
-			if (switchValue != 1) {
-				gotbits = true;
-				out &= (switchValue == 2);
-			}
+		// process the run input/button -- jack takes precedence over the button
+		float run = inputs[RUN_INPUT].getNormalVoltage(params[RUN_PARAM].getValue() * 10.0f);
+		gateRun.set(run);
+		
+		// process the clock
+		float clock = inputs[CLOCK_INPUT].getVoltage(); 
+		//stClock.process(rescale(clock, 0.1f, 2.f, 0.f, 1.f));
+		gateClock.set(clock);
+		
+		if (gateReset.high()) {
+			// hold the count at zero and stop it advancing until we release the reset
+			count = 0;
 		}
 		else {
-			// current bit is low
-			lights[BIT_LIGHT + i].setBrightnessSmooth(0.0f);
-			
-			// is the switch low or any?
-			if (switchValue != 1) {
-				gotbits = true;
-				out &= (switchValue == 0);
+			if (gateRun.high())
+			{
+				// force a reset on positive edge of run
+				if (gateRun.leadingEdge())
+					count = 0;
+				
+				// increment count on positive clock edge
+				if (gateClock.leadingEdge()){
+					count++;
+					
+					if (count > maxnum)
+						count = 0;
+				}
 			}
 		}
 		
-		// shift bit mask to the next bit
-		b = b >> 1;
-	}
-	
-	// ensure we have no output if all bits are set to don't care
-	out &= gotbits;
-	
-	// set the outputs appropriately
-	if (out) {
-		if (!currentGate) {
-			// gate transition from 0 to 1 - kick off the trigger
-			pgTrig.trigger(1e-3f);
+		// reset the bit mask to the first bit on the left and 
+		long b = bitmask;
+
+		// 	start off with a clean slate for the output
+		bool gotbits = false;
+		out = true;
+		
+		// process each bit in turn
+		for (int i = 0; i < NUMBITS; i++) {
+			int switchValue = (int)(params[BIT_PARAM + i].getValue());
+			
+			// determine if current bit is set and act accordingly
+			if ((count & b) == b ) {
+				// current bit is high
+				lights[BIT_LIGHT + i].setBrightness(1.0f);
+				
+				// is the switch high or any?
+				if (switchValue != 1) {
+					gotbits = true;
+					out &= (switchValue == 2);
+				}
+			}
+			else {
+				// current bit is low
+				lights[BIT_LIGHT + i].setBrightness(0.0f);
+				
+				// is the switch low or any?
+				if (switchValue != 1) {
+					gotbits = true;
+					out &= (switchValue == 0);
+				}
+			}
+			
+			// shift bit mask to the next bit
+			b = b >> 1;
 		}
 		
-		outputs[GATE_OUTPUT].value = 10.0f;
-		outputs[INV_OUTPUT].value = 0.0f;
-		lights[GATE_LIGHT].setBrightnessSmooth(1.0f);
-	}
-	else {
-		outputs[GATE_OUTPUT].value = 0.0f;
-		outputs[INV_OUTPUT].value = 10.0f;
-		lights[GATE_LIGHT].setBrightnessSmooth(0.0f);
-	}
-	
-	currentGate = out;
+		// ensure we have no output if all bits are set to don't care
+		out &= gotbits;
+		
+		// set the outputs appropriately
+		if (out) {
+			if (!currentGate) {
+				// gate transition from 0 to 1 - kick off the trigger
+				pgTrig.trigger(1e-3f);
+			}
+			
+			outputs[GATE_OUTPUT].setVoltage(10.0f);
+			outputs[INV_OUTPUT].setVoltage(0.0f);
+			lights[GATE_LIGHT].setBrightness(1.0f);
+		}
+		else {
+			outputs[GATE_OUTPUT].setVoltage(0.0f);
+			outputs[INV_OUTPUT].setVoltage(10.0f);
+			lights[GATE_LIGHT].setBrightness(0.0f);
+		}
+		
+		currentGate = out;
 
-	// set these last two here as they rely on the above logic
-	outputs[TRIGGER_OUTPUT].value = boolToGate(pgTrig.process(engineGetSampleTime()));
-	lights[RUN_LIGHT].setBrightnessSmooth(gateRun.light());
-}
+		// set these last two here as they rely on the above logic
+		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(pgTrig.process(args.sampleTime)));
+		lights[RUN_LIGHT].setBrightness(gateRun.light());
+	}
+
+};
+
 
 struct EventArrangerWidget : ModuleWidget {
-	EventArrangerWidget(EventArranger *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/EventArranger.svg")));
+	EventArrangerWidget(EventArranger *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/EventArranger.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		// custom row positions for this module
 		const int STD_ROWS[8] = {
@@ -202,13 +215,13 @@ struct EventArrangerWidget : ModuleWidget {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 5; j++) {
 				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + (j * 2)], STD_ROWS[STD_ROW1  + (i * 2)]), module, EventArranger::BIT_LIGHT + ((i * 5) + j)));
-				addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + (j * 2)], STD_ROWS[STD_ROW2  + (i * 2)]), module, EventArranger::BIT_PARAM + ((i * 5) + j), 0.0f, 2.0f, 1.0f));
+				addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + (j * 2)], STD_ROWS[STD_ROW2  + (i * 2)]), module, EventArranger::BIT_PARAM + ((i * 5) + j)));
 			}
 		}
 		
 		// buttons
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS[STD_ROW7]), module, EventArranger::RUN_PARAM, 0.0f, 1.0f, 1.0f));
-		addParam(createParamCentered<CountModulaPBSwitchMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS[STD_ROW7]), module, EventArranger::RESET_PARAM, 0.0f, 1.0f, 0.0f));
+		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS[STD_ROW7]), module, EventArranger::RUN_PARAM));
+		addParam(createParamCentered<CountModulaPBSwitchMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS[STD_ROW7]), module, EventArranger::RESET_PARAM));
 
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS[STD_ROW8]), module, EventArranger::CLOCK_INPUT));
@@ -227,8 +240,4 @@ struct EventArrangerWidget : ModuleWidget {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelEventArranger = Model::create<EventArranger, EventArrangerWidget>("Count Modula", "EventArranger", "Event Arranger", SEQUENCER_TAG, CLOCK_TAG);
+Model *modelEventArranger = createModel<EventArranger, EventArrangerWidget>("EventArranger");
