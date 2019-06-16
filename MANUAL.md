@@ -195,7 +195,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 <table>
 	<tr valign="top">
 		<td width=280>
-			<img src="./img/MixerMixer.png">
+			<img src="./img/Mixer.png">
 		</td> 
 		<td>
 			A basic 4 input utility mixer with output level control, overload indicator, inverted output and selectable bipolar/unipolar operation. The first input channel acts as a CV source if no cable is plugged into the jack.
