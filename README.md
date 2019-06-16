@@ -25,7 +25,7 @@ Follow Count Modula on facebook:
 <ul>
 <li><a href="./MANUAL.md#ASR">Analogue Shift Register</a>
 <li><a href="./MANUAL.md#Attenuator">Attenuator</a>
-<li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a> *New features in v1.0
+<li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a> *New features in v1.0.0
 <li><a href="./MANUAL.md#BooleanLogic">Boolean Logic Modules</a>
 	<ul>
 		<li>AND
@@ -42,7 +42,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#ManualGate">Manual Gate</a>
 <li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
 <li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a>
-<li><a href="./MANUAL.md#Mixer">Mixer</a> * New in v1.0
+<li><a href="./MANUAL.md#Mixer">Mixer</a> * New in v1.0.0
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
@@ -69,6 +69,11 @@ Follow Count Modula on facebook:
 		<th align="center">Release</th>
 		<th align="left">Notes</th>
 	</tr>
+	<td align="center">16-Jun-2019</td>
+	<td align="center">v1.0.0</td>
+	<td align="left">
+		Port from Rack v0.6 to v1.0
+	</td>
 	<tr valign="top">
 		<td align="center">09-Jun-2019</td>
 		<td align="center">v0.6.2 and v0.6.3</td>
