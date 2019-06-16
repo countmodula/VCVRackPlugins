@@ -62,6 +62,10 @@ Follow Count Modula on facebook:
 	</ul>
 </ul>
 
+<h4>Still running Rack v0.6?</h4>
+Version v0.6.3 of the Count Modula suite of modules can be found here:
+<a href="https://github.com/countmodula/VCVRackPlugins/tree/V0.6">https://github.com/countmodula/VCVRackPlugins/tree/V0.6</a>
+
 <h3>Release Log</h3>
 <table>
 	<tr valign="top">
