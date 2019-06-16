@@ -3,11 +3,10 @@
 //	Schmitt Trigger controlled logical inverter
 //----------------------------------------------------------------------------
 #pragma once
-#include "dsp/digital.hpp"
 
 struct Inverter {
-	SchmittTrigger i;
-	SchmittTrigger e;
+	dsp::SchmittTrigger i;
+	dsp::SchmittTrigger e;
 	
 	bool isHigh = true;
 	bool isEnabled = false;

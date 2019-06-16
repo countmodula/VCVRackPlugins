@@ -37,7 +37,7 @@ struct GateDelayLine {
 		float timePerTick = delay / 8192.0f;
 		
 		// calculate elapsed time since last tick
-		time += engineGetSampleTime();
+		time += APP->engine->getSampleTime();
 		
 		// if we've exceed the required time, clock the delay line
 		if (time >= timePerTick) {

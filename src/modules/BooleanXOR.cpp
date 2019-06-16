@@ -67,42 +67,38 @@ struct BooleanXOR : Module {
 	XorGate gate;
 	Inverter inverter;
 	
-	BooleanXOR() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	BooleanXOR() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 	
-	void step() override;
-
 	void onReset() override {
 		gate.reset();
 		inverter.reset();
 	}
 	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+		// grab and normalise the inputs
+		float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
+		float inB = inputs[B_INPUT].getNormalVoltage(0.0f);
+		float inC = inputs[C_INPUT].getNormalVoltage(0.0f);
+		float inD = inputs[D_INPUT].getNormalVoltage(0.0f);
+		
+		//perform the logic
+		float out =  gate.process(inA, inB, inC, inD);
+		outputs[XOR_OUTPUT].setVoltage(out);
+		
+		float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
+		outputs[INV_OUTPUT].setVoltage(notOut);
+	}
 };
 
-void BooleanXOR::step() {
-	// grab and normalise the inputs
-	float inA = inputs[A_INPUT].normalize(0.0f);
-	float inB = inputs[B_INPUT].normalize(0.0f);
-	float inC = inputs[C_INPUT].normalize(0.0f);
-	float inD = inputs[D_INPUT].normalize(0.0f);
-	
-	//perform the logic
-	float out =  gate.process(inA, inB, inC, inD);
-	outputs[XOR_OUTPUT].value = out;
-	
-	float notOut = inverter.process(inputs[I_INPUT].normalize(out));
-	outputs[INV_OUTPUT].value = notOut;
-}
-
 struct BooleanXORWidget : ModuleWidget {
-BooleanXORWidget(BooleanXOR *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/BooleanXOR.svg")));
+BooleanXORWidget(BooleanXOR *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanXOR.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		// clock and reset input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW1]),module, BooleanXOR::A_INPUT));
@@ -117,8 +113,4 @@ BooleanXORWidget(BooleanXOR *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelBooleanXOR = Model::create<BooleanXOR, BooleanXORWidget>("Count Modula", "BooleanXOR", "Logical XOR Gate", LOGIC_TAG);
+Model *modelBooleanXOR = createModel<BooleanXOR, BooleanXORWidget>("BooleanXOR");

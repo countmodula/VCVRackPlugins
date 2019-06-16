@@ -1,11 +1,9 @@
 #include "CountModula.hpp"
 
-Plugin *plugin;
+Plugin *pluginInstance;
 
 void init(Plugin *p) {
-	plugin = p;
-	p->slug = TOSTRING(SLUG);
-	p->version = TOSTRING(VERSION);
+	pluginInstance = p;
 
 	// Add all Models defined throughout the plugin
 	p->addModel(modelAnalogueShiftRegister);
@@ -25,6 +23,7 @@ void init(Plugin *p) {
 	p->addModel(modelManualGate);
 	p->addModel(modelMatrixMixer);
 	p->addModel(modelMinimusMaximus);
+	p->addModel(modelMixer);
 	p->addModel(modelMorphShaper);
 	p->addModel(modelMultiplexer);
 	p->addModel(modelMuteIple);
@@ -38,10 +37,6 @@ void init(Plugin *p) {
 	p->addModel(modelVCPolarizer);
 	p->addModel(modelVoltageControlledSwitch);
 	p->addModel(modelVoltageInverter);
-
-#ifdef DEV	
-	#include "dev/addModel.hpp"
-#endif
 
 	// Any other plugin initialization may go here.
 	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.

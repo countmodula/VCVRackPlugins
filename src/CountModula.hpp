@@ -1,8 +1,9 @@
 #include "rack.hpp"
 using namespace rack;
 
+
 // Forward-declare the Plugin
-extern Plugin *plugin;
+extern Plugin *pluginInstance;
 
 // Forward-declare each Model, defined in each module source file
 extern Model *modelComparator;
@@ -35,10 +36,9 @@ extern Model *modelBooleanVCNOT;
 extern Model *modelBurstGenerator;
 extern Model *modelTriggerSequencer16;
 extern Model *modelTriggerSequencer8;
-
-#ifdef DEV
-#include "dev/forwardDec.hpp"
-#endif
+extern Model *modelMixer;
 
 #include "components/CountModulaComponents.hpp"
 #include "components/StdComponentPositions.hpp"
+
+

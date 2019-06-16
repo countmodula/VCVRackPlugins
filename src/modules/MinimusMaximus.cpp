@@ -39,78 +39,85 @@ struct MinimusMaximus : Module {
 		NUM_LIGHTS
 	};
 
-	MinimusMaximus() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
-
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
-};
-
-void MinimusMaximus::step() {
-	
-	float tot = 0.0f;
-	int count = 0;
-	float min = 99999.0f;
-	float max = -99999.0f;
-	float f = 0.0f;
-	
-	// calculate max/min amounts and requisites for average
-	for (int i = 0; i < 4; i++) {
-		bool useBias = (i == 3 && params[BIAS_ON_PARAM].value > 0.5f);
-		
-		if (inputs[A_INPUT+i].active || useBias) {
-			// grab the value taking the bias setting of the last input into consideration
-			f = useBias ? inputs[A_INPUT+i].normalize(params[BIAS_PARAM].value) : inputs[A_INPUT+i].value;
-			
-			count++;
-			tot += f;
-			
-			if (f > max)
-				max = f;
-			
-			if (f < min)
-				min = f;
-		}
-	}
-	
-	// determine the comparator output levels
-	float offset = (params[MODE_PARAM].value > 0.5f ? 5.0f : 0.0f);
-		
-	// cater for possibility of no inputs
-	if (count > 0)
-		outputs[AVG_OUTPUT].value = tot /(float)(count);
-	else {
-		// no inputs - set outputs to zero
-		outputs[AVG_OUTPUT].value = 0.0f;
-		max = min = 0.0f;
-	}
-	
-	// set the min/max outputs
-	outputs[MIN_OUTPUT].value = min;
-	outputs[MAX_OUTPUT].value = max;
-
-	// set the logic outputs
-	for (int i = 0; i < 4; i++) {
-		outputs[A_MIN_OUTPUT + i].value = boolToGate(inputs[A_INPUT+i].active && (inputs[A_INPUT+i].value == min)) - offset;
-		outputs[A_MAX_OUTPUT + i].value = boolToGate(inputs[A_INPUT+i].active && (inputs[A_INPUT+i].value == max)) - offset;
-	}
-}
-
-struct MinimusMaximusWidget : ModuleWidget {
-MinimusMaximusWidget(MinimusMaximus *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/MinimusMaximus.svg")));
-
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+	MinimusMaximus() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		// controls
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_PARAM, -5.0f, 5.0f, 0.0f));
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::MODE_PARAM, 0.0f, 1.0f, 0.0f));
+		configParam(BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f, "Switch bias on/off");
+		configParam(BIAS_PARAM, -5.0f, 5.0f, 0.0f, "Bias Amount");
+		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output Mode (Uni/Bipolar)");
+	}
+
+	void process(const ProcessArgs &args) override {
+	
+		float tot = 0.0f;
+		int count = 0;
+		float min = 99999.0f;
+		float max = -99999.0f;
+		float f = 0.0f;
+		
+		// calculate max/min amounts and requisites for average
+		for (int i = 0; i < 4; i++) {
+			bool useBias = (i == 3 && params[BIAS_ON_PARAM].getValue() > 0.5f);
+			
+			if (inputs[A_INPUT+i].isConnected() || useBias) {
+				// grab the value taking the bias setting of the last input into consideration
+				f = useBias ? inputs[A_INPUT+i].getNormalVoltage(params[BIAS_PARAM].getValue()) : inputs[A_INPUT+i].getVoltage();
+				
+				count++;
+				tot += f;
+				
+				if (f > max)
+					max = f;
+				
+				if (f < min)
+					min = f;
+			}
+		}
+		
+		// determine the comparator output levels
+		bool isGate = (params[MODE_PARAM].getValue() < 0.5f);
+		
+		// cater for possibility of no inputs
+		if (count > 0)
+			outputs[AVG_OUTPUT].setVoltage(tot /(float)(count));
+		else {
+			// no inputs - set outputs to zero
+			outputs[AVG_OUTPUT].setVoltage(0.0f);
+			max = min = 0.0f;
+		}
+		
+		// set the min/max outputs
+		outputs[MIN_OUTPUT].setVoltage(min);
+		outputs[MAX_OUTPUT].setVoltage(max);
+
+		// set the logic outputs
+		bool isMin, isMax;
+		for (int i = 0; i < 4; i++) {
+			isMin = (inputs[A_INPUT + i].isConnected() && (inputs[A_INPUT + i].getVoltage() == min));
+			isMax = (inputs[A_INPUT + i].isConnected() && (inputs[A_INPUT + i].getVoltage() == max));
+			
+			outputs[A_MIN_OUTPUT + i].setVoltage(isGate ? boolToGate(isMin) : boolToAudio(isMin));
+			outputs[A_MAX_OUTPUT + i].setVoltage(isGate ? boolToGate(isMax) : boolToAudio(isMax));
+		}
+	}
+
+};
+
+struct MinimusMaximusWidget : ModuleWidget {
+MinimusMaximusWidget(MinimusMaximus *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MinimusMaximus.svg")));
+
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+
+		// controls
+		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_ON_PARAM));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_PARAM));
+		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::MODE_PARAM));
 		
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, MinimusMaximus::A_INPUT));
@@ -135,8 +142,4 @@ MinimusMaximusWidget(MinimusMaximus *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelMinimusMaximus = Model::create<MinimusMaximus, MinimusMaximusWidget>("Count Modula", "MinimusMaximus", "Minimus Maximus", UTILITY_TAG);
+Model *modelMinimusMaximus = createModel<MinimusMaximus, MinimusMaximusWidget>("MinimusMaximus");

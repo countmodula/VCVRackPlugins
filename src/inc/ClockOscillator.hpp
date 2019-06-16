@@ -3,14 +3,13 @@
 //	A version of the VCV Rack Fundamental LFO offering Square/Pulse only
 //----------------------------------------------------------------------------
 #pragma once
-#include "dsp/digital.hpp"
 
 struct ClockOscillator {
 	float phase = 0.0f;
 	float pw = 0.5f;
 	float freq = 1.0f;
 
-	SchmittTrigger resetTrigger;
+	dsp::SchmittTrigger resetTrigger;
 
 	ClockOscillator() {}
 	

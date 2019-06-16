@@ -27,30 +27,27 @@ struct VoltageInverter : Module {
 	};
 	
 	float out = 0.0f;
-	VoltageInverter() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
+	VoltageInverter() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+		out = 0.0f;
+		for (int i = 0; i < 4; i++) {
+			// grab output value normalised to previous input value
+			out = inputs[A_INPUT + i].getNormalVoltage(out);
+			outputs[A_OUTPUT + i].setVoltage(-out);
+		}
+	}
 };
 
-void VoltageInverter::step() {
-	out = 0.0f;
-	for (int i = 0; i < 4; i++) {
-		// grab output value normalised to previous input value
-		out = inputs[A_INPUT + i].normalize(out);
-		outputs[A_OUTPUT + i].value = -out;
-	}
-}
-
 struct VoltageInverterWidget : ModuleWidget {
-VoltageInverterWidget(VoltageInverter *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/VoltageInverter.svg")));
+	VoltageInverterWidget(VoltageInverter *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VoltageInverter.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		for (int i = 0; i < 4; i++) {
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1 + (i * 2)]), module, VoltageInverter::A_INPUT + i));
@@ -59,8 +56,4 @@ VoltageInverterWidget(VoltageInverter *module) : ModuleWidget(module) {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelVoltageInverter = Model::create<VoltageInverter, VoltageInverterWidget>("Count Modula", "VoltageInverter", "Voltage Inverter", SAMPLE_AND_HOLD_TAG, SEQUENCER_TAG);
+Model *modelVoltageInverter = createModel<VoltageInverter, VoltageInverterWidget>("VoltageInverter");

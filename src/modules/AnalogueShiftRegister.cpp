@@ -80,49 +80,45 @@ struct AnalogueShiftRegister : Module {
 	ASR a {4};
 	ASR b {4};
 	
-	AnalogueShiftRegister() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
-	
+	AnalogueShiftRegister() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 	
 	void onReset() override {
 		a.reset();
-		a.reset();
+		b.reset();
 	}
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+
+		float in2 = inputs[CH2_SIGNAL_INPUT].getNormalVoltage(a.lastStep());
+		float in1 = inputs[CH1_SIGNAL_INPUT].getVoltage();
+		
+		float clock1 = inputs[CH1_CLOCK_INPUT].getVoltage();
+		float clock2 = inputs[CH2_CLOCK_INPUT].getNormalVoltage(clock1);
+		
+		a.process(clock1, in1);
+		b.process(clock2, in2);
+		
+		outputs[CH1_A_OUTPUT].setVoltage(a.out[0]);
+		outputs[CH1_B_OUTPUT].setVoltage(a.out[1]);
+		outputs[CH1_C_OUTPUT].setVoltage(a.out[2]);
+		outputs[CH1_D_OUTPUT].setVoltage(a.out[3]);
+		
+		outputs[CH2_A_OUTPUT].setVoltage(b.out[0]);
+		outputs[CH2_B_OUTPUT].setVoltage(b.out[1]);
+		outputs[CH2_C_OUTPUT].setVoltage(b.out[2]);
+		outputs[CH2_D_OUTPUT].setVoltage(b.out[3]);
+	}	
 };
 
-void AnalogueShiftRegister::step() {
-
-	float in2 = inputs[CH2_SIGNAL_INPUT].normalize(a.lastStep());
-	float in1 = inputs[CH1_SIGNAL_INPUT].value;
-	
-	float clock1 = inputs[CH1_CLOCK_INPUT].value;
-	float clock2 = inputs[CH2_CLOCK_INPUT].normalize(clock1);
-	
-	a.process(clock1, in1);
-	b.process(clock2, in2);
-	
-	outputs[CH1_A_OUTPUT].value = a.out[0];
-	outputs[CH1_B_OUTPUT].value = a.out[1];
-	outputs[CH1_C_OUTPUT].value = a.out[2];
-	outputs[CH1_D_OUTPUT].value = a.out[3];
-	
-	outputs[CH2_A_OUTPUT].value = b.out[0];
-	outputs[CH2_B_OUTPUT].value = b.out[1];
-	outputs[CH2_C_OUTPUT].value = b.out[2];
-	outputs[CH2_D_OUTPUT].value = b.out[3];
-}
-
 struct AnalogueShiftRegisterWidget : ModuleWidget {
-	AnalogueShiftRegisterWidget(AnalogueShiftRegister *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/AnalogueShiftRegister.svg")));
+	AnalogueShiftRegisterWidget(AnalogueShiftRegister *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/AnalogueShiftRegister.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		for (int i = 0; i < 2; i++) {
 			// clock and cv inputs
@@ -137,8 +133,4 @@ struct AnalogueShiftRegisterWidget : ModuleWidget {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelAnalogueShiftRegister = Model::create<AnalogueShiftRegister, AnalogueShiftRegisterWidget>("Count Modula", "AnalogueShiftRegister", "Analogue Shift Register", SAMPLE_AND_HOLD_TAG, SEQUENCER_TAG);
+Model *modelAnalogueShiftRegister = createModel<AnalogueShiftRegister, AnalogueShiftRegisterWidget>("AnalogueShiftRegister");

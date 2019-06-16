@@ -3,11 +3,10 @@
 //	A standardised gate input processor
 //----------------------------------------------------------------------------
 #pragma once
-#include "dsp/digital.hpp"
 
 class GateProcessor {
 	private:
-		SchmittTrigger st;
+		dsp::SchmittTrigger st;
 		bool prevState = false;
 		bool currentState = false;
 		

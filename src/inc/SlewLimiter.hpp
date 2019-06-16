@@ -5,7 +5,7 @@
 //----------------------------------------------------------------------------
 #pragma once
 
-struct SlewLimiter {
+struct LagProcessor {
 
 	float out = 0.0f;
 
@@ -22,14 +22,14 @@ struct SlewLimiter {
 		// Rise
 		if (in > out) {
 			float slew = slewMax * powf(slewMin / slewMax, rise);
-			out += slew * crossfade(1.0f, shapeScale * (in - out), shape) * engineGetSampleTime();
+			out += slew * crossfade(1.0f, shapeScale * (in - out), shape) * APP->engine->getSampleTime();
 			if (out > in)
 				out = in;
 		}
 		// Fall
 		else if (in < out) {
 			float slew = slewMax * powf(slewMin / slewMax, fall);
-			out -= slew * crossfade(1.0f, shapeScale * (out - in), shape) * engineGetSampleTime();
+			out -= slew * crossfade(1.0f, shapeScale * (out - in), shape) * APP->engine->getSampleTime();
 			if (out < in)
 				out = in;
 		}

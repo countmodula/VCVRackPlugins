@@ -7,7 +7,6 @@
 #include "../inc/Inverter.hpp"
 #include "../inc/GateProcessor.hpp"
 
-
 struct BooleanVCNOT : Module {
 	enum ParamIds {
 		ENUMS(ENABLE_PARAM, 2),
@@ -28,35 +27,32 @@ struct BooleanVCNOT : Module {
 
 	Inverter inverter[2];
 	
-	BooleanVCNOT() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	BooleanVCNOT() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 	
-	void step() override;
-
 	void onReset() override {
 		for (int i = 0; i < 2; i++)
 			inverter[i].reset();
 	}
 	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+		//perform the logic
+		for (int i = 0; i < 2; i++) {
+			float out =  inverter[i].process(inputs[LOGIC_INPUT + i].getVoltage(), inputs[ENABLE_INPUT + i].getNormalVoltage(10.0f));
+			outputs[INV_OUTPUT + i].setVoltage(out);
+		}
+	}	
+	
 };
 
-void BooleanVCNOT::step() {
-	//perform the logic
-	for (int i = 0; i < 2; i++) {
-		float out =  inverter[i].process(inputs[LOGIC_INPUT + i].value, inputs[ENABLE_INPUT + i].normalize(10.0f));
-		outputs[INV_OUTPUT + i].value = out;
-	}
-}
-
 struct BooleanVCNOTWidget : ModuleWidget {
-	BooleanVCNOTWidget(BooleanVCNOT *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/BooleanVCNOT.svg")));
+	BooleanVCNOTWidget(BooleanVCNOT *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanVCNOT.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		for (int i = 0; i < 2; i++) {
 			// logic and enable inputs
@@ -69,8 +65,4 @@ struct BooleanVCNOTWidget : ModuleWidget {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelBooleanVCNOT = Model::create<BooleanVCNOT, BooleanVCNOTWidget>("Count Modula", "BooleanVCNOT", "Logical VC Inverter", LOGIC_TAG);
+Model *modelBooleanVCNOT = createModel<BooleanVCNOT, BooleanVCNOTWidget>("BooleanVCNOT");

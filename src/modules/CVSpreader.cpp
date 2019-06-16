@@ -34,53 +34,54 @@ struct CVSpreader : Module {
 		NUM_LIGHTS
 	};
 
-	CVSpreader() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
+	CVSpreader() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+		configParam(BASE_PARAM, -1.0f, 1.0f, 0.0f, "Base CV Level");
+		configParam(SPREAD_PARAM, -1.0f, 1.0f, 0.0f, "Spread CV Level");
+		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Odd/Even Mode Select");
+	}
+
+	void process(const ProcessArgs &args) override {
+
+		float base = inputs[BASE_INPUT].getNormalVoltage(10.0f) * params[BASE_PARAM].getValue();
+		float spread = inputs[SPREAD_INPUT].getNormalVoltage(5.0f) * params[SPREAD_PARAM].getValue();
+		float even = (params[MODE_PARAM].getValue() < 0.5f ? 0.0f : 1.0f);
+		
+		float pos = base + spread;
+		float neg = base - spread;
+		float diff = 2.0f * spread;
+		float div = diff / (9.0f + (even ? 1.0f : 0.0f));
+
+		// output F is always the base value
+		outputs[F_OUTPUT].setVoltage(base);
+		
+		for (int i = 0; i < 5; i++) {
+			// pos outputs
+			outputs[E_OUTPUT - i].setVoltage(clamp(pos - ((float)i * div), -10.0f, 10.0f));
+			
+			// neg outputs
+			outputs[K_OUTPUT - i].setVoltage(clamp(neg + ((float)i * div), -10.0f, 10.0f));
+		}
+	}		
 };
 
-void CVSpreader::step() {
-
-	float base = inputs[BASE_INPUT].normalize(10.0f) * params[BASE_PARAM].value;
-	float spread = inputs[SPREAD_INPUT].normalize(5.0f) * params[SPREAD_PARAM].value;
-	float even = (params[MODE_PARAM].value < 0.5f ? 0.0f : 1.0f);
-	
-	float pos = base + spread;
-	float neg = base - spread;
-	float diff = 2.0f * spread;
-	float div = diff / (9.0f + (even ? 1.0f : 0.0f));
-
-	// output F is always the base value
-	outputs[F_OUTPUT].value = base;
-	
-	for (int i = 0; i < 5; i++) {
-		// pos outputs
-		outputs[E_OUTPUT - i].value = clamp(pos - ((float)i * div), -10.0f, 10.0f);
-		
-		// neg outputs
-		outputs[K_OUTPUT - i].value = clamp(neg + ((float)i * div), -10.0f, 10.0f);
- 	}
-}
-
 struct CVSpreaderWidget : ModuleWidget {
-	CVSpreaderWidget(CVSpreader *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/CVSpreader.svg")));
+	CVSpreaderWidget(CVSpreader *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/CVSpreader.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		// CV knobs
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, CVSpreader::BASE_PARAM, -1.0f, 1.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, CVSpreader::SPREAD_PARAM, -1.0f, 1.0f, 0.0f));
+		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, CVSpreader::BASE_PARAM));
+		addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, CVSpreader::SPREAD_PARAM));
 	
 		// odd/even switch
-		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS6(STD_ROW5)), module, CVSpreader::MODE_PARAM, 0.0f, 1.0f, 1.0f));
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS6(STD_ROW5)), module, CVSpreader::MODE_PARAM));
 		
 		// base and spread input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, CVSpreader::BASE_INPUT));
@@ -105,8 +106,4 @@ struct CVSpreaderWidget : ModuleWidget {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelCVSpreader = Model::create<CVSpreader, CVSpreaderWidget>("Count Modula", "CVSpreader", "CV Spreader", UTILITY_TAG);
+Model *modelCVSpreader = createModel<CVSpreader, CVSpreaderWidget>("CVSpreader");

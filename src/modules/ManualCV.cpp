@@ -27,34 +27,35 @@ struct ManualCV : Module {
 
 	float outVal;
 	
-	ManualCV() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	ManualCV() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		
+		configParam(CV1COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse Value");
+		configParam(CV1FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine Value");
+		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse Value");
+		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine Value");
+	}
 	
-	void step() override;
-	
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+		outputs[CV1_OUTPUT].setVoltage(clamp(params[CV1COARSE_PARAM].getValue() + params[CV1FINE_PARAM].getValue(), -10.0f, 10.0f));
+		outputs[CV2_OUTPUT].setVoltage(clamp(params[CV2COARSE_PARAM].getValue() + params[CV2FINE_PARAM].getValue(), -10.0f, 10.0f));
+	}
 };
 
-void ManualCV::step() {
-	outputs[CV1_OUTPUT].value = clamp(params[CV1COARSE_PARAM].value + params[CV1FINE_PARAM].value, -10.0f, 10.0f);
-	outputs[CV2_OUTPUT].value = clamp(params[CV2COARSE_PARAM].value + params[CV2FINE_PARAM].value, -10.0f, 10.0f);
-}
-
 struct ManualCVWidget : ModuleWidget {
-	ManualCVWidget(ManualCV *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/ManualCV.svg")));
+	ManualCVWidget(ManualCV *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ManualCV.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		// knobs
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, ManualCV::CV1COARSE_PARAM, -10.0f, 10.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, ManualCV::CV1FINE_PARAM, -0.5f, 0.5f, 0.0f));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, ManualCV::CV1COARSE_PARAM));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, ManualCV::CV1FINE_PARAM));
 
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, ManualCV::CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f));
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, ManualCV::CV2FINE_PARAM, -0.5f, 0.5f, 0.0f));
+		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, ManualCV::CV2COARSE_PARAM));
+		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, ManualCV::CV2FINE_PARAM));
 		
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, ManualCV::CV1_OUTPUT));	
@@ -62,8 +63,4 @@ struct ManualCVWidget : ModuleWidget {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelManualCV = Model::create<ManualCV, ManualCVWidget>("Count Modula", "ManualCV", "Manual CV", UTILITY_TAG);
+Model *modelManualCV = createModel<ManualCV, ManualCVWidget>("ManualCV");

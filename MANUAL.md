@@ -1,6 +1,6 @@
 ![alt text](./img/CountModulaLogo.png "Count Modula")
 <h1>Count Modula</h1>
-<h2>Plugin modules for VCV Rack by Adam Verspaget (Count Modula)</h2>
+<h2>Plugin modules for VCV Rack v1.0 by Adam Verspaget (Count Modula)</h2>
 <hr/>
 Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
 <p>&nbsp;</p>
@@ -47,6 +47,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 				From v0.6.2, the reset and run functions have been split into separate jack with the run functioning as outlined above however with a cable plugged into the rest input, it will not reset the sequencer on the positive edge of the gate.
 			</p>
 		</td>
+		* new in v1.0: A new S&H input has been added that, when a cable is connected, causes the Scale functionality to be bypassed and uses a sampled voltage (taken at the leading clock edge) as the base for the division knobs. Note that each knob will equate to 1/6th of the input voltage when at full scale.
 	</tr>
 </table>
 
@@ -174,7 +175,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 			<img src="./img/MatrixMixer.png">
 		</td> 
 		<td>
-			A 4 x 4 matrix allowing up to 4 input signals to be independently mixed to 4 different outputs . Inputs down the left hand side can be mixed to the outputs at the bottom via the columns of knobs. A main level control is provided for each output along with an overload indicator. The knobs on each output channel can be set to attenuate or attenuvert using the associated Unipolar/Bipolar switch next to the output jack. The first input channel (top row) acts as a CV source if no cable is plugged into the jack.
+			A 4 x 4 matrix mixer allowing up to 4 input signals to be independently mixed to 4 different outputs . Inputs down the left hand side can be mixed to the outputs at the bottom via the columns of knobs. A main level control is provided for each output along with an overload indicator. The knobs on each output channel can be set to attenuate or attenuvert using the associated Unipolar/Bipolar switch next to the output jack. The first input channel (top row) acts as a CV source if no cable is plugged into the jack.
 		</td>
 	</tr>
 </table>
@@ -185,9 +186,23 @@ Whilst these modules are offered free of charge, if you like them or are using t
 <tr valign="top">
 <td width=220><img src="./img/MinimusMaximus.png"></td> 
 <td>
-A signal processor that determines and outputs the minimum, maximum and mean (average) of up to 4 input signals along with gate signals (switchable betwen unipolar and bipolar values) for each input channel indicating that the associated input is equal to either the minimum or maximum value. The Bias controls allow the 4th channel to be set manually. When engaged, the 4th Channel input is ignored and the value of the Bias knob is used instead.</td>
+A signal processor that determines and outputs the minimum, maximum and mean (average) of up to 4 input signals along with gate signals (switchable between unipolar and bipolar values) for each input channel indicating that the associated input is equal to either the minimum or maximum value. The Bias controls allow the 4th channel to be set manually. When engaged, the 4th Channel input is ignored and the value of the Bias knob is used instead.</td>
 </tr>
 </table>
+
+<a id="Mixer">
+<h3>Mixer</h3>
+<table>
+	<tr valign="top">
+		<td width=280>
+			<img src="./img/Mixer.png">
+		</td> 
+		<td>
+			A basic 4 input utility mixer with output level control, overload indicator, inverted output and selectable bipolar/unipolar operation. The first input channel acts as a CV source if no cable is plugged into the jack.
+		</td>
+	</tr>
+</table>
+
 
 <a id="MorphShaper">
 <h3>Morph Shaper</h3>

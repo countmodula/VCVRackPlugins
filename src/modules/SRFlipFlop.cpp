@@ -79,41 +79,38 @@ struct SRFlipFlop : Module {
 
 	SRLatch flipflop[2];
 	
-	SRFlipFlop() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
+	SRFlipFlop() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+	}
 	
 	void onReset() override {
 		flipflop[0].reset();
 		flipflop[1].reset();
 	}
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
+	void process(const ProcessArgs &args) override {
+		
+		for (int i = 0; i < 2; i++) {
+			//perform the latch logic with the given inputs
+			flipflop[i].process(inputs[S_INPUT + i].getVoltage(), inputs[R_INPUT + i].getVoltage(), inputs[ENABLE_INPUT + i].getNormalVoltage(10.0f));
+			
+			// set outputs according to latch states
+			outputs[Q_OUTPUT + i].setVoltage(flipflop[i].Q());
+			lights[STATE_LIGHT + i].setSmoothBrightness(flipflop[i].Q(), args.sampleTime);
+			outputs[NQ_OUTPUT + i].setVoltage(flipflop[i].NQ());
+		}
+	}
 };
 
-void SRFlipFlop::step() {
-	
-	for (int i = 0; i < 2; i++) {
-		//perform the latch logic with the given inputs
-		flipflop[i].process(inputs[S_INPUT + i].value, inputs[R_INPUT + i].value, inputs[ENABLE_INPUT + i].normalize(10.0f));
-		
-		// set outputs according to latch states
-		outputs[Q_OUTPUT + i].value = flipflop[i].Q();
-		lights[STATE_LIGHT + i].setBrightnessSmooth(flipflop[i].Q());
-		outputs[NQ_OUTPUT + i].value = flipflop[i].NQ();
-	}
-}
-
 struct SRFlipFlopWidget : ModuleWidget {
-	SRFlipFlopWidget(SRFlipFlop *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/SRFlipFlop.svg")));
+	SRFlipFlopWidget(SRFlipFlop *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SRFlipFlop.svg")));
 
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(Widget::create<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(Widget::create<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		for (int i = 0; i < 2; i++) {
 			int j = i * 3;
@@ -132,8 +129,4 @@ struct SRFlipFlopWidget : ModuleWidget {
 	}
 };
 
-// Specify the Module and ModuleWidget subclass, human-readable
-// author name for categorization per plugin, module slug (should never
-// change), human-readable module name, and any number of tags
-// (found in `include/tags.hpp`) separated by commas.
-Model *modelSRFlipFlop = Model::create<SRFlipFlop, SRFlipFlopWidget>("Count Modula", "SRFlipFlop", "SR Flip Flop", LOGIC_TAG);
+Model *modelSRFlipFlop = createModel<SRFlipFlop, SRFlipFlopWidget>("SRFlipFlop");
