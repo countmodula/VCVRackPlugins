@@ -33,7 +33,7 @@ struct Attenuator : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(CH1_ATTENUATION_PARAM, 0.0f, 1.0f, 0.5f, "Attenuation/Attenuversion");
-		configParam(CH2_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation");
+		configParam(CH2_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Attenuvert");
 	}
 

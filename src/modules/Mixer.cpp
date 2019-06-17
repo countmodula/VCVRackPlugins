@@ -42,14 +42,14 @@ struct Mixer : Module {
 		// mix `knobs
 		for (int i = 0; i < 4; i++) {
 			sprintf (smeg, "Level %d", i + 1);
-			configParam(R1_LEVEL_PARAM + i, 0.0f, 1.0f, 0.5f, smeg);
+			configParam(R1_LEVEL_PARAM + i, 0.0f, 1.0f, 0.5f, smeg, " %", 0.0f, 100.0f, 0.0f);
 		}
 		
 		// level knobs
-		configParam(LEVEL_PARAM, 0.0f, 1.0f, 0.0f, "Output Level");
+		configParam(LEVEL_PARAM, 0.0f, 1.0f, 0.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
 		
 		// switches
-		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Mix Mode (Uni/Bipolar)");
+		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Mix mode (Uni/Bipolar)");
 	}
 	
 	void process(const ProcessArgs &args) override {

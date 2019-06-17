@@ -42,18 +42,18 @@ struct GateDelayMT : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		// parameters 
-		configParam(CVLEVEL_PARAM, -5.0f, 5.0f, 0.0f, "Delay Time CV Amount");
-		configParam(TIME_PARAM, 0.0f, 10.0f, 5.0f, "Delay Time");
-		configParam(RANGE_PARAM, 0.0f, 2.0f, 2.0f, "Delay Range");
+		configParam(CVLEVEL_PARAM, -5.0f, 5.0f, 0.0f, "Delay time CV amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(TIME_PARAM, 0.0f, 10.0f, 5.0f, "Delay time");
+		configParam(RANGE_PARAM, 0.0f, 2.0f, 2.0f, "Delay range");
 		
 		// direct output
-		configParam(MIXDIR_PARAM, 0.0f, 1.0f, 1.0f, "Mute From Mix Output");
+		configParam(MIXDIR_PARAM, 0.0f, 1.0f, 1.0f, "Mute from mix Output");
 			
 		// tapped outputs
 		int k = 0;
 		for (int i = 0; i < 5; i += 4) {
 			for (int j = 0; j < 4; j++) {
-				configParam(MIXDEL_PARAMS + k, 0.0f, 1.0f, 1.0f, "Mute From Mix Output");
+				configParam(MIXDEL_PARAMS + k, 0.0f, 1.0f, 1.0f, "Mute from mix output");
 			
 				k++;
 			}

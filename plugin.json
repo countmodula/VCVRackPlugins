@@ -1,7 +1,7 @@
 {
   "slug": "CountModula",
-  "name": "Count Modular",
-  "version": "1.0.0",
+  "name": "Count Modula",
+  "version": "1.0.1",
   "license": "BSD-3-Clause",
   "brand": "Count Modula",
   "author": "Adam Verspaget",
@@ -179,6 +179,14 @@
       "description": "A 1 input to 8 output and 8 input to 1 output multiplexer.",
       "tags": [
         "Switch"
+      ]
+    },
+    {
+      "slug": "Mute",
+      "name": "Mute",
+      "description": "A voltage controlled mute",
+      "tags": [
+		"Controller"
       ]
     },
     {

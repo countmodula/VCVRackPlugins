@@ -31,8 +31,8 @@ struct VCFrequencyDivider : Module {
 	VCFrequencyDivider() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "CV Level");
-		configParam(MANUAL_PARAM, 0.0f, 10.0f, 0.0f, "Manual Level");
+		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(MANUAL_PARAM, 0.0f, 10.0f, 0.0f, "Manual amount");
 	}
 
 	void onReset() override {

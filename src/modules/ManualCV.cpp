@@ -30,10 +30,10 @@ struct ManualCV : Module {
 	ManualCV() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CV1COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse Value");
-		configParam(CV1FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine Value");
-		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse Value");
-		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine Value");
+		configParam(CV1COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value", " V");
+		configParam(CV1FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
+		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value", " V");
+		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
 	}
 	
 	void process(const ProcessArgs &args) override {

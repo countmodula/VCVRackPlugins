@@ -48,18 +48,18 @@ struct PolyrhythmicGenerator : Module {
 		// division channels
 		for (int i = 0; i < 8; i++) {
 			// knobs
-			configParam(CV_PARAM + i, -1.0f, 1.0f, 0.0f, "Division  CV Amount");
+			configParam(CV_PARAM + i, -1.0f, 1.0f, 0.0f, "Division  CV amount", " %", 0.0f, 100.0f, 0.0f);
 			configParam(DIV_PARAM + i, 0.0f, 10.0f, 0.0f, "Division");
 			
 			// buttons
-			configParam(MUTE_PARAM + i, 0.0f, 1.0f, 0.0f, "Mute Channel");
+			configParam(MUTE_PARAM + i, 0.0f, 1.0f, 0.0f, "Mute channel");
 		
 		}
 		
 		// global stuff
-		configParam(OUTPUTMODE_PARAM, 0.0f, 3.0f, 0.0f, "Output Mode");
-		configParam(BEATMODE_PARAM, 0.0f, 1.0f, 1.0f, "Beat Mode");
-		configParam(MUTEALL_PARAM, 0.0f, 1.0f, 0.0f, "Global Mute");
+		configParam(OUTPUTMODE_PARAM, 0.0f, 3.0f, 0.0f, "Output mode");
+		configParam(BEATMODE_PARAM, 0.0f, 1.0f, 1.0f, "Beat mode");
+		configParam(MUTEALL_PARAM, 0.0f, 1.0f, 0.0f, "Global mute");
 		
 	}
 	

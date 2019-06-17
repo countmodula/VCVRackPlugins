@@ -50,9 +50,9 @@ struct GateDelay : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		for (int i = 0; i < 2; i++) {
-			configParam(CVLEVEL_PARAM + i, -5.0f, 5.0f, 0.0f, "CV Amount");
-			configParam(TIME_PARAM + i, 0.0f, 10.0f, 5.0f, "Delay Time");
-			configParam(RANGE_PARAM + i, 0.0f, 4.0f, 0.0f, "Time Range");
+			configParam(CVLEVEL_PARAM + i, -5.0f, 5.0f, 0.0f, "Delay time CV amount", " %", 0.0f, 100.0f, 0.0f);
+			configParam(TIME_PARAM + i, 0.0f, 10.0f, 5.0f, "Delay time");
+			configParam(RANGE_PARAM + i, 0.0f, 4.0f, 0.0f, "Time range");
 		}
 	}
 

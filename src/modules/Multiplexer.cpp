@@ -68,11 +68,11 @@ struct Multiplexer : Module {
 	Multiplexer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(LENGTH_S_PARAM, 1.0f, 7.0f, 7.0f, "Number of Router Steps (Sends)");
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Router Sample Mode");
+		configParam(LENGTH_S_PARAM, 1.0f, 7.0f, 7.0f, "Number of router steps (Sends)");
+		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Router sample mode");
 		
-		configParam(LENGTH_R_PARAM, 1.0f, 8.0f, 8.0f, "Number of Selector Steps (Receives)");
-		configParam(NORMAL_PARAM, 1.0f, 4.0f, 1.0f, "Selector Normalling Mode");
+		configParam(LENGTH_R_PARAM, 1.0f, 8.0f, 8.0f, "Number of selector steps (Receives)");
+		configParam(NORMAL_PARAM, 1.0f, 4.0f, 1.0f, "Selector normalling mode");
 	}
 	
 	void onReset() override {

@@ -45,6 +45,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Mixer">Mixer</a> * New in v1.0
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
+<li><a href="./MANUAL.md#Mute">Mute</a>
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>

@@ -30,7 +30,7 @@ struct Comparator : Module {
 	Comparator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(THRESHOLD_PARAM, -10.0, 10.0, 0.0, "Threshold");
+		configParam(THRESHOLD_PARAM, -10.0, 10.0, 0.0, "Threshold", " V");
 	}
 	
 	void process(const ProcessArgs &args) override {

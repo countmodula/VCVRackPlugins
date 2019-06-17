@@ -250,6 +250,20 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
+<a id="Mute">
+<h3>Mute</h3>
+<table>
+	<tr valign="top">
+		<td width=180>
+			<img src="./img/Mute.png">
+		</td> 
+		<td>
+			A performance mute controller with two independent inputs and outputs, voltage control over the mute function and switchable response for instant processing of control signals or fast but pop free muting of audio signals.<br/>
+			With no cable plugged into the Mute In, The Mute button mutes and un-mutes the outputs with each press. Plugging a cable into the Mute IN disables the button and the muting is controlled by the presence of a high gate signal.  
+		</td>
+	</tr>
+</table>
+
 <a id="Mute-iple">
 <h3>Mute-iple</h3>
 <table>

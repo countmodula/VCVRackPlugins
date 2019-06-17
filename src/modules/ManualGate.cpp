@@ -39,8 +39,8 @@ struct ManualGate : Module {
 	ManualGate() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Output Gate Length");
-		configParam(GATE_PARAM, 0.0f, 1.0f, 0.0f);
+		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Output gate length");
+		configParam(GATE_PARAM, 0.0f, 1.0f, 0.0f, "Gate on");
 	}
 	
 	void onReset() override {

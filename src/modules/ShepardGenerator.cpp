@@ -78,10 +78,10 @@ struct ShepardGenerator : Module {
 	ShepardGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Frequency CV Level");
+		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Frequency CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(FREQ_PARAM, -8.0f, 10.0f, -4.5f, "Frequency");
-		configParam(SAWLEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Saw Output Level");
-		configParam(TRILEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Triangle Output Level");
+		configParam(SAWLEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Saw output level", " %", 0.0f, 100.0f, 0.0f);
+		configParam(TRILEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Triangle output level", " %", 0.0f, 100.0f, 0.0f);
 	}
 	
 	void onReset() override {

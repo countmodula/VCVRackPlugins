@@ -45,20 +45,20 @@ struct STRUCT_NAME : Module {
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			
 			// length & CV parms
-			sprintf(rowText, "Channel %d Length", r + 1);
+			sprintf(rowText, "Channel %d length", r + 1);
 			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), rowText);
 			
 			// row lights and switches
 			int i = 0;
 			char stepText[20];
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
-				sprintf(stepText, "Step %d Select", s + 1);
+				sprintf(stepText, "Step %d select", s + 1);
 				configParam(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, stepText);
 			}
 			
 			// output lights, mute buttons and jacks
 			for (int i = 0; i < 2; i++) {
-				configParam(MUTE_PARAMS + + (r * 2) + i, 0.0f, 1.0f, 0.0f, "Mute This Output");
+				configParam(MUTE_PARAMS + + (r * 2) + i, 0.0f, 1.0f, 0.0f, "Mute this output");
 			}
 		}
 	}
