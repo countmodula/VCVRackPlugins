@@ -69,13 +69,13 @@ struct MatrixMixer : Module {
 			
 			// mix `knobs
 			for (int j = 0; j < 4; j++)
-				configParam(C1R1_LEVEL_PARAM + (j * 6) + i, 0.0f, 1.0f, 0.5f, smeg);
+				configParam(C1R1_LEVEL_PARAM + (j * 6) + i, 0.0f, 1.0f, 0.5f, smeg, " %", 0.0f, 100.0f, 0.0f);
 			
 			// level knobs
-			configParam(C1_LEVEL_PARAM + (i * 6), 0.0f, 1.0f, 0.0f, "Output Level");
+			configParam(C1_LEVEL_PARAM + (i * 6), 0.0f, 1.0f, 0.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
 			
 			// switches
-			configParam(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, "Channel Mode (Uni/Bipolar)");
+			configParam(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, "Channel mode (Uni/Bipolar)");
 		}
 	}
 	

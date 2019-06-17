@@ -43,7 +43,7 @@ struct MinimusMaximus : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		// controls
-		configParam(BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f, "Switch bias on/off");
+		configParam(BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f, "Bias on/off");
 		configParam(BIAS_PARAM, -5.0f, 5.0f, 0.0f, "Bias Amount");
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output Mode (Uni/Bipolar)");
 	}

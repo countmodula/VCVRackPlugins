@@ -26,6 +26,7 @@ void init(Plugin *p) {
 	p->addModel(modelMixer);
 	p->addModel(modelMorphShaper);
 	p->addModel(modelMultiplexer);
+	p->addModel(modelMute);
 	p->addModel(modelMuteIple);
 	p->addModel(modelGateDelayMT);
 	p->addModel(modelPolyrhythmicGenerator);

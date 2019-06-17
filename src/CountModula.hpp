@@ -37,6 +37,8 @@ extern Model *modelBurstGenerator;
 extern Model *modelTriggerSequencer16;
 extern Model *modelTriggerSequencer8;
 extern Model *modelMixer;
+extern Model *modelMute;
+
 
 #include "components/CountModulaComponents.hpp"
 #include "components/StdComponentPositions.hpp"

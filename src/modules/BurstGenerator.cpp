@@ -54,13 +54,13 @@ struct BurstGenerator : Module {
 	BurstGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(RATECV_PARAM, -1.0f, 1.0f, 0.0f, "Rate CV Amount");
-		configParam(RATE_PARAM, 0.0f, 5.0f, 0.0f, "Burst Rate");
-		configParam(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Rate Range");
+		configParam(RATECV_PARAM, -1.0f, 1.0f, 0.0f, "Rate CV amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(RATE_PARAM, 0.0f, 5.0f, 0.0f, "Burst rate");
+		configParam(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Rate range");
 		configParam(RETRIGGER_PARAM, 0.0f, 1.0f, 0.0f, "Retrigger On/Off");
-		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of Pulses CV Amount");
-		configParam(PULSES_PARAM, 1.0f, 16.0f, 1.0f, "Number of Pulses");
-		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f);
+		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of pulses CV amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(PULSES_PARAM, 1.0f, 16.0f, 1.0f, "Number of pulses");
+		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Manual trigger");
 	}
 	
 	void onReset() override {

@@ -37,9 +37,9 @@ struct CVSpreader : Module {
 	CVSpreader() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		configParam(BASE_PARAM, -1.0f, 1.0f, 0.0f, "Base CV Level");
-		configParam(SPREAD_PARAM, -1.0f, 1.0f, 0.0f, "Spread CV Level");
-		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Odd/Even Mode Select");
+		configParam(BASE_PARAM, -1.0f, 1.0f, 0.0f, "Base CV amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(SPREAD_PARAM, -1.0f, 1.0f, 0.0f, "Spread CV amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Odd/Even mode select");
 	}
 
 	void process(const ProcessArgs &args) override {

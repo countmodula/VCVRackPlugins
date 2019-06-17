@@ -25,7 +25,7 @@ struct MuteIple : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		for (int i = 0; i < 8 ; i++) {
-			configParam(MUTE_PARAMS + i, 0.0f, 1.0f, 0.0f);
+			configParam(MUTE_PARAMS + i, 0.0f, 1.0f, 0.0f, "Mute");
 		}
 	}
 	

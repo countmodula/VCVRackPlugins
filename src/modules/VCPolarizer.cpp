@@ -39,9 +39,9 @@ struct VCPolarizer : Module {
 	VCPolarizer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CH1_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount");
+		configParam(CH1_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH1_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
-		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount");
+		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
 	}
 	
