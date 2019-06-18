@@ -18,7 +18,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.0.0</h3>
+<h3>Modules - Release 1.0.1</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
@@ -45,7 +45,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Mixer">Mixer</a> * New in v1.0.0
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
-<li><a href="./MANUAL.md#Mute">Mute</a>
+<li><a href="./MANUAL.md#Mute">Mute</a>  * New in v1.0.1
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
@@ -74,11 +74,24 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 		<th align="center">Release</th>
 		<th align="left">Notes</th>
 	</tr>
-	<td align="center">16-Jun-2019</td>
-	<td align="center">v1.0.0</td>
-	<td align="left">
-		Port from Rack v0.6 to v1.0
-	</td>
+	<tr valign="top">
+		<td align="center">19-Jun-2019</td>
+		<td align="center">v1.0.1</td>
+		<td align="left">
+			<b>New Modules</b><br/>
+			<ul>
+				<li>Utility Mixer
+				<li>Mute
+			</ul>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td align="center">16-Jun-2019</td>
+		<td align="center">v1.0.0</td>
+		<td align="left">
+			Port from Rack v0.6 to v1.0
+		</td>
+	</tr>
 	<tr valign="top">
 		<td align="center">09-Jun-2019</td>
 		<td align="center">v0.6.2 and v0.6.3</td>
@@ -107,7 +120,8 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 	<tr valign="top">
 		<td align="center">03-Jun-2019</td>
 		<td align="center">v0.6.0</td>
-		<td>Initial Release</td></tr>
+		<td>Initial Release</td>
+	</tr>
 </table>
 
 
