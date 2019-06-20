@@ -46,7 +46,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
 <li><a href="./MANUAL.md#Mute">Mute</a>  * Now polyphonic in v1.0.2
-<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a> * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a> * Now polyphonic in v1.0.2 + New functionality
 <li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a> * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>  * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a>
@@ -54,7 +54,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a>
 <li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a>
 <li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a>
-<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a> * No polyphonic in v1.0.2
+<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a> * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>  * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#CGS">CGS Based Modules</a>
 	<ul>
@@ -76,14 +76,14 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 	</tr>
 	<tr valign="top">
 		<td align="center">21-Jun-2019</td>
-		<td align="center">v1.1.0</td>
+		<td align="center">v1.0.2</td>
 		<td align="left">
 			<b>Module Updates</b><br/>
 			<ul>
 				<li>Attenuator - Attenuation of polyphonic signals
 				<li>Inverter - Inversion of polyphonic signals
 				<li>Mute - Muting of polyphonic signals
-				<li>Mut-iple - Muting of polyphonic sugnals. Hard/Soft mute option.
+				<li>Mut-iple - Muting of polyphonic signals. Hard/Soft mute option.
 				<li>PolyrhythmicGenerator  - Added polyphonic output containing all channels
 				<li>Shepard Generator - Saw and Tri waveforms available as polyphonic signals
 				<li>Voltage Controlled Polarizer - polarization of polyphonic signals
