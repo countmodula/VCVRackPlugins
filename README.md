@@ -18,7 +18,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.0.1</h3>
+<h3>Modules - Release 1.0.2</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
@@ -34,28 +34,28 @@ Follow Count Modula on facebook:
 		<li>XOR
 	</ul>
 <li><a href="./MANUAL.md#Comparator">Comparator</a>
-<li><a href="./MANUAL.md#EventArranger">Event Arranger</a>
+<li><a href="./MANUAL.md#EventArranger">Event Arranger</a> * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#GateDelay">Gate Delay</a>
 <li><a href="./MANUAL.md#G2T">G2T</a>
-<li><a href="./MANUAL.md#Inverter">Inverter</a>
+<li><a href="./MANUAL.md#Inverter">Inverter</a> * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#ManualCV">Manual CV</a>
 <li><a href="./MANUAL.md#ManualGate">Manual Gate</a>
 <li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
 <li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a>
-<li><a href="./MANUAL.md#Mixer">Mixer</a> * New in v1.0.0
+<li><a href="./MANUAL.md#Mixer">Mixer</a>
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
-<li><a href="./MANUAL.md#Mute">Mute</a>  * New in v1.0.1
-<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
-<li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
-<li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
+<li><a href="./MANUAL.md#Mute">Mute</a>  * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a> * Now polyphonic in v1.0.2 + New functionality
+<li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a> * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>  * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
 <li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a>
 <li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a>
 <li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a>
-<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a>
-<li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>
+<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a> * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>  * Now polyphonic in v1.0.2
 <li><a href="./MANUAL.md#CGS">CGS Based Modules</a>
 	<ul>
 		<li><a href="./MANUAL.md#CVSpreader">CV Spreader</a>
@@ -73,6 +73,23 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 		<th align="center">Date</th>
 		<th align="center">Release</th>
 		<th align="left">Notes</th>
+	</tr>
+	<tr valign="top">
+		<td align="center">21-Jun-2019</td>
+		<td align="center">v1.0.2</td>
+		<td align="left">
+			<b>Module Updates</b><br/>
+			<ul>
+				<li>Attenuator - Attenuation of polyphonic signals
+				<li>Inverter - Inversion of polyphonic signals
+				<li>Mute - Muting of polyphonic signals
+				<li>Mut-iple - Muting of polyphonic signals. Hard/Soft mute option.
+				<li>PolyrhythmicGenerator  - Added polyphonic output containing all channels
+				<li>Shepard Generator - Saw and Tri waveforms available as polyphonic signals
+				<li>Voltage Controlled Polarizer - polarization of polyphonic signals
+				<li>Voltage Controlled Switch - switching of polyphonic signals
+			</ul>
+		</td>
 	</tr>
 	<tr valign="top">
 		<td align="center">19-Jun-2019</td>

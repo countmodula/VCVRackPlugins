@@ -42,15 +42,47 @@ struct Attenuator : Module {
 	}
 	
 	void process(const ProcessArgs &args) override {
-		float out1 = inputs[CH1_SIGNAL_INPUT].getNormalVoltage(10.0f);
-		float out2 = inputs[CH2_SIGNAL_INPUT].getNormalVoltage(10.0f);
-		
-		if (params[CH1_MODE_PARAM].getValue() > 0.5f)
-			outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer.process(out1, -1.0f + (params[CH1_ATTENUATION_PARAM].getValue() * 2), 0.0f, 0.0f));
-		else
-			outputs[CH1_SIGNAL_OUTPUT].setVoltage(out1 * params[CH1_ATTENUATION_PARAM].getValue());
+		// grab attenuation settings up front
+		float att1 = params[CH1_ATTENUATION_PARAM].getValue();
+		float att2 = params[CH2_ATTENUATION_PARAM].getValue();
 
-		outputs[CH2_SIGNAL_OUTPUT].setVoltage(out2 * params[CH2_ATTENUATION_PARAM].getValue());
+		bool bipolar = params[CH1_MODE_PARAM].getValue() > 0.5f;
+		
+		// channel 1
+		if (inputs[CH1_SIGNAL_INPUT].isConnected()) {
+			// cable connected grab number of channels and process accordingly
+			int n = inputs[CH1_SIGNAL_INPUT].getChannels();
+			
+			outputs[CH1_SIGNAL_OUTPUT].setChannels(n);
+			for (int c = 0; c < n; c++) {
+				if (bipolar)
+					outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer.process(inputs[CH1_SIGNAL_INPUT].getVoltage(c), -1.0f + (att1 * 2), 0.0f, 0.0f), c);
+				else
+					outputs[CH1_SIGNAL_OUTPUT].setVoltage(inputs[CH1_SIGNAL_INPUT].getVoltage(c) * att1, c);
+			}
+		}
+		else {
+			// nothing connected, we're acting as a CV source
+			if (bipolar)
+				outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer.process(10.0f, -1.0f + (att1 * 2), 0.0f, 0.0f));
+			else
+				outputs[CH1_SIGNAL_OUTPUT].setVoltage(10.0f * att1);
+		}
+		
+		// channel 2
+		if (inputs[CH2_SIGNAL_INPUT].isConnected()) {
+			// cable connected grab number of channels and process accordingly
+			int n = inputs[CH2_SIGNAL_INPUT].getChannels();
+			
+			outputs[CH2_SIGNAL_OUTPUT].setChannels(n);
+			for (int c = 0; c < n; c++)
+				outputs[CH2_SIGNAL_OUTPUT].setVoltage(inputs[CH2_SIGNAL_INPUT].getVoltage(c) * att2, c);
+		}
+		else {
+			// nothing connected, we're acting as a CV source
+			outputs[CH2_SIGNAL_OUTPUT].setVoltage(10.0f * att2);
+		}
+	
 	}
 };
 

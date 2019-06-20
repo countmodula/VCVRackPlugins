@@ -32,11 +32,17 @@ struct VoltageInverter : Module {
 	}
 
 	void process(const ProcessArgs &args) override {
-		out = 0.0f;
+		int inputToUse = 0;
 		for (int i = 0; i < 4; i++) {
-			// grab output value normalised to previous input value
-			out = inputs[A_INPUT + i].getNormalVoltage(out);
-			outputs[A_OUTPUT + i].setVoltage(-out);
+			// determine which input we want to actually use
+			if (inputs[A_INPUT + i].isConnected())
+				inputToUse = i;
+				
+			// grab output value normallised to the previous input value
+			int n = inputs[A_INPUT + inputToUse].getChannels();
+			outputs[A_OUTPUT + i].setChannels(n);
+			for (int c = 0; c < n; c++)
+				outputs[A_OUTPUT + i].setVoltage(-inputs[A_INPUT + inputToUse].getVoltage(c), c);
 		}
 	}
 };

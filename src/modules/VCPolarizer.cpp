@@ -53,12 +53,31 @@ struct VCPolarizer : Module {
 	void process(const ProcessArgs &args) override {
 
 		// channel 1
-		outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer1.process(inputs[CH1_SIGNAL_INPUT].getVoltage(), params[CH1_MANUAL_PARAM].getValue(), inputs[CH1_CV_INPUT].getVoltage(), params[CH1_CVAMOUNT_PARAM].getValue()));
+		
+		float manual = params[CH1_MANUAL_PARAM].getValue();
+		float cv = inputs[CH1_CV_INPUT].getVoltage();
+		float cvAmount = params[CH1_CVAMOUNT_PARAM].getValue();
+
+		int n = inputs[CH1_SIGNAL_INPUT].getChannels();
+		outputs[CH1_SIGNAL_OUTPUT].setChannels(n);
+		
+		for (int c = 0; c < n; c++)
+			outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer1.process(inputs[CH1_SIGNAL_INPUT].getVoltage(c), manual, cv, cvAmount), c);
+
 		lights[CH1_POS_LIGHT].setSmoothBrightness(polarizer1.positiveLevel, args.sampleTime);
 		lights[CH1_NEG_LIGHT].setSmoothBrightness(polarizer1.negativeLevel, args.sampleTime);
 		
 		// channel 2
-		outputs[CH2_SIGNAL_OUTPUT].setVoltage(polarizer2.process(inputs[CH2_SIGNAL_INPUT].getVoltage(), params[CH2_MANUAL_PARAM].getValue(), inputs[CH2_CV_INPUT].getVoltage(), params[CH2_CVAMOUNT_PARAM].getValue()));
+		manual = params[CH2_MANUAL_PARAM].getValue();
+		cv = inputs[CH2_CV_INPUT].getVoltage();
+		cvAmount = params[CH2_CVAMOUNT_PARAM].getValue();
+
+		n = inputs[CH2_SIGNAL_INPUT].getChannels();
+		outputs[CH2_SIGNAL_OUTPUT].setChannels(n);
+		
+		for (int c = 0; c < n; c++)
+			outputs[CH2_SIGNAL_OUTPUT].setVoltage(polarizer2.process(inputs[CH2_SIGNAL_INPUT].getVoltage(c), manual, cv, cvAmount), c);
+
 		lights[CH2_POS_LIGHT].setSmoothBrightness(polarizer2.positiveLevel, args.sampleTime);
 		lights[CH2_NEG_LIGHT].setSmoothBrightness(polarizer2.negativeLevel, args.sampleTime);
 	}

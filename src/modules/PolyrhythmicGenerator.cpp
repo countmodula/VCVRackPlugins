@@ -27,6 +27,7 @@ struct PolyrhythmicGenerator : Module {
 	};
 	enum OutputIds {
 		ENUMS(TRIG_OUTPUT, 8),
+		POLY_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -84,6 +85,8 @@ struct PolyrhythmicGenerator : Module {
 		bool prevPhase;
 		float prevReset = 0.0f;
 		float prevCV = 0.0f;
+		
+		outputs[POLY_OUTPUT].setChannels(8);
 		
 		for (int i = 0; i < 8; i++) {
 			// set the required maximum division in the divider
@@ -143,7 +146,8 @@ struct PolyrhythmicGenerator : Module {
 				}
 			}
 			
-			// output the trigger value and set the light
+			// output the trigger value to both the poly out and the individual channel then set the light
+			outputs[POLY_OUTPUT].setVoltage(boolToGate(trigOut), i);
 			outputs[TRIG_OUTPUT + i].setVoltage(boolToGate(trigOut));
 			lights[TRIG_LIGHT + i].setSmoothBrightness(boolToLight(trigOut), args.sampleTime);
 		
@@ -188,11 +192,12 @@ struct PolyrhythmicGeneratorWidget : ModuleWidget {
 		}
 		
 		// global stuff
-		addParam(createParamCentered<CountModulaRotarySwitch5PosRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, PolyrhythmicGenerator::OUTPUTMODE_PARAM));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, PolyrhythmicGenerator::BEATMODE_INPUT));
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, PolyrhythmicGenerator::BEATMODE_PARAM));
+		addParam(createParamCentered<CountModulaRotarySwitch5PosRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]-15), module, PolyrhythmicGenerator::OUTPUTMODE_PARAM));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]-15), module, PolyrhythmicGenerator::BEATMODE_INPUT));
+		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]-15), module, PolyrhythmicGenerator::BEATMODE_PARAM));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, PolyrhythmicGenerator::MUTEALL_INPUT));
 		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, PolyrhythmicGenerator::MUTEALL_PARAM));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, PolyrhythmicGenerator::POLY_OUTPUT));
 	}
 };
 

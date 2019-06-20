@@ -65,6 +65,8 @@ struct ShepardGenerator : Module {
 	enum OutputIds {
 		ENUMS(SAW_OUTPUT, 8),
 		ENUMS(TRI_OUTPUT, 8),
+		PSAW_OUTPUT,
+		PTRI_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -93,11 +95,19 @@ struct ShepardGenerator : Module {
 		osc.setPitch(params[FREQ_PARAM].getValue() + (params[CV_PARAM].getValue() * inputs[CV_INPUT].getNormalVoltage(0.0f)));
 		osc.step(args.sampleTime);
 		
+		outputs[PSAW_OUTPUT].setChannels(8);
+		outputs[PTRI_OUTPUT].setChannels(8);
+
 		for (int i = 0; i < 8; i++) {
-			outputs[SAW_OUTPUT + i].setVoltage((5.0f + (5.0f * osc.saw(i))) * params[SAWLEVEL_PARAM].getValue());
+			float saw = (5.0f + (5.0f * osc.saw(i))) * params[SAWLEVEL_PARAM].getValue();
 			float tri = 10.0f - (5.0f * osc.tri(i));
-			outputs[TRI_OUTPUT + i].setVoltage(tri * params[TRILEVEL_PARAM].getValue());
 			lights[SHEP_LIGHT + i].setBrightness(tri / 10.0f);
+			tri = tri * params[TRILEVEL_PARAM].getValue();
+			outputs[SAW_OUTPUT + i].setVoltage(saw);
+			outputs[TRI_OUTPUT + i].setVoltage(tri);
+			
+			outputs[PSAW_OUTPUT].setVoltage(saw, i);
+			outputs[PTRI_OUTPUT].setVoltage(tri, i);
 		}
 	}
 };
@@ -113,13 +123,13 @@ struct ShepardGeneratorWidget : ModuleWidget {
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		// knobs
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW2)), module, ShepardGenerator::CV_PARAM));
-		addParam(createParamCentered<CountModulaKnobOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, ShepardGenerator::FREQ_PARAM));
-		addParam(createParamCentered<CountModulaKnobGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW5)), module, ShepardGenerator::SAWLEVEL_PARAM));
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, ShepardGenerator::TRILEVEL_PARAM));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, ShepardGenerator::CV_PARAM));
+		addParam(createParamCentered<CountModulaKnobOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW3) - 5), module, ShepardGenerator::FREQ_PARAM));
+		addParam(createParamCentered<CountModulaKnobGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5] -10 ), module, ShepardGenerator::SAWLEVEL_PARAM));
+		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW6) - 15), module, ShepardGenerator::TRILEVEL_PARAM));
 		
 		// cv input
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW1)), module, ShepardGenerator::CV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, ShepardGenerator::CV_INPUT));
 		
 		// outputs/lights
 		for (int i = 0; i < 8 ; i++) {
@@ -127,6 +137,11 @@ struct ShepardGeneratorWidget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + i]), module, ShepardGenerator::SHEP_LIGHT + i));
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + i]), module, ShepardGenerator::TRI_OUTPUT + i));	
 		}
+		
+		// poly outputs
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1]-15, STD_ROWS8[STD_ROW8]), module, ShepardGenerator::PSAW_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL2]-15, STD_ROWS8[STD_ROW8]), module, ShepardGenerator::PTRI_OUTPUT));	
+		
 	}
 };
 

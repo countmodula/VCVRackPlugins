@@ -46,11 +46,23 @@ struct VoltageControlledSwitch : Module {
 		// not using standard gate processor here due to different trigger levels
 		stSwitch.process(rescale(cv, 3.2f, 3.6f, 0.0f, 1.0f));
 
+		int nA = inputs[A_INPUT].getChannels();
+		int nB1 = inputs[B1_INPUT].getChannels();
+		int nB2 = inputs[B2_INPUT].getChannels();
+		
 		if (stSwitch.isHigh()) {
-			// select I/O 2
-			outputs[A1_OUTPUT].setVoltage(0.0f);
-			outputs[A2_OUTPUT].setVoltage(inputs[A_INPUT].getVoltage());
-			outputs[B_OUTPUT].setVoltage(inputs[B2_INPUT].getVoltage());
+			// IN A -> OUT A2
+			outputs[A1_OUTPUT].setChannels(nA);
+			outputs[A2_OUTPUT].setChannels(nA);
+			for (int c = 0; c < nA; c++) {
+				outputs[A1_OUTPUT].setVoltage(0.0f, c);
+				outputs[A2_OUTPUT].setVoltage(inputs[A_INPUT].getVoltage(c), c);
+			}
+			
+			// IN B2 -> OUT B
+			outputs[B_OUTPUT].setChannels(nB2);
+			for (int c = 0; c < nB2; c++)
+				outputs[B_OUTPUT].setVoltage(inputs[B2_INPUT].getVoltage(c), c);
 			
 			lights[A1_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
 			lights[A2_LIGHT].setSmoothBrightness(1.0f, args.sampleTime);
@@ -58,10 +70,18 @@ struct VoltageControlledSwitch : Module {
 			lights[B2_LIGHT].setSmoothBrightness(1.0f, args.sampleTime);
 		}
 		else {
-			// select I/O 1
-			outputs[A1_OUTPUT].setVoltage(inputs[A_INPUT].getVoltage());
-			outputs[A2_OUTPUT].setVoltage(0.0f);
-			outputs[B_OUTPUT].setVoltage(inputs[B1_INPUT].getVoltage());
+			// IN A -> OUT A1
+			outputs[A1_OUTPUT].setChannels(nA);
+			outputs[A2_OUTPUT].setChannels(nA);
+			for (int c = 0; c < nA; c++) {
+				outputs[A1_OUTPUT].setVoltage(inputs[A_INPUT].getVoltage(c), c);
+				outputs[A2_OUTPUT].setVoltage(0.0f, c);
+			}
+			
+			// IN B1 -> OUT B
+			outputs[B_OUTPUT].setChannels(nB1);
+			for (int c = 0; c < nB2; c++)
+				outputs[B_OUTPUT].setVoltage(inputs[B1_INPUT].getVoltage(c), c);
 			
 			lights[A1_LIGHT].setSmoothBrightness(1.0f, args.sampleTime);
 			lights[A2_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
