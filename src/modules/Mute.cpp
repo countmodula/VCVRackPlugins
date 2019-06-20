@@ -37,7 +37,7 @@ struct Mute : Module {
 	Mute() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Audio/Logic mode");
+		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
 		configParam(MUTE_PARAM, 0.0f, 1.0f, 0.0f, "Mute");
 	}
 	
@@ -64,20 +64,26 @@ struct Mute : Module {
 		// calculate the mute factor
 		float mute = (latch ? 0.0f : 1.0f);
 		if (params[MODE_PARAM].getValue() > 0.5) {
-			// audio mode - apply some slew to soften the switch
+			// soft mode - apply some slew to soften the switch
 			mute = slew.process(mute, 1.0f, 0.1f, 0.1f);
 		}
 		else {
-			// logic mode - keep slew in sync but don't use it
+			// hard mode - keep slew in sync but don't use it
 			slew.process(mute, 1.0f, 0.01f, 0.01f);
 		}
 
 		lights[MUTE_LIGHT].setSmoothBrightness(boolToLight(latch), args.sampleTime);
 		
 		// process the signals
-		outputs[L_OUTPUT].setVoltage(inputs[L_INPUT].getVoltage() * mute);
-		outputs[R_OUTPUT].setVoltage(inputs[R_INPUT].getVoltage() * mute);
+		int numChannelsL = inputs[L_INPUT].getChannels();
+		outputs[L_OUTPUT].setChannels(numChannelsL);
+		for (int c = 0; c < numChannelsL; c++)
+			outputs[L_OUTPUT].setVoltage(inputs[L_INPUT].getVoltage(c) * mute, c);
 		
+		int numChannelsR = inputs[R_INPUT].getChannels();
+		outputs[R_OUTPUT].setChannels(numChannelsR);
+		for (int c = 0; c < numChannelsR; c++)
+			outputs[R_OUTPUT].setVoltage(inputs[R_INPUT].getVoltage(c) * mute, c);
 	}
 };
 

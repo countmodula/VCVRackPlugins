@@ -29,6 +29,9 @@ Whilst these modules are offered free of charge, if you like them or are using t
 		</td> 
 		<td>
 			A basic dual attenuator with switchable attenuverting capability on the top channel. With no CV input the module will output control voltage between 0 and 10V (top channel -10V and +10V when in attenueverter mode) proportional to the position of the level knob.
+			<p>
+				This module can process polyphonic signals. All channels are attenuated or attenuverted by the same amount.
+			</p>
 		</td>
 	</tr>
 </table>
@@ -131,6 +134,9 @@ Whilst these modules are offered free of charge, if you like them or are using t
 		</td> 
 		<td>
 			A quad voltage inverter. Unlike the Boolean Logic Inverter, this module inverts around zero. Positive voltage in become a negative voltage out and vice-versa.
+			<p>
+				This module can process polyphonic signals.
+			</p>
 		</td>
 	</tr>
 </table>
@@ -258,8 +264,11 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 			<img src="./img/Mute.png">
 		</td> 
 		<td>
-			A performance mute controller with two independent inputs and outputs, voltage control over the mute function and switchable response for instant processing of control signals or fast but pop free muting of audio signals.<br/>
+			A performance mute controller with two independent inputs and outputs, voltage control over the mute function and switchable response (hard/soft) for instant processing of control signals or fast but pop free muting of audio signals.<br/>
 			With no cable plugged into the Mute In, The Mute button mutes and un-mutes the outputs with each press. Plugging a cable into the Mute IN disables the button and the muting is controlled by the presence of a high gate signal.  
+			<p>
+				This module can process polyphonic signals. All channels are muted at the same time.
+			</p>
 		</td>
 	</tr>
 </table>
@@ -272,7 +281,13 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 			<img src="./img/Mute-iple.png">
 		</td> 
 		<td>
-			A dual 4-way/ Single 8 way mutable multiple. The top input is normalled to the bottom input creating a 1 to 8 mutable multiple. Note there is no smoothing of the muting function so this module is best suited for gate and control signals although it could be used with audio but the possibility of pops and clicks upon unmuting must be considered.
+			A dual 4-way/ Single 8 way mutable multiple. The top input is normalled to the bottom input creating a 1 to 8 mutable multiple. 
+			<p>
+				New feature in v1.0.2: Soft/hard muting option. Use the soft muting option to avoid clicks when muting audio signals.
+			</p>
+			<p>
+				This module can process polyphonic signals. All channels presented to the inputs are multed to the associated outputs and all channels on any given output are muted at the same time.
+			</p>
 		</td>
 	</tr>
 </table>
@@ -295,6 +310,9 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 				<li>Clock: A single clock pulse for every Nth clock pulse.
 			</ul>
 			The &quot;On The 1&quot; beat mode control and associated CV input set whether the generator outputs pulses on the fist count of the division or on the last. When set to &quot;ON The 1&quot;, the first count will send pulses to the output upon reset then every N clock pulses as opposed to only after N clocks have been received. The former is considered to be more musical. 
+			<p>
+				This module can generate polyphonic triggers. These are available at the Poly Out jack.
+			</p>
 		</td>
 	</tr>
 </table>
@@ -309,6 +327,9 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		<td>
 			Generates a set of 8 ramp and sawtooth signals appropriately phased for generation of Shepard tones (tones that sound like they are continually rising or falling) when coupled with 8 VCOs and VCAs. Slower modulation rates work best for this effect.
 		</td>
+			<p>
+				This module can function as a polyphonic controller. The saw and triangle waveforms are available on separate channels within their respective Poly Out jacks.
+			</p>
 	</tr>
 </table>
 
@@ -399,6 +420,9 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		<td>
 			A dual voltage controlled polarizer. Inverts the the incoming signal under manual/voltage control. A negative control voltage at the CV input will invert the input signal and the amplitude of the CV signal will control the output amplitude. The manual amount is summed with CV amount before being applied.
 		</td>
+			<p>
+				This module can process polyphonic signals. All channels are polarized by the same amount.
+			</p>
 	</tr>
 </table>
 
@@ -411,6 +435,9 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		</td> 
 		<td>
 			Selects between 2 inputs or routes 1 input to one two outputs based on the level of the signal at the CV input.
+			<p>
+				This module can process polyphonic signals. All channels are switch by the same control voltage.
+			</p>
 		</td>
 	</tr>
 </table>
