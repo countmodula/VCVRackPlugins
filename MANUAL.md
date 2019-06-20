@@ -49,8 +49,10 @@ Whilst these modules are offered free of charge, if you like them or are using t
 				Prior to v0.6.2, the Run/Reset input functions like a gate with a low gate value stopping the count and holding the outputs at 0V. A high gate value enables the sequencer with the count being reset on the positive edge of the gate.<br/>
 				From v0.6.2, the reset and run functions have been split into separate jack with the run functioning as outlined above however with a cable plugged into the rest input, it will not reset the sequencer on the positive edge of the gate.
 			</p>
+			<p>
+			* new in v1.0: A new S&H input has been added that, when a cable is connected, causes the Scale functionality to be bypassed and uses a sampled voltage (taken at the leading clock edge) as the base for the division knobs. Note that each knob will equate to 1/6th of the input voltage when at full scale.
+			</p>
 		</td>
-		* new in v1.0: A new S&H input has been added that, when a cable is connected, causes the Scale functionality to be bypassed and uses a sampled voltage (taken at the leading clock edge) as the base for the division knobs. Note that each knob will equate to 1/6th of the input voltage when at full scale.
 	</tr>
 </table>
 
@@ -419,10 +421,10 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		</td> 
 		<td>
 			A dual voltage controlled polarizer. Inverts the the incoming signal under manual/voltage control. A negative control voltage at the CV input will invert the input signal and the amplitude of the CV signal will control the output amplitude. The manual amount is summed with CV amount before being applied.
-		</td>
 			<p>
 				This module can process polyphonic signals. All channels are polarized by the same amount.
 			</p>
+		</td>
 	</tr>
 </table>
 
