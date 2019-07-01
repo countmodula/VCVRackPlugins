@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Analogue Shift Register Module
+//	/^M^\ Count Modula - Analogue Shift Register Module
 //	A Dual 4 output/ single 8 output analaogue shift register 
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

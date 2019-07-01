@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Muteble Module
+//	/^M^\ Count Modula - Muteble Module
 //	A mutable multiple.
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Mixer Engine
+//	/^M^\ Count Modula - Mixer Engine
 //	Basic 4 input bipolar/unipolar mixer
 //----------------------------------------------------------------------------
 struct MixerEngine {

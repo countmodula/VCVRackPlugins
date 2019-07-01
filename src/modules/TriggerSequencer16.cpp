@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - 16 Step Trigger Sequencer Module
+//	/^M^\ Count Modula - 16 Step Trigger Sequencer Module
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

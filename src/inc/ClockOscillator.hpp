@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Clock Oscillator
+//	/^M^\ Count Modula - Clock Oscillator
 //	A version of the VCV Rack Fundamental LFO offering Square/Pulse only
 //----------------------------------------------------------------------------
 #pragma once
@@ -15,6 +15,11 @@ struct ClockOscillator {
 	
 	void setPitch(float pitch) {
 		pitch = fminf(pitch, 10.0f);
+		freq = powf(2.0f, pitch);
+	}
+	
+	void setPitchHigh(float pitch) {
+		pitch = fminf(pitch, 14.5f);
 		freq = powf(2.0f, pitch);
 	}
 	
@@ -36,7 +41,10 @@ struct ClockOscillator {
 	}
 	
 	float sqr() {
-		float sqr = (phase < pw) ? 1.0f : -1.0f;
-		return sqr;
+		return (phase < pw) ? 1.0f : -1.0f;
+	}
+	
+	bool high() {
+		return (phase < pw);
 	}
 };

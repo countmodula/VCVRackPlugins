@@ -1,3 +1,6 @@
+//----------------------------------------------------------------------------
+//	/^M^\ Count Modula Plugin.
+//----------------------------------------------------------------------------
 #include "CountModula.hpp"
 
 Plugin *pluginInstance;
@@ -19,6 +22,7 @@ void init(Plugin *p) {
 	p->addModel(modelEventArranger);
 	p->addModel(modelG2T);
 	p->addModel(modelGateDelay);
+	p->addModel(modelGateModifier);
 	p->addModel(modelManualCV);
 	p->addModel(modelManualGate);
 	p->addModel(modelMatrixMixer);
@@ -30,15 +34,20 @@ void init(Plugin *p) {
 	p->addModel(modelMuteIple);
 	p->addModel(modelGateDelayMT);
 	p->addModel(modelPolyrhythmicGenerator);
+	p->addModel(modelRectifier);
+	p->addModel(modelSampleAndHold);	
 	p->addModel(modelShepardGenerator);
 	p->addModel(modelSRFlipFlop);
+	p->addModel(modelStepSequencer8);
+	p->addModel(modelTFlipFlop);
 	p->addModel(modelTriggerSequencer8);
 	p->addModel(modelTriggerSequencer16);
 	p->addModel(modelVCFrequencyDivider);
 	p->addModel(modelVCPolarizer);
 	p->addModel(modelVoltageControlledSwitch);
 	p->addModel(modelVoltageInverter);
-
+	p->addModel(modelMangler);
+	
 	// Any other plugin initialization may go here.
 	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.
 }

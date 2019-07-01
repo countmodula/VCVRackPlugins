@@ -18,7 +18,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.0.2</h3>
+<h3>Modules - Release 1.1.0</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
@@ -34,10 +34,12 @@ Follow Count Modula on facebook:
 		<li>XOR
 	</ul>
 <li><a href="./MANUAL.md#Comparator">Comparator</a>
-<li><a href="./MANUAL.md#EventArranger">Event Arranger</a> * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#EventArranger">Event Arranger</a>
 <li><a href="./MANUAL.md#GateDelay">Gate Delay</a>
+<li><a href="./MANUAL.md#GateModifier">Gate Modifier</a> * New in v1.1.0
 <li><a href="./MANUAL.md#G2T">G2T</a>
-<li><a href="./MANUAL.md#Inverter">Inverter</a> * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#Inverter">Inverter</a>
+<li><a href="./MANUAL.md#Mangler">Mangler</a>
 <li><a href="./MANUAL.md#ManualCV">Manual CV</a>
 <li><a href="./MANUAL.md#ManualGate">Manual Gate</a>
 <li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
@@ -45,17 +47,21 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Mixer">Mixer</a>
 <li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
-<li><a href="./MANUAL.md#Mute">Mute</a>  * Now polyphonic in v1.0.2
-<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a> * Now polyphonic in v1.0.2 + New functionality
-<li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a> * Now polyphonic in v1.0.2
-<li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>  * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#Mute">Mute</a>
+<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
+<li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
+<li><a href="./MANUAL.md#Rectifier">Rectifier</a> * New in v1.1.0
+<li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a> * New in v1.1.0
+<li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
 <li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a>
+<li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a> * New in v1.1.0
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
+<li><a href="./MANUAL.md#SRFlipFlop">T Flip Flop</a> * New in v1.1.0
 <li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a>
 <li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a>
 <li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a>
-<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a> * Now polyphonic in v1.0.2
-<li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>  * Now polyphonic in v1.0.2
+<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a>
+<li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>
 <li><a href="./MANUAL.md#CGS">CGS Based Modules</a>
 	<ul>
 		<li><a href="./MANUAL.md#CVSpreader">CV Spreader</a>
@@ -73,6 +79,32 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 		<th align="center">Date</th>
 		<th align="center">Release</th>
 		<th align="left">Notes</th>
+	</tr>
+	<tr valign="top">
+		<td align="center">XX-XXX-2019</td>
+		<td align="center">v1.1.0</td>
+		<td align="left">
+			<b>New Modules</b><br/>
+			<ul>
+				<li>Gate Modifier - Extend or shorten gate/trigger signals.
+				<li>Rectifier - Full and half wave rectification around a CV controlled axis.
+				<li>Sample & Hold - Sample/Track and hold.
+				<li>T Flip Flop - Toggle style flip flop.
+				<li>Mangler - Voltage controlled sample rate and bit depth reducer.
+				<li>8 Step Sequencer - A classic 8 step Gate/CV Sequencer.
+			</ul>
+			<b>Module Updates</b><br/>
+			<ul>
+				<li>Manual Gate - Current state is now preserved when saving and re-opening a patch.
+				<li>Mute - Current state is now preserved when saving and re-opening a patch.
+				<li>SR Flip Flop - Current state is now preserved when saving and re-opening a patch.
+				<li>Trigger Sequencers - Addition of length indicators.
+			</ul>
+			<b>Issues Resolved:</b><br/>
+			<ul>
+				<li>Issue #18 Blue knob colour lightened for better visibility.
+			</ul>
+		</td>
 	</tr>
 	<tr valign="top">
 		<td align="center">21-Jun-2019</td>

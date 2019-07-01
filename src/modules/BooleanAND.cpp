@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - AND Logic Gate Module
+//	/^M^\ Count Modula - AND Logic Gate Module
 //	A 4 input AND gate logic module with inverted output
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

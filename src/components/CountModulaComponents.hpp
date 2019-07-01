@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Custom components
+//	/^M^\ Count Modula - Custom components
 //----------------------------------------------------------------------------
 #include "componentlibrary.hpp"
 
@@ -13,6 +13,17 @@ struct CountModulaScrew : SVGScrew {
 	CountModulaScrew() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/ScrewHex.svg")));
 		box.size = sw->box.size;
+	}
+};
+
+//-------------------------------------------------------------------
+// Lights
+//-------------------------------------------------------------------
+struct CountModulaLightRYG : GrayModuleLightWidget {
+	CountModulaLightRYG() {
+		addBaseColor(SCHEME_RED);
+		addBaseColor(SCHEME_YELLOW);
+		addBaseColor(SCHEME_GREEN);
 	}
 };
 
@@ -69,6 +80,12 @@ struct CountModulaKnobBlue : CountModulaKnob {
 	}
 };
 
+struct CountModulaKnobViolet : CountModulaKnob {
+	CountModulaKnobViolet() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobViolet.svg")));
+	}
+};
+
 struct CountModulaKnobGrey : CountModulaKnob {
 	CountModulaKnobGrey() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobGrey.svg")));
@@ -92,6 +109,15 @@ struct CountModulaRotarySwitchRed : CountModulaKnobRed {
 		smooth = false;
 	}
 	
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}
+	
+	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SVGKnob::randomize();
@@ -104,6 +130,14 @@ struct CountModulaRotarySwitchOrange : CountModulaKnobOrange {
 	CountModulaRotarySwitchOrange() {
 		snap = true;
 		smooth = false;
+	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}
 	
 	// override the base randomizer as it sets switches to invalid values.
@@ -119,6 +153,14 @@ struct CountModulaRotarySwitchYellow : CountModulaKnobYellow {
 		snap = true;
 		smooth = false;
 	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -132,6 +174,14 @@ struct CountModulaRotarySwitchGreen : CountModulaKnobGreen {
 	CountModulaRotarySwitchGreen() {
 		snap = true;
 		smooth = false;
+	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}
 	
 	// override the base randomizer as it sets switches to invalid values.
@@ -147,6 +197,14 @@ struct CountModulaRotarySwitchBlue : CountModulaKnobBlue {
 		snap = true;
 		smooth = false;
 	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -156,11 +214,40 @@ struct CountModulaRotarySwitchBlue : CountModulaKnobBlue {
 	}	
 };
 
-
 struct CountModulaRotarySwitchGrey : CountModulaKnobGrey {
 	CountModulaRotarySwitchGrey() {
 		snap = true;
 		smooth = false;
+	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}	
+};
+
+struct CountModulaRotarySwitchViolet : CountModulaKnobViolet {
+	CountModulaRotarySwitchViolet() {
+		snap = true;
+		smooth = false;
+	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}
 	
 	// override the base randomizer as it sets switches to invalid values.
@@ -175,6 +262,14 @@ struct CountModulaRotarySwitchWhite : CountModulaKnobWhite {
 	CountModulaRotarySwitchWhite() {
 		snap = true;
 		smooth = false;
+	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}
 	
 	// override the base randomizer as it sets switches to invalid values.
@@ -232,6 +327,13 @@ struct CountModulaRotarySwitch5PosGrey : CountModulaRotarySwitchGrey {
 	}
 };
 
+struct CountModulaRotarySwitch5PosViolet : CountModulaRotarySwitchViolet {
+	CountModulaRotarySwitch5PosViolet() {
+		minAngle = -0.4*M_PI;
+		maxAngle = 0.4*M_PI;
+	}
+};
+
 struct CountModulaRotarySwitch5PosWhite : CountModulaRotarySwitchWhite {
 	CountModulaRotarySwitch5PosWhite() {
 		minAngle = -0.4*M_PI;
@@ -249,11 +351,22 @@ struct CountModulaToggle2P : SvgSwitch {
 
 		// no shadow for switches
 		shadow->opacity = 0.0f;
-}
+	}
 	
-	// // override the base randomizer as it sets switches to invalid values.
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SvgSwitch::onChange(e);
+		
+		if (paramQuantity->getValue() > 0.5f)
+			paramQuantity->setValue(1.0f);
+		else
+			paramQuantity->setValue(0.0f);
+	}
+	
+	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
-		SVGSwitch::randomize();
+		SvgSwitch::randomize();
 
 		if (paramQuantity->getValue() > 0.5f)
 			paramQuantity->setValue(1.0f);
@@ -274,10 +387,24 @@ struct CountModulaToggle3P : SvgSwitch {
 		// no shadow for switches
 		shadow->opacity = 0.0f;
 	}
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SvgSwitch::onChange(e);
+		
+		if (paramQuantity->getValue() > 1.33f)
+			paramQuantity->setValue(2.0f);
+		else if (paramQuantity->getValue() > 0.67f)
+			paramQuantity->setValue(1.0f);
+		else
+			paramQuantity->setValue(0.0f);
+	}
+
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
-		SVGSwitch::randomize();
+		SvgSwitch::randomize();
 		
 		if (paramQuantity->getValue() > 1.33f)
 			paramQuantity->setValue(2.0f);
@@ -299,7 +426,7 @@ struct CountModulaPB :  SvgSwitch {
 
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
-		SVGSwitch::randomize();
+		SvgSwitch::randomize();
 		
 		if (paramQuantity->getValue() > 0.5f)
 			paramQuantity->setValue(1.0f);

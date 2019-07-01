@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Polarizer
+//	/^M^\ Count Modula - Polarizer
 //	Basic polarizing functionality
 //----------------------------------------------------------------------------
 #pragma once

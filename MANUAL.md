@@ -50,7 +50,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 				From v0.6.2, the reset and run functions have been split into separate jack with the run functioning as outlined above however with a cable plugged into the rest input, it will not reset the sequencer on the positive edge of the gate.
 			</p>
 			<p>
-			* new in v1.0: A new S&H input has been added that, when a cable is connected, causes the Scale functionality to be bypassed and uses a sampled voltage (taken at the leading clock edge) as the base for the division knobs. Note that each knob will equate to 1/6th of the input voltage when at full scale.
+			* new in v1.0: A new S&amp;H input has been added that, when a cable is connected, causes the Scale functionality to be bypassed and uses a sampled voltage (taken at the leading clock edge) as the base for the division knobs. Note that each knob will equate to 1/6th of the input voltage when at full scale.
 			</p>
 		</td>
 	</tr>
@@ -114,6 +114,37 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
+
+<a id="GateModifier">
+<h3>Gate Modifier</h3>
+<table>
+	<tr valign="top">
+		<td width=180>
+			<img src="./img/GateModifier.png">
+		</td> 
+		<td>
+			A voltage controlled gate length modifier with the following selectable ranges:
+			<ul>
+				Short: up to approx. 1 second
+				Medium: up to approx. 10 seconds
+				Long: up to 1 approx. 20 seconds		
+			</ul>
+			The CV input allows modulation of the gate length by approximately 1, 10 or 20 seconds depending on the selected range.
+			<p>
+				The Retrigger/On-shot switch selects how the gate length modification is applied.
+				<ul>
+					<li>Retrigger: sets Output high for the duration of input gate <i>plus</i> the selected length.
+					<li>One-shot: sets Output high only for the the selected length regardless of the input gate length.
+				</ul>
+				To shorten a gate signal, select One-shot and a length that is shorter than the input gate signal. 
+			</p>
+			<p>
+				A trigger pulse is sent to the End output at the end of the extended or shortened gate cycle. 
+			</p>
+		</td>
+	</tr>
+</table>
+
 <a id="G2T">
 <h3>G2T</h3>
 <table>
@@ -138,6 +169,41 @@ Whilst these modules are offered free of charge, if you like them or are using t
 			A quad voltage inverter. Unlike the Boolean Logic Inverter, this module inverts around zero. Positive voltage in become a negative voltage out and vice-versa.
 			<p>
 				This module can process polyphonic signals.
+			</p>
+		</td>
+	</tr>
+</table>
+
+<a id="Mangler">
+<h3>Mangler</h3>
+<table>
+	<tr valign="top">
+		<td width=100>
+			<img src="./img/Mangler.png">
+		</td> 
+		<td>
+			A voltage controlled sample rate and bit depth reducer or &quot;bit crusher&quot; designed to make a lo-fi mess of your audio or CV signals.
+			<p>
+				Three operational modes allow for different lo-fi effects to be achieved:
+				<ul>
+					<li>Slice: Slices the input signal at the selected sample rate.
+					<li>Crush: Crushes the bit depth down to the selected the number of steps.
+					<li>Blend: Combines the Slice and Crush modes for maxmim mangling effect.
+				</ul>
+			</p>
+			<p>
+				Note, it is possible to have no output with low Crush settings and low level input signals. The input level control will amplify the input signal past about 2:00 up to a maximum of 150%.  
+			</p>
+			<p>
+				The Range switch determines how control and audio voltages are handled
+				<ul>
+					<li>0-10V: For processing unipolar control signals in the range of 0-10V signals like envelopes or unipolar LFOs.
+					<li>+/-5V: For processing bipolar signals within the -5V to +5V range such as VCOs. 
+				</ul>
+				Signals outside the selected range will be clamped to that range so oscillators processed via the 1-10V setting for example, will be half wave rectified and control signals processed using the +/-5V setting will be truncated at +5V.	
+			</p>
+			<p>
+				This module can process polyphonic signals with each channel being mangled at the same sample rate and bit depth.
 			</p>
 		</td>
 	</tr>
@@ -319,6 +385,38 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
+<a id="Rectifier">
+<h3>Rectifier</h3>
+<table>
+	<tr valign="top">
+		<td width=180>
+			<img src="./img/Rectifier.png">
+		</td> 
+		<td>
+			A precision rectifier offering full wave, and both positive and negative half wave rectification. The input signals are rectified around a use settable and voltage controllable axis.  A set of inverted outputs for each rectified signal is also available.
+			<p>
+				This module can process polyphonic signals. All channels are rectified around the same axis.
+			</p>
+		</td>
+	</tr>
+</table>
+
+<a id="SampleAndHold">
+<h3>Sample & Hold</h3>
+<table>
+	<tr valign="top">
+		<td width=180>
+			<img src="./img/SampleAndHold.png">
+		</td> 
+		<td>
+			A basic sample and hold with optional track an hold ability. With the Mode switch in the T&H position, the output follows the input whilst the trigger input is high and holds the last sampled value on the transition of the trigger to a low state. 
+			<p>
+				This module can process polyphonic signals. All channels are sampled and held with a single trigger.
+			</p>
+		</td>
+	</tr>
+</table>
+
 <a id="ShepardGenerator">
 <h3>Shepard Generator</h3>
 <table>
@@ -341,14 +439,63 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 <table>
 	<tr valign="top">
 		<td width=180>
-			<img src="./img/SRFlipFLop.png">
+			<img src="./img/SRFlipFlop.png">
 		</td> 
 		<td>
-			A dual Set/Reset flip flop with optional enable. A high gate signal at the S input whilst the flip flop is enabled sets the Q output high and the NOTQ output low. A high gate signal at the R resets the Q outout to low and thre NOTW output to high. Both inouts high at the same result in an invalid state causing both outputs to also be high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be pesent atthe input in order to set or reset the flip flop.
+			A dual Set/Reset flip flop with optional enable. A high gate signal at the S input whilst the flip flop is enabled sets the Q output high and the NOTQ output low. A high gate signal at the R resets the Q output to low and the NOTW output to high. Both inputs high at the same result in an invalid state causing both outputs to also be high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
 		</td>
 	</tr>
 </table>
 
+<a id="StepSequencer8">
+<h3>Step Sequencer - 8 Step</h3>
+<table>
+	<tr valign="top">
+		<td >
+			<img src="./img/StepSequencer8.png">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			A dual 8 step trigger/gate sequencer with voltage control over sequence lengths and direction along with individual inputs for each step on one channel.<br/>
+			The Reset input restarts the sequence at step one on the next clock cycle.<br/>
+			The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
+			The Run, Clock and Reset inputs of channel 2 are normalled to channel 1.<br/>
+			<p>
+				With a cable plugged into CV input, the Length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input. The CV inputs are NOT normalled.<br>
+				The current sequence length is indicated by the small green lights situated next to the step numbers. 
+			</p>
+			<p>
+				Each sequencer can output up to 8 octaves of CV with channel 2 having selectable ranges of 8 , 5 and 2 volts on each row via the Range switches and the channel 1 having continuously variable range via the Scale attenuator knob.<p>
+				Additionally, channel 1 has individual inputs per step for processing of external signals. With no cables plugged in, the CV2 output follows the CV1 output for each step.
+				When a cable is plugged in to a step input, the output when that step is selected will be the input voltage attenuated by the associated knob and channel scale setting.<br>
+				Note that the knobs for channel 1 are common to the CV1 and CV2 outputs with CV1 reflecting the value of the knob scaled by the Scale control which is also common to both outputs.<br>
+				The individual input for step 1 has a special feature for polyphonic cables whereby each channel present is spread across the remaining unconnected step inputs allowing the sequencer to step through each channel in turn like an arpeggiator. 
+			</p>
+			<p>
+				Three direction options are available via the direction switch or control voltage applied to the Direction input.
+				<ul>
+					<li>Forward: The sequence travels from left to right and restart on the left hand side. When in this mode the direction indicator will be green.
+					<li>Pendulum: The sequence travels from left to right then back again before starting over. When in this mode the direction indicator will be yellow.
+					<li>Reverse: The sequence travels from right to left then start again on the right hand side. When in this mode the direction indicator will be red.
+				</ul>
+				With a cable plugged into the direction CV input, the direction switch is disabled and control of the direction is determined only by the applied voltage which responds as follows:
+				<ul>
+					<li> Under 2 Volts: Forward
+					<li> 2 Volts to 4 Volts: Pendulum
+					<li> Over 4 Volts: Reverse
+				</ul>
+				The direction inputs are not mormalled.
+			</p>
+			<p>
+				Each channel has 1 gate output and 3 trigger outputs.<br>
+				The gate outputs stay high for the duration of any selected step. Selecting the gate output for two consecutive steps results in a single gate signal for the duration of both steps. Note that the CV outputs will still change for each step even though the gate does not.<br>
+				The trigger outputs follow the pulse width of the clock signal.<br>
+			</p>
+			The mute buttons affect both adjacent trigger/gate outputs the same time.
+		</td>
+	</tr>
+</table>
 
 <a id="TappedGateDelay">
 <h3>Tapped Gate Delay</h3>
@@ -360,6 +507,19 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		<td>
 			A gate delay that offers up to 40 seconds of delay with tapped outputs at equal intervals along the delay line. Can be cascaded for even longer delays. Note that switching from a shorter delay time range to a longer one may introduce time travel artifacts were a gate that has already been output may be output again depending on where it is in the delay line at the time of the change. This is due to the way the delay line functions and is normal behaviour. The Direct output follows the Gate input whilst the Mixed output provides a user selectable combination of the direct output and the tapped outputs via the Mix buttons. 
 		</td>	
+	</tr>
+</table>
+
+<a id="TFlipFlop">
+<h3>T Flip Flop (Toggle)</h3>
+<table>
+	<tr valign="top">
+		<td width=180>
+			<img src="./img/TFlipFlop.png">
+		</td> 
+		<td>
+			A dual Toggle (T type) flip flop with optional enable. A positive going gate signal at the T input whilst the flip flop is enabled alternates the Q output high and low and the NOTQ output between low and high. A high gate signal at the Reset input resets the Q output to low and the NOTW output to high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
+		</td>
 	</tr>
 </table>
 
@@ -376,6 +536,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 			The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
 			The Run, Clock and Reset inputs of each channel are normalled to the previous channel.<br/>
 			With a cable plugged into CV input, the length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input. The CV inputs are NOT normalled.
+			The current sequence length is indicated by the small green lights situated next to the step numbers. 
 		</td>
 	</tr>
 </table>
@@ -395,6 +556,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 			The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
 			The Run, Clock and Reset inputs of each channel are normalled to the previous channel.<br/>
 			With a cable plugged into CV input, the length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input. The CV inputs are NOT normalled. 
+			The current sequence length is indicated by the small green lights situated next to the step numbers. 
 		</td>
 	</tr>
 </table>

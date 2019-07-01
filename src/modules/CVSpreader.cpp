@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - CV Spreader Module
+//	/^M^\ Count Modula - CV Spreader Module
 //	Based on the CGS37 CV Cluster by Ken Stone.
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

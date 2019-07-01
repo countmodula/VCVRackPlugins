@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Trigger Sequencer Module
+//	/^M^\ Count Modula - Trigger Sequencer Module
 //----------------------------------------------------------------------------
 struct STRUCT_NAME : Module {
 
@@ -24,6 +24,7 @@ struct STRUCT_NAME : Module {
 	enum LightIds {
 		ENUMS(STEP_LIGHTS, TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
 		ENUMS(TRIG_LIGHTS, TRIGSEQ_NUM_ROWS * 2),
+		ENUMS(LENGTH_LIGHTS,  TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
 		NUM_LIGHTS
 	};
 	
@@ -108,8 +109,15 @@ struct STRUCT_NAME : Module {
 			else {
 				length[r] = (int)(params[LENGTH_PARAMS + r].getValue());
 			}
+			
+			// set the length lights
+			for(int i = 0; i < TRIGSEQ_NUM_STEPS; i++) {
+				lights[LENGTH_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + i].setBrightness(boolToLight(i < length[r]));
+			}
 		}
 
+		
+		
 		// now process the steps for each row as required
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			if (gateReset[r].leadingEdge()) {
@@ -213,6 +221,7 @@ struct WIDGET_NAME : ModuleWidget {
 			int i = 0;
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
 				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s] - 15, STD_ROWS8[STD_ROW1 + (r * 2)] + rowOffset), module, STRUCT_NAME::STEP_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + i));
+				addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s]- 5, STD_ROWS8[STD_ROW1 + (r * 2)] + 3), module, STRUCT_NAME::LENGTH_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + i));
 				addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s] - 15, STD_ROWS8[STD_ROW2 + (r * 2)] + rowOffset), module, STRUCT_NAME:: STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++));
 			}
 			

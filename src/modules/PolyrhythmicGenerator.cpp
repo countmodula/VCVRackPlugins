@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Voltage Controlled Divider Module
+//	/^M^\ Count Modula - Voltage Controlled Divider Module
 //	A voltage controlled frequency divider (divide by 1 - approx 20)
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

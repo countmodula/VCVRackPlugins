@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Mixer Module
+//	/^M^\ Count Modula - Mixer Module
 //	A 4 input mixer with switchable uni/bi polar mixing capabilities
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Event Arranger Module
+//	/^M^\ Count Modula - Event Arranger Module
 //	Complex event generator based on John Blacet's "VCC & Event Arranger" 
 //	article published in Synapse magazine in Feb '78. 
 //	With a twist...

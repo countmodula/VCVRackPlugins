@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\	Count Modula - Gate Delay Module
+//	/^M^\ Count Modula - Gate Delay Module
 //	A shift register style gate delay offering up to 20 seconds of
 //  delay
 //----------------------------------------------------------------------------

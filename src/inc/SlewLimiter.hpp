@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Slew Limiter
+//	/^M^\ Count Modula - Slew Limiter
 //	Basic Up/Down Slew limiting functionality based on the Befaco Slew Limiter
-//	By Andrew Belt.
+//	by Andrew Belt.
 //----------------------------------------------------------------------------
 #pragma once
 

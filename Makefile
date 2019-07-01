@@ -15,6 +15,7 @@ SOURCES += $(wildcard src/*.cpp)
 SOURCES += $(wildcard src/modules/*.cpp)
 SOURCES += $(wildcard src/lib/*.cpp)
 SOURCES += $(wildcard src/components/*.cpp)
+SOURCES += $(wildcard src/dev/*.cpp)
 
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.

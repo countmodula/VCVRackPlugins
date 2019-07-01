@@ -1,3 +1,6 @@
+//----------------------------------------------------------------------------
+//	/^M^\ Count Modula header.
+//----------------------------------------------------------------------------
 #include "rack.hpp"
 using namespace rack;
 
@@ -38,7 +41,12 @@ extern Model *modelTriggerSequencer16;
 extern Model *modelTriggerSequencer8;
 extern Model *modelMixer;
 extern Model *modelMute;
-
+extern Model *modelRectifier;
+extern Model *modelSampleAndHold;
+extern Model *modelTFlipFlop;
+extern Model *modelGateModifier;
+extern Model *modelStepSequencer8;
+extern Model *modelMangler;
 
 #include "components/CountModulaComponents.hpp"
 #include "components/StdComponentPositions.hpp"

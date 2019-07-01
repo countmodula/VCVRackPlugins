@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Logical inverter
+//	/^M^\ Count Modula - Logical inverter
 //	Schmitt Trigger controlled logical inverter
 //----------------------------------------------------------------------------
 #pragma once
