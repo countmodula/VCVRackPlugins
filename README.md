@@ -81,7 +81,7 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 		<th align="left">Notes</th>
 	</tr>
 	<tr valign="top">
-		<td align="center">XX-XXX-2019</td>
+		<td align="center">07-July-2019</td>
 		<td align="center">v1.1.0</td>
 		<td align="left">
 			<b>New Modules</b><br/>
