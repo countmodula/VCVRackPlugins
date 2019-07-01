@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - VC NOT Logic Gate Module
+//	/^M^\ Count Modula - VC NOT Logic Gate Module
 //	A Voltage controlled logical inverter
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

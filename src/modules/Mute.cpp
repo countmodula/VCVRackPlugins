@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Manual Gate Module
+//	/^M^\ Count Modula - Manual Gate Module
 //	A simple manual gate generator with a nice big button offering gate, latch
 //	extended gate and trigger outputs 
 //----------------------------------------------------------------------------
@@ -46,6 +46,22 @@ struct Mute : Module {
 		gate.reset();
 		slew.reset();
 	}	
+	
+	json_t* dataToJson() override {
+		json_t* root = json_object();
+		json_object_set_new(root, "Latch", json_boolean(latch));
+		return root;
+	}	
+	
+
+	void dataFromJson(json_t* root) override {
+		json_t* jsonLatch = json_object_get(root, "Latch");
+		
+		if (jsonLatch) {
+			latch = json_is_true(jsonLatch);
+		}
+	}
+		
 	
 	void process(const ProcessArgs &args) override {
 		

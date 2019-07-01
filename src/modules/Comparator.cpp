@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Comparator Module
+//	/^M^\ Count Modula - Comparator Module
 //	An analogue comparator
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

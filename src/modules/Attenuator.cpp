@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\	Count Modula - Attenuator Module
+//	/^M^\ Count Modula - Attenuator Module
 //	A basic dual attenuator module with one switchable attenuverter and one 
 //  simple attenuator
 //----------------------------------------------------------------------------

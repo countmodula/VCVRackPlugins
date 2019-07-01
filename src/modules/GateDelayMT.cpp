@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\	Count Modula - Multi-tapped Gate Delay Module
+//	/^M^\ Count Modula - Multi-tapped Gate Delay Module
 //	A shift register style gate delay offering 8 tapped gate outputs 
 //----------------------------------------------------------------------------
 #include <queue>

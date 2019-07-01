@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - SR Flip Flop (Latch) Logic Gate Module
+//	/^M^\ Count Modula - SR Flip Flop (Latch) Logic Gate Module
 //	A dual set/reset latch with gate enable
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
@@ -87,6 +87,53 @@ struct SRFlipFlop : Module {
 		flipflop[0].reset();
 		flipflop[1].reset();
 	}
+
+
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		// flip flop Q states
+		json_t *QStates = json_array();
+		for (int i = 0; i < 2; i++) {
+			json_array_insert_new(QStates, i, json_boolean(flipflop[i].stateQ));
+		}
+		json_object_set_new(root, "QStates", QStates);
+
+		
+		// flip flop NQ states
+		json_t *NQStates = json_array();
+		for (int i = 0; i < 2; i++) {
+			json_array_insert_new(NQStates, i, json_boolean(flipflop[i].stateNQ));
+		}
+		json_object_set_new(root, "NQStates", NQStates);
+
+		return root;
+	}
+	
+	void dataFromJson(json_t *root) override {
+
+		// flip flop Q states
+		json_t *QStates = json_object_get(root, "QStates");
+		
+		if (QStates) {
+			for (int i = 0; i < 2; i++) {
+				json_t *state = json_array_get(QStates, i);
+				
+				flipflop[i].stateQ = json_is_true(state);
+			}
+		}
+		
+		// flip flop NQ states
+		json_t *NQStates = json_object_get(root, "NQStates");
+		
+		if (NQStates) {
+			for (int i = 0; i < 2; i++) {
+				json_t *state = json_array_get(NQStates, i);
+				
+				flipflop[i].stateNQ = json_is_true(state);
+			}
+		}
+	}	
 
 	void process(const ProcessArgs &args) override {
 		

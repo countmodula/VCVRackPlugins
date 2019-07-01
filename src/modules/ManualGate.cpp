@@ -1,10 +1,11 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Manual Gate Module
+//	/^M^\ Count Modula - Manual Gate Module
 //	A simple manual gate generator with a nice big button offering gate, latch
 //	extended gate and trigger outputs 
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/PulseModifier.hpp"
 #include "../inc/Utility.hpp"
 
 struct ManualGate : Module {
@@ -16,6 +17,7 @@ struct ManualGate : Module {
 	enum InputIds {
 		NUM_INPUTS
 	};
+	
 	enum OutputIds {
 		GATE_OUTPUT,
 		IGATE_OUTPUT,
@@ -33,7 +35,9 @@ struct ManualGate : Module {
 
 	GateProcessor gate;
 	dsp::PulseGenerator  pgTrig;
-	dsp::PulseGenerator  pgGate;
+	PulseModifier pmGate;
+	
+	
 	bool latch = false;
 	
 	ManualGate() {
@@ -47,7 +51,22 @@ struct ManualGate : Module {
 		latch = false;
 		gate.reset();
 		pgTrig.reset();
-		pgGate.reset();
+		pmGate.reset();
+	}	
+	
+	json_t* dataToJson() override {
+		json_t* root = json_object();
+		json_object_set_new(root, "Latch", json_boolean(latch));
+		return root;
+	}	
+	
+
+	void dataFromJson(json_t* root) override {
+		json_t* jsonLatch = json_object_get(root, "Latch");
+		
+		if (jsonLatch) {
+			latch = json_is_true(jsonLatch);
+		}
 	}	
 	
 	void process(const ProcessArgs &args) override {
@@ -61,9 +80,12 @@ struct ManualGate : Module {
 			pgTrig.trigger(1e-3f);
 		}
 		
+		
+		pmGate.set(params[LENGTH_PARAM].getValue());
+		
 		if (gate.high()) {
-			// keep resetting the pulse extender until such time as the gate button goes low
-			pgGate.trigger(params[LENGTH_PARAM].getValue());
+			// reset sets the output low and disables the timer
+			pmGate.restart();
 		}
 		
 		outputs[TRIG_OUTPUT].setVoltage(boolToGate(pgTrig.process(args.sampleTime)));
@@ -74,8 +96,8 @@ struct ManualGate : Module {
 		
 		outputs[LATCH_OUTPUT].setVoltage(boolToGate(latch));
 		outputs[ILATCH_OUTPUT].setVoltage(boolToGate(!latch));
-		
-		bool ext = (gate.high() || pgGate.process(args.sampleTime));
+
+		bool ext = (gate.high() || pmGate.process(args.sampleTime));
 		outputs[EXTENDED_OUTPUT].setVoltage(boolToGate(ext));
 		outputs[IEXT_OUTPUT].setVoltage(boolToGate(!ext));
 		

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Binary Sequencer Module
+//	/^M^\ Count Modula - Binary Sequencer Module
 //	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

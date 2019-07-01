@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Voltage Inverter Module
+//	/^M^\ Count Modula - Voltage Inverter Module
 //	A basic quad voltage inverter
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

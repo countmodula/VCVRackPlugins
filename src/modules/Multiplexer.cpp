@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - XOR Logic Gate Module
+//	/^M^\ Count Modula - XOR Logic Gate Module
 //	A 1-8 8-1 multiplexer module / 1 to 8 router / 8 to 1 switcher
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

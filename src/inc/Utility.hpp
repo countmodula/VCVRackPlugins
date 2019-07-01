@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Utilities
+//	/^M^\ Count Modula - Utilities
 //	Handy little bits and bobs to make life easier
 //----------------------------------------------------------------------------
 #pragma once

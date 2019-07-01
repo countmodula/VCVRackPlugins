@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Gate Processor
+//	/^M^\ Count Modula - Gate Processor
 //	A standardised gate input processor
 //----------------------------------------------------------------------------
 #pragma once

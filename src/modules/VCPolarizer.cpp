@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Voltage Controlled Polarizer Module
+//	/^M^\ Count Modula - Voltage Controlled Polarizer Module
 //	AA 2 channel voltage controlled signal polarizer
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

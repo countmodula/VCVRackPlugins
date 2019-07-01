@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Manual CV Module
+//	/^M^\ Count Modula - Manual CV Module
 //	A dual manual CV generator
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

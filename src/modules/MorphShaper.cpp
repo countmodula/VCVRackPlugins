@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Morph Shaper
+//	/^M^\ Count Modula - Morph Shaper
 //	A CV controlled morphing controller based on the Doepfer A-144
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

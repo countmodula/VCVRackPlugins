@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Binary Sequencer Module
+//	/^M^\ Count Modula - Binary Sequencer Module
 //	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
@@ -84,7 +84,7 @@ struct BinarySequencer : Module {
 		
 		
 		// handle the reset input
-		if (inputs[RESET_INPUT].active) {
+		if (inputs[RESET_INPUT].isConnected()) {
 			// reset really is reset
 			gateReset.set(inputs[RESET_INPUT].getVoltage());
 		}

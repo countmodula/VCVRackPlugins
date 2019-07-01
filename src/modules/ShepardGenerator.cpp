@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	Count Modula - Shepard Generator Module
+//	/^M^\ Count Modula - Shepard Generator Module
 //	An 8 phase shepard oscillator.
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
