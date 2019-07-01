@@ -178,7 +178,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 <h3>Mangler</h3>
 <table>
 	<tr valign="top">
-		<td width=100>
+		<td width=180>
 			<img src="./img/Mangler.png">
 		</td> 
 		<td>
@@ -479,13 +479,17 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 					<li>Pendulum: The sequence travels from left to right then back again before starting over. When in this mode the direction indicator will be yellow.
 					<li>Reverse: The sequence travels from right to left then start again on the right hand side. When in this mode the direction indicator will be red.
 				</ul>
+				<p>
 				With a cable plugged into the direction CV input, the direction switch is disabled and control of the direction is determined only by the applied voltage which responds as follows:
 				<ul>
 					<li> Under 2 Volts: Forward
 					<li> 2 Volts to 4 Volts: Pendulum
 					<li> Over 4 Volts: Reverse
 				</ul>
-				The direction inputs are not mormalled.
+				The direction inputs are not mormalled.<br>
+				Change of direction from forward to reverse or vice-versa occurs on the next clock after the change is made. When changing to pendulum mode the current direction will be maintained until the end (or start) of the sequence is reached at which point the direction will change. 
+			</p>
+				Note that if the seuqunce length is shortened whilst the sequencer is in the reverse dirtection and the current step is outside the selected length, the sequence will continue from it's current step rather than jumping to the new end step.
 			</p>
 			<p>
 				Each channel has 1 gate output and 3 trigger outputs.<br>
