@@ -31,6 +31,14 @@ struct VoltageInverter : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	}
 
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
+	
 	void process(const ProcessArgs &args) override {
 		int inputToUse = 0;
 		for (int i = 0; i < 4; i++) {

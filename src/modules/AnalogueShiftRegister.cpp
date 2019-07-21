@@ -89,6 +89,14 @@ struct AnalogueShiftRegister : Module {
 		b.reset();
 	}
 
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
+	
 	void process(const ProcessArgs &args) override {
 
 		float in2 = inputs[CH2_SIGNAL_INPUT].getNormalVoltage(a.lastStep());

@@ -7,6 +7,7 @@
 #include "../inc/ClockOscillator.hpp"
 #include "../inc/SlewLimiter.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/SequencerExpanderMessage.hpp"
 
 struct BinarySequencer : Module {
 	enum ParamIds {
@@ -52,6 +53,10 @@ struct BinarySequencer : Module {
 	dsp::PulseGenerator  pgTrig;
 	ClockOscillator clock;
 	LagProcessor slew;
+
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
+#endif
 	
 	BinarySequencer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -71,7 +76,21 @@ struct BinarySequencer : Module {
 	
 		// scale switch
 		configParam(SCALE_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+	
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// expander
+		rightExpander.producerMessage = rightMessages[0];
+		rightExpander.consumerMessage = rightMessages[1];
+#endif		
 	}
+	
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.3"));
+		
+		return root;
+	}	
 	
 	void process(const ProcessArgs &args) override {
 
@@ -81,7 +100,6 @@ struct BinarySequencer : Module {
 		
 		// handle the run input
 		gateRun.set(inputs[RUN_INPUT].getNormalVoltage(10.0f));
-		
 		
 		// handle the reset input
 		if (inputs[RESET_INPUT].isConnected()) {
@@ -165,6 +183,33 @@ struct BinarySequencer : Module {
 		
 		// blink the light according to the clock
 		lights[CLOCK_LIGHT].setSmoothBrightness(gateClock.light(), args.sampleTime);
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// set up details for the expander
+		if (rightExpander.module) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+				
+				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
+
+				// set the expander module's channel number
+				messageToExpander->setCVChannel(0);
+				messageToExpander->setTrigChannel(0);
+				messageToExpander->setOutChannel(0);
+	
+				// add the channel counters and gates
+				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {
+					messageToExpander->counters[i] = counter;
+					messageToExpander->clockStates[i] =	gateClock.high();
+					messageToExpander->runningStates[i] = gateRun.high();
+				}		
+				
+				// finally, let all subsequent expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_BNRYSEQ;
+				
+				rightExpander.module->leftExpander.messageFlipRequested = true;
+			}
+		}
+#endif	
 	}
 	
 	void onReset() override {

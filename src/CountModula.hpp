@@ -47,6 +47,14 @@ extern Model *modelTFlipFlop;
 extern Model *modelGateModifier;
 extern Model *modelStepSequencer8;
 extern Model *modelMangler;
+extern Model *modelBasicSequencer8;
+extern Model *modelSequencerExpanderCV8;
+extern Model *modelSequencerExpanderOut8;
+extern Model *modelSequencerExpanderTrig8;
+extern Model *modelSubHarmonicGenerator;
+extern Model *modelPolyrhythmicGeneratorMkII;
+extern Model *modelVCFrequencyDividerMkII;
+
 
 #include "components/CountModulaComponents.hpp"
 #include "components/StdComponentPositions.hpp"

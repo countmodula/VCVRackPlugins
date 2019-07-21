@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula - Voltage Controlled Divider Module
 //	A voltage controlled frequency divider (divide by 1 - approx 20)
+//  use of this module is not advised as it is no longer supported, use MkII instead
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"
@@ -26,7 +27,7 @@ struct VCFrequencyDivider : Module {
 		NUM_LIGHTS
 	};
 
-	FrequencyDivider divider;
+	FrequencyDividerOld divider;
 	
 	VCFrequencyDivider() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -37,6 +38,14 @@ struct VCFrequencyDivider : Module {
 
 	void onReset() override {
 		divider.reset();
+	}
+	
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
 	}
 	
 	void process(const ProcessArgs &args) override {

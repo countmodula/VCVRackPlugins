@@ -52,6 +52,14 @@ struct Mixer : Module {
 		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Mix mode (Uni/Bipolar)");
 	}
 	
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
+	
 	void process(const ProcessArgs &args) override {
 		float out = mixer.process(inputs[R1_INPUT].getNormalVoltage(10.0f), inputs[R2_INPUT].getNormalVoltage(0.0f), inputs[R3_INPUT].getNormalVoltage(0.0f), inputs[R4_INPUT].getNormalVoltage(0.0f), 
 			params[R1_LEVEL_PARAM].getValue(), params[R2_LEVEL_PARAM].getValue(), params[R3_LEVEL_PARAM].getValue(), params[R4_LEVEL_PARAM].getValue(), 

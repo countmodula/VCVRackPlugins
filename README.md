@@ -18,14 +18,15 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.1.0</h3>
+<h3>Modules - Release 1.2.0</h3>
 
 <a href="MANUAL.md">Module Manual</a>
 
 <ul>
 <li><a href="./MANUAL.md#ASR">Analogue Shift Register</a>
 <li><a href="./MANUAL.md#Attenuator">Attenuator</a>
-<li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a> *New features in v1.0.0
+<li><a href="">Basic 8 Step Sequencer</a> <font color="red">* New in v1.2.0</font>
+<li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a>
 <li><a href="./MANUAL.md#BooleanLogic">Boolean Logic Modules</a>
 	<ul>
 		<li>AND
@@ -36,7 +37,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Comparator">Comparator</a>
 <li><a href="./MANUAL.md#EventArranger">Event Arranger</a>
 <li><a href="./MANUAL.md#GateDelay">Gate Delay</a>
-<li><a href="./MANUAL.md#GateModifier">Gate Modifier</a> * New in v1.1.0
+<li><a href="./MANUAL.md#GateModifier">Gate Modifier</a>
 <li><a href="./MANUAL.md#G2T">G2T</a>
 <li><a href="./MANUAL.md#Inverter">Inverter</a>
 <li><a href="./MANUAL.md#Mangler">Mangler</a>
@@ -49,17 +50,26 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
 <li><a href="./MANUAL.md#Mute">Mute</a>
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
-<li><a href="./MANUAL.md#PolyrhythmicGenerator">Polyrhythmic Generator</a>
-<li><a href="./MANUAL.md#Rectifier">Rectifier</a> * New in v1.1.0
-<li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a> * New in v1.1.0
+<li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator</a> <font color="red">Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.</font>
+<li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator MkII</a> <font color="red">* New in v1.2.0</font>
+<li><a href="./MANUAL.md#Rectifier">Rectifier</a>
+<li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a>
+<li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a> <font color="red">* New in v1.2.0</font>
+	<ul>
+		<li>CV8
+		<li>OUT8
+		<li>TRIG8
+	</ul>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
 <li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a>
-<li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a> * New in v1.1.0
+<li><a href="./MANUAL.md#SubHarmonicGenerator">Sub Harmonic Generator</a> <font color="red">* New in v1.2.0</font>
+<li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
-<li><a href="./MANUAL.md#SRFlipFlop">T Flip Flop</a> * New in v1.1.0
+<li><a href="./MANUAL.md#SRFlipFlop">T Flip Flop</a>
 <li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a>
 <li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a>
-<li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a>
+<li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a> <font color="red">Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.</font>
+<li><a href="./MANUAL.md#VCFrequencyDivider2">Voltage Controlled Frequency Divider II</a> <font color="red">* New in v1.2.0</font>
 <li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a>
 <li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>
 <li><a href="./MANUAL.md#CGS">CGS Based Modules</a>
@@ -79,6 +89,22 @@ Version v0.6.3 of the Count Modula suite of modules can be found here:
 		<th align="center">Date</th>
 		<th align="center">Release</th>
 		<th align="left">Notes</th>
+	</tr>
+	<tr valign="top">
+		<td align="center">21-July-2019</td>
+		<td align="center">v1.2.0</td>
+		<td align="left">
+			<b>New Modules</b><br/>
+			<ul>
+				<li>Basic 8 Step Sequencer
+				<li>Sequencer Expander - CV8
+				<li>Sequencer Expander - Out8
+				<li>Sequencer Expander - Trig8
+				<li>Sub Harmonic Generator
+				<li>VC Frequency Divider II (Replaces original version which should no longer be used in new patches)
+				<li>Polyrhythmic Generator MkII (Replaces original version which should no longer be used in new patches)
+			</ul>
+		</td>
 	</tr>
 	<tr valign="top">
 		<td align="center">07-July-2019</td>
