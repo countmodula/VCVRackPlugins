@@ -38,6 +38,14 @@ struct Rectifier : Module {
 		configParam(CV_PARAM, 0.0f, 1.0f, 0.0f, "CV amount", " %", 0.0f, 100.0f, 0.0f);
 	}
 	
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
+	
 	void process(const ProcessArgs &args) override {
 
 		// determine the rectification axis

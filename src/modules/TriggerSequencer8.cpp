@@ -4,6 +4,7 @@
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/SequencerExpanderMessage.hpp"
 
 #define STRUCT_NAME TriggerSequencer8
 #define WIDGET_NAME TriggerSequencer8Widget
@@ -13,5 +14,6 @@
 
 #define TRIGSEQ_NUM_ROWS	4
 #define TRIGSEQ_NUM_STEPS	8
+
 
 #include "TriggerSequencerSrc.hpp"

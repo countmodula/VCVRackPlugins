@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Voltage Controlled Divider Module
-//	A voltage controlled frequency divider (divide by 1 - approx 20)
+//	/^M^\ Count Modula - Polyrhythmic Generator Module
+//	Generates polyrhythmns 
+//  use of this module is not advised as it is no longer supported, use MkII instead
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/FrequencyDivider.hpp"
-
 
 struct PolyrhythmicGenerator : Module {
 	enum ParamIds {
@@ -35,7 +35,7 @@ struct PolyrhythmicGenerator : Module {
 		NUM_LIGHTS
 	};
 
-	FrequencyDivider dividers[8];
+	FrequencyDividerOld dividers[8];
 	dsp::PulseGenerator pgTriggers[8];
 	GateProcessor gpResets[8];
 	GateProcessor gpClocks[8];
@@ -61,7 +61,14 @@ struct PolyrhythmicGenerator : Module {
 		configParam(OUTPUTMODE_PARAM, 0.0f, 3.0f, 0.0f, "Output mode");
 		configParam(BEATMODE_PARAM, 0.0f, 1.0f, 1.0f, "Beat mode");
 		configParam(MUTEALL_PARAM, 0.0f, 1.0f, 0.0f, "Global mute");
+	}
+
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		return root;
 	}
 	
 	void onReset() override {
@@ -87,7 +94,6 @@ struct PolyrhythmicGenerator : Module {
 		float prevCV = 0.0f;
 		
 		outputs[POLY_OUTPUT].setChannels(8);
-		
 		for (int i = 0; i < 8; i++) {
 			// set the required maximum division in the divider
 			dividers[i].setMaxN(15);
@@ -108,7 +114,7 @@ struct PolyrhythmicGenerator : Module {
 			float cv = inputs[CV_INPUT + i].getNormalVoltage(prevCV);
 			float div = params[DIV_PARAM + i].getValue() + (params[CV_PARAM + i].getValue() * cv);
 			dividers[i].setN(div);
-			
+
 			// clock the divider 
 			float clock = inputs[CLOCK_INPUT + i].getNormalVoltage(prevClock);
 			dividers[i].process(clock);

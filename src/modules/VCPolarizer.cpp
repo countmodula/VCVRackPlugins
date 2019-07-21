@@ -44,6 +44,14 @@ struct VCPolarizer : Module {
 		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
 	}
+
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
 	
 	void onReset() override {
 		polarizer1.reset();

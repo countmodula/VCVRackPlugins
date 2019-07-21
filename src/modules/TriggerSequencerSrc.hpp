@@ -33,10 +33,14 @@ struct STRUCT_NAME : Module {
 	GateProcessor gateRun[TRIGSEQ_NUM_ROWS];
 	dsp::PulseGenerator pgTrig[TRIGSEQ_NUM_ROWS * 2];
 	
-	int count[TRIGSEQ_NUM_ROWS]; 
-	int length[TRIGSEQ_NUM_ROWS];
+	int count[TRIGSEQ_NUM_ROWS] = {}; 
+	int length[TRIGSEQ_NUM_ROWS] = {};
 	
 	float cvScale = (float)(TRIGSEQ_NUM_STEPS - 1);
+	
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
+#endif
 	
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -62,6 +66,20 @@ struct STRUCT_NAME : Module {
 				configParam(MUTE_PARAMS + + (r * 2) + i, 0.0f, 1.0f, 0.0f, "Mute this output");
 			}
 		}
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// expander
+		rightExpander.producerMessage = rightMessages[0];
+		rightExpander.consumerMessage = rightMessages[1];
+#endif			
+	}
+	
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		
+		return root;
 	}
 	
 	void onReset() override {
@@ -73,6 +91,7 @@ struct STRUCT_NAME : Module {
 			count[i] = 0;
 			length[i] = TRIGSEQ_NUM_STEPS;
 		}
+		
 		for (int i = 0; i < TRIGSEQ_NUM_ROWS * 2; i++) {
 			pgTrig[i].reset();
 		}
@@ -115,8 +134,6 @@ struct STRUCT_NAME : Module {
 				lights[LENGTH_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + i].setBrightness(boolToLight(i < length[r]));
 			}
 		}
-
-		
 		
 		// now process the steps for each row as required
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
@@ -172,6 +189,38 @@ struct STRUCT_NAME : Module {
 			lights[TRIG_LIGHTS + (r * 2)].setBrightness(boolToLight(outA));	
 			lights[TRIG_LIGHTS + (r * 2) + 1].setBrightness(boolToLight(outB));
 		}
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// set up details for the expander
+		if (rightExpander.module) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+				
+				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
+				
+				// set the expander module's channel number
+				messageToExpander->setCVChannel(0);
+				messageToExpander->setTrigChannel(0);
+				messageToExpander->setOutChannel(0);
+
+				// standard number of channels = 4
+				int j = 0;
+				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS; i++) {
+					messageToExpander->counters[i] = count[j];
+					messageToExpander->clockStates[i] =	gateClock[j].high();
+					messageToExpander->runningStates[i] = gateRun[j].high();
+					
+					// in case we ever add less than the expected number of rows, wrap them around to fill the expected buffer size
+					if (++j == TRIGSEQ_NUM_ROWS)
+						j = 0;
+				}
+	
+				// finally, let all subsequent expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
+	
+				rightExpander.module->leftExpander.messageFlipRequested = true;
+			}
+		}		
+#endif		
 	}
 
 };

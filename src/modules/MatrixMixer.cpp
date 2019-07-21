@@ -79,6 +79,14 @@ struct MatrixMixer : Module {
 		}
 	}
 	
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
+	
 	void process(const ProcessArgs &args) override {
 		
 		for (int i = 0; i < 4; i++) {

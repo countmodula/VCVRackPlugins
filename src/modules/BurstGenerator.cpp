@@ -6,6 +6,7 @@
 #include "../inc/Utility.hpp"
 #include "../inc/ClockOscillator.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/SequencerExpanderMessage.hpp"
 
 struct BurstGenerator : Module {
 	enum ParamIds {
@@ -41,7 +42,11 @@ struct BurstGenerator : Module {
 	bool bursting = false;
 	bool prevBursting = false;
 	bool startBurst = false;
-	
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+	bool seqBurst = false;
+	int seqCount = 0;
+#endif
+
 	bool state = false;
 	float clockFreq = 1.0f;
 	
@@ -50,6 +55,10 @@ struct BurstGenerator : Module {
 	GateProcessor gpTrig;
 	dsp::PulseGenerator pgStart;
 	dsp::PulseGenerator pgEnd;
+	
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
+#endif	
 	
 	BurstGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -61,6 +70,12 @@ struct BurstGenerator : Module {
 		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of pulses CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(PULSES_PARAM, 1.0f, 16.0f, 1.0f, "Number of pulses");
 		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Manual trigger");
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// expander
+		rightExpander.producerMessage = rightMessages[0];
+		rightExpander.consumerMessage = rightMessages[1];
+#endif			
 	}
 	
 	void onReset() override {
@@ -70,9 +85,20 @@ struct BurstGenerator : Module {
 		pgEnd.reset();
 		clock.reset();
 		bursting = false;
+		seqBurst = false;
+		seqCount = 0;
 		counter = -1;
+
 	}
 
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		
+		return root;
+	}
+	
 	void process(const ProcessArgs &args) override {
 
 		// grab the current burst count taking CV into account ans ensuring we don't go below 1
@@ -103,6 +129,10 @@ struct BurstGenerator : Module {
 				// set the burst to go off
 				startBurst = true;
 				counter = -1;
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+				seqBurst = true;
+				seqCount = 0;
+#endif
 			}
 		}
 		
@@ -116,14 +146,26 @@ struct BurstGenerator : Module {
 
 		// process the burst logic based on the results of the above
 		if (gpClock.leadingEdge()) {
+#ifdef SEQUENCER_EXP_MAX_CHANNELS				
+			// keep a separate count for the sequencer expanders
+			if (seqBurst) {
+				seqCount++;
+				if (seqCount > pulses) {	
+					seqCount = 0;
+					seqBurst = false;
+				}
+			}
+#endif
+
 			if (startBurst || bursting) {
 				if (++counter >= pulses) {
 					counter = -1;
 					bursting = false;
 				}
-				else
+				else {
 					bursting = true;
-
+				}
+				
 				startBurst = false;
 			}
 		}
@@ -153,6 +195,33 @@ struct BurstGenerator : Module {
 		
 		// save bursting state for next step
 		prevBursting = bursting;
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// set up details for the expander
+		if (rightExpander.module) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
+
+				// set the expander module's channel number
+				messageToExpander->setCVChannel(0);
+				messageToExpander->setTrigChannel(0);
+				messageToExpander->setOutChannel(0);
+		
+				// add the channel counters and gates
+				int c = seqBurst ? counter + 1 : 0;
+				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {
+					messageToExpander->counters[i] = c;
+					messageToExpander->clockStates[i] =	gpClock.high();
+					messageToExpander->runningStates[i] = true; // always running - the counter takes care of the not running states 
+				}
+			
+				// finally, let all subsequent expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
+				
+				rightExpander.module->leftExpander.messageFlipRequested = true;
+			}
+		}
+#endif		
 	}
 };
 

@@ -32,11 +32,10 @@ struct ManualGate : Module {
 		LATCH_LIGHT,
 		NUM_LIGHTS
 	};
-
+	
 	GateProcessor gate;
 	dsp::PulseGenerator  pgTrig;
 	PulseModifier pmGate;
-	
 	
 	bool latch = false;
 	
@@ -56,17 +55,18 @@ struct ManualGate : Module {
 	
 	json_t* dataToJson() override {
 		json_t* root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		json_object_set_new(root, "Latch", json_boolean(latch));
+		
 		return root;
 	}	
 	
 
 	void dataFromJson(json_t* root) override {
 		json_t* jsonLatch = json_object_get(root, "Latch");
-		
-		if (jsonLatch) {
+		if (jsonLatch)
 			latch = json_is_true(jsonLatch);
-		}
 	}	
 	
 	void process(const ProcessArgs &args) override {
@@ -106,7 +106,7 @@ struct ManualGate : Module {
 };
 
 struct ManualGateWidget : ModuleWidget {
-	ManualGateWidget(ManualGate *module) {
+	ManualGateWidget(ManualGate *module) {	
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ManualGate.svg")));
 

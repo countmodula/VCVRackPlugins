@@ -35,6 +35,14 @@ struct ManualCV : Module {
 		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value", " V");
 		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
 	}
+
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		
+		return root;
+	}
 	
 	void process(const ProcessArgs &args) override {
 		outputs[CV1_OUTPUT].setVoltage(clamp(params[CV1COARSE_PARAM].getValue() + params[CV1FINE_PARAM].getValue(), -10.0f, 10.0f));

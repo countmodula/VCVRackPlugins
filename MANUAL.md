@@ -7,7 +7,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 <a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
 <hr/>
 
-<a id="ASR">
+<a id="ASR"></a>
 <h3>Analogue Shift Register</h3>
 <table>
 	<tr valign="top">
@@ -20,7 +20,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="Attenuator">
+<a id="Attenuator"></a>
 <h3>Attenuator</h3>
 <table>
 	<tr valign="top">
@@ -36,7 +36,51 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="BinarySequencer">
+
+<a id="Basic8StepSequencer"></a>
+<h3>Basic 8 Step Sequencer</h3>
+<table>
+	<tr valign="top">
+		<td width=220>
+			<img src="./img/Basic8StepSequencer.png">
+		</td> 
+		<td>
+			A single 8 step trigger/gate sequencer with voltage control over sequence length and direction.<br/>
+			The Reset input restarts the sequence at step one on the next clock cycle.<br/>
+			The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
+			<p>
+				With a cable plugged into CV input, the Length switch is disabled and control of the sequence length is determined only by the applied voltage. Full sequence length is achieved with a 10V input.<br>
+				The current sequence length is indicated by the small green lights situated next to the step numbers. 
+			</p>
+			<p>
+				The sequencer has a selectable output range of 8 , 5 or 2 volts via the Scale switch.<p>
+			</p>
+			<p>
+				Three direction options are available via the direction switch or control voltage applied to the Direction input.
+				<ul>
+					<li>Forward: The sequence travels from left to right and restart on the left hand side. When in this mode the direction indicator will be green.
+					<li>Pendulum: The sequence travels from left to right then back again before starting over. When in this mode the direction indicator will be yellow.
+					<li>Reverse: The sequence travels from right to left then start again on the right hand side. When in this mode the direction indicator will be red.
+				</ul>
+				With a cable plugged into the direction CV input, the direction switch is disabled and control of the direction is determined only by the applied voltage which responds as follows:
+				<ul>
+					<li> Under 2 Volts: Forward
+					<li> 2 Volts to 4 Volts: Pendulum
+					<li> Over 4 Volts: Reverse
+				</ul>
+			</p>
+			<p>
+				There is 1 gate and 1 trigger output which can be selected via the individual step switches.
+				The trigger outputs follow the pulse width of the clock signal and the gate outputs stay high for the duration of any selected step. Selecting the gate output for two consecutive steps results in a single gate signal for the duration of both steps. Note that the CV outputs will still change for each step even though the gate does not.<br>
+			</p>
+			<p>
+				Extra channels can be added via the <a href="#SequencerExpanders">Sequencer Expander</a> modules.
+			</p>
+		</td>
+	</tr>
+</table>
+
+<a id="BinarySequencer"></a>
 <h3>Binary Sequencer</h3>
 <table>
 	<tr valign="top">
@@ -56,7 +100,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="BooleanLogic">
+<a id="BooleanLogic"></a>
 <h3>Boolean Logic Modules</h3>
 <table>
 	<tr valign="top">
@@ -74,7 +118,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="Comparator">
+<a id="Comparator"></a>
 <h3>Comparator</h3>
 <table>
 	<tr valign="top">
@@ -87,7 +131,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="EventArranger">
+<a id="EventArranger"></a>
 <h3>Event Arranger</h3>
 <table>
 	<tr valign="top">
@@ -101,7 +145,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="GateDelay">
+<a id="GateDelay"></a>
 <h3>Gate Delay</h3>
 <table>
 	<tr valign="top">
@@ -115,7 +159,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 </table>
 
 
-<a id="GateModifier">
+<a id="GateModifier"></a>
 <h3>Gate Modifier</h3>
 <table>
 	<tr valign="top">
@@ -145,7 +189,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="G2T">
+<a id="G2T"></a>
 <h3>G2T</h3>
 <table>
 	<tr valign="top">
@@ -158,7 +202,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="Inverter">
+<a id="Inverter"></a>
 <h3>Inverter</h3>
 <table>
 	<tr valign="top">
@@ -174,7 +218,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="Mangler">
+<a id="Mangler"></a>
 <h3>Mangler</h3>
 <table>
 	<tr valign="top">
@@ -209,7 +253,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="ManualCV">
+<a id="ManualCV"></a>
 <h3>Manual CV</h3>
 <table>
 	<tr valign="top">
@@ -222,7 +266,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
 
-<a id="ManualGate">
+<a id="ManualGate"></a>
 <h3>Manual Gate</h3>
 <table>
 	<tr valign="top">
@@ -241,7 +285,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 	</tr>
 </table>
  
-<a id="MatrixMixer">
+<a id="MatrixMixer"></a>
 <h3>Matrix Mixer</h3>
 <table>
 	<tr valign="top">
@@ -264,7 +308,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 </tr>
 </table>
 
-<a id="Mixer">
+<a id="Mixer"></a>
 <h3>Mixer</h3>
 <table>
 	<tr valign="top">
@@ -278,7 +322,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 </table>
 
 
-<a id="MorphShaper">
+<a id="MorphShaper"></a>
 <h3>Morph Shaper</h3>
 <table>
 	<tr valign="top">
@@ -291,7 +335,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="Multiplexer">
+<a id="Multiplexer"></a>
 <h3>Multiplexer</h3>
 <table>
 	<tr valign="top">
@@ -324,7 +368,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="Mute">
+<a id="Mute"></a>
 <h3>Mute</h3>
 <table>
 	<tr valign="top">
@@ -341,7 +385,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="Mute-iple">
+<a id="Mute-iple"></a>
 <h3>Mute-iple</h3>
 <table>
 	<tr valign="top">
@@ -360,12 +404,53 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="PolyrhythmicGenerator">
-<h3>Polyrhythmic Generator</h3>
+<a id="PolyrhythmicGenerator"></a>
+<h3>Polyrhythmic Generator (Original Version)</h3>
+	<p>
+		This version of the Polyrhythmic Generator has a bug in it which means it can not perform the odd divisions that it was intended to and is dividing by 2, 4, 6, 8 rather than 1, 2 ,3, 4, 5 etc. Unfortunately there was no way to rectify this without breaking existing patches so 
+		this version has been retained for the time being however it is now deprecated and will no longer be supported. Users should convert any existing patches to use the new version ASAP as it is not likely to be ported across to the next incarnation of Rack. 
+	</p>
+	<p>
+		<i>Existing patches can be converted to use the new version using the following method:</i>
+	</p>
+	<ol>
+		<li>If not already turned on, turn Parameter Tooltips on from the Rack Main Menu (View->Parameter Tooltips).
+		<li>Add the MkII version module to your patch and duplicate the settings of all but the division controls.
+		<li>Starting at the top channel and working down, hover the mouse over the division control and note the value.
+		<li>Find the row in the table below where the value of the old control fits between the &quot;From&quot; and &quot;To&quot; values and set the equivalent control in the new module to the value in the right hand column.
+		<li>Repeat for the other seven dividers (or however many you are using in your patch).
+		<li>Drag the inputs/outputs from the old module to the same inputs/outputs on the new module.
+		<li>Finally, set the module into &quot;Legacy Mode&quot; via the module menu and your patch should sound the same as it used to although you may need to tweak the CV controls slightly if the patch does not sound quite right.
+	</ol>
+<center>
+<table>
+	<tr><td colspan=2 align="center"><b>Old Module Values</b></td><td align="center"><b>Mk II Values</b></td></tr>
+	<tr><td width="100" align="center"><b>From</b></td><td width="100" align="center"><b>To</b></td><td width="100" align="center"><b>Use</b></td></tr>
+	<tr><td  align="center">0.000</td><td  align="center">0.666</td><td  align="center">1</td></tr>
+	<tr><td  align="center">0.667</td><td  align="center">1.333</td><td  align="center">2</td></tr>
+	<tr><td  align="center">1.334</td><td  align="center">1.999</td><td  align="center">3</td></tr>
+	<tr><td  align="center">2.000</td><td  align="center">2.666</td><td  align="center">4</td></tr>
+	<tr><td  align="center">2.667</td><td  align="center">3.333</td><td  align="center">5</td></tr>
+	<tr><td  align="center">3.334</td><td  align="center">3.999</td><td  align="center">6</td></tr>
+	<tr><td  align="center">4.000</td><td  align="center">4.666</td><td  align="center">7</td></tr>
+	<tr><td  align="center">4.667</td><td  align="center">5.333</td><td  align="center">8</td></tr>
+	<tr><td  align="center">5.334</td><td  align="center">5.999</td><td  align="center">9</td></tr>
+	<tr><td  align="center">6.000</td><td  align="center">6.665</td><td  align="center">10</td></tr>
+	<tr><td  align="center">6.666</td><td  align="center">7.331</td><td  align="center">11</td></tr>
+	<tr><td  align="center">7.332</td><td  align="center">7.997</td><td  align="center">12</td></tr>
+	<tr><td  align="center">7.998</td><td  align="center">8.663</td><td  align="center">13</td></tr>
+	<tr><td  align="center">8.664</td><td  align="center">9.329</td><td  align="center">14</td></tr>
+	<tr><td  align="center">9.330</td><td  align="center">9.995</td><td  align="center">15</td></tr>
+	<tr><td  align="center">9.996</td><td  align="center">10.000</td><td  align="center">16</td></tr>
+</table>
+</center>
+
+<a id="PolyrhythmicGenerator2"></a>
+<h3>Polyrhythmic Generator MkII</h3>
 <table>
 	<tr valign="top">
 		<td width=340>
-			<img src="./img/PolyrhythmicGenerator.png">
+			<img src="./img/PolyrhythmicGenerator2.png">
 		</td> 
 		<td>
 			A set of 8 voltage controlled clock dividers that can be used to generate polyrhythms by clocking and/or dividing at different rates. The individual clock, reset and division CV  inputs of each channel are normalled to the previous channel allowing for global or segmented/individual control. Plugging a cable into the clock, reset or CV input a given channel will break the normalling input and inputs on subsequent channels from the input on the previous channel. Normalling is applied per input (breaking the CV input  does not break the clock normalling for example) so it is possible to have individual CV control over the divisions on each channel  whilst maintaining a common clock. Along with a global mute button which also has voltage control, each channel can be manually muted individually.
@@ -377,15 +462,24 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 				<li>Gated Clock: The input clock is sent to the output for the selected number of divisions then it is muted for the same number of divisions etc. 
 				<li>Clock: A single clock pulse for every Nth clock pulse.
 			</ul>
-			The &quot;On The 1&quot; beat mode control and associated CV input set whether the generator outputs pulses on the fist count of the division or on the last. When set to &quot;ON The 1&quot;, the first count will send pulses to the output upon reset then every N clock pulses as opposed to only after N clocks have been received. The former is considered to be more musical. 
+			The &quot;On The 1&quot; beat mode control and associated CV input set whether the generator outputs pulses on the fist count of the division or on the first positive going transition of the underlying divided clock). When set to &quot;ON The 1&quot;, the first count will send pulses to the output upon reset then every N clock pulses as opposed to only after N/2 clocks have been received then every N clock pulses. The former is considered to be more musical.
 			<p>
 				This module can generate polyphonic triggers. These are available at the Poly Out jack.
+			</p>
+			<b>Notes:</b>
+			<p>
+				The MkII module differs from the original version in two ways:
+				<ul>
+					<li>It has switches for the division controls rather than the freely adjustable knobs to make it easier to dial in the desired division ratios. 
+					<li>The correct division ratios including odd divisions are now used (1, 2, 3, 4, 5 etc rather than 1, 2, 4, 6 , 8, 10 etc)
+				</ul>
+				For those with old patches requiring the behaviour of the original version or who simply prefer the way it worked, the MkII module can be switched over to &quot;Legacy Mode&quot; via an option in the module context menu. Notes on converting old patches to use the MkII version of this module can be found <a href="#PolyrhythmicGenerator">here</a>.
 			</p>
 		</td>
 	</tr>
 </table>
 
-<a id="Rectifier">
+<a id="Rectifier"></a>
 <h3>Rectifier</h3>
 <table>
 	<tr valign="top">
@@ -401,7 +495,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="SampleAndHold">
+<a id="SampleAndHold"></a>
 <h3>Sample & Hold</h3>
 <table>
 	<tr valign="top">
@@ -417,7 +511,32 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="ShepardGenerator">
+<a id="SequencerExpanders"></a>
+<h3>Sequencer Expanders</h3>
+<table>
+	<tr valign="top">
+		<td width=340>
+			<img src="./img/SequencerExpanders.png">
+		</td> 
+		<td>
+			A set of expander modules that add extra channel functionality to the Count Modula 8 step sequencers.
+			<ul>
+				<li>SX-OUT8: Adds individual gate outputs for each step.<br>The Trigger/Gate switch determines whether the outputs stay high for the duration of the step (gate) or follow the clock width (trigger)
+				<li>SX-CV8: Adds another channel of CV output.<br>This module functions like the CV strip of the Basic Sequencer with Scale switch determining the output scale as 2, 4 or 8 volts. 
+				<li>SX-TRIG8: Adds another channel of Trigger/Gate output.This module functions like the gate/trigger switch strip on the Basic Sequencer with the switches selecting either of the trigger or gate output or no output at all when the step is active.
+			</ul>
+			<p>
+				These modules use the new expander functionality introduced in Rack V1 so must be placed immediately to the right of a sequencer module in order to function. Multiple expanders can be used by placing each extra expander immediately to the right of an already connected expander and they can be used in any combination and in any order. It should be noted a s sample delay is introduced with each expander.
+			</p>
+			<p>
+				Each expander has a channel indicator light to show which channel of the parent or master sequencer they are associated with and the colour of the indicator will match that of the associated master sequencer channel knobs should that master have multiple channels.
+				Note that the direction, number of steps and the current step of the associated master channel are passed through to the expanders. i.e. If the master channel is set to run in reverse then each expander attached to that channel will also run in reverse.
+			</p>
+		</td>
+	</tr>
+</table>
+
+<a id="ShepardGenerator"></a>
 <h3>Shepard Generator</h3>
 <table>
 	<tr valign="top">
@@ -426,15 +545,14 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 		</td> 
 		<td>
 			Generates a set of 8 ramp and sawtooth signals appropriately phased for generation of Shepard tones (tones that sound like they are continually rising or falling) when coupled with 8 VCOs and VCAs. Slower modulation rates work best for this effect.
-		</td>
 			<p>
 				This module can function as a polyphonic controller. The saw and triangle waveforms are available on separate channels within their respective Poly Out jacks.
 			</p>
+		<td>
 	</tr>
 </table>
 
-
-<a id="SRFlipFlop">
+<a id="SRFlipFlop"></a>
 <h3>SR Flip Flop</h3>
 <table>
 	<tr valign="top">
@@ -447,7 +565,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="StepSequencer8">
+<a id="StepSequencer8"></a>
 <h3>Step Sequencer - 8 Step</h3>
 <table>
 	<tr valign="top">
@@ -501,7 +619,24 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="TappedGateDelay">
+
+<a id="SubHarmonicGenerator"></a>
+<h3>Sub Harmonic Generator</h3>
+<table>
+	<tr valign="top">
+		<td width=220>
+			<img src="./img/SubHarmonicGenerator.png">
+		</td> 
+		<td>
+			Accepts a signal from a VCO/LFO and generates a mix of user selectable sub harmonic square waves. This module works best when fed with a square wave but will function with any other waveshape.
+			<p>
+			<b>Important Note:</b> This module is highly likely to introduce aliasing artefacts. An anti aliasing mode is planned for a future release.
+			</p>
+		</td>	
+	</tr>
+</table>
+
+<a id="TappedGateDelay"></a>
 <h3>Tapped Gate Delay</h3>
 <table>
 	<tr valign="top">
@@ -514,7 +649,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="TFlipFlop">
+<a id="TFlipFlop"></a>
 <h3>T Flip Flop (Toggle)</h3>
 <table>
 	<tr valign="top">
@@ -527,7 +662,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="TriggerSequencer8">
+<a id="TriggerSequencer8"></a>
 <h3>Trigger Sequencer - 8 Step</h3>
 <table>
 	<tr valign="top">
@@ -545,7 +680,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="TriggerSequencer16">
+<a id="TriggerSequencer16"></a>
 <h3>Trigger Sequencer - 16 Step</h3>
 <table>
 	<tr valign="top">
@@ -565,20 +700,81 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="VCFrequencyDivider">
+<a id="VCFrequencyDivider"></a>
 <h3>Voltage Controlled Frequency Divider</h3>
+	<p>
+		This version of the Voltage Controlled Frequency Divider has a bug in it which means it can not perform the odd divisions that it was intended to and is dividing by 2, 4, 6, 8 rather than 1, 2 ,3, 4, 5 etc. Unfortunately there was no way to rectify this without breaking existing patches so 
+		this version has been retained for the time being however it is now deprecated and will no longer be supported. Users should convert any existing patches to use the new version ASAP as it is not likely to be ported across to the next incarnation of Rack. 
+	</p>
+	<p>
+		<i>Existing patches can be converted to use the new version using the following method:</i>
+	</p>
+	<ol>
+		<li>If not already turned on, turn Parameter Tooltips on from the Rack Main Menu (View->Parameter Tooltips).
+		<li>Add the MkII version module to your patch and duplicate the settings of the CV control.
+		<li>Hover the mouse over the division control and note the value.
+		<li>Find the row in the table below where the value of the old control fits between the &quot;From&quot; and &quot;To&quot; values and set the division control in the new module to the value in the right hand column.
+		<li>Drag the inputs/outputs from the old module to the same inputs/outputs on the new module.
+		<li>Finally, set the module into &quot;Legacy Mode&quot; via the module menu and your patch should sound the same as it used to although you may need to tweak the CV control slightly if the patch does not sound quite right.
+	</ol>
+	<center>
+<table>
+	<tr><td colspan=2 align="center"><b>Old Module Values</b></td><td align="center"><b>Mk II Values</b></td></tr>
+	<tr><td width="100" align="center"><b>From</b></td><td width="100" align="center"><b>To</b></td><td width="100" align="center"><b>Use</b></td></tr>
+	<tr><td align="center">0.000</td><td align="center">0.500</td><td align="center">1</td></tr>
+	<tr><td align="center">0.501</td><td align="center">0.999</td><td align="center">2</td></tr>
+	<tr><td align="center">1.000</td><td align="center">1.499</td><td align="center">3</td></tr>
+	<tr><td align="center">1.500</td><td align="center">1.999</td><td align="center">4</td></tr>
+	<tr><td align="center">2.000</td><td align="center">2.499</td><td align="center">5</td></tr>
+	<tr><td align="center">2.500</td><td align="center">2.999</td><td align="center">6</td></tr>
+	<tr><td align="center">3.000</td><td align="center">3.499</td><td align="center">7</td></tr>
+	<tr><td align="center">3.500</td><td align="center">3.999</td><td align="center">8</td></tr>
+	<tr><td align="center">4.000</td><td align="center">4.499</td><td align="center">9</td></tr>
+	<tr><td align="center">4.500</td><td align="center">4.999</td><td align="center">10</td></tr>
+	<tr><td align="center">5.000</td><td align="center">5.499</td><td align="center">11</td></tr>
+	<tr><td align="center">5.500</td><td align="center">5.999</td><td align="center">12</td></tr>
+	<tr><td align="center">6.000</td><td align="center">6.499</td><td align="center">13</td></tr>
+	<tr><td align="center">6.500</td><td align="center">6.999</td><td align="center">14</td></tr>
+	<tr><td align="center">7.000</td><td align="center">7.499</td><td align="center">15</td></tr>
+	<tr><td align="center">7.500</td><td align="center">7.999</td><td align="center">16</td></tr>
+	<tr><td align="center">8.000</td><td align="center">8.499</td><td align="center">17</td></tr>
+	<tr><td align="center">8.500</td><td align="center">8.999</td><td align="center">18</td></tr>
+	<tr><td align="center">9.000</td><td align="center">9.499</td><td align="center">19</td></tr>
+	<tr><td align="center">9.500</td><td align="center">9.999</td><td align="center">20</td></tr>
+	<tr><td align="center">10.000</td><td align="center">10.000</td><td align="center">21</td></tr>
+</table>
+	</center>
+
+
+
+<a id="VCFrequencyDivider2"></a>
+<h3>Voltage Controlled Frequency Divider MkII</h3>
 <table>
 	<tr valign="top">
 		<td width=100>
-			<img src="./img/VCFrequencyDivider.png">
+			<img src="./img/VCFrequencyDivider2.png">
 		</td> 
 		<td>
-			A frequency divider with a variable and voltage controlled division ratio from 1 to around 20. Can be used with VCOs to create suboctaves or clocks to divide down to lower rates.
+			<p>
+				A frequency divider with a variable and voltage controlled division ratio from 1 to around 20. Can be used with VCOs to create suboctaves or clocks to divide down to lower rates.
+			</p>
+			<b>Notes:</b>
+			<p>
+				This module is highly likely to introduce aliasing artefacts when driven with audio frequencies. An anti aliasing mode is planned for a future release.
+			</p>
+			<p>
+				The MkII module differs from the original version in two ways:
+				<ul>
+					<li>It has switches for the division controls rather than the freely adjustable knobs to make it easier to dial in the desired division ratios. 
+					<li>The correct division ratios including odd divisions are now used (1, 2, 3, 4, 5 etc rather than 1, 2, 4, 6 , 8, 10 etc)
+				</ul>
+				For those with old patches requiring the behaviour of the original version or who simply prefer the way it worked, the MkII module can be switched over to &quot;Legacy Mode&quot; via an option in the module context menu. Notes on converting old patches to use the MkII version of this module can be found <a href="#VCFrequencyDivider">here</a>.
+			</p>
 		</td>
 	</tr>
 </table>
 
-<a id="VCPolarizer">
+<a id="VCPolarizer"></a>
 <h3>Voltage Controlled Polarizer </h3>
 <table>
 	<tr valign="top">
@@ -594,7 +790,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="VCSwitch">
+<a id="VCSwitch"></a>
 <h3>Voltage Controlled Switch</h3>
 <table>
 	<tr valign="top">
@@ -610,7 +806,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 	</tr>
 </table>
 
-<a id="CGS">
+<a id="CGS"></a>
 <h2>CGS Based Modules</h2>
 A nod to the genius of Ken stone, these are some of my favourite CGS designs realised in VCV Rack format.<br/>
 <a id="CVSpreader">
@@ -626,7 +822,7 @@ A nod to the genius of Ken stone, these are some of my favourite CGS designs rea
 	</tr>
 </table>
 
-<a id="BurstGenerator">
+<a id="BurstGenerator"></a>
 <h3>Burst Generator</h3>
 <table>
 	<tr valign="top">
@@ -640,7 +836,7 @@ A nod to the genius of Ken stone, these are some of my favourite CGS designs rea
 </table>
 
 <!--
-<a id="anchor">
+<a id="anchor"></a>
 <h3>title</h3>
 <table>
 	<tr valign="top">

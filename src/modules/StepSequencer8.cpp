@@ -5,6 +5,7 @@
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/SequencerExpanderMessage.hpp"
 
 #define STRUCT_NAME StepSequencer8
 #define WIDGET_NAME StepSequencer8Widget
@@ -68,13 +69,17 @@ struct STRUCT_NAME : Module {
 	GateProcessor gateReset[SEQ_NUM_SEQS];
 	GateProcessor gateRun[SEQ_NUM_SEQS];
 	
-	int count[SEQ_NUM_SEQS]; 
-	int length[SEQ_NUM_SEQS];
-	int direction[SEQ_NUM_SEQS];
-	int directionMode[SEQ_NUM_SEQS];
+	int count[SEQ_NUM_SEQS] = {}; 
+	int length[SEQ_NUM_SEQS] = {};
+	int direction[SEQ_NUM_SEQS] = {};
+	int directionMode[SEQ_NUM_SEQS] = {};
 	
 	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
-	float stepInputVoltages[SEQ_NUM_STEPS];
+	float stepInputVoltages[SEQ_NUM_STEPS] = {};
+	
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
+#endif
 	
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -138,11 +143,19 @@ struct STRUCT_NAME : Module {
 					configParam(RANGE_SW_PARAMS + + (r * 2) + i, 0.0f, 2.0f, 0.0f, "Scale");
 			}			
 		}
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// expander
+		rightExpander.producerMessage = rightMessages[0];
+		rightExpander.consumerMessage = rightMessages[1];
+#endif	
 	}
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		
 		json_t *currentStep = json_array();
 		json_t *dir = json_array();
 		
@@ -454,6 +467,39 @@ struct STRUCT_NAME : Module {
 			lights[GATE_LIGHTS + (r * 2)].setBrightness(boolToLight(gate1));	
 			lights[GATE_LIGHTS + (r * 2) + 1].setBrightness(boolToLight(gate2));
 		}
+		
+		
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
+		// set up details for the expander
+		if (rightExpander.module) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+				
+				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
+
+				// set the expander module's channel number
+				messageToExpander->setCVChannel(0);
+				messageToExpander->setTrigChannel(0);
+				messageToExpander->setOutChannel(0);
+	
+				// add the channel counters
+				int j = 0;
+				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS; i++) {
+					messageToExpander->counters[i] = count[j];
+					messageToExpander->clockStates[i] =	gateClock[j].high();
+					messageToExpander->runningStates[i] = gateRun[j++].high();
+						
+					// in case we ever add less than the expected number of rows, wrap them around to fill the expected buffer size
+					if (++j == SEQ_NUM_SEQS)
+						j = 0;
+				}
+					
+				// finally, let all subsequent expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_STEPSEQ;
+				
+				rightExpander.module->leftExpander.messageFlipRequested = true;
+			}
+		}
+#endif		
 	}
 
 };
