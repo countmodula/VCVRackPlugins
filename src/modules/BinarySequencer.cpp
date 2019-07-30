@@ -268,6 +268,80 @@ struct BinarySequencerWidget : ModuleWidget {
 		// clock rate light
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)), module, BinarySequencer::CLOCK_LIGHT));
 	}
+	
+	struct InitMenuItem : MenuItem {
+		BinarySequencerWidget *widget;
+		bool triggerInit = true;
+		bool cvInit = true;
+		
+		void onAction(const event::Action &e) override {
+
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			h->name = "initialize division mix";
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+		
+			widget->getParam(BinarySequencer::DIV01_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV02_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV04_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV08_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV16_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV32_PARAM)->reset();
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};	
+	
+	struct RandMenuItem : MenuItem {
+		BinarySequencerWidget *widget;
+		bool cvRand = true;
+	
+		void onAction(const event::Action &e) override {
+		
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			h->name = "randomize division mix";
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+		
+			widget->getParam(BinarySequencer::DIV01_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV02_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV04_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV08_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV16_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV32_PARAM)->randomize();
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};
+	
+	void appendContextMenu(Menu *menu) override {
+		BinarySequencer *module = dynamic_cast<BinarySequencer*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// pretty heading
+		MenuLabel *settingsLabel = new MenuLabel();
+		settingsLabel->text = "Binary Sequencer";
+		menu->addChild(settingsLabel);		
+
+		// CV only init
+		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize Division Mix Only");
+		initCVMenuItem->widget = this;
+		menu->addChild(initCVMenuItem);
+
+		// CV only random
+		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize Division Mix Only");
+		randCVMenuItem->widget = this;
+		menu->addChild(randCVMenuItem);
+	}
 };
 
 Model *modelBinarySequencer = createModel<BinarySequencer, BinarySequencerWidget>("BinarySequencer");

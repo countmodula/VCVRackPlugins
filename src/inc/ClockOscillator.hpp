@@ -9,8 +9,6 @@ struct ClockOscillator {
 	float pw = 0.5f;
 	float freq = 1.0f;
 
-	dsp::SchmittTrigger resetTrigger;
-
 	ClockOscillator() {}
 	
 	void setPitch(float pitch) {
@@ -30,7 +28,6 @@ struct ClockOscillator {
 	
 	void reset() {
 		phase = 0.0f;
-		resetTrigger.reset();
 	}
 	
 	void step(float dt) {
