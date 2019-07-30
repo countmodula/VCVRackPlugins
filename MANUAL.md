@@ -239,7 +239,7 @@ This module can process polyphonic signals.
 <h3>Mangler</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=180>
 <img src="./img/Mangler.png">
 </td> 
 <td>
@@ -623,6 +623,11 @@ With a cable plugged into the direction CV input, the direction switch is disabl
 The direction inputs are not normalled.
 </p>
 <p>
+Change of direction from forward to reverse or vice-versa occurs on the next clock after the change is made. When changing to pendulum mode the current direction will be maintained until the end (or start) of the sequence is reached at which point the direction will change. 
+</p>
+Note that if the sequence length is shortened whilst the sequencer is in the reverse direction and the current step is outside the selected length, the sequence will continue from it's current step rather than jumping to the new end step.
+</p>
+<p>
 Each channel has 1 gate output and 3 trigger outputs.<br>
 The gate outputs stay high for the duration of any selected step. Selecting the gate output for two consecutive steps results in a single gate signal for the duration of both steps. Note that the CV outputs will still change for each step even though the gate does not.<br>
 The trigger outputs follow the pulse width of the clock signal.<br>
@@ -644,7 +649,6 @@ The following context menu options are available to facilitate initialization an
 </td>
 </tr>
 </table>
-
 
 <a id="SubHarmonicGenerator"></a>
 <h3>Sub Harmonic Generator</h3>
