@@ -536,7 +536,7 @@ struct CountModulaPBSwitchMegaMomentaryUnlit : CountModulaPB {
     CountModulaPBSwitchMegaMomentaryUnlit() {
         addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
         addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-
+	
  		momentary = true;
    }
 };

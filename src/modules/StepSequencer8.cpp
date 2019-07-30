@@ -12,6 +12,7 @@
 #define MODULE_NAME "StepSequencer8"
 #define PANEL_FILE "res/StepSequencer8.svg"
 #define MODEL_NAME	modelStepSequencer8
+#define MENU_TEXT "Dual 8 Step Sequencer Settings"
 
 #define SEQ_NUM_SEQS	2
 #define SEQ_NUM_STEPS	8
@@ -124,7 +125,7 @@ struct STRUCT_NAME : Module {
 									"Mute Trig F/Gate H"};
 								
 			for (int i = 0; i < 2; i++) {
-				configParam(MUTE_PARAMS + + (r * 2) + i, 0.0f, 1.0f, 0.0f, muteText[i + (r * 2)]);
+				configParam(MUTE_PARAMS + (r * 2) + i, 0.0f, 1.0f, 0.0f, muteText[i + (r * 2)]);
 			}
 			
 			// range controls
@@ -136,11 +137,7 @@ struct STRUCT_NAME : Module {
 						configParam(RANGE_PARAMS + (r * 2) + i, 0.0f, 1.0f, 1.0f, "Range", " %", 0.0f, 100.0f, 0.0f);
 				}
 				else
-					configParam(RANGE_SW_PARAMS + + (r * 2) + i, 0.0f, 2.0f, 0.0f, "Scale");
-
-				// 2nd row on channel 2
-				if (r > 0)
-					configParam(RANGE_SW_PARAMS + + (r * 2) + i, 0.0f, 2.0f, 0.0f, "Scale");
+					configParam(RANGE_SW_PARAMS + (r * 2) + i, 0.0f, 2.0f, 0.0f, "Scale");
 			}			
 		}
 		
@@ -154,7 +151,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_string("1.2"));
 		
 		json_t *currentStep = json_array();
 		json_t *dir = json_array();
@@ -209,7 +206,7 @@ struct STRUCT_NAME : Module {
 			params[MUTE_PARAMS + i].setValue(0.0f);
 		}
 	}
-	
+
 	float getScale(float range) {
 		
 		switch ((int)(range)) {
@@ -335,7 +332,7 @@ struct STRUCT_NAME : Module {
 						count[r] = 0;
 						break;
 					case REVERSE:
-						count[r] = SEQ_NUM_STEPS;
+						count[r] = SEQ_NUM_STEPS + 1;
 						break;
 				}
 				
@@ -372,6 +369,9 @@ struct STRUCT_NAME : Module {
 							}
 						}
 					}
+					
+					if (count[r] > length[r])
+						count[r] = length[r];
 				}
 			}
 			
@@ -467,8 +467,7 @@ struct STRUCT_NAME : Module {
 			lights[GATE_LIGHTS + (r * 2)].setBrightness(boolToLight(gate1));	
 			lights[GATE_LIGHTS + (r * 2) + 1].setBrightness(boolToLight(gate2));
 		}
-		
-		
+				
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
@@ -486,7 +485,7 @@ struct STRUCT_NAME : Module {
 				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS; i++) {
 					messageToExpander->counters[i] = count[j];
 					messageToExpander->clockStates[i] =	gateClock[j].high();
-					messageToExpander->runningStates[i] = gateRun[j++].high();
+					messageToExpander->runningStates[i] = gateRun[j].high();
 						
 					// in case we ever add less than the expected number of rows, wrap them around to fill the expected buffer size
 					if (++j == SEQ_NUM_SEQS)
@@ -601,10 +600,6 @@ struct WIDGET_NAME : ModuleWidget {
 				}
 				else
 					addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (SEQ_NUM_STEPS * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4) + i]), module, STRUCT_NAME::RANGE_SW_PARAMS + (r * 2) + i));
-
-				// 2nd row on channel 2
-				if (r > 0)
-					addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (SEQ_NUM_STEPS * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4) + i]), module, STRUCT_NAME::RANGE_SW_PARAMS + (r * 2) + i));
 			}
 			
 			// trig output jacks TA/TB
@@ -622,6 +617,252 @@ struct WIDGET_NAME : ModuleWidget {
 			// cv output jacks IA/IB
 			for (int i = 0; i < 2; i++)
 				addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + (SEQ_NUM_STEPS * 2) + 2], STD_ROWS8[STD_ROW3 + (r * 4) + i]), module, STRUCT_NAME::CVI_OUTPUTS + (r * 2) + i));
+		}
+	}
+	
+	struct InitMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+		bool triggerInit = true;
+		bool cvInit = true;
+		
+		void onAction(const event::Action &e) override {
+			// text for history menu item
+			char buffer[100];
+			if (!triggerInit && cvInit)
+				sprintf(buffer, "initialize channel %d CV", channel + 1);
+			else if (triggerInit && !cvInit)
+				sprintf(buffer, "initialize channel %d triggers", channel + 1);
+			else
+				sprintf(buffer, "initialize channel %d", channel + 1);
+			
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			h->name = buffer;
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+
+			// both trig and cv indicate we're doing the entire channel so do the common controls here
+			if (triggerInit && cvInit) {
+				// length switch
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->reset();
+				
+				// direction
+				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->reset();
+				
+				// scale/range/mutes
+				for (int i = 0; i < 2; i++) {
+					// use a single pot on the 1st row of the channel 1 and a switch on channel 2
+					if (channel == 0) {
+						if (i == 0)
+							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->reset();
+					}
+					else
+						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->reset();
+					
+					// mutes
+					widget->getParam(STRUCT_NAME::MUTE_PARAMS + (channel * 2) + i)->reset();
+				}
+			}
+			
+			// step controls
+			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+				// triggers/gates
+				if (triggerInit) {
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->reset();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->reset();
+				}
+				
+				if (cvInit) {
+					// cv row 1
+					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->reset();
+					
+					// cv row 2 (ch 2 only)
+					if (channel > 0) 
+						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->reset();
+				}
+			}
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+
+		}
+	};	
+	
+	struct RandMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+		bool triggerRand = true;
+		bool cvRand = true;
+	
+		void onAction(const event::Action &e) override {
+		
+			// text for history menu item
+			char buffer[100];
+			if (!triggerRand && cvRand)
+				sprintf(buffer, "randomize channel %d CV", channel + 1);
+			else if (triggerRand && !cvRand)
+				sprintf(buffer, "randomize channel %d triggers", channel + 1);
+			else
+				sprintf(buffer, "randomize channel %d", channel + 1);
+			
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			h->name = buffer;
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+
+			// both trig and cv indicate we're doing the entire channel so do the common controls here
+			if (triggerRand && cvRand) {
+				// length switch
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->randomize();
+				
+				// direction
+				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->randomize();
+				
+				// scale/range
+				for (int i = 0; i < 2; i++) {
+					// use a single pot on the 1st row of the channel 1 and a switch on channel 2
+					if (channel == 0) {
+						if (i == 0)
+							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->randomize();
+					}
+					else
+						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->randomize();
+				}
+			}
+			
+			// step controls
+			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+				// triggers/gates
+				if (triggerRand) {
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->randomize();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->randomize();
+				}
+				
+				if (cvRand) {
+					// cv row 1
+					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->randomize();
+					
+					// cv row 2 (ch 2 only)
+					if (channel > 0) 
+						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->randomize();
+				}
+			}
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};
+		
+	struct ChannelInitMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+	
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// full channel init
+			InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>("Entire Channel");
+			initMenuItem->channel = channel;
+			initMenuItem->widget = widget;
+			menu->addChild(initMenuItem);
+
+			// CV only init
+			InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("CV Only");
+			initCVMenuItem->channel = channel;
+			initCVMenuItem->widget = widget;
+			initCVMenuItem->triggerInit = false;
+			menu->addChild(initCVMenuItem);
+
+			// trigger only init
+			InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Gates/Triggers Only");
+			initTrigMenuItem->channel = channel;
+			initTrigMenuItem->widget = widget;
+			initTrigMenuItem->cvInit = false;
+			menu->addChild(initTrigMenuItem);
+			
+			return menu;
+		}
+	
+	};
+	
+	struct ChannelRandMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// full channel random
+			RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>("Entire Channel");
+			randMenuItem->channel = channel;
+			randMenuItem->widget = widget;
+			menu->addChild(randMenuItem);
+
+			// CV only random
+			RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("CV Only");
+			randCVMenuItem->channel = channel;
+			randCVMenuItem->widget = widget;
+			randCVMenuItem->triggerRand = false;
+			menu->addChild(randCVMenuItem);
+
+			// trigger only random
+			RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only");
+			randTrigMenuItem->channel = channel;
+			randTrigMenuItem->widget = widget;
+			randTrigMenuItem->cvRand = false;
+			menu->addChild(randTrigMenuItem);
+			
+			return menu;
+		}	
+	};
+	
+	struct ChannelMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// initialize
+			ChannelInitMenuItem *initMenuItem = createMenuItem<ChannelInitMenuItem>("Initialize", RIGHT_ARROW);
+			initMenuItem->channel = channel;
+			initMenuItem->widget = widget;
+			menu->addChild(initMenuItem);
+
+			// randomize
+			ChannelRandMenuItem *randMenuItem = createMenuItem<ChannelRandMenuItem>("Randomize", RIGHT_ARROW);
+			randMenuItem->channel = channel;
+			randMenuItem->widget = widget;
+			menu->addChild(randMenuItem);
+
+			return menu;
+		}
+	};
+	
+	void appendContextMenu(Menu *menu) override {
+		STRUCT_NAME *module = dynamic_cast<STRUCT_NAME*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// pretty heading
+		MenuLabel *settingsLabel = new MenuLabel();
+		settingsLabel->text = MENU_TEXT;
+		menu->addChild(settingsLabel);		
+
+		char textBuffer[100];
+		for (int r = 0; r < SEQ_NUM_SEQS; r++) {
+			
+			sprintf(textBuffer, "Channel %d", r + 1);
+			ChannelMenuItem *chMenuItem = createMenuItem<ChannelMenuItem>(textBuffer, RIGHT_ARROW);
+			chMenuItem->channel = r;
+			chMenuItem->widget = this;
+			menu->addChild(chMenuItem);
 		}
 	}
 };

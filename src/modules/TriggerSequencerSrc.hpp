@@ -282,6 +282,174 @@ struct WIDGET_NAME : ModuleWidget {
 			}
 		}
 	}
+	
+	struct InitMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+		bool allInit = true;
+		
+		void onAction(const event::Action &e) override {
+			// // text for history menu item
+			char buffer[100];
+			if (!allInit)
+				sprintf(buffer, "initialize channel %d triggers", channel + 1);
+			else
+				sprintf(buffer, "initialize channel %d", channel + 1);
+			
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			h->name = buffer;
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+
+			// we're doing the entire channel so do the common controls here
+			if (allInit) {
+				// length switch
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->reset();
+			}
+			
+			// triggers/gates
+			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->reset();
+			}
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};	
+	
+	struct RandMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+		bool allRand = true;
+	
+		void onAction(const event::Action &e) override {
+		
+			// text for history menu item
+			char buffer[100];
+			if (!allRand)
+				sprintf(buffer, "randomize channel %d triggers", channel + 1);
+			else
+				sprintf(buffer, "randomize channel %d", channel + 1);
+			
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			h->name = buffer;
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+
+			// we're doing the entire channel so do the common controls here
+			if (allRand) {
+				// length switch
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->randomize();
+			}
+			
+			// triggers/gates
+			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->randomize();
+			}
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};
+		
+	struct ChannelInitMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+	
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// full channel init
+			InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>("Entire Channel");
+			initMenuItem->channel = channel;
+			initMenuItem->widget = widget;
+			menu->addChild(initMenuItem);
+
+			// trigger only init
+			InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Gates/Triggers Only");
+			initTrigMenuItem->channel = channel;
+			initTrigMenuItem->widget = widget;
+			initTrigMenuItem->allInit = false;
+			menu->addChild(initTrigMenuItem);
+			
+			return menu;
+		}
+	
+	};
+	
+	struct ChannelRandMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// full channel random
+			RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>("Entire Channel");
+			randMenuItem->channel = channel;
+			randMenuItem->widget = widget;
+			menu->addChild(randMenuItem);
+
+			// trigger only random
+			RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only");
+			randTrigMenuItem->channel = channel;
+			randTrigMenuItem->widget = widget;
+			randTrigMenuItem->allRand = false;
+			menu->addChild(randTrigMenuItem);
+			
+			return menu;
+		}	
+	};
+	
+	struct ChannelMenuItem : MenuItem {
+		WIDGET_NAME *widget;
+		int channel = 0;
+
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// initialize
+			ChannelInitMenuItem *initMenuItem = createMenuItem<ChannelInitMenuItem>("Initialize", RIGHT_ARROW);
+			initMenuItem->channel = channel;
+			initMenuItem->widget = widget;
+			menu->addChild(initMenuItem);
+
+			// randomize
+			ChannelRandMenuItem *randMenuItem = createMenuItem<ChannelRandMenuItem>("Randomize", RIGHT_ARROW);
+			randMenuItem->channel = channel;
+			randMenuItem->widget = widget;
+			menu->addChild(randMenuItem);
+
+			return menu;
+		}
+	};
+	
+	void appendContextMenu(Menu *menu) override {
+		STRUCT_NAME *module = dynamic_cast<STRUCT_NAME*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// pretty heading
+		MenuLabel *settingsLabel = new MenuLabel();
+		settingsLabel->text = MENU_TEXT;
+		menu->addChild(settingsLabel);		
+
+		char textBuffer[100];
+		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
+			
+			sprintf(textBuffer, "Channel %d", r + 1);
+			ChannelMenuItem *chMenuItem = createMenuItem<ChannelMenuItem>(textBuffer, RIGHT_ARROW);
+			chMenuItem->channel = r;
+			chMenuItem->widget = this;
+			menu->addChild(chMenuItem);
+		}
+	}
 };
 
 Model *MODEL_NAME = createModel<STRUCT_NAME, WIDGET_NAME>(MODULE_NAME);

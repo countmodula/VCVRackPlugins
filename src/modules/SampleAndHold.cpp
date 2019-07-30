@@ -14,6 +14,7 @@ struct SampleAndHold : Module {
 	enum InputIds {
 		SAMPLE_INPUT,
 		TRIG_INPUT,
+		MODE_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -22,10 +23,13 @@ struct SampleAndHold : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		TRACK_LIGHT,
+		HOLD_LIGHT,
 		NUM_LIGHTS
 	};
 
 	GateProcessor gateTrig;
+	GateProcessor gateMode;
 	
 	SampleAndHold() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -36,23 +40,29 @@ struct SampleAndHold : Module {
 	
 	void onReset() override {
 		gateTrig.reset();
+		gateMode.reset();
 	}	
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
 		return root;
 	}
 	
 	void process(const ProcessArgs &args) override {
 
-		// process the trigger input
+		// process the mode and trigger inputs
 		gateTrig.set(inputs[TRIG_INPUT].getVoltage());
+		gateMode.set(inputs[MODE_INPUT].getVoltage());
 		
-		// determine the mode
-		bool trackMode = (params[MODE_PARAM].getValue() > 0.5f);
+		// determine the mode - input takes precedence over switch
+		bool trackMode = false;
+		if (inputs[MODE_INPUT].isConnected())
+			trackMode =  gateMode.high();
+		else
+			trackMode =(params[MODE_PARAM].getValue() > 0.5f);
 		
 		// determine number of channels
 		int n = inputs[SAMPLE_INPUT].getChannels();
@@ -76,6 +86,9 @@ struct SampleAndHold : Module {
 			outputs[SAMPLE_INPUT].setVoltage(s, c);
 			outputs[INV_OUTPUT].setVoltage(-s, c);
 		}
+		
+		lights[TRACK_LIGHT].setBrightness(boolToLight(trackMode));	
+		lights[HOLD_LIGHT].setBrightness(boolToLight(!trackMode));
 	}
 	
 };
@@ -93,11 +106,18 @@ SampleAndHoldWidget(SampleAndHold *module) {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]),module, SampleAndHold::TRIG_INPUT));
 
 		// mode switch
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS6(STD_ROW3)), module, SampleAndHold::MODE_PARAM));
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, SampleAndHold::MODE_PARAM));
 		
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, SampleAndHold::SAMPLE_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, SampleAndHold::INV_OUTPUT));
+
+		// mode input
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]),module, SampleAndHold::MODE_INPUT));
+		
+		// lights
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 17, STD_ROWS6[STD_ROW3] - 18), module, SampleAndHold::TRACK_LIGHT));
+		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 17, STD_ROWS6[STD_ROW3] + 18), module, SampleAndHold::HOLD_LIGHT));
 	}
 };
 

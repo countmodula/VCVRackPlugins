@@ -10,6 +10,7 @@
 #define MODULE_NAME "TriggerSequencer16"
 #define PANEL_FILE "res/TriggerSequencer16.svg"
 #define MODEL_NAME	modelTriggerSequencer16
+#define MENU_TEXT "16 Step Trigger Sequencer Settings"
 
 #define TRIGSEQ_NUM_ROWS	4
 #define TRIGSEQ_NUM_STEPS	16 

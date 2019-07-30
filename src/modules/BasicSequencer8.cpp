@@ -97,7 +97,7 @@ struct BasicSequencer8 : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 
@@ -228,7 +228,7 @@ struct BasicSequencer8 : Module {
 					count = 0;
 					break;
 				case REVERSE:
-					count = SEQ_NUM_STEPS;
+					count = SEQ_NUM_STEPS + 1;
 					break;
 			}
 			
@@ -265,6 +265,9 @@ struct BasicSequencer8 : Module {
 						}
 					}
 				}
+				
+				if (count > length)
+					count = length;				
 			}
 		}
 		
@@ -405,6 +408,112 @@ struct BasicSequencer8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, BasicSequencer8::TRIG_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW8]), module, BasicSequencer8::GATE_OUTPUT));
 	}
+	
+	struct InitMenuItem : MenuItem {
+		BasicSequencer8Widget *widget;
+		bool triggerInit = true;
+		bool cvInit = true;
+		
+		void onAction(const event::Action &e) override {
+
+		// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			if (!triggerInit && cvInit)
+				h->name = "initialize CV";
+			else if (triggerInit && !cvInit)
+				h->name = "initialize triggers";
+			else
+				h->name = "initialize module";
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+		
+			// step controls
+			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+				// triggers/gates
+				if (triggerInit)
+					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->reset();
+				
+				// cv knobs
+				if (cvInit)
+					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->reset();
+			}
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};	
+	
+	struct RandMenuItem : MenuItem {
+		BasicSequencer8Widget *widget;
+		bool triggerRand = true;
+		bool cvRand = true;
+	
+		void onAction(const event::Action &e) override {
+		
+			// history - current settings
+			history::ModuleChange *h = new history::ModuleChange;
+			if (!triggerRand && cvRand)
+				h->name = "randomize CV";
+			else if (triggerRand && !cvRand)
+				h->name = "randomize triggers";
+			else
+				h->name = "randomize";
+			h->moduleId = widget->module->id;
+			h->oldModuleJ = widget->toJson();
+
+			// step controls
+			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+				// triggers/gates
+				if (triggerRand)
+					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->randomize();
+				
+				if (cvRand)
+					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->randomize();
+			}
+
+			// history - new settings
+			h->newModuleJ = widget->toJson();
+			APP->history->push(h);	
+		}
+	};
+	
+	void appendContextMenu(Menu *menu) override {
+		BasicSequencer8 *module = dynamic_cast<BasicSequencer8*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// pretty heading
+		MenuLabel *settingsLabel = new MenuLabel();
+		settingsLabel->text = "Basic 8 Step Sequencer";
+		menu->addChild(settingsLabel);		
+
+		// CV only init
+		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize CV Only");
+		initCVMenuItem->widget = this;
+		initCVMenuItem->triggerInit = false;
+		menu->addChild(initCVMenuItem);
+
+		// trigger only init
+		InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Initialize Gates/Triggers Only");
+		initTrigMenuItem->widget = this;
+		initTrigMenuItem->cvInit = false;
+		menu->addChild(initTrigMenuItem);
+
+		// CV only random
+		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only");
+		randCVMenuItem->widget = this;
+		randCVMenuItem->triggerRand = false;
+		menu->addChild(randCVMenuItem);
+
+		// trigger only random
+		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Triggers Only");
+		randTrigMenuItem->widget = this;
+		randTrigMenuItem->cvRand = false;
+		menu->addChild(randTrigMenuItem);			
+	}	
 };
 
 Model *modelBasicSequencer8 = createModel<BasicSequencer8, BasicSequencer8Widget>("BasicSequencer8");

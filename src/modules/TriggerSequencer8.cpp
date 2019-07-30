@@ -11,6 +11,7 @@
 #define MODULE_NAME "TriggerSequencer8"
 #define PANEL_FILE "res/TriggerSequencer8.svg"
 #define MODEL_NAME	modelTriggerSequencer8
+#define MENU_TEXT "8 Step Trigger Sequencer Settings"
 
 #define TRIGSEQ_NUM_ROWS	4
 #define TRIGSEQ_NUM_STEPS	8

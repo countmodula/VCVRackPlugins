@@ -18,10 +18,13 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.2.0</h3>
-
-<a href="MANUAL.md">Module Manual</a>
-
+<h3>Modules - Release 1.2.1</h3>
+<p>
+	<a href="CHANGELOG.md">Change Log</a>
+</p>
+<p>
+	<a href="MANUAL.md">Module Manual</a>
+</p>
 <ul>
 <li><a href="./MANUAL.md#ASR">Analogue Shift Register</a>
 <li><a href="./MANUAL.md#Attenuator">Attenuator</a>
@@ -82,122 +85,6 @@ Follow Count Modula on facebook:
 <h4>Still running Rack v0.6?</h4>
 Version v0.6.3 of the Count Modula suite of modules can be found here:
 <a href="https://github.com/countmodula/VCVRackPlugins/tree/V0.6">https://github.com/countmodula/VCVRackPlugins/tree/V0.6</a>
-
-<h3>Release Log</h3>
-<table>
-	<tr valign="top">
-		<th align="center">Date</th>
-		<th align="center">Release</th>
-		<th align="left">Notes</th>
-	</tr>
-	<tr valign="top">
-		<td align="center">21-July-2019</td>
-		<td align="center">v1.2.0</td>
-		<td align="left">
-			<b>New Modules</b><br/>
-			<ul>
-				<li>Basic 8 Step Sequencer
-				<li>Sequencer Expander - CV8
-				<li>Sequencer Expander - Out8
-				<li>Sequencer Expander - Trig8
-				<li>Sub Harmonic Generator
-				<li>VC Frequency Divider II (Replaces original version which should no longer be used in new patches)
-				<li>Polyrhythmic Generator MkII (Replaces original version which should no longer be used in new patches)
-			</ul>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">07-July-2019</td>
-		<td align="center">v1.1.0</td>
-		<td align="left">
-			<b>New Modules</b><br/>
-			<ul>
-				<li>Gate Modifier - Extend or shorten gate/trigger signals.
-				<li>Rectifier - Full and half wave rectification around a CV controlled axis.
-				<li>Sample & Hold - Sample/Track and hold.
-				<li>T Flip Flop - Toggle style flip flop.
-				<li>Mangler - Voltage controlled sample rate and bit depth reducer.
-				<li>8 Step Sequencer - A classic 8 step Gate/CV Sequencer.
-			</ul>
-			<b>Module Updates</b><br/>
-			<ul>
-				<li>Manual Gate - Current state is now preserved when saving and re-opening a patch.
-				<li>Mute - Current state is now preserved when saving and re-opening a patch.
-				<li>SR Flip Flop - Current state is now preserved when saving and re-opening a patch.
-				<li>Trigger Sequencers - Addition of length indicators.
-			</ul>
-			<b>Issues Resolved:</b><br/>
-			<ul>
-				<li>Issue #18 Blue knob colour lightened for better visibility.
-			</ul>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">21-Jun-2019</td>
-		<td align="center">v1.0.2</td>
-		<td align="left">
-			<b>Module Updates</b><br/>
-			<ul>
-				<li>Attenuator - Attenuation of polyphonic signals
-				<li>Inverter - Inversion of polyphonic signals
-				<li>Mute - Muting of polyphonic signals
-				<li>Mut-iple - Muting of polyphonic signals. Hard/Soft mute option.
-				<li>PolyrhythmicGenerator  - Added polyphonic output containing all channels
-				<li>Shepard Generator - Saw and Tri waveforms available as polyphonic signals
-				<li>Voltage Controlled Polarizer - polarization of polyphonic signals
-				<li>Voltage Controlled Switch - switching of polyphonic signals
-			</ul>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">19-Jun-2019</td>
-		<td align="center">v1.0.1</td>
-		<td align="left">
-			<b>New Modules</b><br/>
-			<ul>
-				<li>Utility Mixer
-				<li>Mute
-			</ul>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">16-Jun-2019</td>
-		<td align="center">v1.0.0</td>
-		<td align="left">
-			Port from Rack v0.6 to v1.0
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">09-Jun-2019</td>
-		<td align="center">v0.6.2 and v0.6.3</td>
-		<td align="left">
-			<b>New Modules</b><br/>
-			<ul>
-				<li>Multipexer
-				<li>8 Step Trigger Sequencer
-				<li>16 Step Trigger Sequencer
-			</ul>
-			<b>Issues Resolved:</b><br/>
-			<ul>
-				<li>Issue #6 Binary Sequencer enhanced to split run and reset inputs.
-				<li>Issue #7 Randomize not setting switch values correctly.
-			</ul>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">04-Jun-2019</td>
-		<td align="center">v0.6.1</td>
-		<td align="left">
-			<b>Issues Resolved:</b><br/>
-			Issue #3 svgs incorrectly packaged.<br/>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td align="center">03-Jun-2019</td>
-		<td align="center">v0.6.0</td>
-		<td>Initial Release</td>
-	</tr>
-</table>
 
 
 

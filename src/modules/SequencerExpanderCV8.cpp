@@ -278,7 +278,7 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 	
 				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
 					ParamWidget *p = getParam(SequencerExpanderCV8::STEP_CV_PARAMS + i);
-						((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, knobColours[m]))); 
+					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, knobColours[m]))); 
 					((CountModulaKnob *)(p))->dirtyValue = -1;
 				}
 				

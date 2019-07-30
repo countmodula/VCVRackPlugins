@@ -152,7 +152,7 @@ VCFrequencyDividerMkIIWidget(VCFrequencyDividerMkII *module) {
 		assert(module);
 
 		// blank separator
-		menu->addChild(new MenuLabel());
+		menu->addChild(new MenuSeparator());
 		
 		// pretty heading
 		MenuLabel *settingsLabel = new MenuLabel();
