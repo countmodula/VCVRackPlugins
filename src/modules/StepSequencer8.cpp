@@ -471,7 +471,8 @@ struct STRUCT_NAME : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || 
+				rightExpander.module->model == modelSequencerExpanderTrig8 || rightExpander.module->model == modelSequencerExpanderRM8) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 
@@ -479,6 +480,7 @@ struct STRUCT_NAME : Module {
 				messageToExpander->setCVChannel(0);
 				messageToExpander->setTrigChannel(0);
 				messageToExpander->setOutChannel(0);
+				messageToExpander->setRMChannel(0);
 	
 				// add the channel counters
 				int j = 0;

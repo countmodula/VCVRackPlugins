@@ -532,7 +532,7 @@ This module can process polyphonic signals. All channels are sampled and held wi
 <h3>Sequencer Expanders</h3>
 <table>
 <tr valign="top">
-<td width=340>
+<td width=380>
 <img src="./img/SequencerExpanders.png">
 </td> 
 <td>
@@ -541,6 +541,9 @@ A set of expander modules that add extra channel functionality to the Count Modu
 <li>SX-OUT8: Adds individual gate outputs for each step.<br>The Trigger/Gate switch determines whether the outputs stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
 <li>SX-CV8: Adds another channel of CV output.<br>This module functions like the CV strip of the Basic Sequencer with Scale switch determining the output scale as 2, 4 or 8 volts. </li>
 <li>SX-TRIG8: Adds another channel of Trigger/Gate output.This module functions like the gate/trigger switch strip on the Basic Sequencer with the switches selecting either of the trigger or gate output or no output at all when the step is active.</li>
+<li>SX-RM8: Adds another channel of Random Melody CV output to the <a href="#GatedComparator">Gated Comparator</a>. This module functions as a digital to analogue converter just like the Random Melody section of the Gated Comparator however it also adds a scale switch to select the maximum voltage range to be output and the voltages for the active bits can be selectively added or subtracted when perforing the digital to analogue conversion.<br/>
+Although Designed specifically for the Gated Comparator, this module will work with other sequencer modules however its usefulness in this capacity may be limited. For the 8 step sequencers, the module will follow the active steps of the sequencer. When used with the Binary Sequencer, the switches function like the Binary Sequencer Division knobs except the associated voltages are added or subtracted in full rather than being mixed in variable amounts.  
+</li>
 </ul>
 <p>
 These modules use the new expander functionality introduced in Rack V1 so must be placed immediately to the right of a sequencer module in order to function. Multiple expanders can be used by placing each extra expander immediately to the right of an already connected expander and they can be used in any combination and in any order. It should be noted a s sample delay is introduced with each expander.
@@ -854,7 +857,9 @@ This module can process polyphonic signals. All channels are switched by the sam
 
 <a id="CGS"></a>
 <h2>CGS Based Modules</h2>
-A nod to the genius of Ken stone, these are some of my favourite CGS designs realised in VCV Rack format.<br/>
+<p>
+A nod to the genius of Ken Stone, these are some of my favourite CGS designs realised in VCV Rack format.<br/>
+</p>
 <a id="CVSpreader">
 <h3>CV Spreader</h3>
 <table>
@@ -881,12 +886,62 @@ This module generates bursts of 1-16 pulses whenever a trigger is received at th
 </tr>
 </table>
 
+<a id="GatedComparator"></a>
+<h3>Gated Comparator</h3>
+<table>
+<tr valign="top">
+<td width=300>
+<img src="./img/GatedComparator.png">
+</td> 
+<td>
+<p>
+The gated comparator is a binary shift register fed by a comparator and coupled to a basic "digital to analogue" converter which can be used to generate Random sequences.
+</p>
+<p>
+The input section is a fairly standard comparator having a signal input, a threshold control and voltage control over the threshold level. When the input signal is greater than the sum of the manual Threshold and CV threshold amounts, the comparator will output a high gate signal which is also sent to the input of the shift register.
+</p>
+<p>
+With each positive going clock edge, the values of each of the Shift Register section outputs are "shifted" right to their next adjacent output (or down to row 2 in the case of th 4th output) and the value of the comparator output is "shifted" into position 1. 
+</p>
+<p>
+The shift register features a loop input that allows an external gate signal to fed into the shift register and can be used to chain Gated Comparator module together by connecting the final output of the first module to the Loop Input of the second module with its loop function enabled. The loop input can be enabled/disabled via the Loop Enable switch and Loop Enable input. The input overrides the switch and requires a high gate signal (> 2 Volts) to enable the loop. The last bit will need to be manually connected to the loop input if you wish to recycle the shift register values once they have been loaded. <br/>
+Note that the loop input is ORed with the output of the comparator section so it is possible to very quickly fill the register with high values.
+</p>
+<p>
+The Random Melody section functions as a digital to analogue converted with the switches determining which of the currently active Shift Register bits are used when determining the output voltage which will range from 0 with no active bits to 8V with all bits active. Each switch is binary weighted with switch 1 equating to 1/255th of 8V and switch 8 equating to 128/255ths of 8V.
+</p>
+<p>
+The <a href="#SequencerExpanders">Sequencer Expander</a> modules work with the gated comparator however they do function a little bit differently to when they are attached to a sequencer:
+<ul>
+<li>SX-OUT8: Adds an extra set of shift register outputs that follow the main shift register however the outputs can be set to operate as triggers via the Trigger/Gate switch which determines whether they stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
+<li>SX-CV8: Adds a set of CV outputs that, when connected to the Gated Comparator, function like the CV strip of the Binary Sequencer. Each knob has a maximum value of the selected scale divided by 8 and the value of each active step is summed and sent to the output. The Scale switch determines maximum the output value when all steps are active so on the 2 volt setting the output changes will be quite subtle. Note that unlike the knobs on Binary Sequencer, the values are positive only. </li>
+<li>SX-TRIG8: Adds a channel of selectable Trigger/Gate outputs where Gate or Trigger outputs are activated only when all of the Shift Register outputs matching the selected pattern are active; i.e. if the switches for step 1 and 2 are both set to "Trigger" and all others are off then the Trigger output will fire only when Shift Register output 1 and 2 are high.</li>
+<li>SX-RM8: Adds another channel of Random Melody CV output. This module functions like the Random Melody section of the Gated Comparator however it also adds a scale switch to select the maximum voltage range to be output and the voltages for the active bits can be added or subtracted.</li>
+</ul>
+</p>
+</td>
+</tr>
+</table>
+
+<a id="SlopeDetector"></a>
+<h3>Slope Detector</h3>
+<table>
+<tr valign="top">
+<td width=120>
+<img src="./img/SlopeDetector.png">
+</td> 
+<td>
+The slope detector generates gate pulses from a CV input based on whether it is rising, falling or steady. The Sense control determines how fast it responds to change and the range switch doubles the response time to cater for very slowly changing inputs.
+</td>
+</tr>
+</table>
+
 <!--
 <a id="anchor"></a>
 <h3>title</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/image.png">
 </td> 
 <td>

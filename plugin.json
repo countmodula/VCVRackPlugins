@@ -1,7 +1,7 @@
 {
   "slug": "CountModula",
   "name": "Count Modula",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "license": "BSD-3-Clause",
   "brand": "Count Modula",
   "author": "Adam Verspaget",
@@ -410,6 +410,31 @@
         "Clock modulator",
 		"Sequencer",
 		"Polyphonic"
+      ]
+    },
+    {
+      "slug": "GatedComparator",
+      "name": "Gated Comparator",
+      "description": "Gated Comparator",
+      "tags": [
+		"Sequencer",
+		"Random"
+      ]
+    },
+    {
+      "slug": "SlopeDetector",
+      "name": "Slope Detector",
+      "description": "Slope Detector",
+      "tags": [
+		"Utility"
+      ]
+    },
+    {
+      "slug": "SequencerExpanderRM8",
+      "name": "Gated Comparator Expander - Random Melody",
+      "description": "Gated Comparator expander adding Random Melody output (also works with other sequencers).",
+      "tags": [
+		"Utility"
       ]
     }
   ]

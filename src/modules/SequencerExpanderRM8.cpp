@@ -9,10 +9,11 @@
 
 #define SEQ_NUM_STEPS	8
 
-struct SequencerExpanderTrig8 : Module {
+struct SequencerExpanderRM8 : Module {
 
 	enum ParamIds {
 		ENUMS(STEP_SW_PARAMS, SEQ_NUM_STEPS),
+		RANGE_SW_PARAM,
 		NUM_PARAMS
 	};
 	
@@ -21,15 +22,13 @@ struct SequencerExpanderTrig8 : Module {
 	};
 	
 	enum OutputIds {
-		TRIG_OUTPUT,
-		GATE_OUTPUT,
+		CV_OUTPUT,
+		CVI_OUTPUT,
 		NUM_OUTPUTS
 	};
 	
 	enum LightIds {
 		ENUMS(STEP_LIGHTS, SEQ_NUM_STEPS),
-		TRIG_LIGHT,
-		GATE_LIGHT,
 		ENUMS(CHANNEL_LIGHTS, SEQUENCER_EXP_MAX_CHANNELS),
 		NUM_LIGHTS
 	};
@@ -51,7 +50,9 @@ struct SequencerExpanderTrig8 : Module {
 	
 	int *colourMap = colourMapDefault;
 	
-	SequencerExpanderTrig8() {
+	float stepValue = 8.0f / 255.0f;
+	
+	SequencerExpanderRM8() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// from left module (master)
@@ -66,6 +67,9 @@ struct SequencerExpanderTrig8 : Module {
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			configParam(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate");
 		}
+		
+		// range switch
+		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
 	}
 
 	json_t *dataToJson() override {
@@ -91,10 +95,8 @@ struct SequencerExpanderTrig8 : Module {
 	void process(const ProcessArgs &args) override {
 
 		// details from master
-		bool running = true;
-		bool clock = false;
-		int count = 0;
-		int channelCounters[SEQUENCER_EXP_MAX_CHANNELS] = {0, 0, 0, 0};
+		int shiftRegister = 0;
+		int shiftRegisters[SEQUENCER_EXP_MAX_CHANNELS] = {0, 0, 0, 0};
 		bool clockStates[SEQUENCER_EXP_MAX_CHANNELS] = {false, false, false, false};
 		bool runningStates[SEQUENCER_EXP_MAX_CHANNELS] = {false, false, false, false};
 		
@@ -125,23 +127,33 @@ struct SequencerExpanderTrig8 : Module {
 				}
 				
 				// grab the channel id
-				channelID = clamp(messagesFromMaster->channelTRIG, -1, 3);
+				channelID = clamp(messagesFromMaster->channelRM, -1, 3);
 
 				// decode the counter array
 				for(int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS; i++) {
-					channelCounters[i] = messagesFromMaster->counters[i];
+					shiftRegisters[i] = messagesFromMaster->counters[i];
 					clockStates[i] = messagesFromMaster->clockStates[i];
 					runningStates[i] = messagesFromMaster->runningStates[i];
 			
 					if (i == channelID) {
-						count = std::max(channelCounters[i], 0);
-						clock = clockStates[i];
-						running = runningStates[i];
-
-						// wrap counters > 8 back around to 1 for the sequencers
-						if (messagesFromMaster->masterModule != SEQUENCER_EXP_MASTER_MODULE_GTDCOMP) {
+						// for non shift register or 8/s6 step based sources, we need to translate the counter into a shift register value
+						if (messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_GTDCOMP || messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_BNRYSEQ) {
+							// shift register or full scale counter based master - can use the value we're given
+							shiftRegister = std::max(shiftRegisters[i], 0) & 0xFF;
+						}
+						else {
+							int count = std::max(shiftRegisters[i], 0);
+							
 							while (count > SEQ_NUM_STEPS)
 								count -= SEQ_NUM_STEPS;
+
+							if (count > 0) {
+								// adjust 1-8 down to 0-7
+								count--;
+							
+								// now convert to shift register
+								shiftRegister = 0x01 << count;
+							}
 						}
 					}
 				}
@@ -169,84 +181,38 @@ struct SequencerExpanderTrig8 : Module {
 		for (int i = 0; i < 4; i ++)
 			lights[CHANNEL_LIGHTS + i].setBrightness(boolToLight(i == m));
 	
-		// now process the lights and outputs
-		bool trig = false;
-		bool gate = false;	
-			
-		if (leftModuleAvailable && messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_GTDCOMP) {
-			// for gated comparator, we have multiple bits set at the same time so must do things a little differently
-			short bitMask = 0x01;
-			short triggerBits = 0;
-			short gateBits = 0;
-			
-			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-		
-				bool stepActive = (((short)count & bitMask) == bitMask);
-				
-				// set step lights here
-				lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));
 
-				// now figure out the logic
-				switch ((int)(params[STEP_SW_PARAMS + c].getValue())) {
-					case 0: // lower output
-						gateBits = gateBits | bitMask;
+		float cv = 0.0f;
+		int bitMask = 0x01;
+
+		// determine which scale to use
+		float scale = getScale(params[RANGE_SW_PARAM].getValue());
+
+		// now deal with the CV and lights
+		for (int i = 0; i < 8; i ++) {
+			// outputs and lights
+			bool v = ((shiftRegister & bitMask) == bitMask);
+			lights[STEP_LIGHTS + i].setBrightness(boolToLight(v));
+			
+			// determine random melody value for this bit
+			if (v) {
+				switch ((int)(params[STEP_SW_PARAMS + i].getValue())) {
+					case 0:
+						cv -= (((float)(bitMask)) * stepValue);
 						break;
-					case 2: // upper output
-						triggerBits = triggerBits | bitMask;
-						break;				
-					default: // off
+					case 2:
+						cv += (((float)(bitMask)) * stepValue);
 						break;
 				}
-
-				// prepare for next bit
-				bitMask = bitMask << 1;
 			}
 			
-			// only set the outputs when the selected bits are set
-			trig = (triggerBits > 0 && (((short)count & triggerBits) == triggerBits));
-			gate = (gateBits > 0 && (((short)count & gateBits) == gateBits));
-		}
-		else {			
-	
-			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-				bool stepActive = ((c + 1) == count);
-
-				// set step lights here
-				lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));
-				
-				// now determine the output values
-				if (stepActive) {
-					// trigger/gate
-					switch ((int)(params[STEP_SW_PARAMS + c].getValue())) {
-						case 0: // lower output
-							trig = false;
-							gate = true;
-							break;
-						case 2: // upper output
-							trig = true;
-							gate = false;
-							break;				
-						default: // off
-							trig = false;
-							gate = false;
-							break;
-					}
-				}
-			}
+			// prepare for next bit
+			bitMask = bitMask << 1;
 		}
 
-		// trig output follows clock width
-		trig &= (running && clock);
-
-		// gate output follows step widths
-		gate &= running;	
-		
 		// set the outputs accordingly
-		outputs[TRIG_OUTPUT].setVoltage(boolToGate(trig));	
-		outputs[GATE_OUTPUT].setVoltage(boolToGate(gate));	
-	
-		lights[TRIG_LIGHT].setBrightness(boolToLight(trig));	
-		lights[GATE_LIGHT].setBrightness(boolToLight(gate));
+		outputs[CV_OUTPUT].setVoltage(cv * scale);
+		outputs[CVI_OUTPUT].setVoltage(-cv * scale);	
 
 		// set up the detail for any secondary expander
 		if (rightExpander.module) {
@@ -262,15 +228,15 @@ struct SequencerExpanderTrig8 : Module {
 					messageToExpander->setTrigChannel(-1);
 					messageToExpander->setOutChannel(-1);
 					messageToExpander->setRMChannel(-1);
-					
+
 					messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
 				}
 				else {
-					messageToExpander->setNextTrigChannel(channelID);
+					messageToExpander->setNextRMChannel(channelID);
 					
 					// add the channel counters and gate states
 					for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {
-						messageToExpander->counters[i] = channelCounters[i];
+						messageToExpander->counters[i] = shiftRegisters[i];
 						messageToExpander->clockStates[i] = clockStates[i];
 						messageToExpander->runningStates[i] = runningStates[i];
 					}
@@ -279,7 +245,7 @@ struct SequencerExpanderTrig8 : Module {
 					if (messagesFromMaster) {
 						messageToExpander->setCVChannel(messagesFromMaster->channelCV);
 						messageToExpander->setOutChannel(messagesFromMaster->channelOUT);
-						messageToExpander->setRMChannel(messagesFromMaster->channelRM);				
+						messageToExpander->setTrigChannel(messagesFromMaster->channelTRIG);			
 						messageToExpander->masterModule = messagesFromMaster->masterModule;
 					}
 				}
@@ -290,10 +256,10 @@ struct SequencerExpanderTrig8 : Module {
 	}
 };
 
-struct SequencerExpanderTrig8Widget : ModuleWidget {
-	SequencerExpanderTrig8Widget(SequencerExpanderTrig8 *module) {
+struct SequencerExpanderRM8Widget : ModuleWidget {
+	SequencerExpanderRM8Widget(SequencerExpanderRM8 *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SequencerExpanderTrig8.svg")));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SequencerExpanderRM8.svg")));
 
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -302,21 +268,20 @@ struct SequencerExpanderTrig8Widget : ModuleWidget {
 
 		// row lights and switches
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::STEP_SW_PARAMS + s));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderRM8::STEP_LIGHTS + s));
+			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderRM8::STEP_SW_PARAMS + s));
 		}
 
 		// channel light
-		addChild(createLightCentered<MediumLight<CountModulaLightRGYB>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, SequencerExpanderTrig8::CHANNEL_LIGHTS));
+		addChild(createLightCentered<MediumLight<CountModulaLightRGYB>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, SequencerExpanderRM8::CHANNEL_LIGHTS));
 		
-		// output lights
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6] - 20), module, SequencerExpanderTrig8::TRIG_LIGHT));
-		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8] - 20), module, SequencerExpanderTrig8::GATE_LIGHT));
+		// range control
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, SequencerExpanderRM8::RANGE_SW_PARAM));
 
-		// gate/trig outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, SequencerExpanderTrig8::TRIG_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderTrig8::GATE_OUTPUT));
+		// cv outputs
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, SequencerExpanderRM8::CV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderRM8::CVI_OUTPUT));
 	}
 };
 
-Model *modelSequencerExpanderTrig8 = createModel<SequencerExpanderTrig8, SequencerExpanderTrig8Widget>("SequencerExpanderTrig8");
+Model *modelSequencerExpanderRM8 = createModel<SequencerExpanderRM8, SequencerExpanderRM8Widget>("SequencerExpanderRM8");

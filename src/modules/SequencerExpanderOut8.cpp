@@ -38,6 +38,7 @@ struct SequencerExpanderOut8 : Module {
 	
 	int channelID = -1;
 	int prevChannelID = -1;
+	bool leftModuleAvailable = false; 
 	
 	// 0123
 	// RGYB
@@ -83,11 +84,14 @@ struct SequencerExpanderOut8 : Module {
 		colourMap = colourMapDefault;
 		
 		// grab the detail from the left hand module if we have one
+		leftModuleAvailable = false;
 		if (leftExpander.module) {
-			if (leftExpander.module->model == modelSequencerExpanderCV8 || leftExpander.module->model == modelSequencerExpanderOut8 || leftExpander.module->model == modelSequencerExpanderTrig8 ||
+			if (leftExpander.module->model == modelSequencerExpanderCV8 || leftExpander.module->model == modelSequencerExpanderOut8 || 
+				leftExpander.module->model == modelSequencerExpanderTrig8 || leftExpander.module->model == modelSequencerExpanderRM8 ||
 				leftExpander.module->model == modelTriggerSequencer8 || leftExpander.module->model == modelStepSequencer8 || leftExpander.module->model == modelBinarySequencer || 
-				leftExpander.module->model == modelBasicSequencer8 || leftExpander.module->model == modelBurstGenerator) {
+				leftExpander.module->model == modelBasicSequencer8 || leftExpander.module->model == modelBurstGenerator || leftExpander.module->model == modelGatedComparator) {
 					
+				leftModuleAvailable = true;
 				messagesFromMaster = (SequencerExpanderMessage *)(leftExpander.consumerMessage);
 
 				switch (messagesFromMaster->masterModule) {
@@ -117,9 +121,11 @@ struct SequencerExpanderOut8 : Module {
 						clock = clockStates[i];
 						running = runningStates[i];
 						
-						// wrap counters > 8 back around to 1
-						while (count > SEQ_NUM_STEPS)
-							count -= SEQ_NUM_STEPS;
+						// wrap counters > 8 back around to 1 for the sequencers
+						if (messagesFromMaster->masterModule != SEQUENCER_EXP_MASTER_MODULE_GTDCOMP) {
+							while (count > SEQ_NUM_STEPS)
+								count -= SEQ_NUM_STEPS;
+						}
 					}
 				}
 			}
@@ -150,15 +156,28 @@ struct SequencerExpanderOut8 : Module {
 			clock = true;
 		
 		// set step lights and outputs
+		short bitMask = 0x01;
 		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-			bool stepActive = ((c + 1) == count);
+			bool stepActive = false;
+			
+			// for gated comparator, we have multiple bits set at the same time
+			if (leftModuleAvailable && messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_GTDCOMP) {
+				stepActive = (((short)count & bitMask) == bitMask);
+				
+				// prepare for next bit
+				bitMask = bitMask << 1;
+			}
+			else
+				stepActive = ((c + 1) == count);
+			
 			lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));
 			outputs[STEP_GATE_OUTPUTS + c].setVoltage(boolToGate(stepActive && clock && running));
 		}
 
 		// set up the detail for any secondary expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || 
+				rightExpander.module->model == modelSequencerExpanderTrig8 || rightExpander.module->model == modelSequencerExpanderRM8) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 				
@@ -168,6 +187,8 @@ struct SequencerExpanderOut8 : Module {
 					messageToExpander->setCVChannel(-1);
 					messageToExpander->setTrigChannel(-1);
 					messageToExpander->setOutChannel(-1);
+					messageToExpander->setRMChannel(-1);
+					
 					messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
 				}
 				else {
@@ -184,6 +205,7 @@ struct SequencerExpanderOut8 : Module {
 					if (messagesFromMaster) {
 						messageToExpander->setTrigChannel(messagesFromMaster->channelTRIG);
 						messageToExpander->setCVChannel(messagesFromMaster->channelCV);
+						messageToExpander->setRMChannel(messagesFromMaster->channelRM);				
 						messageToExpander->masterModule = messagesFromMaster->masterModule;
 					}
 				}

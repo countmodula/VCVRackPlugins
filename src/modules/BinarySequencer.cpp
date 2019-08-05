@@ -130,7 +130,7 @@ struct BinarySequencer : Module {
 				// kick off the trigger
 				pgTrig.trigger(1e-3f);
 
-				if (++counter > 127)
+				if (++counter > 255)
 					counter = 0;
 			}
 		}
@@ -187,7 +187,8 @@ struct BinarySequencer : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || 
+				rightExpander.module->model == modelSequencerExpanderTrig8 || rightExpander.module->model == modelSequencerExpanderRM8) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 
@@ -195,6 +196,7 @@ struct BinarySequencer : Module {
 				messageToExpander->setCVChannel(0);
 				messageToExpander->setTrigChannel(0);
 				messageToExpander->setOutChannel(0);
+				messageToExpander->setRMChannel(0);
 	
 				// add the channel counters and gates
 				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {

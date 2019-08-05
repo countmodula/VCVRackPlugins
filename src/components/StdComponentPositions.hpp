@@ -81,6 +81,14 @@ const int STD_COL32 = 31;
 // standard row definitions
 //------------------------------------------------------------------------
 
+const int STD_ROWS5[5] = {
+	64,
+	127,
+	190,
+	253,
+	316
+};
+
 // 6 row panel positions
 const int STD_ROWS6[6] = {
 	53,

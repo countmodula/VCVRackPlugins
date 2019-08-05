@@ -8,11 +8,14 @@
 #define SEQUENCER_EXP_MASTER_MODULE_DEFAULT 0
 #define SEQUENCER_EXP_MASTER_MODULE_BNRYSEQ 1
 #define SEQUENCER_EXP_MASTER_MODULE_STEPSEQ 2
+#define SEQUENCER_EXP_MASTER_MODULE_GTDCOMP 3
+
 
 struct SequencerExpanderMessage {
 	int channelCV;		// for CV expanders
 	int channelOUT;		// for output expanders
 	int channelTRIG;	// for gate/trigger expanders
+	int channelRM;		// for random melody expanders
 	
 	int masterModule;
 	
@@ -34,6 +37,11 @@ struct SequencerExpanderMessage {
 	// sets the trigger expander channel
 	void setTrigChannel (int c) {
 		channelTRIG = c;
+	}
+	
+	// sets the random melody expander channel
+	void setRMChannel (int c) {
+		channelRM = c;
 	}
 	
 	// sets the channel for the next CV expander 
@@ -60,7 +68,7 @@ struct SequencerExpanderMessage {
 			channelOUT  = 0;		
 	}	
 	
-	// sets the channel fro the next trigger expander 
+	// sets the channel for the next trigger expander 
 	void setNextTrigChannel(int c) {
 		channelTRIG = c;
 		
@@ -71,6 +79,18 @@ struct SequencerExpanderMessage {
 		if (channelTRIG >= SEQUENCER_EXP_MAX_CHANNELS)
 			channelTRIG  = 0;		
 	}
+	
+	// sets the channel for the next random melody expander 
+	void setNextRMChannel(int c) {
+		channelRM = c;
+		
+		if (channelRM >= 0)
+			channelRM++;
+		
+		// wrap the channels around in case anyone is crazy enough to add more expanders than we expect
+		if (channelRM >= SEQUENCER_EXP_MAX_CHANNELS)
+			channelRM  = 0;		
+	}	
 	
 	// sets the clock state
 	void setClockState(int c, bool cs) {

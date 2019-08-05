@@ -11,6 +11,18 @@
 <th align="left">Notes</th>
 </tr>
 <tr valign="top">
+<td align="center">??-??-2019</td>
+<td align="center">v1.3.0</td>
+<td align="left">
+<ul>
+<b>New Modules</b>
+<li>Gated Comparator</li>
+<li>Sequencer (Gated Comparator) Expander - Random Melody</li>
+<li>Slope Detector</li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
 <td align="center">29-July-2019</td>
 <td align="center">v1.2.1</td>
 <td align="left">
@@ -29,14 +41,13 @@
 </ul>
 </td>
 </tr>	
-
 <tr valign="top">
 <td align="center">21-July-2019</td>
 <td align="center">v1.2.0</td>
 <td align="left">
 <ul>
 <b>New Modules</b>
-<li>Basic 8 Step Sequencer
+<li>Basic 8 Step Sequencer</li>
 <li>Sequencer Expander - CV8</li>
 <li>Sequencer Expander - Out8</li>
 <li>Sequencer Expander - Trig8</li>

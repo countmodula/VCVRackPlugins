@@ -40,6 +40,7 @@ struct SequencerExpanderCV8 : Module {
 	
 	int channelID = -1;
 	int prevChannelID = -1;
+	bool leftModuleAvailable = false; 
 	
 	// 0123
 	// RGYB
@@ -101,11 +102,14 @@ struct SequencerExpanderCV8 : Module {
 		colourMap = colourMapDefault;
 		
 		// grab the detail from the left hand module if we have one
+		leftModuleAvailable = false;
 		if (leftExpander.module) {
-			if (leftExpander.module->model == modelSequencerExpanderCV8 || leftExpander.module->model == modelSequencerExpanderOut8 || leftExpander.module->model == modelSequencerExpanderTrig8 ||
+			if (leftExpander.module->model == modelSequencerExpanderCV8 || leftExpander.module->model == modelSequencerExpanderOut8 || 
+				leftExpander.module->model == modelSequencerExpanderTrig8 || leftExpander.module->model == modelSequencerExpanderRM8 ||
 				leftExpander.module->model == modelTriggerSequencer8 || leftExpander.module->model == modelStepSequencer8 || leftExpander.module->model == modelBinarySequencer || 
-				leftExpander.module->model == modelBasicSequencer8 || leftExpander.module->model == modelBurstGenerator) {
+				leftExpander.module->model == modelBasicSequencer8 || leftExpander.module->model == modelBurstGenerator || leftExpander.module->model == modelGatedComparator) {
 					
+				leftModuleAvailable = true;
 				messagesFromMaster = (SequencerExpanderMessage *)(leftExpander.consumerMessage);
 
 				switch (messagesFromMaster->masterModule) {
@@ -133,10 +137,11 @@ struct SequencerExpanderCV8 : Module {
 					if (i == channelID) {
 						count = std::max(channelCounters[i], 0);
 			
-						// wrap counters > 8 back around to 1
-						while (count > SEQ_NUM_STEPS)
-							count -= SEQ_NUM_STEPS;
-						
+						// wrap counters > 8 back around to 1 for the sequencers
+						if (messagesFromMaster->masterModule != SEQUENCER_EXP_MASTER_MODULE_GTDCOMP) {
+							while (count > SEQ_NUM_STEPS)
+								count -= SEQ_NUM_STEPS;
+						}
 					}
 				}
 			}
@@ -164,21 +169,39 @@ struct SequencerExpanderCV8 : Module {
 			lights[CHANNEL_LIGHTS + i].setBrightness(boolToLight(i == m));
 	
 		float cv = 0.0f;
-		float scale = 1.0f;
-		
+		short bitMask = 0x01;
+
+		// determine which scale to use
+		float scale = getScale(params[RANGE_SW_PARAM].getValue());
+
+		// now deal with the CV and lights
 		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+			bool stepActive = false;
+			if (leftModuleAvailable && messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_GTDCOMP) {
+				// for gated comparator, we have multiple bits set at the same time so must do things a little differently
+				
+				stepActive = (((short)count & bitMask) == bitMask);
+				
+				// calculate cv for this bit and add to the total - this will work a bit like the binary sequencer except it will be positive only
+				if (stepActive)
+					cv = cv + (params[STEP_CV_PARAMS + c].getValue() / 8.0f * scale);
+				
+				// prepare for next bit
+				bitMask = bitMask << 1;
+			}
+			else {			
+				stepActive = ((c + 1) == count);
+				
+				// now determine the output values
+				if (stepActive) {
+					
+					// now grab the cv value
+					cv = params[STEP_CV_PARAMS + c].getValue() * scale;
+				}
+			}
 			// set step lights here
-			bool stepActive = ((c + 1) == count);
 			lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));
 			
-			// now determine the output values
-			if (stepActive) {
-				// determine which scale to use
-				scale = getScale(params[RANGE_SW_PARAM].getValue());
-				
-				// now grab the cv value
-				cv = params[STEP_CV_PARAMS + c].getValue() * scale;
-			}
 		}
 
 		// set the outputs accordingly
@@ -187,7 +210,8 @@ struct SequencerExpanderCV8 : Module {
 		
 		// set up the detail for any secondary expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 ||
+				rightExpander.module->model == modelSequencerExpanderTrig8 || rightExpander.module->model == modelSequencerExpanderRM8) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 				
@@ -197,6 +221,8 @@ struct SequencerExpanderCV8 : Module {
 					messageToExpander->setCVChannel(-1);
 					messageToExpander->setTrigChannel(-1);
 					messageToExpander->setOutChannel(-1);
+					messageToExpander->setRMChannel(-1);
+					
 					messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
 				}
 				else {
@@ -213,6 +239,7 @@ struct SequencerExpanderCV8 : Module {
 					if (messagesFromMaster) {
 						messageToExpander->setTrigChannel(messagesFromMaster->channelTRIG);
 						messageToExpander->setOutChannel(messagesFromMaster->channelOUT);
+						messageToExpander->setRMChannel(messagesFromMaster->channelRM);				
 						messageToExpander->masterModule = messagesFromMaster->masterModule;
 					}
 				}
