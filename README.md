@@ -60,10 +60,9 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a></li>
 <li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a>
 <ul>
-<li>CV8</li>
-<li>OUT8</li>
-<li>TRIG8</li>
-<li>RM8 (For the Gated Comparator but functions with other sequencers albeit slightly differently)<font color="red">* New in v1.3.0</font></li>
+<li>SX-CV8: CV Expander</li>
+<li>SX-OUT8: Output Expander</li>
+<li>SX-TRIG8: Gate/Trigger Expander</li>
 </ul>
 </li>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a></li>
@@ -83,6 +82,12 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#CVSpreader">CV Spreader</a></li>
 <li><a href="./MANUAL.md#BurstGenerator">Burst Generator</a></li>
 <li><a href="./MANUAL.md#GatedComparator">Gated Comparator</a> <font color="red">* New in v1.3.0</font></li>
+<li><a href="./MANUAL.md#GatedComparator">Gated Comparator Expanders</a>
+<ul>
+<li>GC-RM: Random Melody Expander<font color="red">* New in v1.3.0</font></li>
+<li>GC-LOGIC: Trigger/Gate Logic Expander <font color="red">* New in v1.3.0</font></li>
+</ul>
+</li>
 <li><a href="./MANUAL.md#SlopeDetector">Slope Detector</a> <font color="red">* New in v1.3.0</font></li>
 </ul>
 </li>

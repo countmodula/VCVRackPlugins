@@ -11,7 +11,7 @@ Whilst these modules are offered free of charge, if you like them or are using t
 <h3>Analogue Shift Register</h3>
 <table>
 <tr valign="top">
-<td width=150>
+<td width=140>
 <img src="./img/ASR.png">
 </td> 
 <td>
@@ -24,7 +24,7 @@ A dual 4 output or single 8 output shift register. On each the rising edge at th
 <h3>Attenuator</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/Attenuator.png">
 </td> 
 <td>
@@ -41,7 +41,7 @@ This module can process polyphonic signals. All channels are attenuated or atten
 <h3>Basic 8 Step Sequencer</h3>
 <table>
 <tr valign="top">
-<td width=220>
+<td width=260>
 <img src="./img/Basic8StepSequencer.png">
 </td> 
 <td>
@@ -93,7 +93,7 @@ Extra channels can be added via the <a href="#SequencerExpanders">Sequencer Expa
 <h3>Binary Sequencer</h3>
 <table>
 <tr valign="top">
-<td width=220>
+<td width=200>
 <img src="./img/BinarySequencer.png">
 </td> 
 <td>
@@ -139,7 +139,7 @@ The following context menu options are available to facilitate initialization an
 <h3>Comparator</h3>
 <table>
 <tr valign="top">
-<td width=140>
+<td width=110>
 <img src="./img/Comparator.png">
 </td> 
 <td>
@@ -152,7 +152,7 @@ Compares the input signal with either an internal or external threshold value an
 <h3>Event Arranger</h3>
 <table>
 <tr valign="top">
-<td width=280>
+<td width=320>
 <img src="./img/EventArranger.png">
 </td> 
 <td>
@@ -166,7 +166,7 @@ Each switch corresponds to a bit in a binary counter and can be "mixed" into the
 <h3>Gate Delay</h3>
 <table>
 <tr valign="top">
-<td width=240>
+<td width=200>
 <img src="./img/GateDelay.png">
 </td> 
 <td>
@@ -175,12 +175,11 @@ A dual gate delay line giving up to 40 seconds of delay with voltage control ove
 </tr>
 </table>
 
-
 <a id="GateModifier"></a>
 <h3>Gate Modifier</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/GateModifier.png">
 </td> 
 <td>
@@ -210,7 +209,7 @@ A trigger pulse is sent to the End output at the end of the extended or shortene
 <h3>G2T</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/G2T.png">
 </td> 
 <td>
@@ -223,7 +222,7 @@ A gate converter module. Converts any signal into a gate. The gate output will b
 <h3>Inverter</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/Inverter.png">
 </td> 
 <td>
@@ -239,7 +238,7 @@ This module can process polyphonic signals.
 <h3>Mangler</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/Mangler.png">
 </td> 
 <td>
@@ -274,7 +273,7 @@ This module can process polyphonic signals with each channel being mangled at th
 <h3>Manual CV</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/ManualCV.png">
 </td> 
 <td>
@@ -287,7 +286,7 @@ A simple dual manual CV generator offering +/- 10V with both coarse and fine con
 <h3>Manual Gate</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/ManualGate.png">
 </td> 
 <td>
@@ -306,7 +305,7 @@ A manually triggered gate generator offering a number of simultaneous gate and i
 <h3>Matrix Mixer</h3>
 <table>
 <tr valign="top">
-<td width=280>
+<td width=340>
 <img src="./img/MatrixMixer.png">
 </td> 
 <td>
@@ -319,7 +318,7 @@ A 4 x 4 matrix mixer allowing up to 4 input signals to be independently mixed to
 <h3>Minimus Maximus</h3>
 <table>
 <tr valign="top">
-<td width=220><img src="./img/MinimusMaximus.png"></td> 
+<td width=200><img src="./img/MinimusMaximus.png"></td> 
 <td>
 A signal processor that determines and outputs the minimum, maximum and mean (average) of up to 4 input signals along with gate signals (switchable between unipolar and bipolar values) for each input channel indicating that the associated input is equal to either the minimum or maximum value. The Bias controls allow the 4th channel to be set manually. When engaged, the 4th Channel input is ignored and the value of the Bias knob is used instead.</td>
 </tr>
@@ -329,7 +328,7 @@ A signal processor that determines and outputs the minimum, maximum and mean (av
 <h3>Mixer</h3>
 <table>
 <tr valign="top">
-<td width=280>
+<td width=140>
 <img src="./img/Mixer.png">
 </td> 
 <td>
@@ -338,12 +337,11 @@ A basic 4 input utility mixer with output level control, overload indicator, inv
 </tr>
 </table>
 
-
 <a id="MorphShaper"></a>
 <h3>Morph Shaper</h3>
 <table>
 <tr valign="top">
-<td width=160>
+<td width=140>
 <img src="./img/MorphShaper.png">
 </td> 
 <td>
@@ -356,7 +354,7 @@ With kind permission from Dieter Doepfer, this is a VCV Rack version of the A-14
 <h3>Multiplexer</h3>
 <table>
 <tr valign="top">
-<td width=300><img src="./img/Multiplexer.png"></td> 
+<td width=320><img src="./img/Multiplexer.png"></td> 
 <td>
 <ul>
 The multiplexer operates in two independent but interconnected parts:
@@ -389,7 +387,7 @@ The selector has four modes of operation which control the normalling behaviour 
 <h3>Mute</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/Mute.png">
 </td> 
 <td>
@@ -406,7 +404,7 @@ This module can process polyphonic signals. All channels are muted at the same t
 <h3>Mute-iple</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=200>
 <img src="./img/Mute-iple.png">
 </td> 
 <td>
@@ -464,9 +462,11 @@ this version has been retained for the time being however it is now deprecated a
 <h3>Polyrhythmic Generator MkII</h3>
 <table>
 <tr valign="top">
-<td width=340>
+<td>
 <img src="./img/PolyrhythmicGenerator2.png">
 </td> 
+</tr>
+<tr>
 <td>
 A set of 8 voltage controlled clock dividers that can be used to generate polyrhythms by clocking and/or dividing at different rates. The individual clock, reset and division CV  inputs of each channel are normalled to the previous channel allowing for global or segmented/individual control. Plugging a cable into the clock, reset or CV input a given channel will break the normalling input and inputs on subsequent channels from the input on the previous channel. Normalling is applied per input (breaking the CV input  does not break the clock normalling for example) so it is possible to have individual CV control over the divisions on each channel  whilst maintaining a common clock. Along with a global mute button which also has voltage control, each channel can be manually muted individually.
 <p/>
@@ -498,7 +498,7 @@ For those with old patches requiring the behaviour of the original version or wh
 <h3>Rectifier</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/Rectifier.png">
 </td> 
 <td>
@@ -516,7 +516,7 @@ Note that the rectifier module is highly likely to introduce aliasing artefacts 
 <h3>Sample & Hold</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=80>
 <img src="./img/SampleAndHold.png">
 </td> 
 <td>
@@ -532,19 +532,20 @@ This module can process polyphonic signals. All channels are sampled and held wi
 <h3>Sequencer Expanders</h3>
 <table>
 <tr valign="top">
-<td width=380>
+<td>
 <img src="./img/SequencerExpanders.png">
 </td> 
+</tr>
+<tr>
 <td>
 <ul>
 A set of expander modules that add extra channel functionality to the Count Modula 8 step sequencers.
 <li>SX-OUT8: Adds individual gate outputs for each step.<br>The Trigger/Gate switch determines whether the outputs stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
 <li>SX-CV8: Adds another channel of CV output.<br>This module functions like the CV strip of the Basic Sequencer with Scale switch determining the output scale as 2, 4 or 8 volts. </li>
 <li>SX-TRIG8: Adds another channel of Trigger/Gate output.This module functions like the gate/trigger switch strip on the Basic Sequencer with the switches selecting either of the trigger or gate output or no output at all when the step is active.</li>
-<li>SX-RM8: Adds another channel of Random Melody CV output to the <a href="#GatedComparator">Gated Comparator</a>. This module functions as a digital to analogue converter just like the Random Melody section of the Gated Comparator however it also adds a scale switch to select the maximum voltage range to be output and the voltages for the active bits can be selectively added or subtracted when perforing the digital to analogue conversion.<br/>
-Although Designed specifically for the Gated Comparator, this module will work with other sequencer modules however its usefulness in this capacity may be limited. For the 8 step sequencers, the module will follow the active steps of the sequencer. When used with the Binary Sequencer, the switches function like the Binary Sequencer Division knobs except the associated voltages are added or subtracted in full rather than being mixed in variable amounts.  
-</li>
 </ul>
+Although Designed specifically for the Gated Comparator, the Gated Comparator expanders will work with other sequencer modules however their usefulness in this capacity may be limited. 
+For the 8 step sequencers, the modules will simply follow the active steps of the sequencer. When used with the Binary Sequencer, the modules will follow the internal binary count.
 <p>
 These modules use the new expander functionality introduced in Rack V1 so must be placed immediately to the right of a sequencer module in order to function. Multiple expanders can be used by placing each extra expander immediately to the right of an already connected expander and they can be used in any combination and in any order. It should be noted a s sample delay is introduced with each expander.
 </p>
@@ -560,7 +561,7 @@ Note that the direction, number of steps and the current step of the associated 
 <h3>Shepard Generator</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=200>
 <img src="./img/ShepardGenerator.png">
 </td> 
 <td>
@@ -576,7 +577,7 @@ This module can function as a polyphonic controller. The saw and triangle wavefo
 <h3>SR Flip Flop</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/SRFlipFlop.png">
 </td> 
 <td>
@@ -657,7 +658,7 @@ The following context menu options are available to facilitate initialization an
 <h3>Sub Harmonic Generator</h3>
 <table>
 <tr valign="top">
-<td width=220>
+<td width=140>
 <img src="./img/SubHarmonicGenerator.png">
 </td> 
 <td>
@@ -673,7 +674,7 @@ Accepts a signal from a VCO/LFO and generates a mix of user selectable sub harmo
 <h3>Tapped Gate Delay</h3>
 <table>
 <tr valign="top">
-<td width=220>
+<td width=260>
 <img src="./img/TappedGateDelay.png">
 </td> 
 <td>
@@ -686,7 +687,7 @@ A gate delay that offers up to 40 seconds of delay with tapped outputs at equal 
 <h3>T Flip Flop (Toggle)</h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/TFlipFlop.png">
 </td> 
 <td>
@@ -699,9 +700,11 @@ A dual Toggle (T type) flip flop with optional enable. A positive going gate sig
 <h3>Trigger Sequencer - 8 Step</h3>
 <table>
 <tr valign="top">
-<td width=340>
+<td>
 <img src="./img/TriggerSequencer8.png">
 </td> 
+</tr>
+<tr>
 <td>
 A set of four 8 Step trigger sequencers in a single panel each with voltage control over the sequence length and two independent outputs.<br/>
 The Reset input restarts the sequence at step one on th next clock cycle.<br/>
@@ -794,13 +797,11 @@ this version has been retained for the time being however it is now deprecated a
 </table>
 </center>
 
-
-
 <a id="VCFrequencyDivider2"></a>
 <h3>Voltage Controlled Frequency Divider MkII</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/VCFrequencyDivider2.png">
 </td> 
 <td>
@@ -827,7 +828,7 @@ For those with old patches requiring the behaviour of the original version or wh
 <h3>Voltage Controlled Polarizer </h3>
 <table>
 <tr valign="top">
-<td width=180>
+<td width=140>
 <img src="./img/VCPolarizer.png">
 </td> 
 <td>
@@ -843,7 +844,7 @@ This module can process polyphonic signals. All channels are polarized by the sa
 <h3>Voltage Controlled Switch</h3>
 <table>
 <tr valign="top">
-<td width=100>
+<td width=80>
 <img src="./img/VCSwitch.png">
 </td> 
 <td>
@@ -860,7 +861,7 @@ This module can process polyphonic signals. All channels are switched by the sam
 <p>
 A nod to the genius of Ken Stone, these are some of my favourite CGS designs realised in VCV Rack format.<br/>
 </p>
-<a id="CVSpreader">
+<a id="CVSpreader"></a>
 <h3>CV Spreader</h3>
 <table>
 <tr valign="top">
@@ -890,9 +891,11 @@ This module generates bursts of 1-16 pulses whenever a trigger is received at th
 <h3>Gated Comparator</h3>
 <table>
 <tr valign="top">
-<td width=300>
+<td>
 <img src="./img/GatedComparator.png">
-</td> 
+</td>
+</tr>
+<tr> 
 <td>
 <p>
 The gated comparator is a binary shift register fed by a comparator and coupled to a basic "digital to analogue" converter which can be used to generate Random sequences.
@@ -911,12 +914,19 @@ Note that the loop input is ORed with the output of the comparator section so it
 The Random Melody section functions as a digital to analogue converted with the switches determining which of the currently active Shift Register bits are used when determining the output voltage which will range from 0 with no active bits to 8V with all bits active. Each switch is binary weighted with switch 1 equating to 1/255th of 8V and switch 8 equating to 128/255ths of 8V.
 </p>
 <p>
-The <a href="#SequencerExpanders">Sequencer Expander</a> modules work with the gated comparator however they do function a little bit differently to when they are attached to a sequencer:
 <ul>
-<li>SX-OUT8: Adds an extra set of shift register outputs that follow the main shift register however the outputs can be set to operate as triggers via the Trigger/Gate switch which determines whether they stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
-<li>SX-CV8: Adds a set of CV outputs that, when connected to the Gated Comparator, function like the CV strip of the Binary Sequencer. Each knob has a maximum value of the selected scale divided by 8 and the value of each active step is summed and sent to the output. The Scale switch determines maximum the output value when all steps are active so on the 2 volt setting the output changes will be quite subtle. Note that unlike the knobs on Binary Sequencer, the values are positive only. </li>
-<li>SX-TRIG8: Adds a channel of selectable Trigger/Gate outputs where Gate or Trigger outputs are activated only when all of the Shift Register outputs matching the selected pattern are active; i.e. if the switches for step 1 and 2 are both set to "Trigger" and all others are off then the Trigger output will fire only when Shift Register output 1 and 2 are high.</li>
-<li>SX-RM8: Adds another channel of Random Melody CV output. This module functions like the Random Melody section of the Gated Comparator however it also adds a scale switch to select the maximum voltage range to be output and the voltages for the active bits can be added or subtracted.</li>
+The following expander modules are available for the Gated Comparator:
+<li>GX-RM: Adds another channel of Random Melody CV output. This module functions like the Random Melody section of the Gated Comparator only with selectable polarity on the CV generated for each bit. It also adds a scale switch to select the maximum CV range to be output.</li>
+<li>GX-LOGIC: Adds logic processing of the shift register bits. The AND output will be high whenever there are &quot;on&quot; shift register bits that match <i>all</i> of the switches that are in the &quot;1&1uot; position whilst the OR output will be high whenever there are &quot;on&quot; shift register bits that match <i>any</i> of the switches that are in the &quot;1&1uot; position.</li>
+Although these modules will function with the other sequencer modules, their usefulness may be limited.
+</ul>
+</p>
+<p>
+<ul>
+The <a href="#SequencerExpanders">Sequencer Expander</a> modules work with the gated comparator however they do function a little bit differently to when they are attached to a sequencer:
+<li>SX-OUT8: Adds an extra set of outputs that follow the main shift register outputs however they can be set to operate as triggers or gates. The Trigger/Gate switch which determines whether the outputs stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
+<li>SX-CV8: Adds a set of CV outputs that function like the CV strip of the Basic Sequencer except that the active step is addressed by the binary value of the shift register rather than being sequential.</li>
+<li>SX-TRIG8: Adds a set of selectable Gate/Trigger outputs that function like the Gate/Trigger selection strip of the Basic Sequencer except that the active step is addressed by the binary value shift register rather than being sequential.</li>
 </ul>
 </p>
 </td>
@@ -927,7 +937,7 @@ The <a href="#SequencerExpanders">Sequencer Expander</a> modules work with the g
 <h3>Slope Detector</h3>
 <table>
 <tr valign="top">
-<td width=120>
+<td width=140>
 <img src="./img/SlopeDetector.png">
 </td> 
 <td>

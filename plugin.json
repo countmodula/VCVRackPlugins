@@ -436,6 +436,14 @@
       "tags": [
 		"Utility"
       ]
+    },
+    {
+      "slug": "SequencerExpanderLOG8",
+      "name": "Gated Comparator Expander - Gate Logic",
+      "description": "Gated Comparator expander adding logical mixing of the shift register outputs.",
+      "tags": [
+		"Utility"
+      ]
     }
   ]
 }

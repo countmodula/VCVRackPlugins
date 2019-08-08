@@ -67,7 +67,7 @@ struct BurstGenerator : Module {
 		configParam(RATE_PARAM, 0.0f, 5.0f, 0.0f, "Burst rate");
 		configParam(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Rate range");
 		configParam(RETRIGGER_PARAM, 0.0f, 1.0f, 0.0f, "Retrigger On/Off");
-		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of pulses CV amount", " %", 0.0f, 100.0f, 0.0f);
+		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of pulses CV amount", " %", 0.0f, 62.5f, 0.0f);
 		configParam(PULSES_PARAM, 1.0f, 16.0f, 1.0f, "Number of pulses");
 		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Manual trigger");
 		
@@ -199,16 +199,12 @@ struct BurstGenerator : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || 
-				rightExpander.module->model == modelSequencerExpanderTrig8 || rightExpander.module->model == modelSequencerExpanderRM8) {
+			if (isExpanderModule(rightExpander.module)) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 
-				// set the expander module's channel number
-				messageToExpander->setCVChannel(0);
-				messageToExpander->setTrigChannel(0);
-				messageToExpander->setOutChannel(0);
-				messageToExpander->setRMChannel(0);
+				// set any potential expander module's channel number
+				messageToExpander->setAllChannels(0);
 		
 				// add the channel counters and gates
 				int c = seqBurst ? counter + 1 : 0;
@@ -218,8 +214,8 @@ struct BurstGenerator : Module {
 					messageToExpander->runningStates[i] = true; // always running - the counter takes care of the not running states 
 				}
 			
-				// finally, let all subsequent expanders know where we came from
-				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
+				// finally, let all potential expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_BURSTGENERATOR;
 				
 				rightExpander.module->leftExpander.messageFlipRequested = true;
 			}

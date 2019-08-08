@@ -17,7 +17,8 @@
 <ul>
 <b>New Modules</b>
 <li>Gated Comparator</li>
-<li>Sequencer (Gated Comparator) Expander - Random Melody</li>
+<li>Gated Comparator Expander - Random Melody</li>
+<li>Gated Comparator Expander - Logic</li>
 <li>Slope Detector</li>
 </ul>
 </td>

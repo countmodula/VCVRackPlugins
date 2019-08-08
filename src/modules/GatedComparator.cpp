@@ -165,28 +165,23 @@ struct GatedComparator : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || 
-				rightExpander.module->model == modelSequencerExpanderTrig8 || rightExpander.module->model == modelSequencerExpanderRM8) {
+			if (isExpanderModule(rightExpander.module)) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 
-				// set the expander module's channel number
-				messageToExpander->setCVChannel(0);
-				messageToExpander->setTrigChannel(0);
-				messageToExpander->setOutChannel(0);
-				messageToExpander->setRMChannel(0);
-		
+				// set any potential expander module's channel number
+				messageToExpander->setAllChannels(0);
+	
 				// add the channel counters and gates
 				int c = (int)(shiftReg & 0xFF);
 				for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {
-					messageToExpander->counters[i] = shiftReg;
 					messageToExpander->counters[i] = c;
 					messageToExpander->clockStates[i] =	gpClock.high();
 					messageToExpander->runningStates[i] = true; // always running - the counter takes care of the not running states 
 				}
-			
-				// finally, let all subsequent expanders know where we came from
-				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_GTDCOMP;
+				
+				// finally, let all potential expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_GATEDCOMPARATOR;
 				
 				rightExpander.module->leftExpander.messageFlipRequested = true;
 			}

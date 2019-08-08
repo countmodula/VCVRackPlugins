@@ -376,6 +376,40 @@ struct CountModulaToggle2P : SvgSwitch {
 };
 
 //-------------------------------------------------------------------
+// on-off toggle switch - sideways
+//-------------------------------------------------------------------
+struct CountModulaToggle2P90 : SvgSwitch {
+	CountModulaToggle2P90() {
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_2.svg")));
+
+		// no shadow for switches
+		shadow->opacity = 0.0f;
+	}
+	
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SvgSwitch::onChange(e);
+		
+		if (paramQuantity->getValue() > 0.5f)
+			paramQuantity->setValue(1.0f);
+		else
+			paramQuantity->setValue(0.0f);
+	}
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SvgSwitch::randomize();
+
+		if (paramQuantity->getValue() > 0.5f)
+			paramQuantity->setValue(1.0f);
+		else
+			paramQuantity->setValue(0.0f);
+	}	
+};
+
+//-------------------------------------------------------------------
 // on-off-on toggle switch
 //-------------------------------------------------------------------
 struct CountModulaToggle3P : SvgSwitch {
