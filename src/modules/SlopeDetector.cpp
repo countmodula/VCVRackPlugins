@@ -29,13 +29,14 @@ struct SlopeDetector : Module {
 		NUM_LIGHTS
 	};
 
-	LagProcessor slewUp;
-	LagProcessor slewDn;
+	LagProcessor lag;
 	
-	float cvUp = 0.0f;
-	float cvDn = 0.0f;
+	float cv = 0.0f, cvLag = 0.0f;
+	float lagAmt = 0.0f, range = 0.0f;
+	
 	int count = 0;
 	bool prevRising = false, prevFalling = false;
+	bool rising = false, falling = false, steady = true;
 	
 	SlopeDetector() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -54,33 +55,38 @@ struct SlopeDetector : Module {
 	
 	void process(const ProcessArgs &args) override {
 		// grab CV input value
-		float cv = inputs[CV_INPUT].getVoltage();
+		cv = inputs[CV_INPUT].getVoltage();
 
 		// apply lag
-		float range = (params[RANGE_PARAM].getValue() > 0.5f ? 2.0f : 1.0f);
-		float lagAmt = (0.1f + params[SENSE_PARAM].getValue()) * range;
-		cvUp = slewUp.process(cv, 0.5f, lagAmt, 0.0f);
-		cvDn = slewDn.process(cv, 0.5f, 0.0f, lagAmt);
-	
-		// determine if we're rising or falling based on the lagged value
-		bool rising = cv > cvUp;
-		bool falling = cv < cvDn;
+		range = (params[RANGE_PARAM].getValue() > 0.5f ? 1.0f : 0.5f);
+		lagAmt = (0.1f + params[SENSE_PARAM].getValue()) * range;
+		cvLag = lag.process(cv, 1.0f, lagAmt, lagAmt);
 		
-		// change of direction can end up with both falling and rising based on the slew so let's handle that right here.
-		if (rising && falling) {
-			if (prevRising) {
-				slewUp.out = cv;
+		// determine if we're rising or falling based on the lagged value
+		// applying a bit of hysteresis to avoid double triggering.
+		// double triggering will still happen if the response is set too quick and the input signal is slow
+		if(fabs(cv - cvLag) > 0.01f) {
+			if (cv > cvLag) {
+				rising = true;
+			}
+			else if (prevRising && cv < (cvLag - 0.01f)) {
 				rising = false;
 			}
 			
-			if (prevFalling) {
-				slewDn.out = cv;
+			if (cv < cvLag) {
+				falling = true;
+			}
+			else if (prevFalling && cv > (cvLag + 0.01f)) {
 				falling = false;
 			}
 		}
+		else {
+			// any cv input within 0.01 volts of the lagged value is considered steady
+			rising = falling = false;
+		}
 		
 		// steady only if neither rising or falling
-		float steady = !(rising || falling);
+		steady = !(rising || falling);
 		
 		// set the outputs
 		outputs[RISING_OUTPUT].setVoltage(boolToGate(rising));
@@ -115,7 +121,7 @@ struct SlopeDetectorWidget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW3]), module, SlopeDetector::RISING_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW4]), module, SlopeDetector::STEADY_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW5]), module, SlopeDetector::FALLING_OUTPUT));
-	
+
 		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW3]), module, SlopeDetector::RISING_LIGHT));
 		addChild(createLightCentered<MediumLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW4]), module, SlopeDetector::STEADY_LIGHT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW5]), module, SlopeDetector::FALLING_LIGHT));

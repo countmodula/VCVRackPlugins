@@ -1,7 +1,15 @@
-![alt text](./img/CountModulaLogo.png "Count Modula")
-<h1>Count Modula</h1>
-<h2>Plugin modules for VCV Rack v1.0 by Adam Verspaget (Count Modula)</h2>
-
+<table style="width:1000px; border: 0px solid black;">
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+<center>
+<img src="./img/CountModulaLogo.png" alt="Count Modula">
+<h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+</center>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
 All source code in this repository is licensed under BSD-3-Clause by Adam Verspaget/Count Modula
