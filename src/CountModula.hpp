@@ -54,7 +54,10 @@ extern Model *modelSequencerExpanderTrig8;
 extern Model *modelSubHarmonicGenerator;
 extern Model *modelPolyrhythmicGeneratorMkII;
 extern Model *modelVCFrequencyDividerMkII;
-
+extern Model *modelGatedComparator;
+extern Model *modelSlopeDetector;
+extern Model *modelSequencerExpanderRM8;
+extern Model *modelSequencerExpanderLog8;
 
 #include "components/CountModulaComponents.hpp"
 #include "components/StdComponentPositions.hpp"

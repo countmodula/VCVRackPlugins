@@ -471,14 +471,12 @@ struct STRUCT_NAME : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (isExpanderModule(rightExpander.module)) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 
-				// set the expander module's channel number
-				messageToExpander->setCVChannel(0);
-				messageToExpander->setTrigChannel(0);
-				messageToExpander->setOutChannel(0);
+				// set any potential expander module's channel number
+				messageToExpander->setAllChannels(0);
 	
 				// add the channel counters
 				int j = 0;
@@ -492,8 +490,8 @@ struct STRUCT_NAME : Module {
 						j = 0;
 				}
 					
-				// finally, let all subsequent expanders know where we came from
-				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_STEPSEQ;
+				// finally, let all potential expanders know where we came from
+				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DUALSTEP;
 				
 				rightExpander.module->leftExpander.messageFlipRequested = true;
 			}

@@ -9,10 +9,10 @@
 
 #define SEQ_NUM_STEPS	8
 
-struct SequencerExpanderCV8 : Module {
+struct SequencerExpanderRM8 : Module {
 
 	enum ParamIds {
-		ENUMS(STEP_CV_PARAMS, SEQ_NUM_STEPS),
+		ENUMS(STEP_SW_PARAMS, SEQ_NUM_STEPS),
 		RANGE_SW_PARAM,
 		NUM_PARAMS
 	};
@@ -34,7 +34,7 @@ struct SequencerExpanderCV8 : Module {
 	};
 	
 	// Expander details
-	int ExpanderID = SequencerExpanderMessage::CV8;
+	int ExpanderID = SequencerExpanderMessage::RM8;
 	SequencerExpanderMessage leftMessages[2][1];	// messages from left module (master)
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 	SequencerExpanderMessage *messagesFromMaster;
@@ -51,7 +51,9 @@ struct SequencerExpanderCV8 : Module {
 	
 	int *colourMap = colourMapDefault;
 	
-	SequencerExpanderCV8() {
+	float stepValue = 8.0f / 255.0f;
+	
+	SequencerExpanderRM8() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// from left module (master)
@@ -64,7 +66,7 @@ struct SequencerExpanderCV8 : Module {
 		
 		// step params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configParam(STEP_CV_PARAMS + s, 0.0f, 8.0f, 0.0f, "Step value");
+			configParam(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate");
 		}
 		
 		// range switch
@@ -79,8 +81,7 @@ struct SequencerExpanderCV8 : Module {
 		return root;
 	}
 	
-	float getScale(float range) {
-		
+	float getScale(float range) {		
 		switch ((int)(range)) {
 			case 2:
 				return 0.25f; // 2 volts
@@ -95,8 +96,8 @@ struct SequencerExpanderCV8 : Module {
 	void process(const ProcessArgs &args) override {
 
 		// details from master
-		int count = 0;
-		int channelCounters[SEQUENCER_EXP_MAX_CHANNELS] = {0, 0, 0, 0};
+		int shiftRegister = 0;
+		int shiftRegisters[SEQUENCER_EXP_MAX_CHANNELS] = {0, 0, 0, 0};
 		bool clockStates[SEQUENCER_EXP_MAX_CHANNELS] = {false, false, false, false};
 		bool runningStates[SEQUENCER_EXP_MAX_CHANNELS] = {false, false, false, false};
 		
@@ -106,7 +107,7 @@ struct SequencerExpanderCV8 : Module {
 		leftModuleAvailable = false;
 		if (leftExpander.module) {
 			if (isExpanderModule(leftExpander.module) || isExpandableModule(leftExpander.module)) {
-					
+				
 				leftModuleAvailable = true;
 				messagesFromMaster = (SequencerExpanderMessage *)(leftExpander.consumerMessage);
 
@@ -127,16 +128,30 @@ struct SequencerExpanderCV8 : Module {
 
 				// decode the counter array
 				for(int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS; i++) {
-					channelCounters[i] = messagesFromMaster->counters[i];
+					shiftRegisters[i] = messagesFromMaster->counters[i];
 					clockStates[i] = messagesFromMaster->clockStates[i];
 					runningStates[i] = messagesFromMaster->runningStates[i];
-					
-					if (i == channelID) {
-						count = std::max(channelCounters[i], 0);
 			
-						// wrap counters > 8 back around to 1 - for the gated comparator, we'll just treat the shift register like a counter
-						while (count > SEQ_NUM_STEPS)
-							count -= SEQ_NUM_STEPS;
+					if (i == channelID) {
+						if (messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_GATEDCOMPARATOR || messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_BINARY) {
+							// shift register or full scale counter based master - can use the value we're given
+							shiftRegister = std::max(shiftRegisters[i], 0) & 0xFF;
+						}
+						else {
+							// for non shift register or 8/16 step based sources, we need to translate the counter into a shift register value
+							int count = std::max(shiftRegisters[i], 0);
+							
+							while (count > SEQ_NUM_STEPS)
+								count -= SEQ_NUM_STEPS;
+
+							if (count > 0) {
+								// adjust 1-8 down to 0-7
+								count--;
+							
+								// now convert to shift register
+								shiftRegister = 0x01 << count;
+							}
+						}
 					}
 				}
 			}
@@ -163,26 +178,39 @@ struct SequencerExpanderCV8 : Module {
 		for (int i = 0; i < 4; i ++)
 			lights[CHANNEL_LIGHTS + i].setBrightness(boolToLight(i == m));
 	
+
+		float cv = 0.0f;
+		int bitMask = 0x01;
+
 		// determine which scale to use
 		float scale = getScale(params[RANGE_SW_PARAM].getValue());
 
 		// now deal with the CV and lights
-		float cv = 0.0f;
-		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-			bool stepActive = ((c + 1) == count);
+		for (int i = 0; i < 8; i ++) {
+			// outputs and lights
+			bool v = ((shiftRegister & bitMask) == bitMask);
+			lights[STEP_LIGHTS + i].setBrightness(boolToLight(v));
 			
-			// grab the cv value
-			if (stepActive)
-				cv = params[STEP_CV_PARAMS + c].getValue() * scale;
-
-			// set step lights here
-			lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));
+			// determine random melody value for this bit
+			if (v) {
+				switch ((int)(params[STEP_SW_PARAMS + i].getValue())) {
+					case 0:
+						cv -= (((float)(bitMask)) * stepValue);
+						break;
+					case 2:
+						cv += (((float)(bitMask)) * stepValue);
+						break;
+				}
+			}
+			
+			// prepare for next bit
+			bitMask = bitMask << 1;
 		}
 
 		// set the outputs accordingly
-		outputs[CV_OUTPUT].setVoltage(cv);
-		outputs[CVI_OUTPUT].setVoltage(-cv);
-		
+		outputs[CV_OUTPUT].setVoltage(cv * scale);
+		outputs[CVI_OUTPUT].setVoltage(-cv * scale);	
+
 		// set up the detail for any secondary expander
 		if (rightExpander.module) {
 			if (isExpanderModule(rightExpander.module)) {
@@ -194,13 +222,10 @@ struct SequencerExpanderCV8 : Module {
 					// we have no left hand module
 					messageToExpander->setDefaultValues();
 				}
-				else {
-					// set the channel for the next expander of this type
-					messageToExpander->setNextChannel(channelID, ExpanderID);
-					
+				else {		
 					// add the channel counters and gate states
 					for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {
-						messageToExpander->counters[i] = channelCounters[i];
+						messageToExpander->counters[i] = shiftRegisters[i];
 						messageToExpander->clockStates[i] = clockStates[i];
 						messageToExpander->runningStates[i] = runningStates[i];
 					}
@@ -208,12 +233,14 @@ struct SequencerExpanderCV8 : Module {
 					// pass through the other expander channel numbers and master module details
 					if (messagesFromMaster) {
 						for(int i = 0; i < SequencerExpanderMessage::NUM_EXPANDERS; i++) {
-							if (i != ExpanderID)
-								messageToExpander->setChannel(messagesFromMaster->channels[i], i);
+							messageToExpander->setChannel(messagesFromMaster->channels[i], i);
 						}
-						
+
 						messageToExpander->masterModule = messagesFromMaster->masterModule;
 					}
+					
+					// set the channel for the next expander of this type
+					messageToExpander->setNextChannel(channelID, ExpanderID);
 				}
 
 				rightExpander.module->leftExpander.messageFlipRequested = true;
@@ -222,72 +249,32 @@ struct SequencerExpanderCV8 : Module {
 	}
 };
 
-struct SequencerExpanderCV8Widget : ModuleWidget {
-	SequencerExpanderCV8Widget(SequencerExpanderCV8 *module) {
+struct SequencerExpanderRM8Widget : ModuleWidget {
+	SequencerExpanderRM8Widget(SequencerExpanderRM8 *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SequencerExpanderCV8.svg")));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SequencerExpanderRM8.svg")));
 
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		// row lights and knobs
+		// row lights and switches
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderCV8::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaKnobGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderCV8::STEP_CV_PARAMS + s));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderRM8::STEP_LIGHTS + s));
+			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderRM8::STEP_SW_PARAMS + s));
 		}
 
 		// channel light
-		addChild(createLightCentered<MediumLight<CountModulaLightRGYB>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, SequencerExpanderCV8::CHANNEL_LIGHTS));
+		addChild(createLightCentered<MediumLight<CountModulaLightRGYB>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, SequencerExpanderRM8::CHANNEL_LIGHTS));
 		
 		// range control
-		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, SequencerExpanderCV8::RANGE_SW_PARAM));
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, SequencerExpanderRM8::RANGE_SW_PARAM));
 
 		// cv outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, SequencerExpanderCV8::CV_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderCV8::CVI_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, SequencerExpanderRM8::CV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderRM8::CVI_OUTPUT));
 	}
-	
-	char knobColours[5][50] = {	"res/Components/KnobRed.svg", 
-								"res/Components/KnobGreen.svg", 
-								"res/Components/KnobYellow.svg",  
-								"res/Components/KnobBlue.svg", 
-								"res/Components/KnobGrey.svg"};   	
-							
-	void step() override {
-		if (module) {
-			int cid = ((SequencerExpanderCV8*)module)->channelID;
-			int pid = ((SequencerExpanderCV8*)module)->prevChannelID;
-		
-			if (cid != pid) {
-				
-				int m = 4;
-				switch (cid) {
-					case 0:
-					case 1:
-					case 2:
-					case 3:
-						m = ((SequencerExpanderCV8*)module)->colourMap[cid];
-						break;
-					default:
-						m = 4; // always 4 (grey)
-						break;
-				}
-	
-				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(SequencerExpanderCV8::STEP_CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, knobColours[m]))); 
-					((CountModulaKnob *)(p))->dirtyValue = -1;
-				}
-				
-				((SequencerExpanderCV8*)module)->prevChannelID = cid;
-			}
-		}
-		
-		Widget::step();
-	}	
-	
 };
 
-Model *modelSequencerExpanderCV8 = createModel<SequencerExpanderCV8, SequencerExpanderCV8Widget>("SequencerExpanderCV8");
+Model *modelSequencerExpanderRM8 = createModel<SequencerExpanderRM8, SequencerExpanderRM8Widget>("SequencerExpanderRM8");

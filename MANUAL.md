@@ -1,33 +1,42 @@
-![alt text](./img/CountModulaLogo.png "Count Modula")
-<h1>Count Modula</h1>
-<h2>Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
-<hr/>
+<table style="width:1000px; border: 0px solid black;">
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+<center>
+<img src="./img/CountModulaLogo.png" alt="Count Modula">
+<h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+</center>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
 <p>&nbsp;</p>
 <a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
-<hr/>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="ASR"></a>
 <h3>Analogue Shift Register</h3>
-<table>
-<tr valign="top">
-<td width=150>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/ASR.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A dual 4 output or single 8 output shift register. On each the rising edge at the shift input, the signal present at each output is propagated to the next successive output and the input is simultaneously sampled and sent to the first output. The shift input on channel 2 is normalled to the shift input on channel 1 and the signal input on channel 2 is normalled to output 4 of channel 1 so that, with no cables connected to channel 2, the module functions as a single 8 output shift register.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Attenuator"></a>
 <h3>Attenuator</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top"  style="border: 0px solid black;">
+<td width=80  style="border: 0px solid black;">
 <img src="./img/Attenuator.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A basic dual attenuator with switchable attenuverting capability on the top channel. With no CV input the module will output control voltage between 0 and 10V (top channel -10V and +10V when in attenueverter mode) proportional to the position of the level knob.
 <p>
 This module can process polyphonic signals. All channels are attenuated or attenuverted by the same amount.
@@ -35,16 +44,16 @@ This module can process polyphonic signals. All channels are attenuated or atten
 </td>
 </tr>
 </table>
-
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Basic8StepSequencer"></a>
 <h3>Basic 8 Step Sequencer</h3>
-<table>
-<tr valign="top">
-<td width=220>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=260 style="border: 0px solid black;">
 <img src="./img/Basic8StepSequencer.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A single 8 step trigger/gate sequencer with voltage control over sequence length and direction.<br/>
 The Reset input restarts the sequence at step one on the next clock cycle.<br/>
 The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
@@ -88,15 +97,16 @@ Extra channels can be added via the <a href="#SequencerExpanders">Sequencer Expa
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="BinarySequencer"></a>
 <h3>Binary Sequencer</h3>
-<table>
-<tr valign="top">
-<td width=220>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/BinarySequencer.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 Similar to a now discontinued Frac format module, this is a binary counter based sequencer where the individual bits of the counter are mixed together in varying  proportions to produce a repeating CV pattern. The output can be smoothed into slowly varying voltages with the Lag and Lag Shape controls and the output range can be set to 2, 5 or 10 volts. The selected output range indicates the maximum voltage that can be produced when all of the knobs are fully clockwise. i.e the selected value is divided equally across the bit knobs. The sequencer can be internally or externally clocked and offers both gate and trigger outputs.<br.>
 <p>
 Prior to v0.6.2, the Run/Reset input functions like a gate with a low gate value stopping the count and holding the outputs at 0V. A high gate value enables the sequencer with the count being reset on the positive edge of the gate.<br/>
@@ -112,19 +122,19 @@ The following context menu options are available to facilitate initialization an
 <li>Randomize Division Mix Only: Set only the division knobs to random values</li>
 </ul>
 </p>			
-
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="BooleanLogic"></a>
 <h3>Boolean Logic Modules</h3>
-<table>
-<tr valign="top">
-<td width=260>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=260 style="border: 0px solid black;">
 <img src="./img/BooleanLogic.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 <ul>
 <li>AND: A quad input AND/NAND gate with built in NOT gate (logical inverter). The AND output is high if all connected inputs are also high. With nothing connected to the Inverter input (I), the NOT output will perform the NAND function.</li>
 <li>OR: A quad input OR/NOR gate with built in NOT gate (logical inverter). The OR output is high if any connected input is high. With nothing connected to the Inverter input (I), the NOT output will perform the NOR function.</li>
@@ -134,56 +144,59 @@ The following context menu options are available to facilitate initialization an
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Comparator"></a>
 <h3>Comparator</h3>
-<table>
-<tr valign="top">
-<td width=140>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=110 style="border: 0px solid black;">
 <img src="./img/Comparator.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 Compares the input signal with either an internal or external threshold value and outputs gate signals indicating if it is under or over that threshold.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="EventArranger"></a>
 <h3>Event Arranger</h3>
-<table>
-<tr valign="top">
-<td width=280>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=320 style="border: 0px solid black;">
 <img src="./img/EventArranger.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 This is a VCV Rack implementation of the VC Clock and Event Arranger published in an article by John Blacet in the Jan/Feb edition of Synapse magazine. Without the VC clock but with an added twist.<br/>
 Each switch corresponds to a bit in a binary counter and can be "mixed" into the output depending on the switch position. In position 1, the bit will be logically ANDed with any other "active" bit when it is high. In position 0, the bit will be inverted and logically ANDed with any other "active" bit i.e when it is low. In the centre or "X" position, the bit is considered to be "inactive" and is ignored. Depending on how the switches are set, this module can be used as a simple clock divider or a complex gate pattern generator.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="GateDelay"></a>
 <h3>Gate Delay</h3>
-<table>
-<tr valign="top">
-<td width=240>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/GateDelay.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A dual gate delay line giving up to 40 seconds of delay with voltage control over the delay time. Note that switching from a shorter delay time range to a longer one may introduce time travel artifacts were a gate that has already been output may be output again at the end of the new longer delay time depending on where it is in the pipeline. This is due to the way the delay line functions and is normal behaviour. Three gate outputs are available with the Direct output following the gate input, the Delay output providing only the delayed gates middle output providing a logical mix of the two.
 </td>
 </tr>
 </table>
-
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="GateModifier"></a>
 <h3>Gate Modifier</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/GateModifier.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 <ul>
 A voltage controlled gate length modifier with the following selectable ranges:
 <li>Short: up to approx. 1 second</li>
@@ -205,28 +218,30 @@ A trigger pulse is sent to the End output at the end of the extended or shortene
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="G2T"></a>
 <h3>G2T</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/G2T.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A gate converter module. Converts any signal into a gate. The gate output will be at 0V unless the voltage presented at the input is greater than 2.0V in which case the Gate output will be high (10V). The Inv Gate output functions the other way around, 10V unless the input voltage is over 2.0V in which case the output will be 0V. The Start trigger output will fire a 10ms pulse at the start or leading edge (i.e. on the transition from low to high) of the generated gate and the End trigger output will fire a 10ms pulse at the end or trailing edge (i.e. on the transition from high to low) of the generated gate.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Inverter"></a>
 <h3>Inverter</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/Inverter.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A quad voltage inverter. Unlike the Boolean Logic Inverter, this module inverts around zero. Positive voltage in become a negative voltage out and vice-versa.
 <p>
 This module can process polyphonic signals.
@@ -234,15 +249,16 @@ This module can process polyphonic signals.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Mangler"></a>
 <h3>Mangler</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/Mangler.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A voltage controlled sample rate and bit depth reducer or &quot;bit crusher&quot; designed to make a lo-fi mess of your audio or CV signals.
 <p>
 <ul>
@@ -269,28 +285,30 @@ This module can process polyphonic signals with each channel being mangled at th
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="ManualCV"></a>
 <h3>Manual CV</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/ManualCV.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A simple dual manual CV generator offering +/- 10V with both coarse and fine controls.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="ManualGate"></a>
 <h3>Manual Gate</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/ManualGate.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 <ul>
 A manually triggered gate generator offering a number of simultaneous gate and inverted gate outputs.
 <li>Gate/Inv Gate: Outputs a high (or low in the case of the inverted output) gate level as long as the button is held down.</li>
@@ -301,63 +319,71 @@ A manually triggered gate generator offering a number of simultaneous gate and i
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="MatrixMixer"></a>
 <h3>Matrix Mixer</h3>
-<table>
-<tr valign="top">
-<td width=280>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=340 style="border: 0px solid black;">
 <img src="./img/MatrixMixer.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A 4 x 4 matrix mixer allowing up to 4 input signals to be independently mixed to 4 different outputs . Inputs down the left hand side can be mixed to the outputs at the bottom via the columns of knobs. A main level control is provided for each output along with an overload indicator. The knobs on each output channel can be set to attenuate or attenuvert using the associated Unipolar/Bipolar switch next to the output jack. The first input channel (top row) acts as a CV source if no cable is plugged into the jack.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="MinimusMaximus">
 <h3>Minimus Maximus</h3>
-<table>
-<tr valign="top">
-<td width=220><img src="./img/MinimusMaximus.png"></td> 
-<td>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
+<img src="./img/MinimusMaximus.png">
+</td> 
+<td style="border: 0px solid black;">
 A signal processor that determines and outputs the minimum, maximum and mean (average) of up to 4 input signals along with gate signals (switchable between unipolar and bipolar values) for each input channel indicating that the associated input is equal to either the minimum or maximum value. The Bias controls allow the 4th channel to be set manually. When engaged, the 4th Channel input is ignored and the value of the Bias knob is used instead.</td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Mixer"></a>
 <h3>Mixer</h3>
-<table>
-<tr valign="top">
-<td width=280>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/Mixer.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A basic 4 input utility mixer with output level control, overload indicator, inverted output and selectable bipolar/unipolar operation. The first input channel acts as a CV source if no cable is plugged into the jack.
 </td>
 </tr>
 </table>
-
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="MorphShaper"></a>
 <h3>Morph Shaper</h3>
-<table>
-<tr valign="top">
-<td width=160>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/MorphShaper.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 With kind permission from Dieter Doepfer, this is a VCV Rack version of the A-144 Morphing Controller. This module takes a ramped (typically) CV input signal and produces a set of 4 overlapping triangles depending on the position of the signal. These overlapping triangle signals can be used to control the levels of a VC mixer allowing it to morph between up to 4 different signals. The module is sensitive to input signal levels so the input level attenuverter control is capable of applying some amplification (up to 2 x positive or negative) to achieve the full morphing range on smaller signals. The manual control when used in conjunction with the CV input, acts as an offset to the CV input i.e the CV input value is added (or subtracted from depending on the attenuverter setting and CV input polarity) to the manual value before being processed. Note that the input is not limited to ramp signals and by inputting other signal types, interesting wave shaping effects can be achieved.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Multiplexer"></a>
 <h3>Multiplexer</h3>
-<table>
-<tr valign="top">
-<td width=300><img src="./img/Multiplexer.png"></td> 
-<td>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=320 style="border: 0px solid black;">
+<img src="./img/Multiplexer.png">
+</td> 
+<td style="border: 0px solid black;">
 <ul>
 The multiplexer operates in two independent but interconnected parts:
 <li>A 1 input to 8 output router (sends)</li>
@@ -384,15 +410,16 @@ The selector has four modes of operation which control the normalling behaviour 
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Mute"></a>
 <h3>Mute</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/Mute.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A performance mute controller with two independent inputs and outputs, voltage control over the mute function and switchable response (hard/soft) for instant processing of control signals or fast but pop free muting of audio signals.<br/>
 With no cable plugged into the Mute In, The Mute button mutes and un-mutes the outputs with each press. Plugging a cable into the Mute IN disables the button and the muting is controlled by the presence of a high gate signal.  
 <p>
@@ -401,15 +428,16 @@ This module can process polyphonic signals. All channels are muted at the same t
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Mute-iple"></a>
 <h3>Mute-iple</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/Mute-iple.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A dual 4-way/ Single 8 way mutable multiple. The top input is normalled to the bottom input creating a 1 to 8 mutable multiple. 
 <p>
 New feature in v1.0.2: Soft/hard muting option. Use the soft muting option to avoid clicks when muting audio signals.
@@ -420,9 +448,13 @@ This module can process polyphonic signals. All channels presented to the inputs
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="PolyrhythmicGenerator"></a>
 <h3>Polyrhythmic Generator (Original Version)</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <p>
 This version of the Polyrhythmic Generator has a bug in it which means it can not perform the odd divisions that it was intended to and is dividing by 2, 4, 6, 8 rather than 1, 2 ,3, 4, 5 etc. Unfortunately there was no way to rectify this without breaking existing patches so 
 this version has been retained for the time being however it is now deprecated and will no longer be supported. Users should convert any existing patches to use the new version ASAP as it is not likely to be ported across to the next incarnation of Rack. 
@@ -437,6 +469,7 @@ this version has been retained for the time being however it is now deprecated a
 <li>Drag the inputs/outputs from the old module to the same inputs/outputs on the new module.</li>
 <li>Finally, set the module into &quot;Legacy Mode&quot; via the module menu and your patch should sound the same as it used to although you may need to tweak the CV controls slightly if the patch does not sound quite right.</li>
 </ol>
+
 <center>
 <table>
 <tr><td colspan=2 align="center"><b>Old Module Values</b></td><td align="center"><b>Mk II Values</b></td></tr>
@@ -459,15 +492,21 @@ this version has been retained for the time being however it is now deprecated a
 <tr><td  align="center">9.996</td><td  align="center">10.000</td><td  align="center">16</td></tr>
 </table>
 </center>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="PolyrhythmicGenerator2"></a>
 <h3>Polyrhythmic Generator MkII</h3>
-<table>
-<tr valign="top">
-<td width=340>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <img src="./img/PolyrhythmicGenerator2.png">
 </td> 
-<td>
+</tr>
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 A set of 8 voltage controlled clock dividers that can be used to generate polyrhythms by clocking and/or dividing at different rates. The individual clock, reset and division CV  inputs of each channel are normalled to the previous channel allowing for global or segmented/individual control. Plugging a cable into the clock, reset or CV input a given channel will break the normalling input and inputs on subsequent channels from the input on the previous channel. Normalling is applied per input (breaking the CV input  does not break the clock normalling for example) so it is possible to have individual CV control over the divisions on each channel  whilst maintaining a common clock. Along with a global mute button which also has voltage control, each channel can be manually muted individually.
 <p/>
 <ul>
@@ -493,15 +532,16 @@ For those with old patches requiring the behaviour of the original version or wh
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="Rectifier"></a>
 <h3>Rectifier</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/Rectifier.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A precision rectifier offering full wave, and both positive and negative half wave rectification. The input signals are rectified around a use settable and voltage controllable axis.  A set of inverted outputs for each rectified signal is also available.
 <p>
 This module can process polyphonic signals. All channels are rectified around the same axis.
@@ -511,15 +551,16 @@ Note that the rectifier module is highly likely to introduce aliasing artefacts 
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="SampleAndHold"></a>
 <h3>Sample & Hold</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/SampleAndHold.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A basic sample and hold with optional track an hold ability. With the Mode switch in the T&H position, the output follows the input whilst the trigger input is high and holds the last sampled value on the transition of the trigger to a low state. 
 <p>
 This module can process polyphonic signals. All channels are sampled and held with a single trigger.
@@ -527,21 +568,26 @@ This module can process polyphonic signals. All channels are sampled and held wi
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="SequencerExpanders"></a>
 <h3>Sequencer Expanders</h3>
-<table>
-<tr valign="top">
-<td width=340>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <img src="./img/SequencerExpanders.png">
 </td> 
-<td>
+</tr>
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <ul>
 A set of expander modules that add extra channel functionality to the Count Modula 8 step sequencers.
 <li>SX-OUT8: Adds individual gate outputs for each step.<br>The Trigger/Gate switch determines whether the outputs stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
 <li>SX-CV8: Adds another channel of CV output.<br>This module functions like the CV strip of the Basic Sequencer with Scale switch determining the output scale as 2, 4 or 8 volts. </li>
 <li>SX-TRIG8: Adds another channel of Trigger/Gate output.This module functions like the gate/trigger switch strip on the Basic Sequencer with the switches selecting either of the trigger or gate output or no output at all when the step is active.</li>
 </ul>
+Although Designed specifically for the Gated Comparator, the Gated Comparator expanders will work with other sequencer modules however their usefulness in this capacity may be limited. 
+For the 8 step sequencers, the modules will simply follow the active steps of the sequencer. When used with the Binary Sequencer, the modules will follow the internal binary count.
 <p>
 These modules use the new expander functionality introduced in Rack V1 so must be placed immediately to the right of a sequencer module in order to function. Multiple expanders can be used by placing each extra expander immediately to the right of an already connected expander and they can be used in any combination and in any order. It should be noted a s sample delay is introduced with each expander.
 </p>
@@ -552,46 +598,49 @@ Note that the direction, number of steps and the current step of the associated 
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="ShepardGenerator"></a>
 <h3>Shepard Generator</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/ShepardGenerator.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 Generates a set of 8 ramp and sawtooth signals appropriately phased for generation of Shepard tones (tones that sound like they are continually rising or falling) when coupled with 8 VCOs and VCAs. Slower modulation rates work best for this effect.
 <p>
 This module can function as a polyphonic controller. The saw and triangle waveforms are available on separate channels within their respective Poly Out jacks.
 </p>
-<td>
+</td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="SRFlipFlop"></a>
 <h3>SR Flip Flop</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/SRFlipFlop.png">
 </td> 
-<td>
-A dual Set/Reset flip flop with optional enable. A high gate signal at the S input whilst the flip flop is enabled sets the Q output high and the NOTQ output low. A high gate signal at the R resets the Q output to low and the NOTW output to high. Both inputs high at the same result in an invalid state causing both outputs to also be high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
+<td style="border: 0px solid black;">
+A dual Set/Reset flip flop with optional enable. A high gate signal at the S input whilst the flip flop is enabled sets the Q output high and the NOTQ output low. A high gate signal at the R resets the Q output to low and the NOTQ output to high. Both inputs high at the same result in an invalid state causing both outputs to also be high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="StepSequencer8"></a>
 <h3>Dual 8 Step Sequencer</h3>
-<table>
-<tr valign="top">
-<td >
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <img src="./img/StepSequencer8.png">
 </td>
 </tr>
-<tr>
-<td>
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 A dual 8 step trigger/gate sequencer with voltage control over sequence lengths and direction along with individual inputs for each step on one channel.<br/>
 The Reset input restarts the sequence at step one on the next clock cycle.<br/>
 The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
@@ -649,15 +698,16 @@ The following context menu options are available to facilitate initialization an
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="SubHarmonicGenerator"></a>
 <h3>Sub Harmonic Generator</h3>
-<table>
-<tr valign="top">
-<td width=220>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/SubHarmonicGenerator.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 Accepts a signal from a VCO/LFO and generates a mix of user selectable sub harmonic square waves. This module works best when fed with a square wave but will function with any other waveshape.
 <p>
 <b>Important Note:</b> This module is highly likely to introduce aliasing artefacts. An anti aliasing mode is planned for a future release.
@@ -665,41 +715,46 @@ Accepts a signal from a VCO/LFO and generates a mix of user selectable sub harmo
 </td>	
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="TappedGateDelay"></a>
 <h3>Tapped Gate Delay</h3>
-<table>
-<tr valign="top">
-<td width=220>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=260 style="border: 0px solid black;">
 <img src="./img/TappedGateDelay.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A gate delay that offers up to 40 seconds of delay with tapped outputs at equal intervals along the delay line. Can be cascaded for even longer delays. Note that switching from a shorter delay time range to a longer one may introduce time travel artifacts were a gate that has already been output may be output again depending on where it is in the delay line at the time of the change. This is due to the way the delay line functions and is normal behaviour. The Direct output follows the Gate input whilst the Mixed output provides a user selectable combination of the direct output and the tapped outputs via the Mix buttons. 
 </td>	
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="TFlipFlop"></a>
 <h3>T Flip Flop (Toggle)</h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/TFlipFlop.png">
 </td> 
-<td>
-A dual Toggle (T type) flip flop with optional enable. A positive going gate signal at the T input whilst the flip flop is enabled alternates the Q output high and low and the NOTQ output between low and high. A high gate signal at the Reset input resets the Q output to low and the NOTW output to high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
+<td style="border: 0px solid black;">
+A dual Toggle (T type) flip flop with optional enable. A positive going gate signal at the T input whilst the flip flop is enabled alternates the Q output high and low and the NOTQ output between low and high. A high gate signal at the Reset input resets the Q output to low and the NOTQ output to high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="TriggerSequencer8"></a>
 <h3>Trigger Sequencer - 8 Step</h3>
-<table>
-<tr valign="top">
-<td width=340>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <img src="./img/TriggerSequencer8.png">
 </td> 
-<td>
+</tr>
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 A set of four 8 Step trigger sequencers in a single panel each with voltage control over the sequence length and two independent outputs.<br/>
 The Reset input restarts the sequence at step one on th next clock cycle.<br/>
 The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
@@ -718,17 +773,18 @@ The following context menu options are available to facilitate initialization an
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="TriggerSequencer16"></a>
 <h3>Trigger Sequencer - 16 Step</h3>
-<table>
-<tr valign="top">
-<td >
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <img src="./img/TriggerSequencer16.png">
 </td>
 </tr>
-<tr>
-<td>
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 A set of four 16 Step trigger sequencers in a single panel each with voltage control over the sequence length and two independent outputs.<br/>
 The Reset input restarts the sequence at step one on th next clock cycle.<br/>
 The Run input allows the sequencer to be started and stopped by the application of a gate signal with a low gate inhibiting the sequencer and a high gate enabling it. This functions like a pause button and operation resumes at the next clock cycle.<br/>
@@ -747,9 +803,13 @@ The following context menu options are available to facilitate initialization an
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="VCFrequencyDivider"></a>
 <h3>Voltage Controlled Frequency Divider</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
 <p>
 This version of the Voltage Controlled Frequency Divider has a bug in it which means it can not perform the odd divisions that it was intended to and is dividing by 2, 4, 6, 8 rather than 1, 2 ,3, 4, 5 etc. Unfortunately there was no way to rectify this without breaking existing patches so 
 this version has been retained for the time being however it is now deprecated and will no longer be supported. Users should convert any existing patches to use the new version ASAP as it is not likely to be ported across to the next incarnation of Rack. 
@@ -790,17 +850,19 @@ this version has been retained for the time being however it is now deprecated a
 <tr><td align="center">10.000</td><td align="center">10.000</td><td align="center">21</td></tr>
 </table>
 </center>
-
-
+</td> 
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="VCFrequencyDivider2"></a>
 <h3>Voltage Controlled Frequency Divider MkII</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/VCFrequencyDivider2.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 <p>
 A frequency divider with a variable and voltage controlled division ratio from 1 to around 20. Can be used with VCOs to create suboctaves or clocks to divide down to lower rates.
 </p>
@@ -819,15 +881,16 @@ For those with old patches requiring the behaviour of the original version or wh
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="VCPolarizer"></a>
 <h3>Voltage Controlled Polarizer </h3>
-<table>
-<tr valign="top">
-<td width=180>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
 <img src="./img/VCPolarizer.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 A dual voltage controlled polarizer. Inverts the the incoming signal under manual/voltage control. A negative control voltage at the CV input will invert the input signal and the amplitude of the CV signal will control the output amplitude. The manual amount is summed with CV amount before being applied.
 <p>
 This module can process polyphonic signals. All channels are polarized by the same amount.
@@ -835,15 +898,16 @@ This module can process polyphonic signals. All channels are polarized by the sa
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="VCSwitch"></a>
 <h3>Voltage Controlled Switch</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/VCSwitch.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 Selects between 2 inputs or routes 1 input to one two outputs based on the level of the signal at the CV input.
 <p>
 This module can process polyphonic signals. All channels are switched by the same control voltage.
@@ -851,48 +915,130 @@ This module can process polyphonic signals. All channels are switched by the sam
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="CGS"></a>
-<h2>CGS Based Modules</h2>
-A nod to the genius of Ken stone, these are some of my favourite CGS designs realised in VCV Rack format.<br/>
-<a id="CVSpreader">
+<h1 style="border-bottom: 0px;font-size:30px;">CGS Based Modules</h2>
+<p>
+A nod to the genius of Ken Stone, these are some of my favourite CGS designs realised in VCV Rack format.<br/>
+</p>
+<a id="CVSpreader"></a>
 <h3>CV Spreader</h3>
-<table>
-<tr valign="top">
-<td width=200>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/CV Spreader.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 This module accepts two CV inputs, &quot;Base&quot; and &quot;Spread&quot; and creates a set of new CV values that are spread either side of the base value by an amount determined by the spread value. The Odd/Even switch determines whether the spread occurs around the base value (odd spread) or not (even spread). With the spread value at 0, each output merely reflects the value at the base input however as the spread value increases or decreases, the spread outputs will increase or decrease by 1/5th  of the spread value. A 5 volt spread input with a 0 volt base input will produce outputs that are  1 volt apart ranging from -5 to +5 volts.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <a id="BurstGenerator"></a>
 <h3>Burst Generator</h3>
-<table>
-<tr valign="top">
-<td width=200>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/BurstGenerator.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 This module generates bursts of 1-16 pulses whenever a trigger is received at the trigger input. The pulses can be generated internally or via an external clock at the Ext. Clock input. Where the internal clock is used, the pulses are synchronised to start when the trigger is received however when using an external clock, the pulses will start at the next rising edge of the incoming clock. The number of pulses per burst  and internal burst rate and can both be independently controlled via CV with the Range switch determining whether the internal burst rate is slow or fast. The retrigger switch sets whether or not the burst generator must wait until the current burst of pulses is complete before it can be triggered again or if it can interrupt the current burst and start again immediately. Two outputs, Start and  End, each give a pulse at the start of the burst and end of the burst respectively whilst a third output, Duration, offers a gate signal that lasts for the duration of the burst.
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
+<a id="GatedComparator"></a>
+<h3>Gated Comparator</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+<img src="./img/GatedComparator.png">
+</td>
+</tr>
+<tr style="border: 0px solid black;"> 
+<td style="border: 0px solid black;">
+<p>
+The gated comparator is a binary shift register fed by a comparator and coupled to a basic "digital to analogue" converter which can be used to generate Random sequences.
+</p>
+<p>
+The input section is a fairly standard comparator having a signal input, a threshold control and voltage control over the threshold level. When the input signal is greater than the sum of the manual Threshold and CV threshold amounts, the comparator will output a high gate signal which is also sent to the input of the shift register.
+</p>
+<p>
+With each positive going clock edge, the values of each of the Shift Register section outputs are "shifted" right to their next adjacent output (or down to row 2 in the case of th 4th output) and the value of the comparator output is "shifted" into position 1. 
+</p>
+<p>
+The shift register features a loop input that allows an external gate signal to fed into the shift register and can be used to chain Gated Comparator module together by connecting the final output of the first module to the Loop Input of the second module with its loop function enabled. The loop input can be enabled/disabled via the Loop Enable switch and Loop Enable input. The input overrides the switch and requires a high gate signal (> 2 Volts) to enable the loop. The last bit will need to be manually connected to the loop input if you wish to recycle the shift register values once they have been loaded. <br/>
+Note that the loop input is ORed with the output of the comparator section so it is possible to very quickly fill the register with high values.
+</p>
+<p>
+The Random Melody section functions as a digital to analogue converted with the switches determining which of the currently active Shift Register bits are used when determining the output voltage which will range from 0 with no active bits to 8V with all bits active. Each switch is binary weighted with switch 1 equating to 1/255th of 8V and switch 8 equating to 128/255ths of 8V.
+</p>
+<p>
+<ul>
+The following expander modules are available for the Gated Comparator:
+<li>GX-RM: Adds another channel of Random Melody CV output. This module functions like the Random Melody section of the Gated Comparator only with selectable polarity on the CV generated for each bit. It also adds a scale switch to select the maximum CV range to be output.</li>
+<li>GX-LOGIC: Adds logic processing of the shift register bits. The AND output will be high whenever there are &quot;on&quot; shift register bits that match <i>all</i> of the switches that are in the &quot;1&1uot; position whilst the OR output will be high whenever there are &quot;on&quot; shift register bits that match <i>any</i> of the switches that are in the &quot;1&1uot; position.</li>
+Although these modules will function with the other sequencer modules, their usefulness may be limited.
+</ul>
+</p>
+<p>
+<ul>
+The <a href="#SequencerExpanders">Sequencer Expander</a> modules work with the gated comparator however they do function a little bit differently to when they are attached to a sequencer:
+<li>SX-OUT8: Adds an extra set of outputs that follow the main shift register outputs however they can be set to operate as triggers or gates. The Trigger/Gate switch which determines whether the outputs stay high for the duration of the step (gate) or follow the clock width (trigger)</li>
+<li>SX-CV8: Adds a set of CV outputs that function like the CV strip of the Basic Sequencer except that the active step is addressed by the binary value of the shift register rather than being sequential.</li>
+<li>SX-TRIG8: Adds a set of selectable Gate/Trigger outputs that function like the Gate/Trigger selection strip of the Basic Sequencer except that the active step is addressed by the binary value shift register rather than being sequential.</li>
+</ul>
+</p>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
+<a id="SlopeDetector"></a>
+<h3>Slope Detector</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
+<img src="./img/SlopeDetector.png">
+</td> 
+<td style="border: 0px solid black;">
+<p>
+The slope detector generates gate pulses from a CV input based on whether it is rising, falling or steady. The Sense control determines how fast it responds to change and the range switch doubles the response time to cater for very slowly changing inputs. This module may generate multiple triggers if a fast response time is used on a slow moving CV input. If this occurs, the response time should be increased until the multiple triggers cease.
+</p>
+<p>
+The following oscilloscope capture shows how the Slope Detector functions when it is fed with an ADSR envelope:
+<center>
+<img src="./img/SlopeDetectorTraces.png">
+</center>
+The red trace shows the CV input.</br>
+The green trace shows that during the Attack stage of the envelope, the Rising output which is high.</br>
+The yellow trace shows that the Steady output is high up until the start of the attack stage, during the Sustain stage and then again as the Release stage approaches zero volts.</br>
+The blue trace shows the Falling output going high during both the Decay and Release stages.</br>
+</p>
+<p>
+<b>NOTE:</b> The detector functions by comparing the input CV signal with a slewed version (the slew is amount set by the Response control) and sets the rising/falling outputs when there is a positive or negative difference between the two voltages that is greater than 10mv. As such, there can be a little bit of lead or lag in the switching of the outputs depending on the chosen response setting and direction (rising/falling) of the input CV. 
+</p>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 
 <!--
 <a id="anchor"></a>
 <h3>title</h3>
-<table>
-<tr valign="top">
-<td width=100>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
 <img src="./img/image.png">
 </td> 
-<td>
+<td style="border: 0px solid black;">
 blurb
 </td>
 </tr>
 </table>
+<hr style="width:1000px; border: 1px solid black;"/>
 --/>
 

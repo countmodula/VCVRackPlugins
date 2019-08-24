@@ -193,14 +193,12 @@ struct STRUCT_NAME : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (isExpanderModule(rightExpander.module)) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 				
-				// set the expander module's channel number
-				messageToExpander->setCVChannel(0);
-				messageToExpander->setTrigChannel(0);
-				messageToExpander->setOutChannel(0);
+				// set any potential expander module's channel number
+				messageToExpander->setAllChannels(0);
 
 				// standard number of channels = 4
 				int j = 0;
@@ -214,9 +212,12 @@ struct STRUCT_NAME : Module {
 						j = 0;
 				}
 	
-				// finally, let all subsequent expanders know where we came from
-				messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
-	
+				// finally, let all potential expanders know where we came from
+				if (TRIGSEQ_NUM_STEPS == 16)
+					messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_TRIGGER16;
+				else
+					messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_TRIGGER8;
+					
 				rightExpander.module->leftExpander.messageFlipRequested = true;
 			}
 		}		

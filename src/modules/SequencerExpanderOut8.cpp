@@ -31,13 +31,15 @@ struct SequencerExpanderOut8 : Module {
 		NUM_LIGHTS
 	};
 	
-	// Expander
+	// Expander details
+	int ExpanderID = SequencerExpanderMessage::OUT8;
 	SequencerExpanderMessage leftMessages[2][1];	// messages from left module (master)
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 	SequencerExpanderMessage *messagesFromMaster;
 	
 	int channelID = -1;
 	int prevChannelID = -1;
+	bool leftModuleAvailable = false; 
 	
 	// 0123
 	// RGYB
@@ -58,7 +60,7 @@ struct SequencerExpanderOut8 : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];	
 		
-		// range switch
+		// mode switch
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
 	}
 
@@ -83,28 +85,27 @@ struct SequencerExpanderOut8 : Module {
 		colourMap = colourMapDefault;
 		
 		// grab the detail from the left hand module if we have one
+		leftModuleAvailable = false;
 		if (leftExpander.module) {
-			if (leftExpander.module->model == modelSequencerExpanderCV8 || leftExpander.module->model == modelSequencerExpanderOut8 || leftExpander.module->model == modelSequencerExpanderTrig8 ||
-				leftExpander.module->model == modelTriggerSequencer8 || leftExpander.module->model == modelStepSequencer8 || leftExpander.module->model == modelBinarySequencer || 
-				leftExpander.module->model == modelBasicSequencer8 || leftExpander.module->model == modelBurstGenerator) {
+			if (isExpanderModule(leftExpander.module) || isExpandableModule(leftExpander.module)) {
 					
+				leftModuleAvailable = true;
 				messagesFromMaster = (SequencerExpanderMessage *)(leftExpander.consumerMessage);
 
 				switch (messagesFromMaster->masterModule) {
-					case SEQUENCER_EXP_MASTER_MODULE_BNRYSEQ:
+					case SEQUENCER_EXP_MASTER_MODULE_BINARY:
 						colourMap = colourMapBinSeq;
 						break;
-					case SEQUENCER_EXP_MASTER_MODULE_STEPSEQ:
+					case SEQUENCER_EXP_MASTER_MODULE_DUALSTEP:
 						colourMap = colourMapSS;
 						break;
-					case SEQUENCER_EXP_MASTER_MODULE_DEFAULT:
 					default:
 						colourMap = colourMapDefault;
 						break;
 				}
 				
-				// grab the channel id
-				channelID = clamp(messagesFromMaster->channelOUT, -1, 3);
+				// grab the channel id for this expander type
+				channelID = clamp(messagesFromMaster->channels[ExpanderID], -1, 3);
 
 				// decode the counter array
 				for(int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS; i++) {
@@ -117,9 +118,11 @@ struct SequencerExpanderOut8 : Module {
 						clock = clockStates[i];
 						running = runningStates[i];
 						
-						// wrap counters > 8 back around to 1
-						while (count > SEQ_NUM_STEPS)
-							count -= SEQ_NUM_STEPS;
+						// wrap counters > 8 back around to 1 for the sequencers
+						if (messagesFromMaster->masterModule != SEQUENCER_EXP_MASTER_MODULE_GATEDCOMPARATOR) {
+							while (count > SEQ_NUM_STEPS)
+								count -= SEQ_NUM_STEPS;
+						}
 					}
 				}
 			}
@@ -150,29 +153,36 @@ struct SequencerExpanderOut8 : Module {
 			clock = true;
 		
 		// set step lights and outputs
+		short bitMask = 0x01;
 		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-			bool stepActive = ((c + 1) == count);
+			bool stepActive = false;
+			
+			// for gated comparator, we have multiple bits set at the same time
+			if (leftModuleAvailable && messagesFromMaster->masterModule == SEQUENCER_EXP_MASTER_MODULE_GATEDCOMPARATOR) {
+				stepActive = (((short)count & bitMask) == bitMask);
+				
+				// prepare for next bit
+				bitMask = bitMask << 1;
+			}
+			else
+				stepActive = ((c + 1) == count);
+			
 			lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));
 			outputs[STEP_GATE_OUTPUTS + c].setVoltage(boolToGate(stepActive && clock && running));
 		}
 
 		// set up the detail for any secondary expander
 		if (rightExpander.module) {
-			if (rightExpander.module->model == modelSequencerExpanderCV8 || rightExpander.module->model == modelSequencerExpanderOut8 || rightExpander.module->model == modelSequencerExpanderTrig8) {
+			if (isExpanderModule(rightExpander.module)) {
 				
 				SequencerExpanderMessage *messageToExpander = (SequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 				
 				// set next module's channel number
 				if (channelID < 0) {
 					// we have no left hand module
-					messageToExpander->setCVChannel(-1);
-					messageToExpander->setTrigChannel(-1);
-					messageToExpander->setOutChannel(-1);
-					messageToExpander->masterModule = SEQUENCER_EXP_MASTER_MODULE_DEFAULT;
+					messageToExpander->setDefaultValues();
 				}
 				else {
-					messageToExpander->setNextOutChannel(channelID);
-					
 					// add the channel counters and gate states
 					for (int i = 0; i < SEQUENCER_EXP_MAX_CHANNELS ; i++) {
 						messageToExpander->counters[i] = channelCounters[i];
@@ -180,12 +190,17 @@ struct SequencerExpanderOut8 : Module {
 						messageToExpander->runningStates[i] = runningStates[i];
 					}
 					
-					// pass through the trigger channel number and master module details
+					// pass through the other expander channel numbers and master module details
 					if (messagesFromMaster) {
-						messageToExpander->setTrigChannel(messagesFromMaster->channelTRIG);
-						messageToExpander->setCVChannel(messagesFromMaster->channelCV);
+						for(int i = 0; i < SequencerExpanderMessage::NUM_EXPANDERS; i++) {
+								messageToExpander->setChannel(messagesFromMaster->channels[i], i);
+						}
+
 						messageToExpander->masterModule = messagesFromMaster->masterModule;
 					}
+					
+					// set the channel for the next expander of this type
+					messageToExpander->setNextChannel(channelID, ExpanderID);
 				}
 
 				rightExpander.module->leftExpander.messageFlipRequested = true;

@@ -43,7 +43,7 @@ struct Comparator : Module {
 	
 	void process(const ProcessArgs &args) override {
 
-		// Compute the threshold from the pitch parameter and input
+		// Compute the threshold from the threshold parameter and input
 		float threshold = params[THRESHOLD_PARAM].getValue();
 		threshold += inputs[THRESHOLD_INPUT].getVoltage();
 

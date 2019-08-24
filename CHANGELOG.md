@@ -1,14 +1,35 @@
-![alt text](./img/CountModulaLogo.png "Count Modula")
-<h1>Count Modula</h1>
-<h2>Plugin modules for VCV Rack v1.0 by Adam Verspaget (Count Modula)</h2>
-
+<table style="width:1000px; border: 0px solid black;">
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+<center>
+<img src="./img/CountModulaLogo.png" alt="Count Modula">
+<h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+</center>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 <h3>Change Log:</h3>
 &nbsp;
-<table>
+<table style="width:1000px;">
 <tr valign="top">
-<th align="center">Date</th>
+<th align="center" style="width:120px;">Date</th>
 <th align="center">Release</th>
 <th align="left">Notes</th>
+</tr>
+<tr valign="top">
+<td align="center">24-August-2019</td>
+<td align="center">v1.3.0</td>
+<td align="left">
+<ul>
+<b>New Modules</b>
+<li>Gated Comparator</li>
+<li>Gated Comparator Expander - Random Melody</li>
+<li>Gated Comparator Expander - Logic</li>
+<li>Slope Detector</li>
+</ul>
+</td>
 </tr>
 <tr valign="top">
 <td align="center">29-July-2019</td>
@@ -29,14 +50,13 @@
 </ul>
 </td>
 </tr>	
-
 <tr valign="top">
 <td align="center">21-July-2019</td>
 <td align="center">v1.2.0</td>
 <td align="left">
 <ul>
 <b>New Modules</b>
-<li>Basic 8 Step Sequencer
+<li>Basic 8 Step Sequencer</li>
 <li>Sequencer Expander - CV8</li>
 <li>Sequencer Expander - Out8</li>
 <li>Sequencer Expander - Trig8</li>

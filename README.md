@@ -1,7 +1,15 @@
-![alt text](./img/CountModulaLogo.png "Count Modula")
-<h1>Count Modula</h1>
-<h2>Plugin modules for VCV Rack v1.0 by Adam Verspaget (Count Modula)</h2>
-
+<table style="width:1000px; border: 0px solid black;">
+<tr style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+<center>
+<img src="./img/CountModulaLogo.png" alt="Count Modula">
+<h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+</center>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
 All source code in this repository is licensed under BSD-3-Clause by Adam Verspaget/Count Modula
@@ -18,68 +26,79 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.2.1</h3>
+<h3>Modules - Release 1.3.0</h3>
 <p>
-	<a href="CHANGELOG.md">Change Log</a>
+<a href="CHANGELOG.md">Change Log</a>
 </p>
 <p>
-	<a href="MANUAL.md">Module Manual</a>
+<a href="MANUAL.md">Module Manual</a>
 </p>
 <ul>
-<li><a href="./MANUAL.md#ASR">Analogue Shift Register</a>
-<li><a href="./MANUAL.md#Attenuator">Attenuator</a>
-<li><a href="">Basic 8 Step Sequencer</a> <font color="red">* New in v1.2.0</font>
-<li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a>
+<li><a href="./MANUAL.md#ASR">Analogue Shift Register</a></li>
+<li><a href="./MANUAL.md#Attenuator">Attenuator</a></li>
+<li><a href="">Basic 8 Step Sequencer</a></li>
+<li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a></li>
 <li><a href="./MANUAL.md#BooleanLogic">Boolean Logic Modules</a>
-	<ul>
-		<li>AND
-		<li>OR
-		<li>VC Inverter
-		<li>XOR
-	</ul>
-<li><a href="./MANUAL.md#Comparator">Comparator</a>
-<li><a href="./MANUAL.md#EventArranger">Event Arranger</a>
-<li><a href="./MANUAL.md#GateDelay">Gate Delay</a>
-<li><a href="./MANUAL.md#GateModifier">Gate Modifier</a>
-<li><a href="./MANUAL.md#G2T">G2T</a>
-<li><a href="./MANUAL.md#Inverter">Inverter</a>
-<li><a href="./MANUAL.md#Mangler">Mangler</a>
-<li><a href="./MANUAL.md#ManualCV">Manual CV</a>
-<li><a href="./MANUAL.md#ManualGate">Manual Gate</a>
-<li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a>
-<li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a>
-<li><a href="./MANUAL.md#Mixer">Mixer</a>
-<li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a>
-<li><a href="./MANUAL.md#Multiplexer">Multiplexer</a>
-<li><a href="./MANUAL.md#Mute">Mute</a>
-<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a>
-<li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator</a> <font color="red">Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.</font>
-<li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator MkII</a> <font color="red">* New in v1.2.0</font>
-<li><a href="./MANUAL.md#Rectifier">Rectifier</a>
-<li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a>
-<li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a> <font color="red">* New in v1.2.0</font>
-	<ul>
-		<li>CV8
-		<li>OUT8
-		<li>TRIG8
-	</ul>
-<li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a>
-<li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a>
-<li><a href="./MANUAL.md#SubHarmonicGenerator">Sub Harmonic Generator</a> <font color="red">* New in v1.2.0</font>
-<li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a>
-<li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a>
-<li><a href="./MANUAL.md#SRFlipFlop">T Flip Flop</a>
-<li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a>
-<li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a>
-<li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a> <font color="red">Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.</font>
-<li><a href="./MANUAL.md#VCFrequencyDivider2">Voltage Controlled Frequency Divider II</a> <font color="red">* New in v1.2.0</font>
-<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a>
-<li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a>
+<ul>
+<li>AND
+<li>OR
+<li>VC Inverter
+<li>XOR
+</ul>
+</li>
+<li><a href="./MANUAL.md#Comparator">Comparator</a></li>
+<li><a href="./MANUAL.md#EventArranger">Event Arranger</a></li>
+<li><a href="./MANUAL.md#GateDelay">Gate Delay</a></li>
+<li><a href="./MANUAL.md#GateModifier">Gate Modifier</a></li>
+<li><a href="./MANUAL.md#G2T">G2T</a></li>
+<li><a href="./MANUAL.md#Inverter">Inverter</a></li>
+<li><a href="./MANUAL.md#Mangler">Mangler</a></li>
+<li><a href="./MANUAL.md#ManualCV">Manual CV</a></li>
+<li><a href="./MANUAL.md#ManualGate">Manual Gate</a></li>
+<li><a href="./MANUAL.md#MatrixMixer">Matrix Mixer</a></li>
+<li><a href="./MANUAL.md#MinimusMaximus">Minimus Maximus</a></li>
+<li><a href="./MANUAL.md#Mixer">Mixer</a></li>
+<li><a href="./MANUAL.md#MorphShaper">Morph Shaper</a></li>
+<li><a href="./MANUAL.md#Multiplexer">Multiplexer</a></li>
+<li><a href="./MANUAL.md#Mute">Mute</a></li>
+<li><a href="./MANUAL.md#Mute-iple">Mute-iple</a></li>
+<li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator</a> <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
+<li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator MkII</a></li>
+<li><a href="./MANUAL.md#Rectifier">Rectifier</a></li>
+<li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a></li>
+<li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a>
+<ul>
+<li>SX-CV8: CV Expander</li>
+<li>SX-OUT8: Output Expander</li>
+<li>SX-TRIG8: Gate/Trigger Expander</li>
+</ul>
+</li>
+<li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a></li>
+<li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a></li>
+<li><a href="./MANUAL.md#SubHarmonicGenerator">Sub Harmonic Generator</a></li>
+<li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a></li>
+<li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a></li>
+<li><a href="./MANUAL.md#SRFlipFlop">T Flip Flop</a></li>
+<li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a></li>
+<li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a></li>
+<li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a> <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
+<li><a href="./MANUAL.md#VCFrequencyDivider2">Voltage Controlled Frequency Divider II</a></li>
+<li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a></li>
+<li><a href="./MANUAL.md#VCSwitch">Voltage Controlled Switch</a></li>
 <li><a href="./MANUAL.md#CGS">CGS Based Modules</a>
-	<ul>
-		<li><a href="./MANUAL.md#CVSpreader">CV Spreader</a>
-		<li><a href="./MANUAL.md#BurstGenerator">Burst Generator</a>
-	</ul>
+<ul>
+<li><a href="./MANUAL.md#CVSpreader">CV Spreader</a></li>
+<li><a href="./MANUAL.md#BurstGenerator">Burst Generator</a></li>
+<li><a href="./MANUAL.md#GatedComparator">Gated Comparator</a> <font color="red">* New in v1.3.0</font></li>
+<li><a href="./MANUAL.md#GatedComparator">Gated Comparator Expanders</a>
+<ul>
+<li>GC-RM: Random Melody Expander<font color="red">* New in v1.3.0</font></li>
+<li>GC-LOGIC: Trigger/Gate Logic Expander <font color="red">* New in v1.3.0</font></li>
+</ul>
+</li>
+<li><a href="./MANUAL.md#SlopeDetector">Slope Detector</a> <font color="red">* New in v1.3.0</font></li>
+</ul>
+</li>
 </ul>
 
 <h4>Still running Rack v0.6?</h4>
