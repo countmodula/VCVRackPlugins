@@ -8,6 +8,10 @@
 #include "../inc/SlewLimiter.hpp"
 #include "../inc/Utility.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME Mute
+#define PANEL_FILE "Mute.svg"
+
 struct Mute : Module {
 	enum ParamIds {
 		MUTE_PARAM,
@@ -33,12 +37,18 @@ struct Mute : Module {
 	GateProcessor gate;
 	LagProcessor slew;
 	bool latch = false;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	Mute() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
 		configParam(MUTE_PARAM, 0.0f, 1.0f, 0.0f, "Mute");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -51,9 +61,12 @@ struct Mute : Module {
 		json_t* root = json_object();
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		json_object_set_new(root, "Latch", json_boolean(latch));
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+
 		return root;
 	}	
-	
 
 	void dataFromJson(json_t* root) override {
 		json_t* jsonLatch = json_object_get(root, "Latch");
@@ -61,9 +74,11 @@ struct Mute : Module {
 		if (jsonLatch) {
 			latch = json_is_true(jsonLatch);
 		}
+	
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"	
 	}
 		
-	
 	void process(const ProcessArgs &args) override {
 		
 		// set the mute state based on the input or the mute button. input takes precedence
@@ -132,6 +147,29 @@ struct MuteWidget : ModuleWidget {
 		// Mega mute button - non-standard position
 		addParam(createParamCentered<CountModulaPBSwitchMegaMomentaryUnlit>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, Mute::MUTE_PARAM));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		Mute *module = dynamic_cast<Mute*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelMute = createModel<Mute, MuteWidget>("Mute");

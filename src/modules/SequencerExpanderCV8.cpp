@@ -9,6 +9,10 @@
 
 #define SEQ_NUM_STEPS	8
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SequencerExpanderCV8
+#define PANEL_FILE "SequencerExpanderCV8.svg"
+
 struct SequencerExpanderCV8 : Module {
 
 	enum ParamIds {
@@ -50,6 +54,9 @@ struct SequencerExpanderCV8 : Module {
 	int colourMapSS[4] = {1, 3, 0, 2}; 		// colour map for step sequencer, matches the first row of knob colours 
 	
 	int *colourMap = colourMapDefault;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	SequencerExpanderCV8() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -69,6 +76,9 @@ struct SequencerExpanderCV8 : Module {
 		
 		// range switch
 		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -76,8 +86,16 @@ struct SequencerExpanderCV8 : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	float getScale(float range) {
 		
@@ -255,8 +273,26 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 								"res/Components/KnobBlue.svg", 
 								"res/Components/KnobGrey.svg"};   	
 							
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"							
+		
+	void appendContextMenu(Menu *menu) override {
+		SequencerExpanderCV8 *module = dynamic_cast<SequencerExpanderCV8*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
 	void step() override {
 		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"			
+		
 			int cid = ((SequencerExpanderCV8*)module)->channelID;
 			int pid = ((SequencerExpanderCV8*)module)->prevChannelID;
 		

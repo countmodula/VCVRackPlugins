@@ -5,6 +5,10 @@
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME VCPolarizer
+#define PANEL_FILE "VCPolarizer.svg"
+
 struct VCPolarizer : Module {
 	enum ParamIds {
 		CH1_CVAMOUNT_PARAM,
@@ -36,6 +40,9 @@ struct VCPolarizer : Module {
 	Polarizer polarizer1;
 	Polarizer polarizer2;
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	VCPolarizer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -43,6 +50,9 @@ struct VCPolarizer : Module {
 		configParam(CH1_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
 		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -50,7 +60,15 @@ struct VCPolarizer : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+				
 		return root;
+	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
 	}
 	
 	void onReset() override {
@@ -121,6 +139,29 @@ struct VCPolarizerWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 10, STD_ROWS6[STD_ROW4]), module, VCPolarizer::CH2_NEG_LIGHT));
 		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 10, STD_ROWS6[STD_ROW4]), module, VCPolarizer::CH2_POS_LIGHT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		VCPolarizer *module = dynamic_cast<VCPolarizer*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelVCPolarizer = createModel<VCPolarizer, VCPolarizerWidget>("VCPolarizer");

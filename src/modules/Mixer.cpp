@@ -5,6 +5,10 @@
 #include "../CountModula.hpp"
 #include "../inc/MixerEngine.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME Mixer
+#define PANEL_FILE "Mixer.svg"
+
 struct Mixer : Module {
 	enum ParamIds {
 		R1_LEVEL_PARAM,
@@ -33,6 +37,9 @@ struct Mixer : Module {
 	};
 
 	MixerEngine mixer;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
 	
 	Mixer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -50,6 +57,9 @@ struct Mixer : Module {
 		
 		// switches
 		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Mix mode (Uni/Bipolar)");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -57,8 +67,16 @@ struct Mixer : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 		float out = mixer.process(inputs[R1_INPUT].getNormalVoltage(10.0f), inputs[R2_INPUT].getNormalVoltage(0.0f), inputs[R3_INPUT].getNormalVoltage(0.0f), inputs[R4_INPUT].getNormalVoltage(0.0f), 
@@ -103,6 +121,29 @@ struct MixerWidget : ModuleWidget {
 		// lights
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW5]), module, Mixer::OVERLOAD_LIGHT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		Mixer *module = dynamic_cast<Mixer*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelMixer = createModel<Mixer, MixerWidget>("Mixer");

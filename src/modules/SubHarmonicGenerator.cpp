@@ -6,6 +6,10 @@
 #include "../inc/FrequencyDivider.hpp"
 #include "../inc/Utility.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SubHarmonicGenerator
+#define PANEL_FILE "SubHarmonicGenerator.svg"
+
 struct SubHarmonicGenerator : Module {
 	enum ParamIds {
 		ENUMS(MIX_PARAM, 5),
@@ -30,6 +34,9 @@ struct SubHarmonicGenerator : Module {
 	FrequencyDivider dividers[5];
 	
 	bool antiAlias = false;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	SubHarmonicGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -50,6 +57,9 @@ struct SubHarmonicGenerator : Module {
 
 		// output level knobs
 		configParam(OUTPUTLEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -57,6 +67,9 @@ struct SubHarmonicGenerator : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		json_object_set_new(root, "antiAlias", json_boolean(antiAlias));
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
 		
 		return root;
 	}
@@ -67,6 +80,9 @@ struct SubHarmonicGenerator : Module {
 
 		if (aa)
 			antiAlias = json_boolean_value(aa);
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"		
 	}	
 
 	void process(const ProcessArgs &args) override {
@@ -126,6 +142,29 @@ struct SubHarmonicGeneratorWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, SubHarmonicGenerator::OUTPUTLEVEL_PARAM));
 
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"	
+	
+	void appendContextMenu(Menu *menu) override {
+		SubHarmonicGenerator *module = dynamic_cast<SubHarmonicGenerator*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelSubHarmonicGenerator = createModel<SubHarmonicGenerator, SubHarmonicGeneratorWidget>("SubHarmonicGenerator");

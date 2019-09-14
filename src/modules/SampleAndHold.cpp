@@ -1,10 +1,14 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula - Sample & Hold Module
-//	Sample/Track and Hold
+//	Sample/Track/Pass and Hold
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
+
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SampleAndHold
+#define PANEL_FILE "SampleAndHold.svg"
 
 struct SampleAndHold : Module {
 	enum ParamIds {
@@ -24,46 +28,66 @@ struct SampleAndHold : Module {
 	};
 	enum LightIds {
 		TRACK_LIGHT,
-		HOLD_LIGHT,
+		SAMPLE_LIGHT,
+		PASS_LIGHT,
 		NUM_LIGHTS
 	};
 
+	
+	enum Modes {
+		SAMPLE,
+		TRACK,
+		PASS
+	};
+	
 	GateProcessor gateTrig;
-	GateProcessor gateMode;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	SampleAndHold() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		// tracking mode switch
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Sample or Track Mode");
+		configParam(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Sample, Track or Pass Mode");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
 		gateTrig.reset();
-		gateMode.reset();
 	}	
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_string("1.2"));
 		
-		return root;
+		// add the theme details
+		#include "../themes/dataToJson.hpp"				
+		
+		return root;	
 	}
+
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void process(const ProcessArgs &args) override {
 
-		// process the mode and trigger inputs
+		// process trigger input
 		gateTrig.set(inputs[TRIG_INPUT].getVoltage());
-		gateMode.set(inputs[MODE_INPUT].getVoltage());
 		
 		// determine the mode - input takes precedence over switch
-		bool trackMode = false;
-		if (inputs[MODE_INPUT].isConnected())
-			trackMode =  gateMode.high();
+		int trackMode = SAMPLE;
+		if (inputs[MODE_INPUT].isConnected()) {
+			trackMode =  (int)(clamp(inputs[MODE_INPUT].getVoltage(), 0.0f, 5.0f)) / 2;
+		}
 		else
-			trackMode =(params[MODE_PARAM].getValue() > 0.5f);
-		
+			trackMode = (int)(params[MODE_PARAM].getValue());
+				
 		// determine number of channels
 		int n = inputs[SAMPLE_INPUT].getChannels();
 		outputs[SAMPLE_OUTPUT].setChannels(n);
@@ -72,9 +96,8 @@ struct SampleAndHold : Module {
 		// now sample away
 		float s;
 		for (int c = 0; c < n; c++) {
-			
-			if ((trackMode && gateTrig.high()) || (!trackMode && gateTrig.leadingEdge())) {
-				// track the input
+			if ((trackMode == TRACK && gateTrig.high()) || (trackMode == SAMPLE && gateTrig.leadingEdge()) || (trackMode == PASS && !gateTrig.high())) {
+				// track, pass  or sample the input
 				s = inputs[SAMPLE_INPUT].getVoltage(c);
 			}
 			else {
@@ -87,14 +110,15 @@ struct SampleAndHold : Module {
 			outputs[INV_OUTPUT].setVoltage(-s, c);
 		}
 		
-		lights[TRACK_LIGHT].setBrightness(boolToLight(trackMode));	
-		lights[HOLD_LIGHT].setBrightness(boolToLight(!trackMode));
+		lights[PASS_LIGHT].setBrightness(boolToLight(trackMode == PASS));	
+		lights[TRACK_LIGHT].setBrightness(boolToLight(trackMode == TRACK));	
+		lights[SAMPLE_LIGHT].setBrightness(boolToLight(trackMode == SAMPLE));
 	}
 	
 };
 
 struct SampleAndHoldWidget : ModuleWidget {
-SampleAndHoldWidget(SampleAndHold *module) {
+	SampleAndHoldWidget(SampleAndHold *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SampleAndHold.svg")));
 
@@ -106,7 +130,7 @@ SampleAndHoldWidget(SampleAndHold *module) {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]),module, SampleAndHold::TRIG_INPUT));
 
 		// mode switch
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, SampleAndHold::MODE_PARAM));
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, SampleAndHold::MODE_PARAM));
 		
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, SampleAndHold::SAMPLE_OUTPUT));
@@ -116,9 +140,34 @@ SampleAndHoldWidget(SampleAndHold *module) {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]),module, SampleAndHold::MODE_INPUT));
 		
 		// lights
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 17, STD_ROWS6[STD_ROW3] - 18), module, SampleAndHold::TRACK_LIGHT));
-		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 17, STD_ROWS6[STD_ROW3] + 18), module, SampleAndHold::HOLD_LIGHT));
+		addChild(createLightCentered<SmallLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 19, STD_ROWS6[STD_ROW3] - 18), module, SampleAndHold::PASS_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 19, STD_ROWS6[STD_ROW3]), module, SampleAndHold::TRACK_LIGHT));
+		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 19, STD_ROWS6[STD_ROW3] + 18), module, SampleAndHold::SAMPLE_LIGHT));
 	}
+	
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		SampleAndHold *module = dynamic_cast<SampleAndHold*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelSampleAndHold = createModel<SampleAndHold, SampleAndHoldWidget>("SampleAndHold");

@@ -6,6 +6,10 @@
 #include "../inc/Utility.hpp"
 #include "../inc/FrequencyDivider.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME PolyrhythmicGeneratorMkII
+#define PANEL_FILE "PolyrhythmicGeneratorMkII.svg"
+
 struct PolyrhythmicGeneratorMkII : Module {
 	enum ParamIds {
 		ENUMS(CV_PARAM, 8),
@@ -65,7 +69,10 @@ struct PolyrhythmicGeneratorMkII : Module {
 	
 	GateProcessor gpMuteAll;
 	GateProcessor gpBeatMode;
-
+	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	PolyrhythmicGeneratorMkII() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -84,8 +91,9 @@ struct PolyrhythmicGeneratorMkII : Module {
 		configParam(BEATMODE_PARAM, 0.0f, 1.0f, 1.0f, "Beat mode");
 		configParam(MUTEALL_PARAM, 0.0f, 1.0f, 0.0f, "Global mute");
 		
+	// set the theme from the current default value
+	#include "../themes/setDefaultTheme.hpp"
 	}
-	
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
@@ -103,7 +111,10 @@ struct PolyrhythmicGeneratorMkII : Module {
 		
 		json_object_set_new(root, "divCountMode", countMode);
 		json_object_set_new(root, "divN", n);
-
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
 
@@ -133,6 +144,9 @@ struct PolyrhythmicGeneratorMkII : Module {
 					dividers[i].N = json_integer_value(v);
 			}
 		}
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"		
 	}
 	
 	void onReset() override {
@@ -379,6 +393,9 @@ struct PolyrhythmicGeneratorMkIIWidget : ModuleWidget {
 		}
 	};	
 	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"	
+	
 	void appendContextMenu(Menu *menu) override {
 		PolyrhythmicGeneratorMkII *module = dynamic_cast<PolyrhythmicGeneratorMkII*>(this->module);
 		assert(module);
@@ -386,17 +403,23 @@ struct PolyrhythmicGeneratorMkIIWidget : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = "Polyrhythmic Generator MkII Settings";
-		menu->addChild(settingsLabel);		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"	
 		
 		// add legacy mode menu item
 		LegacyModeMenuItem *legacyMenuItem = createMenuItem<LegacyModeMenuItem>("Legacy Mode", CHECKMARK(module->legacyMode));
 		legacyMenuItem->module = module;
-		menu->addChild(legacyMenuItem);
+		menu->addChild(legacyMenuItem);	
 	}	
 	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelPolyrhythmicGeneratorMkII = createModel<PolyrhythmicGeneratorMkII, PolyrhythmicGeneratorMkIIWidget>("PolyrhythmicGeneratorMkII");

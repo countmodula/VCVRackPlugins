@@ -6,6 +6,10 @@
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SRFlipFlop
+#define PANEL_FILE "SRFlipFlop.svg"
+
 // implements a basic SR flip flop
 struct SRLatch {
 	GateProcessor S;
@@ -78,9 +82,15 @@ struct SRFlipFlop : Module {
 	};
 
 	SRLatch flipflop[2];
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	SRFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -108,7 +118,10 @@ struct SRFlipFlop : Module {
 			json_array_insert_new(NQStates, i, json_boolean(flipflop[i].stateNQ));
 		}
 		json_object_set_new(root, "NQStates", NQStates);
-
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
 	
@@ -135,6 +148,9 @@ struct SRFlipFlop : Module {
 				flipflop[i].stateNQ = json_is_true(state);
 			}
 		}
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"		
 	}	
 
 	void process(const ProcessArgs &args) override {
@@ -176,6 +192,29 @@ struct SRFlipFlopWidget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2 + j]), module, SRFlipFlop::STATE_LIGHT + i));
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		SRFlipFlop *module = dynamic_cast<SRFlipFlop*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelSRFlipFlop = createModel<SRFlipFlop, SRFlipFlopWidget>("SRFlipFlop");

@@ -7,6 +7,10 @@
 #include "../inc/Utility.hpp"
 #include "../inc/Polarizer.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME MinimusMaximus
+#define PANEL_FILE "MinimusMaximus.svg"
+
 struct MinimusMaximus : Module {
 	enum ParamIds {
 		BIAS_PARAM,
@@ -39,6 +43,9 @@ struct MinimusMaximus : Module {
 		NUM_LIGHTS
 	};
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 	MinimusMaximus() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
@@ -46,6 +53,9 @@ struct MinimusMaximus : Module {
 		configParam(BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f, "Bias on/off");
 		configParam(BIAS_PARAM, -5.0f, 5.0f, 0.0f, "Bias Amount");
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output Mode (Uni/Bipolar)");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -53,8 +63,16 @@ struct MinimusMaximus : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 	
@@ -113,7 +131,7 @@ struct MinimusMaximus : Module {
 };
 
 struct MinimusMaximusWidget : ModuleWidget {
-MinimusMaximusWidget(MinimusMaximus *module) {
+	MinimusMaximusWidget(MinimusMaximus *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MinimusMaximus.svg")));
 
@@ -148,6 +166,29 @@ MinimusMaximusWidget(MinimusMaximus *module) {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, MinimusMaximus::MIN_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW6]), module, MinimusMaximus::MAX_OUTPUT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		MinimusMaximus *module = dynamic_cast<MinimusMaximus*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelMinimusMaximus = createModel<MinimusMaximus, MinimusMaximusWidget>("MinimusMaximus");

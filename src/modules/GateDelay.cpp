@@ -11,6 +11,10 @@
 #include "../inc/GateProcessor.hpp"
 #include "../inc/GateDelayLine.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME GateDelay
+#define PANEL_FILE "GateDelay.svg"
+
 struct GateDelay : Module {
 	enum ParamIds {
 		ENUMS(TIME_PARAM, 2),
@@ -46,6 +50,9 @@ struct GateDelay : Module {
 	
 	GateDelayLine delayLine[2];
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 	GateDelay() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
@@ -54,6 +61,9 @@ struct GateDelay : Module {
 			configParam(TIME_PARAM + i, 0.0f, 10.0f, 5.0f, "Delay time");
 			configParam(RANGE_PARAM + i, 0.0f, 4.0f, 0.0f, "Time range");
 		}
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -61,8 +71,16 @@ struct GateDelay : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void onReset() override {
 		for (int i = 0; i < 2; i++) {
@@ -151,6 +169,29 @@ struct GateDelayWidget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 18, STD_ROWS6[STD_ROW3 + j] - 21), module, GateDelay::DELAYED_OUT_LIGHT + i));
 		}
 	}
+
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		GateDelay *module = dynamic_cast<GateDelay*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelGateDelay = createModel<GateDelay, GateDelayWidget>("GateDelay");

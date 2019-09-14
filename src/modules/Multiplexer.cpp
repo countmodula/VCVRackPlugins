@@ -5,6 +5,10 @@
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME Multiplexer
+#define PANEL_FILE "Multiplexer.svg"
+
 struct Multiplexer : Module {
 	enum ParamIds {
 		LENGTH_S_PARAM,
@@ -64,6 +68,9 @@ struct Multiplexer : Module {
 	int holdMode = 1;
 	
 	float sendOutputs[8];
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
 	
 	Multiplexer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -73,6 +80,9 @@ struct Multiplexer : Module {
 		
 		configParam(LENGTH_R_PARAM, 1.0f, 8.0f, 8.0f, "Number of selector steps (Receives)");
 		configParam(NORMAL_PARAM, 1.0f, 4.0f, 1.0f, "Selector normalling mode");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -80,8 +90,16 @@ struct Multiplexer : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}	
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void onReset() override {
 		indexS = -1;
@@ -267,6 +285,29 @@ struct MultiplexerWidget : ModuleWidget {
 		
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW8]), module, Multiplexer::RECEIVE_OUTPUT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		Multiplexer *module = dynamic_cast<Multiplexer*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelMultiplexer = createModel<Multiplexer, MultiplexerWidget>("Multiplexer");

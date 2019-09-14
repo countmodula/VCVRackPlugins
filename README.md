@@ -36,8 +36,9 @@ Follow Count Modula on facebook:
 <ul>
 <li><a href="./MANUAL.md#ASR">Analogue Shift Register</a></li>
 <li><a href="./MANUAL.md#Attenuator">Attenuator</a></li>
-<li><a href="">Basic 8 Step Sequencer</a></li>
+<li><a href="./MANUAL.md#Basic8StepSequencer">Basic 8 Step Sequencer</a></li>
 <li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a></li>
+<li>Blank Panels</li>
 <li><a href="./MANUAL.md#BooleanLogic">Boolean Logic Modules</a>
 <ul>
 <li>AND
@@ -64,6 +65,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a></li>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator</a> <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator MkII</a></li>
+<li>Rack Ears</li>
 <li><a href="./MANUAL.md#Rectifier">Rectifier</a></li>
 <li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a></li>
 <li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a>
@@ -75,6 +77,7 @@ Follow Count Modula on facebook:
 </li>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a></li>
 <li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a></li>
+<li><a href="./MANUAL.md#StartupDelay">Startup Delay</a> <font color="red">* New in v1.4.0</font></li>
 <li><a href="./MANUAL.md#SubHarmonicGenerator">Sub Harmonic Generator</a></li>
 <li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a></li>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a></li>
@@ -89,14 +92,14 @@ Follow Count Modula on facebook:
 <ul>
 <li><a href="./MANUAL.md#CVSpreader">CV Spreader</a></li>
 <li><a href="./MANUAL.md#BurstGenerator">Burst Generator</a></li>
-<li><a href="./MANUAL.md#GatedComparator">Gated Comparator</a> <font color="red">* New in v1.3.0</font></li>
+<li><a href="./MANUAL.md#GatedComparator">Gated Comparator</a></li>
 <li><a href="./MANUAL.md#GatedComparator">Gated Comparator Expanders</a>
 <ul>
-<li>GC-RM: Random Melody Expander<font color="red">* New in v1.3.0</font></li>
-<li>GC-LOGIC: Trigger/Gate Logic Expander <font color="red">* New in v1.3.0</font></li>
+<li>GC-RM: Random Melody Expander</li>
+<li>GC-LOGIC: Trigger/Gate Logic Expander</li>
 </ul>
 </li>
-<li><a href="./MANUAL.md#SlopeDetector">Slope Detector</a> <font color="red">* New in v1.3.0</font></li>
+<li><a href="./MANUAL.md#SlopeDetector">Slope Detector</a></li>
 </ul>
 </li>
 </ul>

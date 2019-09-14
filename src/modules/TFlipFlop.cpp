@@ -6,6 +6,10 @@
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME TFlipFlop
+#define PANEL_FILE "TFlipFlop.svg"
+
 // implements a basic Toggle flip flop
 struct TLatch {
 	GateProcessor T;
@@ -75,8 +79,14 @@ struct TFlipFlop : Module {
 
 	TLatch flipflop[2];
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+		
 	TFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -103,7 +113,10 @@ struct TFlipFlop : Module {
 			json_array_insert_new(NQStates, i, json_boolean(flipflop[i].stateNQ));
 		}
 		json_object_set_new(root, "NQStates", NQStates);
-
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
 	
@@ -130,6 +143,9 @@ struct TFlipFlop : Module {
 				flipflop[i].stateNQ = json_is_true(state);
 			}
 		}
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"		
 	}	
 	
 	
@@ -172,6 +188,29 @@ struct TFlipFlopWidget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2 + j]), module, TFlipFlop::STATE_LIGHT + i));
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		TFlipFlop *module = dynamic_cast<TFlipFlop*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelTFlipFlop = createModel<TFlipFlop, TFlipFlopWidget>("TFlipFlop");

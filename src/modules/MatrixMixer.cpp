@@ -5,6 +5,10 @@
 #include "../CountModula.hpp"
 #include "../inc/MixerEngine.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME MatrixMixer
+#define PANEL_FILE "MatrixMixer.svg"
+
 struct MatrixMixer : Module {
 	enum ParamIds {
 		C1R1_LEVEL_PARAM,
@@ -56,6 +60,9 @@ struct MatrixMixer : Module {
 	};
 
 	MixerEngine mixers[4];
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	MatrixMixer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -77,6 +84,9 @@ struct MatrixMixer : Module {
 			// switches
 			configParam(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, "Channel mode (Uni/Bipolar)");
 		}
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -84,8 +94,16 @@ struct MatrixMixer : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 		
@@ -144,6 +162,29 @@ struct MatrixMixerWidget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[(i + 1) * 2] + 15, STD_ROWS6[STD_ROW6] - 20), module, MatrixMixer::C1_OVERLOAD_LIGHT + i));
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		MatrixMixer *module = dynamic_cast<MatrixMixer*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelMatrixMixer = createModel<MatrixMixer, MatrixMixerWidget>("MatrixMixer");

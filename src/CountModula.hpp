@@ -4,7 +4,6 @@
 #include "rack.hpp"
 using namespace rack;
 
-
 // Forward-declare the Plugin
 extern Plugin *pluginInstance;
 
@@ -58,6 +57,19 @@ extern Model *modelGatedComparator;
 extern Model *modelSlopeDetector;
 extern Model *modelSequencerExpanderRM8;
 extern Model *modelSequencerExpanderLog8;
+// extern Model *modelVCGateDivider;
+// extern Model *modelOscilloscope;
+extern Model *modelStartupDelay;
+extern Model *modelRackEarLeft;
+extern Model *modelRackEarRight;
+extern Model *modelBlank4HP;
+extern Model *modelBlank8HP;
+extern Model *modelBlank12HP;
+extern Model *modelBlank16HP;
+
+// theme functions
+int readDefaultTheme();
+void saveDefaultTheme(int theme);
 
 #include "components/CountModulaComponents.hpp"
 #include "components/StdComponentPositions.hpp"

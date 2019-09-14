@@ -6,6 +6,10 @@
 #include "../inc/FrequencyDivider.hpp"
 #include "../inc/Utility.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME VCFrequencyDividerMkII
+#define PANEL_FILE "VCFrequencyDividerMkII.svg"
+
 struct VCFrequencyDividerMkII : Module {
 	enum ParamIds {
 		CV_PARAM,
@@ -53,11 +57,17 @@ struct VCFrequencyDividerMkII : Module {
 								9.75f,
 								10.25f };
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	VCFrequencyDividerMkII() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		// scale 10V CV up to 20
 		configParam(CV_PARAM, -2.0f, 2.0f, 0.0f, "CV Amount", " %", 0.0f, 50.0f, 0.0f);
 		configParam(MANUAL_PARAM, 1.0f, 21.0f, 0.0f, "Divide by");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	void onReset() override {
@@ -71,7 +81,10 @@ struct VCFrequencyDividerMkII : Module {
 		json_object_set_new(root, "moduleVersion", json_string("2.0"));
 		json_object_set_new(root, "antiAlias", json_boolean(antiAlias));
 		json_object_set_new(root, "legacyMode", json_boolean(legacyMode));
-	
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+			
 		return root;
 	}
 
@@ -84,6 +97,9 @@ struct VCFrequencyDividerMkII : Module {
 		json_t *aa = json_object_get(root, "antiAlias");
 		if (aa)
 			antiAlias = json_boolean_value(aa);
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"	
 	}	
 	
 	void process(const ProcessArgs &args) override {
@@ -119,7 +135,7 @@ struct VCFrequencyDividerMkII : Module {
 };
 
 struct VCFrequencyDividerMkIIWidget : ModuleWidget {
-VCFrequencyDividerMkIIWidget(VCFrequencyDividerMkII *module) {
+	VCFrequencyDividerMkIIWidget(VCFrequencyDividerMkII *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VCFrequencyDividerMkII.svg")));
 
@@ -147,6 +163,9 @@ VCFrequencyDividerMkIIWidget(VCFrequencyDividerMkII *module) {
 		}
 	};	
 	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
 	void appendContextMenu(Menu *menu) override {
 		VCFrequencyDividerMkII *module = dynamic_cast<VCFrequencyDividerMkII*>(this->module);
 		assert(module);
@@ -154,16 +173,23 @@ VCFrequencyDividerMkIIWidget(VCFrequencyDividerMkII *module) {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = "VC Frequency Divider MkII Settings";
-		menu->addChild(settingsLabel);		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"		
 		
 		// add legacy mode menu item
 		LegacyModeMenuItem *legacyMenuItem = createMenuItem<LegacyModeMenuItem>("Legacy Mode", CHECKMARK(module->legacyMode));
 		legacyMenuItem->module = module;
 		menu->addChild(legacyMenuItem);
-	}	
+	}
+		
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}
 };
 
 Model *modelVCFrequencyDividerMkII = createModel<VCFrequencyDividerMkII, VCFrequencyDividerMkIIWidget>("VCFrequencyDividerMkII");

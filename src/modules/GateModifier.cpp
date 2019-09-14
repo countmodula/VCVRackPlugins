@@ -7,6 +7,10 @@
 #include "../inc/PulseModifier.hpp"
 #include "../inc/Utility.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME GateModifier
+#define PANEL_FILE "GateModifier.svg"
+
 struct GateModifier : Module {
 	enum ParamIds {
 		CV_PARAM,
@@ -50,12 +54,18 @@ struct GateModifier : Module {
 	bool isReset = false;
 	bool currentState = false;
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	GateModifier() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Length");
 		configParam(RANGE_PARAM, 0.0f, 2.0f, 1.0f, "Range");
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -63,8 +73,16 @@ struct GateModifier : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void onReset() override {
 		gate.reset();
@@ -151,7 +169,7 @@ struct GateModifier : Module {
 };
 
 struct GateModifierWidget : ModuleWidget {
-GateModifierWidget(GateModifier *module) {
+	GateModifierWidget(GateModifier *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/GateModifier.svg")));
 
@@ -178,9 +196,30 @@ GateModifierWidget(GateModifier *module) {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, GateModifier::END_OUTPUT));
 		
 		
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, GateModifier::PULSE_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, GateModifier::PULSE_LIGHT));	
+	}
 
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		GateModifier *module = dynamic_cast<GateModifier*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
 		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
 	}
 };
 

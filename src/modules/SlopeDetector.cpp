@@ -6,6 +6,10 @@
 #include "../inc/Utility.hpp"
 #include "../inc/SlewLimiter.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SlopeDetector
+#define PANEL_FILE "SlopeDetector.svg"
+
 struct SlopeDetector : Module {
 	enum ParamIds {
 		SENSE_PARAM,
@@ -38,11 +42,17 @@ struct SlopeDetector : Module {
 	bool prevRising = false, prevFalling = false;
 	bool rising = false, falling = false, steady = true;
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	SlopeDetector() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(SENSE_PARAM, 0.0f, 1.0f, 0.0f, "Sense");
 		configParam(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Sense range");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -50,8 +60,16 @@ struct SlopeDetector : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"			
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 		// grab CV input value
@@ -126,6 +144,29 @@ struct SlopeDetectorWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW4]), module, SlopeDetector::STEADY_LIGHT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW5]), module, SlopeDetector::FALLING_LIGHT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		SlopeDetector *module = dynamic_cast<SlopeDetector*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelSlopeDetector = createModel<SlopeDetector, SlopeDetectorWidget>("SlopeDetector");

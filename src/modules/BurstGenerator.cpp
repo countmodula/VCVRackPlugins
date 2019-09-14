@@ -8,6 +8,10 @@
 #include "../inc/GateProcessor.hpp"
 #include "../inc/SequencerExpanderMessage.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME BurstGenerator
+#define PANEL_FILE "BurstGenerator.svg"
+
 struct BurstGenerator : Module {
 	enum ParamIds {
 		PULSES_PARAM,
@@ -56,6 +60,9 @@ struct BurstGenerator : Module {
 	dsp::PulseGenerator pgStart;
 	dsp::PulseGenerator pgEnd;
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 #endif	
@@ -76,6 +83,9 @@ struct BurstGenerator : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
 #endif			
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -88,7 +98,6 @@ struct BurstGenerator : Module {
 		seqBurst = false;
 		seqCount = 0;
 		counter = -1;
-
 	}
 
 	json_t *dataToJson() override {
@@ -96,8 +105,16 @@ struct BurstGenerator : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+	
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void process(const ProcessArgs &args) override {
 
@@ -260,6 +277,29 @@ struct BurstGeneratorWidget : ModuleWidget {
 		// lights
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, BurstGenerator::CLOCK_LIGHT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
+	void appendContextMenu(Menu *menu) override {
+		BurstGenerator *module = dynamic_cast<BurstGenerator*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelBurstGenerator = createModel<BurstGenerator, BurstGeneratorWidget>("BurstGenerator");

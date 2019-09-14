@@ -15,6 +15,26 @@ Whilst these modules are offered free of charge, if you like them or are using t
 <a href="https://www.paypal.me/CountModula" target="_donate"><img src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" alt="Donate with PayPal"/></a>
 <hr style="width:1000px; border: 1px solid black;"/>
 
+
+<a id="ColourThemes"></a>
+<h3>Colour Themes</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+Pop up menus on all Count Modula modules allow one of five themes to be selected either individually for modules already in a patch via the "Theme" menu option, or to all modules as they are added to a patch via the "Default Theme" option. Once set, modules in a patch will retain their themes regardless of the default setting.
+</td>
+</tr>
+<tr valign="top" style="border: 0px solid black;">
+<td style="border: 0px solid black;">
+<p>
+There are currently five themes available: Silver, Absinthe, Moonlight, Raven and Sanguine:
+</p>
+<img src="./img/Themes.png">
+</td> 
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
 <a id="ASR"></a>
 <h3>Analogue Shift Register</h3>
 <table style="width:1000px; border: 0px solid black;">
@@ -561,7 +581,25 @@ Note that the rectifier module is highly likely to introduce aliasing artefacts 
 <img src="./img/SampleAndHold.png">
 </td> 
 <td style="border: 0px solid black;">
-A basic sample and hold with optional track an hold ability. With the Mode switch in the T&H position, the output follows the input whilst the trigger input is high and holds the last sampled value on the transition of the trigger to a low state. 
+A basic Sample &amp; Hold with optional Pass &amp; Hold and Track &amp; Hold capability.
+<ul>
+Operational Modes:
+<li>S: Sample and Hold. A transition to high (2.0 Volt threshold) on the trigger input samples the input and sends it to the output where it us held until the high trigger transition occurs.
+<li>T: Track and Hold. The output follows the input whilst the trigger input is high and holds the last sampled value on the transition of the trigger to a low state. 
+<li>P: Pass and Hold. The output follows the input whilst the trigger input is low. A high transition on the trigger input causes the current value to be held until the trigger transitions back to low again.
+</ul>
+<ul>
+Voltage control over the mode can be achieved by applying CV to the Mode input with the selection thresholds as follows:
+<li> &lt; 2.0 volts: Sample &amp; Hold
+<li> &gt;= 2.0 and &lt> 4 Volts: Track &amp; Hold 
+<li> &gt;= 4.0 volts: Pass &amp; Hold
+</ul>
+<p>
+With a cable plugged into Mode input, the Mode switch has no effect.
+</p>
+<p>
+Note: anybody who was selecting the T &amp; H mode via voltage control in plugin version 1.3.0 or earlier may need to attenuate the mode CV to ensure the mode is selected correctly in version 1.4.0 onwards.
+</p>
 <p>
 This module can process polyphonic signals. All channels are sampled and held with a single trigger.
 </p>
@@ -626,6 +664,29 @@ This module can function as a polyphonic controller. The saw and triangle wavefo
 </td> 
 <td style="border: 0px solid black;">
 A dual Set/Reset flip flop with optional enable. A high gate signal at the S input whilst the flip flop is enabled sets the Q output high and the NOTQ output low. A high gate signal at the R resets the Q output to low and the NOTQ output to high. Both inputs high at the same result in an invalid state causing both outputs to also be high. With nothing plugged into the enable input, the flip flop is permanently enabled however with a cable plugged in, a high signal must be present at the input in order to set or reset the flip flop.
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
+<a id="StartupDelay"></a>
+<h3>Startup Delay</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
+<img src="./img/StartupDelay.png">
+</td> 
+<td style="border: 0px solid black;">
+A utility that generates a gate and trigger signal that is delayed with respect to the loading of a patch or the starting of Rack. Can be used to automatically start self triggering modules such as the Befaco Rampage that require an initial manual trigger to get them cycling. Delay time can be set from 1 - 30 seconds.
+<ul>
+Three outputs are available:
+<li>Delay: a gate signal that starts high as soon as Rack is started or the patch is loaded and remains so until the selected time has elapsed.</li>
+<li>Gate: a gate signal that starts low and transitions to high after the selected time has elapsed since Rack was started or the patch was loaded.</li>
+<li>Trig: a trigger signal that fires after the selected time has elapsed since Rack was started or the patch was loaded.</li>
+<p>
+Note that once the selected time has elapsed and the outputs have been set accordingly, they will not change until the patch is reloaded or Rack is restarted.
+</p>
+</ul>
 </td>
 </tr>
 </table>

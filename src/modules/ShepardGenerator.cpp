@@ -4,6 +4,10 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME ShepardGenerator
+#define PANEL_FILE "ShepardGenerator.svg"
+
 struct ShepardOscillator {
 	float basePhases[8] = {0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f };
 	float phase[8] = {0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f };
@@ -74,9 +78,11 @@ struct ShepardGenerator : Module {
 		NUM_LIGHTS
 	};
 
-	
 	ShepardOscillator osc; 
-	
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+		
 	ShepardGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -84,6 +90,9 @@ struct ShepardGenerator : Module {
 		configParam(FREQ_PARAM, -8.0f, 10.0f, -4.5f, "Frequency");
 		configParam(SAWLEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Saw output level", " %", 0.0f, 100.0f, 0.0f);
 		configParam(TRILEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Triangle output level", " %", 0.0f, 100.0f, 0.0f);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -91,9 +100,17 @@ struct ShepardGenerator : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"			
+		
 		return root;
 	}
 	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
+
 	void onReset() override {
 		osc.reset();
 	}
@@ -149,8 +166,30 @@ struct ShepardGeneratorWidget : ModuleWidget {
 		// poly outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1]-15, STD_ROWS8[STD_ROW8]), module, ShepardGenerator::PSAW_OUTPUT));	
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL2]-15, STD_ROWS8[STD_ROW8]), module, ShepardGenerator::PTRI_OUTPUT));	
-		
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		ShepardGenerator *module = dynamic_cast<ShepardGenerator*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelShepardGenerator = createModel<ShepardGenerator, ShepardGeneratorWidget>("ShepardGenerator");

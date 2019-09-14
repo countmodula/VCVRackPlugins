@@ -10,14 +10,16 @@
 #define STRUCT_NAME StepSequencer8
 #define WIDGET_NAME StepSequencer8Widget
 #define MODULE_NAME "StepSequencer8"
-#define PANEL_FILE "res/StepSequencer8.svg"
 #define MODEL_NAME	modelStepSequencer8
-#define MENU_TEXT "Dual 8 Step Sequencer Settings"
 
 #define SEQ_NUM_SEQS	2
 #define SEQ_NUM_STEPS	8
 
 #define SEQ_STEP_INPUTS
+
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME StepSequencer8
+#define PANEL_FILE "StepSequencer8.svg"
 
 struct STRUCT_NAME : Module {
 
@@ -81,6 +83,9 @@ struct STRUCT_NAME : Module {
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 #endif
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -146,6 +151,9 @@ struct STRUCT_NAME : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
 #endif	
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -163,7 +171,10 @@ struct STRUCT_NAME : Module {
 		
 		json_object_set_new(root, "currentStep", currentStep);
 		json_object_set_new(root, "direction", dir);
-
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
 
@@ -185,6 +196,9 @@ struct STRUCT_NAME : Module {
 					direction[i] = json_integer_value(v);
 			}
 		}
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"	
 	}
 
 	void onReset() override {
@@ -504,7 +518,7 @@ struct STRUCT_NAME : Module {
 struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, PANEL_FILE)));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
 
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -841,6 +855,9 @@ struct WIDGET_NAME : ModuleWidget {
 		}
 	};
 	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
 	void appendContextMenu(Menu *menu) override {
 		STRUCT_NAME *module = dynamic_cast<STRUCT_NAME*>(this->module);
 		assert(module);
@@ -848,10 +865,8 @@ struct WIDGET_NAME : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = MENU_TEXT;
-		menu->addChild(settingsLabel);		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
 
 		char textBuffer[100];
 		for (int r = 0; r < SEQ_NUM_SEQS; r++) {
@@ -863,6 +878,15 @@ struct WIDGET_NAME : ModuleWidget {
 			menu->addChild(chMenuItem);
 		}
 	}
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *MODEL_NAME = createModel<STRUCT_NAME, WIDGET_NAME>(MODULE_NAME);

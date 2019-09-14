@@ -7,6 +7,10 @@
 #include "../inc/Inverter.hpp"
 #include "../inc/GateProcessor.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME BooleanXOR
+#define PANEL_FILE "BooleanXOR.svg"
+
 struct XorGate {
 	GateProcessor a;
 	GateProcessor b;
@@ -66,18 +70,33 @@ struct BooleanXOR : Module {
 
 	XorGate gate;
 	Inverter inverter;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	BooleanXOR() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
 		
 		return root;
 	}
+	
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void onReset() override {
 		gate.reset();
@@ -101,7 +120,7 @@ struct BooleanXOR : Module {
 };
 
 struct BooleanXORWidget : ModuleWidget {
-BooleanXORWidget(BooleanXOR *module) {
+	BooleanXORWidget(BooleanXOR *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanXOR.svg")));
 
@@ -119,6 +138,29 @@ BooleanXORWidget(BooleanXOR *module) {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW5]), module, BooleanXOR::XOR_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW7]), module, BooleanXOR::INV_OUTPUT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		BooleanXOR *module = dynamic_cast<BooleanXOR*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelBooleanXOR = createModel<BooleanXOR, BooleanXORWidget>("BooleanXOR");

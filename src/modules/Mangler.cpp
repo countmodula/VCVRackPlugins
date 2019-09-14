@@ -5,6 +5,10 @@
 #include "../CountModula.hpp"
 #include "../inc/ClockOscillator.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME Mangler
+#define PANEL_FILE "Mangler.svg"
+
 struct Mangler : Module {
 	enum ParamIds {
 		INPUT_LEVEL_PARAM,
@@ -36,6 +40,9 @@ struct Mangler : Module {
 	float sr, srCV, sRate;
 	bool bipolar; 
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 	Mangler() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -46,6 +53,9 @@ struct Mangler : Module {
 		configParam(CRUSH_PARAM, 1.0f, 64.0f, 64.0f, "Crush amount");
 		configParam(RANGE_PARAM, 0.0f, 1.0f, 1.0f, "Range");
 		configParam(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mangle mode");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -53,8 +63,17 @@ struct Mangler : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 			
@@ -168,6 +187,29 @@ struct ManglerWidget : ModuleWidget {
 
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, Mangler::SIGNAL_OUTPUT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		Mangler *module = dynamic_cast<Mangler*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelMangler = createModel<Mangler, ManglerWidget>("Mangler");
