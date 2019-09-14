@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.3.0</h3>
+<h3>Modules - Release 1.4.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -38,7 +38,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Attenuator">Attenuator</a></li>
 <li><a href="./MANUAL.md#Basic8StepSequencer">Basic 8 Step Sequencer</a></li>
 <li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a></li>
-<li>Blank Panels</li>
+<li>Blank Panels</li> <font color="red">* New in v1.4.0</font>
 <li><a href="./MANUAL.md#BooleanLogic">Boolean Logic Modules</a>
 <ul>
 <li>AND
@@ -65,7 +65,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a></li>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator</a> <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator MkII</a></li>
-<li>Rack Ears</li>
+<li>Rack Ears</li> <font color="red">* New in v1.4.0</font>
 <li><a href="./MANUAL.md#Rectifier">Rectifier</a></li>
 <li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a></li>
 <li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a>
