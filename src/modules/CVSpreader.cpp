@@ -4,6 +4,10 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME CVSpreader
+#define PANEL_FILE "CVSpreader.svg"
+
 struct CVSpreader : Module {
 	enum ParamIds {
 		BASE_PARAM,
@@ -34,21 +38,35 @@ struct CVSpreader : Module {
 		NUM_LIGHTS
 	};
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	CVSpreader() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		configParam(BASE_PARAM, -1.0f, 1.0f, 0.0f, "Base CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(SPREAD_PARAM, -1.0f, 1.0f, 0.0f, "Spread CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Odd/Even mode select");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
 		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 
@@ -112,6 +130,29 @@ struct CVSpreaderWidget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, CVSpreader::J_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW6]), module, CVSpreader::K_OUTPUT));	
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		CVSpreader *module = dynamic_cast<CVSpreader*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelCVSpreader = createModel<CVSpreader, CVSpreaderWidget>("CVSpreader");

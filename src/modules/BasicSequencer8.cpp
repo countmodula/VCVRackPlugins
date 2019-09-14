@@ -9,6 +9,10 @@
 
 #define SEQ_NUM_STEPS	8
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME BasicSequencer8
+#define PANEL_FILE "BasicSequencer8.svg"
+
 struct BasicSequencer8 : Module {
 
 	enum ParamIds {
@@ -64,6 +68,9 @@ struct BasicSequencer8 : Module {
 	
 	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 #endif
@@ -92,15 +99,21 @@ struct BasicSequencer8 : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];	
 #endif
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_string("1.2"));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 
+		// add the theme details
+		#include "../themes/dataToJson.hpp"
+				
 		return root;
 	}
 
@@ -114,6 +127,9 @@ struct BasicSequencer8 : Module {
 		
 		if (dir)
 			direction = json_integer_value(dir);
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
 	}
 
 	void onReset() override {
@@ -408,6 +424,9 @@ struct BasicSequencer8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW8]), module, BasicSequencer8::GATE_OUTPUT));
 	}
 	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
 	struct InitMenuItem : MenuItem {
 		BasicSequencer8Widget *widget;
 		bool triggerInit = true;
@@ -484,11 +503,9 @@ struct BasicSequencer8Widget : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = "Basic 8 Step Sequencer";
-		menu->addChild(settingsLabel);		
-
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+		
 		// CV only init
 		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize CV Only");
 		initCVMenuItem->widget = this;
@@ -511,8 +528,17 @@ struct BasicSequencer8Widget : ModuleWidget {
 		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Triggers Only");
 		randTrigMenuItem->widget = this;
 		randTrigMenuItem->cvRand = false;
-		menu->addChild(randTrigMenuItem);			
-	}	
+		menu->addChild(randTrigMenuItem);
+	}
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelBasicSequencer8 = createModel<BasicSequencer8, BasicSequencer8Widget>("BasicSequencer8");

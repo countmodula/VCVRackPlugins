@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula - Binary Sequencer Module
 //	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
+//	RIP John. Frac rules!
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -8,6 +9,10 @@
 #include "../inc/SlewLimiter.hpp"
 #include "../inc/GateProcessor.hpp"
 #include "../inc/SequencerExpanderMessage.hpp"
+
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME BinarySequencer
+#define PANEL_FILE "BinarySequencer.svg"
 
 struct BinarySequencer : Module {
 	enum ParamIds {
@@ -54,6 +59,9 @@ struct BinarySequencer : Module {
 	ClockOscillator clock;
 	LagProcessor slew;
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 #endif
@@ -82,15 +90,26 @@ struct BinarySequencer : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
 #endif		
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.3"));
+		json_object_set_new(root, "moduleVersion", json_string("1.4"));
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"
 		
 		return root;
 	}	
+
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 
@@ -318,6 +337,9 @@ struct BinarySequencerWidget : ModuleWidget {
 		}
 	};
 	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
 	void appendContextMenu(Menu *menu) override {
 		BinarySequencer *module = dynamic_cast<BinarySequencer*>(this->module);
 		assert(module);
@@ -325,10 +347,8 @@ struct BinarySequencerWidget : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = "Binary Sequencer";
-		menu->addChild(settingsLabel);		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"	
 
 		// CV only init
 		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize Division Mix Only");
@@ -339,6 +359,15 @@ struct BinarySequencerWidget : ModuleWidget {
 		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize Division Mix Only");
 		randCVMenuItem->widget = this;
 		menu->addChild(randCVMenuItem);
+	}
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
 	}
 };
 

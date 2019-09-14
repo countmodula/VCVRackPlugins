@@ -4,6 +4,10 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME VoltageInverter
+#define PANEL_FILE "VoltageInverter.svg"
+
 struct VoltageInverter : Module {
 	enum ParamIds {
 		NUM_PARAMS
@@ -27,8 +31,15 @@ struct VoltageInverter : Module {
 	};
 	
 	float out = 0.0f;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+		
 	VoltageInverter() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -36,7 +47,15 @@ struct VoltageInverter : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+				
 		return root;
+	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
 	}
 	
 	void process(const ProcessArgs &args) override {
@@ -68,6 +87,29 @@ struct VoltageInverterWidget : ModuleWidget {
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2 + (i * 2)]), module, VoltageInverter::A_OUTPUT + (i)));
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		VoltageInverter *module = dynamic_cast<VoltageInverter*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelVoltageInverter = createModel<VoltageInverter, VoltageInverterWidget>("VoltageInverter");

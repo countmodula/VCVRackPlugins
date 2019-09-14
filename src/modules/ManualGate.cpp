@@ -8,6 +8,10 @@
 #include "../inc/PulseModifier.hpp"
 #include "../inc/Utility.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME ManualGate
+#define PANEL_FILE "ManualGate.svg"
+
 struct ManualGate : Module {
 	enum ParamIds {
 		GATE_PARAM,
@@ -38,12 +42,18 @@ struct ManualGate : Module {
 	PulseModifier pmGate;
 	
 	bool latch = false;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	ManualGate() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Output gate length");
 		configParam(GATE_PARAM, 0.0f, 1.0f, 0.0f, "Gate on");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -58,6 +68,9 @@ struct ManualGate : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		json_object_set_new(root, "Latch", json_boolean(latch));
+			
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
 		
 		return root;
 	}	
@@ -67,6 +80,10 @@ struct ManualGate : Module {
 		json_t* jsonLatch = json_object_get(root, "Latch");
 		if (jsonLatch)
 			latch = json_is_true(jsonLatch);
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+
 	}	
 	
 	void process(const ProcessArgs &args) override {
@@ -134,6 +151,29 @@ struct ManualGateWidget : ModuleWidget {
 		// Mega manual button - non-standard position
 		addParam(createParamCentered<CountModulaPBSwitchMegaMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, ManualGate::GATE_PARAM));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		ManualGate *module = dynamic_cast<ManualGate*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelManualGate = createModel<ManualGate, ManualGateWidget>("ManualGate");

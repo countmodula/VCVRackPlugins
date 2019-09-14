@@ -8,6 +8,10 @@
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME EventArranger
+#define PANEL_FILE "EventArranger.svg"
+
 struct EventArranger : Module {
 
 	enum ParamIds {
@@ -54,6 +58,9 @@ struct EventArranger : Module {
 	
 	dsp::PulseGenerator  pgTrig;
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	EventArranger() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -72,15 +79,26 @@ struct EventArranger : Module {
 		// buttons
 		configParam(RUN_PARAM, 0.0f, 1.0f, 1.0f, "Run");
 		configParam(RESET_PARAM, 0.0f, 1.0f, 0.0f, "Reset");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+	
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
 		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void onReset() override {
 		count = 0;
@@ -244,8 +262,30 @@ struct EventArrangerWidget : ModuleWidget {
 		// lights
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS[STD_ROW7]), module, EventArranger::GATE_LIGHT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS[STD_ROW7]), module, EventArranger::RUN_LIGHT));
-	
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		EventArranger *module = dynamic_cast<EventArranger*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelEventArranger = createModel<EventArranger, EventArrangerWidget>("EventArranger");

@@ -9,6 +9,10 @@
 
 #define SEQ_NUM_STEPS	8
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SequencerExpanderTrig8
+#define PANEL_FILE "SequencerExpanderTrig8.svg"
+
 struct SequencerExpanderTrig8 : Module {
 
 	enum ParamIds {
@@ -51,6 +55,9 @@ struct SequencerExpanderTrig8 : Module {
 	int colourMapSS[4] = {1, 3, 0, 2}; 		// colour map for step sequencer, matches the first row of knob colours 
 	
 	int *colourMap = colourMapDefault;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	SequencerExpanderTrig8() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -67,6 +74,9 @@ struct SequencerExpanderTrig8 : Module {
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			configParam(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate");
 		}
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -74,8 +84,16 @@ struct SequencerExpanderTrig8 : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+			// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void process(const ProcessArgs &args) override {
 
@@ -262,6 +280,29 @@ struct SequencerExpanderTrig8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, SequencerExpanderTrig8::TRIG_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderTrig8::GATE_OUTPUT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		SequencerExpanderTrig8 *module = dynamic_cast<SequencerExpanderTrig8*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelSequencerExpanderTrig8 = createModel<SequencerExpanderTrig8, SequencerExpanderTrig8Widget>("SequencerExpanderTrig8");

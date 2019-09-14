@@ -45,9 +45,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="45.430064"
-     inkscape:cy="148.42771"
+     inkscape:zoom="2.828427"
+     inkscape:cx="9.9782577"
+     inkscape:cy="147.29215"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -58,7 +58,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="true">
@@ -82,6 +82,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Panel"
+     style="display:inline"
      sodipodi:insensitive="true">
     <rect
        transform="translate(0,-196.45832)"
@@ -97,7 +98,8 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-196.45832)"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#b3b3b3;stroke-width:0.46249548"
        id="rect134"

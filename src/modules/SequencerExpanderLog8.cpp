@@ -9,6 +9,10 @@
 
 #define SEQ_NUM_STEPS	8
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME SequencerExpanderLog8
+#define PANEL_FILE "SequencerExpanderLog8.svg"
+
 struct SequencerExpanderLog8 : Module {
 
 	enum ParamIds {
@@ -52,6 +56,9 @@ struct SequencerExpanderLog8 : Module {
 	int colourMapSS[4] = {1, 3, 0, 2}; 		// colour map for step sequencer, matches the first row of knob colours 
 	
 	int *colourMap = colourMapDefault;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
 	
 	SequencerExpanderLog8() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -71,6 +78,9 @@ struct SequencerExpanderLog8 : Module {
 		
 		// mode switch
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -78,8 +88,16 @@ struct SequencerExpanderLog8 : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	float getScale(float range) {		
 		switch ((int)(range)) {
@@ -290,6 +308,29 @@ struct SequencerExpanderLog8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, SequencerExpanderLog8::AND_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderLog8::OR_OUTPUT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		SequencerExpanderLog8 *module = dynamic_cast<SequencerExpanderLog8*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
 };
 
 Model *modelSequencerExpanderLog8 = createModel<SequencerExpanderLog8, SequencerExpanderLog8Widget>("SequencerExpanderLOG8");

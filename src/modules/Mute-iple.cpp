@@ -5,6 +5,10 @@
 #include "../CountModula.hpp"
 #include "../inc/SlewLimiter.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME MuteIple
+#define PANEL_FILE "Mute-iple.svg"
+
 struct MuteIple : Module {
 	enum ParamIds {
 		ENUMS(MUTE_PARAMS, 8),
@@ -27,6 +31,10 @@ struct MuteIple : Module {
 	LagProcessor slew[8];
 	bool softMute[8];
 	int numChannels[8];
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 	MuteIple() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
@@ -36,6 +44,9 @@ struct MuteIple : Module {
 
 		configParam(MODEA_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
 		configParam(MODEB_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -50,8 +61,16 @@ struct MuteIple : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}	
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 
@@ -111,7 +130,7 @@ struct MuteIple : Module {
 
 
 struct MuteIpleWidget : ModuleWidget {
-MuteIpleWidget(MuteIple *module) {
+	MuteIpleWidget(MuteIple *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Mute-iple.svg")));
 
@@ -135,6 +154,29 @@ MuteIpleWidget(MuteIple *module) {
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + i]), module, MuteIple::SIGNAL_OUTPUTS + i));	
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		MuteIple *module = dynamic_cast<MuteIple*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelMuteIple = createModel<MuteIple, MuteIpleWidget>("Mute-iple");

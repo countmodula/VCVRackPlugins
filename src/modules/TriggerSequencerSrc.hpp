@@ -42,6 +42,9 @@ struct STRUCT_NAME : Module {
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 #endif
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+		
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -72,6 +75,9 @@ struct STRUCT_NAME : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
 #endif			
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -79,8 +85,16 @@ struct STRUCT_NAME : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void onReset() override {
 		
@@ -229,7 +243,7 @@ struct STRUCT_NAME : Module {
 struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, PANEL_FILE)));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
 
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -429,18 +443,19 @@ struct WIDGET_NAME : ModuleWidget {
 		}
 	};
 	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
 	void appendContextMenu(Menu *menu) override {
 		STRUCT_NAME *module = dynamic_cast<STRUCT_NAME*>(this->module);
 		assert(module);
 
 		// blank separator
 		menu->addChild(new MenuSeparator());
-		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = MENU_TEXT;
-		menu->addChild(settingsLabel);		
 
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+		
 		char textBuffer[100];
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			
@@ -451,6 +466,15 @@ struct WIDGET_NAME : ModuleWidget {
 			menu->addChild(chMenuItem);
 		}
 	}
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *MODEL_NAME = createModel<STRUCT_NAME, WIDGET_NAME>(MODULE_NAME);

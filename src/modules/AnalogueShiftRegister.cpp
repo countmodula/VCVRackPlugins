@@ -5,13 +5,17 @@
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME AnalogueShiftRegister
+#define PANEL_FILE "AnalogueShiftRegister.svg"
+
 struct ASR {
 	static const int MAX_LEN = 16;
 	
 	GateProcessor trigger;
 	float out[MAX_LEN];	
 	int num_taps;
-		
+	
 	void process(float clock, float cv) {
 	
 		trigger.set(clock);
@@ -80,8 +84,14 @@ struct AnalogueShiftRegister : Module {
 	ASR a {4};
 	ASR b {4};
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	AnalogueShiftRegister() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	void onReset() override {
@@ -92,10 +102,18 @@ struct AnalogueShiftRegister : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"
+			
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 
@@ -139,6 +157,28 @@ struct AnalogueShiftRegisterWidget : ModuleWidget {
 			}
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	void appendContextMenu(Menu *menu) override {
+		AnalogueShiftRegister *module = dynamic_cast<AnalogueShiftRegister*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelAnalogueShiftRegister = createModel<AnalogueShiftRegister, AnalogueShiftRegisterWidget>("AnalogueShiftRegister");

@@ -4,6 +4,10 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME Comparator
+#define PANEL_FILE "Comparator.svg"
+
 struct Comparator : Module {
 	enum ParamIds {
 		THRESHOLD_PARAM,
@@ -27,19 +31,33 @@ struct Comparator : Module {
 
 	bool state = 0;
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	Comparator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(THRESHOLD_PARAM, -10.0, 10.0, 0.0, "Threshold", " V");
+		
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"	
 	}
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
 		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 
@@ -73,10 +91,8 @@ struct Comparator : Module {
 	}
 };
 
-
-
 struct ComparatorWidget : ModuleWidget {
-ComparatorWidget(Comparator *module) {
+	ComparatorWidget(Comparator *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Comparator.svg")));
 
@@ -94,6 +110,29 @@ ComparatorWidget(Comparator *module) {
 		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(65, 260), module, Comparator::OVER_LIGHT));
 		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(65, 307), module, Comparator::UNDER_LIGHT));
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
+	void appendContextMenu(Menu *menu) override {
+		Comparator *module = dynamic_cast<Comparator*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelComparator = createModel<Comparator, ComparatorWidget>("Comparator");

@@ -7,6 +7,10 @@
 #include "../inc/GateProcessor.hpp"
 #include "../inc/SequencerExpanderMessage.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME GatedComparator
+#define PANEL_FILE "GatedComparator.svg"
+
 struct GatedComparator : Module {
 
 	enum ParamIds {
@@ -49,6 +53,9 @@ struct GatedComparator : Module {
 	
 	float stepValue = 8.0f / 255.0f;
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 #endif	
@@ -71,6 +78,9 @@ struct GatedComparator : Module {
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
 #endif			
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 
 	json_t *dataToJson() override {
@@ -79,7 +89,10 @@ struct GatedComparator : Module {
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		json_object_set_new(root, "loopEnabled", json_boolean(loopEnabled));
 		json_object_set_new(root, "shiftReg", json_integer(shiftReg));
-
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
 
@@ -92,6 +105,9 @@ struct GatedComparator : Module {
 		
 		if (shftRg)
 			shiftReg = json_integer_value(shftRg);
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
 	}
 
 	void onReset() override {
@@ -286,6 +302,10 @@ struct GatedComparatorWidget : ModuleWidget {
 		}
 	};
 	
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+	
 	void appendContextMenu(Menu *menu) override {
 		GatedComparator *module = dynamic_cast<GatedComparator*>(this->module);
 		assert(module);
@@ -293,11 +313,9 @@ struct GatedComparatorWidget : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
-		// pretty heading
-		MenuLabel *settingsLabel = new MenuLabel();
-		settingsLabel->text = "Gated Comparator";
-		menu->addChild(settingsLabel);		
-
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"	
+		
 		// trigger only init
 		InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Initialize Random Melody Only");
 		initTrigMenuItem->widget = this;
@@ -306,7 +324,16 @@ struct GatedComparatorWidget : ModuleWidget {
 		// trigger only random
 		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Random Melody Only");
 		randTrigMenuItem->widget = this;
-		menu->addChild(randTrigMenuItem);			
+		menu->addChild(randTrigMenuItem);	
+	}
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
 	}	
 };
 

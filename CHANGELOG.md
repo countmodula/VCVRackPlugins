@@ -18,6 +18,29 @@
 <th align="center">Release</th>
 <th align="left">Notes</th>
 </tr>
+
+<tr valign="top">
+<td align="center">14-Sep-2019</td>
+<td align="center">v1.4.0</td>
+<td align="left">
+<ul>
+<b>New Modules</b>
+<li>Startup Delay</li>
+<li>Rack Ears</li>
+<li>Blank Panels</>
+</ul>
+<ul>
+<b>Module Updates</b>
+<li>Sample &amp; Hold - New "Pass &amp; Hold" mode</li>
+<li>All Modules - Selectable colour themes</li>
+</ul>
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #31 Inverted Outputs on the Rectifier are not polyphonic.</li>
+</ul>
+</td>
+</tr>
+
 <tr valign="top">
 <td align="center">24-August-2019</td>
 <td align="center">v1.3.0</td>

@@ -4,6 +4,10 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME MorphShaper
+#define PANEL_FILE "MorphShaper.svg"
+
 struct MorphShaper : Module {
 	enum ParamIds {
 		CV_PARAM,
@@ -66,12 +70,18 @@ struct MorphShaper : Module {
 	const float scale = 10.0f / span;	
 #endif
 	
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"	
+	
 	MorphShaper() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// knobs
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Morph CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(MANUAL_PARAM, 0.0f, 10.0f, 0.0f, "Manual morph");
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -79,8 +89,16 @@ struct MorphShaper : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+	
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}		
 	
 	void process(const ProcessArgs &args) override {
 		
@@ -124,6 +142,29 @@ struct MorphShaperWidget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3 + i]), module, MorphShaper::MORPH_LIGHT + i));
 		}
 	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		MorphShaper *module = dynamic_cast<MorphShaper*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}	
 };
 
 Model *modelMorphShaper = createModel<MorphShaper, MorphShaperWidget>("MorphShaper");

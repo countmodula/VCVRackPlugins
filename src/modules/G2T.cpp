@@ -6,6 +6,10 @@
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Inverter.hpp"
 
+// set the module name for the theme selection functions
+#define THEME_MODULE_NAME G2T
+#define PANEL_FILE "G2T.svg"
+
 struct G2T : Module {
 	enum ParamIds {
 		NUM_PARAMS
@@ -32,8 +36,14 @@ struct G2T : Module {
 	dsp::PulseGenerator pgStart;
 	dsp::PulseGenerator pgEnd;
 
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
 	G2T() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
 	}
 	
 	json_t *dataToJson() override {
@@ -41,8 +51,16 @@ struct G2T : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.0"));
 		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
 		return root;
 	}
+
+	void dataFromJson(json_t* root) override {
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"
+	}	
 	
 	void onReset() override {
 		gate.reset();
@@ -98,7 +116,7 @@ struct G2T : Module {
 };
 
 struct G2TWidget : ModuleWidget {
-G2TWidget(G2T *module) {
+	G2TWidget(G2T *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/G2T.svg")));
 
@@ -118,6 +136,29 @@ G2TWidget(G2T *module) {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2] + 15), module, G2T::GATE_LIGHT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5] + 6), module, G2T::START_LIGHT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, G2T::END_LIGHT));
+	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		G2T *module = dynamic_cast<G2T*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
 	}
 };
 
