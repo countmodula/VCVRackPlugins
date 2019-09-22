@@ -1,7 +1,8 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Gate Delay Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Gate Delay Module
 //	A shift register style gate delay offering up to 20 seconds of
 //  delay
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include <queue>
 #include <deque>

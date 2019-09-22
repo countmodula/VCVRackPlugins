@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Pulse modifier
+//	/^M^\ Count Modula Plugin for VCV Rack - Pulse modifier
 //	Modify the length of a pulse
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
 struct PulseModifier {

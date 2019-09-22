@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Utilities
+//	/^M^\ Count Modula Plugin for VCV Rack - Utilities
 //	Handy little bits and bobs to make life easier
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 // handy macros to convert a bool to an appropriate value for output and display

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Pulse Extender Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Pulse Extender Module
 //	A voltage controlled pulse extender
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"

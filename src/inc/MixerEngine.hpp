@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Mixer Engine
+//	/^M^\ Count Modula Plugin for VCV Rack - Mixer Engine
 //	Basic 4 input bipolar/unipolar mixer
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 struct MixerEngine {
 	float overloadLevel = 0.0f;

@@ -1,5 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Trigger Sequencer Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Trigger Sequencer Module
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 struct STRUCT_NAME : Module {
 

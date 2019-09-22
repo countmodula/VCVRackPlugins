@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Voltage Controlled Switch Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Switch Module
 //	A 2 in/1 out 1 in/2 out voltage controlled switch
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

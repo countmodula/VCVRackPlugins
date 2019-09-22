@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Clock Oscillator
+//	/^M^\ Count Modula Plugin for VCV Rack - Clock Oscillator
 //	A version of the VCV Rack Fundamental LFO offering Square/Pulse only
 //----------------------------------------------------------------------------
 #pragma once

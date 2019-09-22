@@ -1,8 +1,9 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Event Arranger Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Event Arranger Module
 //	Complex event generator based on John Blacet's "VCC & Event Arranger" 
 //	article published in Synapse magazine in Feb '78. 
 //	With a twist...
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

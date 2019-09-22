@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Gate Processor
-//	A standardised gate input processor
+//	/^M^\ Count Modula Plugin for VCV Rack - A standardised gate input processor
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 

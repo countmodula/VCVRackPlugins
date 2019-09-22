@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - 12HP Blank Panel Module
+//	/^M^\ Count Modula Plugin for VCV Rack - 12HP Blank Panel Module
 //	12HP Blank Panel
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

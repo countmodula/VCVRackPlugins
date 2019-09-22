@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Voltage Inverter Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Voltage Inverter Module
 //	A basic quad voltage inverter
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

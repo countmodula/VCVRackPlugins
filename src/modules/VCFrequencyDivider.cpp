@@ -1,7 +1,8 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Voltage Controlled Divider Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Divider Module
 //	A voltage controlled frequency divider (divide by 1 - approx 20)
 //  use of this module is not advised as it is no longer supported, use MkII instead
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"

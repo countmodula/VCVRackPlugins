@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Polarizer
+//	/^M^\ Count Modula Plugin for VCV Rack - Polarizer
 //	Basic polarizing functionality
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 struct Polarizer {

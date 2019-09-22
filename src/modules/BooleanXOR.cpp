@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - XOR Logic Gate Module
+//	/^M^\ Count Modula Plugin for VCV Rack - XOR Logic Gate Module
 //	A 4 input Exclusive-OR (XOR) gate logic module with inverted output
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

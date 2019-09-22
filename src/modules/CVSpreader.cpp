@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - CV Spreader Module
+//	/^M^\ Count Modula Plugin for VCV Rack - CV Spreader Module
 //	Based on the CGS37 CV Cluster by Ken Stone.
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

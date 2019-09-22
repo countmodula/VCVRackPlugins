@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Blank Panel Functionality
+//	/^M^\ Count Modula Plugin for VCV Rack - Blank Panel Functionality
 //	Blank Panel
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
 // set the module name for the theme selection functions

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - G2T Module
+//	/^M^\ Count Modula Plugin for VCV Rack - G2T Module
 //	Gate To Trigger Module
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"

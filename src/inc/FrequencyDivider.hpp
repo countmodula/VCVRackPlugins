@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------
-//  /^M^\ Count Modula - Frequency Divider
+//  /^M^\ Count Modula Plugin for VCV Rack - Frequency Divider
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 #include "GateProcessor.hpp"

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Right Hand Rack Ears Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Right Hand Rack Ears Module
 //	Right Hand Rack Ears
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
