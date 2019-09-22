@@ -1,5 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - 16 Step Trigger Sequencer Module
+//	/^M^\ Count Modula Plugin for VCV Rack - 16 Step Trigger Sequencer Module
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

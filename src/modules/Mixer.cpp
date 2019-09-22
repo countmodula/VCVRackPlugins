@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Mixer Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Mixer Module
 //	A 4 input mixer with switchable uni/bi polar mixing capabilities
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/MixerEngine.hpp"

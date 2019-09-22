@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Sub Harmonic Generator
+//	/^M^\ Count Modula Plugin for VCV Rack - Sub Harmonic Generator
 //	A sub harmonic generator  
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"

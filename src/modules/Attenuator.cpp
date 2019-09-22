@@ -1,7 +1,8 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Attenuator Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Attenuator Module
 //	A basic dual attenuator module with one switchable attenuverter and one 
 //  simple attenuator
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"

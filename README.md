@@ -12,7 +12,7 @@
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
-All source code in this repository is licensed under BSD-3-Clause by Adam Verspaget/Count Modula
+All source code in this repository is copyright © 2019 Adam Verspaget/Count Modula and licensed under GNU GPLv3
 
 All graphics including the Count Modula logo, panels and components are copyright © 2019 Adam Verspaget/Count Modula and may not be used in derivative works.
 

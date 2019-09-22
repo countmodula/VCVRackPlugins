@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - VC NOT Logic Gate Module
+//	/^M^\ Count Modula Plugin for VCV Rack - VC NOT Logic Gate Module
 //	A Voltage controlled logical inverter
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

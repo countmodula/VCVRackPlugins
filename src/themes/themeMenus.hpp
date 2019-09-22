@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - theme menus
+//	/^M^\ Count Modula Plugin for VCV Rack - theme menus
 // common menus for selecting themes
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
 // add main theme menu item

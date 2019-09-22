@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------
-//  /^M^\ Count Modula
-//  Standard column and row definitions
+//  /^M^\ Count Modula Plugin for VCV Rack Plugin for VCV Rack - Standard column and row definitions
+//  Copyright (C) 2019  Adam Verspaget
 //------------------------------------------------------------------------
 
 //------------------------------------------------------------------------

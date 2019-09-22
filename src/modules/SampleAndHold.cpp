@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Sample & Hold Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Sample & Hold Module
 //	Sample/Track/Pass and Hold
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

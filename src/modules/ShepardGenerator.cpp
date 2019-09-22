@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Shepard Generator Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Shepard Generator Module
 //	An 8 phase shepard oscillator.
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

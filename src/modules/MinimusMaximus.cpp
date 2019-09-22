@@ -1,7 +1,8 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Minimus Maximus Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Minimus Maximus Module
 //	A Min/Max/Mean processor with gate outputs to indicate which inputs are at
 //	the minimum or maximum level
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

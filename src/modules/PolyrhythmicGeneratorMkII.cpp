@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Polyrhythmic Generator Module Mk II
+//	/^M^\ Count Modula Plugin for VCV Rack - Polyrhythmic Generator Module Mk II
 //	Generates polyrhythmns 
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

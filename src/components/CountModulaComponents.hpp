@@ -1,5 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Custom components
+//	/^M^\ Count Modula Plugin for VCV Rack - Custom components
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "componentlibrary.hpp"
 

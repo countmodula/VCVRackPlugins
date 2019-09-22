@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Sequencer expander message
+//	/^M^\ Count Modula Plugin for VCV Rack - Sequencer expander message
 //	For passing sequence details to and from sequencer expander modules
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
 #define SEQUENCER_EXP_MAX_CHANNELS 4

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Bit Crusher Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Bit Crusher Module
 //	Bit and sample rate reducer
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/ClockOscillator.hpp"

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Gated Comparator Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Gated Comparator Module
 //  A VCV rack implementation of the Ken Stone CGS13 Gated Comparator
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

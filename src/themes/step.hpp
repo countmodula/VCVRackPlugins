@@ -1,6 +1,8 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - theme selection step() functionality
+//	/^M^\ Count Modula Plugin for VCV Rack - theme selection step() functionality
 // common  functionality for handling of setting the selected theme
+
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
  
 int cTheme = ((THEME_MODULE_NAME*)module)->currentTheme;

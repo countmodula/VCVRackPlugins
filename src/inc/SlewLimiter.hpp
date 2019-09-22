@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Slew Limiter
+//	/^M^\ Count Modula Plugin for VCV Rack - Slew Limiter
 //	Basic Up/Down Slew limiting functionality based on the Befaco Slew Limiter
 //	by Andrew Belt.
 //----------------------------------------------------------------------------

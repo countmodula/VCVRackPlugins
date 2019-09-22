@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - AND Logic Gate Module
+//	/^M^\ Count Modula Plugin for VCV Rack - AND Logic Gate Module
 //	A 4 input AND gate logic module with inverted output
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Inverter.hpp"

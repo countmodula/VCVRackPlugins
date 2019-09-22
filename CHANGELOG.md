@@ -20,6 +20,16 @@
 </tr>
 
 <tr valign="top">
+<td align="center">22-Sep-2019</td>
+<td align="center">v1.4.1</td>
+<td align="left">
+<ul>
+<li>License updated to GPLv3</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">14-Sep-2019</td>
 <td align="center">v1.4.0</td>
 <td align="left">

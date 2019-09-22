@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Rectifier Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Rectifier Module
 //	A full and half wave rectifier
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Inverter.hpp"

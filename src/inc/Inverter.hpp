@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Logical inverter
-//	Schmitt Trigger controlled logical inverter
+//	/^M^\ Count Modula Plugin for VCV Rack - Schmitt Trigger controlled logical inverter
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 

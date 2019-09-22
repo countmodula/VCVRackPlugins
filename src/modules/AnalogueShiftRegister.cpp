@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Analogue Shift Register Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Analogue Shift Register Module
 //	A Dual 4 output/ single 8 output analaogue shift register 
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula - Multi-tapped Gate Delay Module
+//	/^M^\ Count Modula Plugin for VCV Rack - Multi-tapped Gate Delay Module
 //	A shift register style gate delay offering a number of tapped gate outputs 
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 

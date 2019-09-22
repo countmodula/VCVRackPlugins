@@ -1,6 +1,6 @@
-//------------------------------------------------------------------------
-//  /^M^\ Count Modula
-//  Standard column and row functions
+//----------------------------------------------------------------------------
+//	/^M^\ Count Modula Plugin for VCV Rack - Standard column and row functions
+//  Copyright (C) 2019  Adam Verspaget
 //------------------------------------------------------------------------
 #include "StdComponentPositions.hpp"
 
