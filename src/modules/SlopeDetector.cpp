@@ -25,12 +25,14 @@ struct SlopeDetector : Module {
 		RISING_OUTPUT,
 		STEADY_OUTPUT,
 		FALLING_OUTPUT,
+		MOVING_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
 		RISING_LIGHT,
 		STEADY_LIGHT,
 		FALLING_LIGHT,
+		MOVING_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -111,11 +113,13 @@ struct SlopeDetector : Module {
 		outputs[RISING_OUTPUT].setVoltage(boolToGate(rising));
 		outputs[STEADY_OUTPUT].setVoltage(boolToGate(steady));
 		outputs[FALLING_OUTPUT].setVoltage(boolToGate(falling));
+		outputs[MOVING_OUTPUT].setVoltage(boolToGate(!steady));
 
 		// Set lights
 		lights[RISING_LIGHT].setSmoothBrightness(boolToLight(rising), args.sampleTime);
 		lights[STEADY_LIGHT].setSmoothBrightness(boolToLight(steady), args.sampleTime);
 		lights[FALLING_LIGHT].setSmoothBrightness(boolToLight(falling), args.sampleTime);
+		lights[MOVING_LIGHT].setSmoothBrightness(boolToLight(!steady), args.sampleTime);
 		
 		// use these to detect change of direction
 		prevRising = rising;
@@ -132,18 +136,20 @@ struct SlopeDetectorWidget : ModuleWidget {
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW1]), module, SlopeDetector::CV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]), module, SlopeDetector::CV_INPUT));
 
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW1]), module, SlopeDetector::SENSE_PARAM));
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW2]), module, SlopeDetector::RANGE_PARAM));
+		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, SlopeDetector::SENSE_PARAM));
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, SlopeDetector::RANGE_PARAM));
 
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW3]), module, SlopeDetector::RISING_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW4]), module, SlopeDetector::STEADY_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW5]), module, SlopeDetector::FALLING_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, SlopeDetector::RISING_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, SlopeDetector::STEADY_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, SlopeDetector::FALLING_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, SlopeDetector::MOVING_OUTPUT));
 
-		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW3]), module, SlopeDetector::RISING_LIGHT));
-		addChild(createLightCentered<MediumLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW4]), module, SlopeDetector::STEADY_LIGHT));
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW5]), module, SlopeDetector::FALLING_LIGHT));
+		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, SlopeDetector::RISING_LIGHT));
+		addChild(createLightCentered<MediumLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, SlopeDetector::STEADY_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, SlopeDetector::FALLING_LIGHT));
+		addChild(createLightCentered<MediumLight<BlueLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, SlopeDetector::MOVING_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
