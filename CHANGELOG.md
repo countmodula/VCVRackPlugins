@@ -20,10 +20,22 @@
 </tr>
 
 <tr valign="top">
+<td align="center">24-Sep-2019</td>
+<td align="center">v1.4.2</td>
+<td align="left">
+<ul>
+<b>Module Updates</b>
+<li>Slope Detector - Added "Moving" (not steady) output.</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">22-Sep-2019</td>
 <td align="center">v1.4.1</td>
 <td align="left">
 <ul>
+<b>General</b>
 <li>License updated to GPLv3</li>
 </ul>
 </td>
