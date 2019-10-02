@@ -16,7 +16,7 @@ struct MixerEngine {
 		float level4 = inputLevel4;
 		
 		// convert to unipolar
-		if (mode > 0.5) {
+		if (mode > 0.5f) {
 			level1 = (clamp(inputLevel1, 0.0f, 1.0f) * 2.0f) - 1.0f;
 			level2 = (clamp(inputLevel2, 0.0f, 1.0f) * 2.0f) - 1.0f;
 			level3 = (clamp(inputLevel3, 0.0f, 1.0f) * 2.0f) - 1.0f;

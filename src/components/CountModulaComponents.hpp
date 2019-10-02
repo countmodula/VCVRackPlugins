@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Custom components
-//  Copyright (C) 2019  Adam Verspaget
+//  Copyright (C) 2019  Adam Verspaget 
 //----------------------------------------------------------------------------
 #include "componentlibrary.hpp"
 
@@ -24,6 +24,16 @@ struct CountModulaLightRYG : GrayModuleLightWidget {
 	CountModulaLightRYG() {
 		addBaseColor(SCHEME_RED);
 		addBaseColor(SCHEME_YELLOW);
+		addBaseColor(SCHEME_GREEN);
+	}
+};
+
+//-------------------------------------------------------------------
+// Lights
+//-------------------------------------------------------------------
+struct CountModulaLightRG : GrayModuleLightWidget {
+	CountModulaLightRG() {
+		addBaseColor(SCHEME_RED);
 		addBaseColor(SCHEME_GREEN);
 	}
 };
