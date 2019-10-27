@@ -166,6 +166,25 @@ The following context menu options are available to facilitate initialization an
 </table>
 <hr style="width:1000px; border: 1px solid black;"/>
 
+<a id="Chances"></a>
+<h3>Chances</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=110 style="border: 0px solid black;">
+<img src="./img/Chances.png">
+</td> 
+<td style="border: 0px solid black;">
+A single voltage controlled Bernoulli gate that randomly sends gate a gate signal to either one of the two outputs. The Chance control determines the probability of the given output being selected on each gate transition. With the Chance control fully CCW, the A output is favoured 100% of the time and with the control fully CW the B output is favoured 100% of the time. The chance input value is added to the selected control value with 0V favouring the A output 100% and 10V favouring the B output 100% when the Chance control is set fully CCW.
+<ul>
+There are two operational modes:
+<li>Non-Latched: The selected A/B output follows the input gate length.</li>
+<li>Latched: The selected A/B output latches on until the the outcome changes. i.e. either the A or B output will always be high regardless of the current state of the gate input.</li>
+</ul>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
 <a id="Comparator"></a>
 <h3>Comparator</h3>
 <table style="width:1000px; border: 0px solid black;">
@@ -190,6 +209,29 @@ Compares the input signal with either an internal or external threshold value an
 <td style="border: 0px solid black;">
 This is a VCV Rack implementation of the VC Clock and Event Arranger published in an article by John Blacet in the Jan/Feb edition of Synapse magazine. Without the VC clock but with an added twist.<br/>
 Each switch corresponds to a bit in a binary counter and can be "mixed" into the output depending on the switch position. In position 1, the bit will be logically ANDed with any other "active" bit when it is high. In position 0, the bit will be inverted and logically ANDed with any other "active" bit i.e when it is low. In the centre or "X" position, the bit is considered to be "inactive" and is ignored. Depending on how the switches are set, this module can be used as a simple clock divider or a complex gate pattern generator.
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
+
+<a id="Fade"></a>
+<h3>Fade</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
+<img src="./img/Fade.png">
+</td> 
+<td style="border: 0px solid black;">
+<p>
+A controller intended for use with recording modules to provide automated fade in and out in the recording. This is essentially a VCA controlled by an inbuilt ASR Envelope generator. Connect the signals to be recorded into the L/Mon and Right inputs and connect the L/Mon and Right outputs to the appropriate inputs on the recording module. Click on the Start/Stop button to initiate the fade-in (Start) and click again to initiate the fade out (Stop). The two knobs control the fade-in and fade-out times (0.1 to 10 seconds). The Gate and Trigger outputs can be used to control the recording process. The Gate output goes high at the start of the fade-in/fade-out envelope and low at the end. A trigger pulse is presented to the Trig output at both the start and end of the fade-in/fade-out envelope.
+</p>
+<p>
+Note that once started, the fade-in/fade-out cycle will always complete regardless of how long the button is left in the on position. i.e. Stopping the process during the fade-in stage will still result in both the fade-in and fade-out completing. If the start button is clicked during fade-out stage and is still in the on position at the end of the stage, the cycle will recommence at the fade-in stage with the gate output remaining high and no trigger being sent until the end of the new cycle.
+</p>
+<p>
+This module can process polyphonic signals. 
+</p>
 </td>
 </tr>
 </table>
@@ -464,6 +506,21 @@ New feature in v1.0.2: Soft/hard muting option. Use the soft muting option to av
 </p>
 <p>
 This module can process polyphonic signals. All channels presented to the inputs are multed to the associated outputs and all channels on any given output are muted at the same time.
+</p>
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
+<a id="OffsetGenerator"></a>
+<h3>Offset Generator</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=140 style="border: 0px solid black;">
+<img src="./img/OffsetGenerator.png">
+</td> 
+<td style="border: 0px solid black;">
+Adds or subtracts the selected offset amount to or from the input CV value. The Coarse control selects values from -8V to +8V in 1V increments. The fine control selects continuous values between -1 and +1 volt. With a cable connected to the Coarse CV input, the Coarse control is disconnected and the supplied voltage is used to determine the base coarse offset value. Note that the Coarse CV value is quantized to 1 volt increments.
 </p>
 </td>
 </tr>

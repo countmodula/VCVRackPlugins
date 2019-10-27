@@ -20,11 +20,28 @@
 </tr>
 
 <tr valign="top">
+<td align="center">27-Oct-2019</td>
+<td align="center">v1.5.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Chances</li>
+<li>Fade</li>
+<li>Offset Generator</li>
+</ul>
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #37 Mixer outputs transposed.</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">24-Sep-2019</td>
 <td align="center">v1.4.2</td>
 <td align="left">
 <ul>
-<b>Module Updates</b>
+<b>Module Updates:</b>
 <li>Slope Detector - Added "Moving" (not steady) output.</li>
 </ul>
 </td>
@@ -46,13 +63,13 @@
 <td align="center">v1.4.0</td>
 <td align="left">
 <ul>
-<b>New Modules</b>
+<b>New Modules:</b>
 <li>Startup Delay</li>
 <li>Rack Ears</li>
 <li>Blank Panels</>
 </ul>
 <ul>
-<b>Module Updates</b>
+<b>Module Updates:</b>
 <li>Sample &amp; Hold - New "Pass &amp; Hold" mode</li>
 <li>All Modules - Selectable colour themes</li>
 </ul>
@@ -68,7 +85,7 @@
 <td align="center">v1.3.0</td>
 <td align="left">
 <ul>
-<b>New Modules</b>
+<b>New Modules:</b>
 <li>Gated Comparator</li>
 <li>Gated Comparator Expander - Random Melody</li>
 <li>Gated Comparator Expander - Logic</li>
@@ -81,7 +98,7 @@
 <td align="center">v1.2.1</td>
 <td align="left">
 <ul>
-<b>Module Updates</b>
+<b>Module Updates:</b>
 <li>Sample &amp; Hold - Voltage control over Track/Sample mode. A voltage over 2 Volts at the mode input selects Track & Hold Mode</li>
 <li>Dual 8 Step Sequencer - New context menu items to independently initialize/randomize each channel.</li>
 <li>Basic 8 Step Sequencer - New context menu items to independently initialize/randomize CV and Gate/Trigger sections.</li>
@@ -100,7 +117,7 @@
 <td align="center">v1.2.0</td>
 <td align="left">
 <ul>
-<b>New Modules</b>
+<b>New Modules:</b>
 <li>Basic 8 Step Sequencer</li>
 <li>Sequencer Expander - CV8</li>
 <li>Sequencer Expander - Out8</li>
@@ -116,7 +133,7 @@
 <td align="center">v1.1.0</td>
 <td align="left">
 <ul>
-<b>New Modules</b><br/>
+<b>New Modules:</b><br/>
 <li>Gate Modifier - Extend or shorten gate/trigger signals.</li>
 <li>Rectifier - Full and half wave rectification around a CV controlled axis.</li>
 <li>Sample & Hold - Sample/Track and hold.</li>
@@ -125,7 +142,7 @@
 <li>8 Step Sequencer - A classic 8 step Gate/CV Sequencer.</li>
 </ul>
 <ul>
-<b>Module Updates</b><br/>
+<b>Module Updates:</b><br/>
 <li>Manual Gate - Current state is now preserved when saving and re-opening a patch.</li>
 <li>Mute - Current state is now preserved when saving and re-opening a patch.</li>
 <li>SR Flip Flop - Current state is now preserved when saving and re-opening a patch.</li>
@@ -142,7 +159,7 @@
 <td align="center">v1.0.2</td>
 <td align="left">
 <ul>
-<b>Module Updates</b><br/>
+<b>Module Updates:</b><br/>
 <li>Attenuator - Attenuation of polyphonic signals</li>
 <li>Inverter - Inversion of polyphonic signals</li>
 <li>Mute - Muting of polyphonic signals</li>
@@ -159,7 +176,7 @@
 <td align="center">v1.0.1</td>
 <td align="left">
 <ul>
-<b>New Modules</b><br/>
+<b>New Modules:</b><br/>
 <li>Utility Mixer</li>
 <li>Mute</li>
 </ul>
@@ -177,7 +194,7 @@ Port from Rack v0.6 to v1.0
 <td align="center">v0.6.2 and v0.6.3</td>
 <td align="left">
 <ul>
-<b>New Modules</b><br/>
+<b>New Modules:</b><br/>
 <li>Multipexer</li>
 <li>8 Step Trigger Sequencer</li>
 <li>16 Step Trigger Sequencer</li>

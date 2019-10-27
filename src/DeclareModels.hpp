@@ -63,3 +63,4 @@ extern Model *modelBlank12HP;
 extern Model *modelBlank16HP;
 extern Model *modelOffsetGenerator;
 extern Model *modelChances;
+extern Model *modelFade;

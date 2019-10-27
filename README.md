@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.4.0</h3>
+<h3>Modules - Release 1.5.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -38,7 +38,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Attenuator">Attenuator</a></li>
 <li><a href="./MANUAL.md#Basic8StepSequencer">Basic 8 Step Sequencer</a></li>
 <li><a href="./MANUAL.md#BinarySequencer">Binary Sequencer</a></li>
-<li>Blank Panels <font color="red">* New in v1.4.0</font></li> 
+<li>Blank Panels</li> 
 <li><a href="./MANUAL.md#BooleanLogic">Boolean Logic Modules</a>
 <ul>
 <li>AND
@@ -47,8 +47,10 @@ Follow Count Modula on facebook:
 <li>XOR
 </ul>
 </li>
+<li><a href="./MANUAL.md#Chances">Chances</a> <font color="red">* New in v1.5.0</font></li>
 <li><a href="./MANUAL.md#Comparator">Comparator</a></li>
 <li><a href="./MANUAL.md#EventArranger">Event Arranger</a></li>
+<li><a href="./MANUAL.md#Fade">Fade</a> <font color="red">* New in v1.5.0</font></li>
 <li><a href="./MANUAL.md#GateDelay">Gate Delay</a></li>
 <li><a href="./MANUAL.md#GateModifier">Gate Modifier</a></li>
 <li><a href="./MANUAL.md#G2T">G2T</a></li>
@@ -63,9 +65,10 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Multiplexer">Multiplexer</a></li>
 <li><a href="./MANUAL.md#Mute">Mute</a></li>
 <li><a href="./MANUAL.md#Mute-iple">Mute-iple</a></li>
+<li><a href="./MANUAL.md#OffsetGenerator">Offset Generator</a> <font color="red">* New in v1.5.0</font></li>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator</a> <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li><a href="./MANUAL.md#PolyrhythmicGenerator2">Polyrhythmic Generator MkII</a></li>
-<li>Rack Ears <font color="red">* New in v1.4.0</font></li>
+<li>Rack Ears</li>
 <li><a href="./MANUAL.md#Rectifier">Rectifier</a></li>
 <li><a href="./MANUAL.md#SampleAndHold">Sample & Hold</a></li>
 <li><a href="./MANUAL.md#SequencerExpanders">Sequencer Expanders</a>
@@ -77,7 +80,7 @@ Follow Count Modula on facebook:
 </li>
 <li><a href="./MANUAL.md#ShepardGenerator">Shepard Generator</a></li>
 <li><a href="./MANUAL.md#SRFlipFlop">SR Flip Flop</a></li>
-<li><a href="./MANUAL.md#StartupDelay">Startup Delay</a> <font color="red">* New in v1.4.0</font></li>
+<li><a href="./MANUAL.md#StartupDelay">Startup Delay</a></li>
 <li><a href="./MANUAL.md#SubHarmonicGenerator">Sub Harmonic Generator</a></li>
 <li><a href="./MANUAL.md#StepSequencer8">8 Step Sequencer</a></li>
 <li><a href="./MANUAL.md#TappedGateDelay">Tapped Gate Delay</a></li>
