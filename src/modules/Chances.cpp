@@ -28,14 +28,15 @@ struct Chances : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
-		ENUMS(STATE_LIGHT, 2),
+		A_LIGHT,
+		B_LIGHT,
 		NUM_LIGHTS
 	};
 
 	GateProcessor gateTriggers;
 	
 	bool latch = false;
-	bool outcome = false;
+	bool outcome = true;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -87,18 +88,18 @@ struct Chances : Module {
 
 		// in latch mode, the outputs should just flip between themselves based on the outcome rather than following the gate input
 		bool gate = latch || gateTriggers.high();
-		bool a = outcome && gate;
-		bool b = !outcome && gate;
+		bool b = outcome && gate;
+		bool a = !outcome && gate;
 		
 		if (a || b) {
 			// just flip the lights if we have one or the other
-			lights[STATE_LIGHT].setBrightness(boolToLight(a));
-			lights[STATE_LIGHT+1].setBrightness(boolToLight(b));
+			lights[A_LIGHT].setBrightness(boolToLight(a));
+			lights[B_LIGHT].setBrightness(boolToLight(b));
 		}
 		else{
 			// fade the lights if we've got nothing going on
-			lights[STATE_LIGHT].setSmoothBrightness(boolToLight(a), args.sampleTime);
-			lights[STATE_LIGHT+1].setSmoothBrightness(boolToLight(b), args.sampleTime);
+			lights[A_LIGHT].setSmoothBrightness(boolToLight(a), args.sampleTime);
+			lights[B_LIGHT].setSmoothBrightness(boolToLight(b), args.sampleTime);
 		}
 		
 		outputs[A_OUTPUT].setVoltage(boolToGate(a));
@@ -126,8 +127,9 @@ struct ChancesWidget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW6]), module, Chances::A_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW7]), module, Chances::B_OUTPUT));
 		
-		// polarity lights
-		addChild(createLightCentered<MediumLight<CountModulaLightRG>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW3]), module, Chances::STATE_LIGHT));
+		// outcome lights
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1]- 10, STD_ROWS7[STD_ROW3]), module, Chances::A_LIGHT));
+		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1]+ 10, STD_ROWS7[STD_ROW3]), module, Chances::B_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
