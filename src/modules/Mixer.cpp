@@ -47,13 +47,13 @@ struct Mixer : Module {
 		
 		char smeg[10];
 		
-		// mix `knobs
+		// mix knobs
 		for (int i = 0; i < 4; i++) {
 			sprintf (smeg, "Level %d", i + 1);
 			configParam(R1_LEVEL_PARAM + i, 0.0f, 1.0f, 0.5f, smeg, " %", 0.0f, 100.0f, 0.0f);
 		}
 		
-		// level knobs
+		// output level 
 		configParam(LEVEL_PARAM, 0.0f, 1.0f, 0.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
 		
 		// switches
@@ -113,8 +113,8 @@ struct MixerWidget : ModuleWidget {
 		
 
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, Mixer::XIM_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, Mixer::MIX_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, Mixer::MIX_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, Mixer::XIM_OUTPUT));
 
 		// switches
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, Mixer::MODE_PARAM));
