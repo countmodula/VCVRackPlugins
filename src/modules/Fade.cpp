@@ -7,6 +7,8 @@
 #include "../inc/SlewLimiter.hpp"
 #include "../inc/Utility.hpp"
 
+#include "../inc/FadeExpanderMessage.hpp"
+
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME Fade
 #define PANEL_FILE "Fade.svg"
@@ -55,6 +57,9 @@ struct Fade : Module {
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
+	
+	FadeExpanderMessage rightMessages[2][1]; // messages to right module (expander)
+	
 	
 	Fade() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -185,6 +190,22 @@ struct Fade : Module {
 	
 		// save for next time
 		prevRunning = running;
+		
+		// set up details for the expander
+		if (rightExpander.module) {
+			if (rightExpander.module->model == modelFadeExpander) {
+				
+				FadeExpanderMessage *messageToExpander = (FadeExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
+
+				// set any potential expander module values
+				messageToExpander->envelope = mute * 10.0f;
+				messageToExpander->run = gate;
+				messageToExpander->fadeIn = (stage == ATTACK_STAGE);
+				messageToExpander->fadeOut = (stage == DECAY_STAGE);
+				
+				rightExpander.module->leftExpander.messageFlipRequested = true;
+			}
+		}	
 	}
 };
 

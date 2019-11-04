@@ -3,6 +3,7 @@
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
+#include "../inc/GateProcessor.hpp"
 
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME OffsetGenerator
@@ -17,7 +18,7 @@ struct OffsetGenerator : Module {
 	enum InputIds {
 		CV_INPUT,
 		COARSE_INPUT,
-		RESET_INPUT,
+		TRIG_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -31,6 +32,9 @@ struct OffsetGenerator : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 		
+	GateProcessor gateTrig;
+	float cv[PORT_MAX_CHANNELS] = {};
+	
 	OffsetGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
@@ -42,6 +46,9 @@ struct OffsetGenerator : Module {
 	}
 
 	void onReset() override {
+		gateTrig.reset();
+		for (int i = 0; i < PORT_MAX_CHANNELS;i++)
+			cv[i] = 0.0f;
 	}
 	
 	json_t *dataToJson() override {
@@ -62,17 +69,39 @@ struct OffsetGenerator : Module {
 	
 	void process(const ProcessArgs &args) override {
 
-		// grab the coarse offset
-		float offset = 0.0f;
-		if (inputs[COARSE_INPUT].isConnected())
-			offset = floor(inputs[COARSE_INPUT].getVoltage());
+		// process trigger input
+		bool trig = true;
+		if (inputs[TRIG_INPUT].isConnected()) {
+			gateTrig.set(inputs[TRIG_INPUT].getVoltage());
+			trig = gateTrig.leadingEdge();
+		}
+		
+		// determine number of channels
+		int n = inputs[CV_INPUT].getChannels();
+		outputs[MIX_OUTPUT].setChannels(n);
+
+		if (trig) {
+			// grab the coarse offset
+			float offset = 0.0f;
+			if (inputs[COARSE_INPUT].isConnected())
+				offset = floor(inputs[COARSE_INPUT].getVoltage());
+			else
+				offset = params[COARSE_PARAM].getValue();
+			
+			offset = offset + params[FINE_PARAM].getValue();
+			
+			for (int i = 0; i < n; i ++) {
+				cv[i] = clamp(inputs[CV_INPUT].getVoltage(i) + offset, -12.0f, 12.0f);
+			}
+		}
+		
+		
+		if (n > 0) {
+			for (int i  = 0; i < n; i ++)
+				outputs[MIX_OUTPUT].setVoltage(cv[i], i);
+		}
 		else
-			offset = params[COARSE_PARAM].getValue();
-		
-		offset = offset + params[FINE_PARAM].getValue();
-		
-		float cv = clamp(inputs[CV_INPUT].getVoltage() + offset, -12.0f, 12.0f);
-		outputs[MIX_OUTPUT].setVoltage(cv);
+			outputs[MIX_OUTPUT].setVoltage(0.0f);
 	}
 };
 
@@ -85,15 +114,16 @@ struct OffsetGeneratorWidget : ModuleWidget {
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		
 		// knobs
-		addParam(createParamCentered<CountModulaRotarySwitchBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW2]), module, OffsetGenerator::COARSE_PARAM));
-		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW3]), module, OffsetGenerator::FINE_PARAM));
+		addParam(createParamCentered<CountModulaRotarySwitchBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, OffsetGenerator::COARSE_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, OffsetGenerator::FINE_PARAM));
 		
 		// inputs
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW1]), module, OffsetGenerator::COARSE_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW4]), module, OffsetGenerator::CV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, OffsetGenerator::COARSE_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, OffsetGenerator::TRIG_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, OffsetGenerator::CV_INPUT));
 		
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW5]), module, OffsetGenerator::MIX_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, OffsetGenerator::MIX_OUTPUT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

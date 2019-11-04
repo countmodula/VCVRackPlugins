@@ -219,8 +219,9 @@ Each switch corresponds to a bit in a binary counter and can be "mixed" into the
 <h3>Fade</h3>
 <table style="width:1000px; border: 0px solid black;">
 <tr valign="top" style="border: 0px solid black;">
-<td width=140 style="border: 0px solid black;">
+<td width=200 style="border: 0px solid black;">
 <img src="./img/Fade.png">
+<img src="./img/FadeExpander.png">
 </td> 
 <td style="border: 0px solid black;">
 <p>
@@ -229,6 +230,12 @@ A controller intended for use with recording modules to provide automated fade i
 <p>
 Note that once started, the fade-in/fade-out cycle will always complete regardless of how long the button is left in the on position. i.e. Stopping the process during the fade-in stage will still result in both the fade-in and fade-out completing. If the start button is clicked during fade-out stage and is still in the on position at the end of the stage, the cycle will recommence at the fade-in stage with the gate output remaining high and no trigger being sent until the end of the new cycle.
 </p>
+<ul>
+The expander module, when placed to the immediate right hand side of the Fade module adds the following outputs:
+<li>Envelope: breaks out the internal envelope signal for use in external processing.</li>
+<li>Run and Start/Stop: these output a gate and start/stop triggers that follow the state of the Fade button allowing it to synchronise the starting sequencers at the beginning of recording and stop them before the fade out starts so that an attached recording module can capture decaying sounds such as reverb tails etc.</li>
+<li>Fading In and Fading Out: these output high gate signals during the respective fade-in and fade-out stages.</li>
+</ul>
 <p>
 This module can process polyphonic signals. 
 </p>
@@ -290,7 +297,7 @@ A trigger pulse is sent to the End output at the end of the extended or shortene
 <img src="./img/G2T.png">
 </td> 
 <td style="border: 0px solid black;">
-A gate converter module. Converts any signal into a gate. The gate output will be at 0V unless the voltage presented at the input is greater than 2.0V in which case the Gate output will be high (10V). The Inv Gate output functions the other way around, 10V unless the input voltage is over 2.0V in which case the output will be 0V. The Start trigger output will fire a 10ms pulse at the start or leading edge (i.e. on the transition from low to high) of the generated gate and the End trigger output will fire a 10ms pulse at the end or trailing edge (i.e. on the transition from high to low) of the generated gate.
+A gate converter module. Converts any signal into a gate. The gate output will be at 0V unless the voltage presented at the input is greater than 2.0V in which case the Gate output will be high (10V). The Inv Gate output functions the other way around, 10V unless the input voltage is over 2.0V in which case the output will be 0V. The Start trigger output will fire a 10ms pulse at the start or leading edge (i.e. on the transition from low to high) of the generated gate and the End trigger output will fire a 10ms pulse at the end or trailing edge (i.e. on the transition from high to low) of the generated gate. The Start/End output is a logical OR of the Start and End trigger outputs giving a trigger pulse on both transitions of the generated gate signal.
 </td>
 </tr>
 </table>
@@ -520,7 +527,10 @@ This module can process polyphonic signals. All channels presented to the inputs
 <img src="./img/OffsetGenerator.png">
 </td> 
 <td style="border: 0px solid black;">
-Adds or subtracts the selected offset amount to or from the input CV value. The Coarse control selects values from -8V to +8V in 1V increments. The fine control selects continuous values between -1 and +1 volt. With a cable connected to the Coarse CV input, the Coarse control is disconnected and the supplied voltage is used to determine the base coarse offset value. Note that the Coarse CV value is quantized to 1 volt increments.
+Adds or subtracts the selected offset amount to or from the input CV value. The Coarse control selects values from -8V to +8V in 1V increments. The fine control selects continuous values between -1 and +1 volt. With a cable connected to the Coarse CV input, the Coarse control is disconnected and the supplied voltage is used to determine the base coarse offset value. Note that the Coarse CV value is quantized to 1 volt increments. The trigger input functions adds a sample and hold function to the offset generator and with a cable connected, any changes are only sent to the output on a positive going edge so that they can synchronised with a sequencer or clock. With nothing connected tot he trigger inut, changes are immediate.
+</p>
+<p>
+This module can process polyphonic signals with all channels being offset by the one offset amount. 
 </p>
 </td>
 </tr>

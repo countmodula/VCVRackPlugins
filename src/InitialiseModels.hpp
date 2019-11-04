@@ -65,3 +65,4 @@ p->addModel(modelBlank16HP);
 p->addModel(modelOffsetGenerator);
 p->addModel(modelChances);
 p->addModel(modelFade);
+p->addModel(modelFadeExpander);

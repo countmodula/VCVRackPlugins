@@ -4,6 +4,7 @@
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
+#include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Inverter.hpp"
 
@@ -24,12 +25,14 @@ struct G2T : Module {
 		INV_OUTPUT,
 		START_OUTPUT,
 		END_OUTPUT,
+		EDGE_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
 		GATE_LIGHT,
 		START_LIGHT,
 		END_LIGHT,
+		EDGE_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -50,7 +53,7 @@ struct G2T : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -94,25 +97,21 @@ struct G2T : Module {
 			lights[GATE_LIGHT].setBrightness(0.0f);
 		}
 		
+		bool sTrig = pgStart.process(args.sampleTime);
+		bool eTrig = pgEnd.process(args.sampleTime);
+		
 		// process the start trigger
-		if (pgStart.process(args.sampleTime)) {
-			outputs[START_OUTPUT].setVoltage(10.0f);
-			lights[START_LIGHT].setSmoothBrightness(10.0f, args.sampleTime);
-		}
-		else {
-			outputs[START_OUTPUT].setVoltage(0.0f);
-			lights[START_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
-		}
+		outputs[START_OUTPUT].setVoltage(boolToGate(sTrig));
+		lights[START_LIGHT].setSmoothBrightness(boolToLight(sTrig), args.sampleTime);
 
 		// process the end trigger
-		if (pgEnd.process(args.sampleTime)) {
-			outputs[END_OUTPUT].setVoltage(10.0f);
-			lights[END_LIGHT].setSmoothBrightness(10.0f, args.sampleTime);
-		}
-		else {
-			outputs[END_OUTPUT].setVoltage(0.0f);
-			lights[END_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
-		}
+		outputs[END_OUTPUT].setVoltage(boolToGate(eTrig));
+		lights[END_LIGHT].setSmoothBrightness(boolToLight(eTrig), args.sampleTime);
+		
+		// process the end trigger
+		outputs[EDGE_OUTPUT].setVoltage(boolToGate(sTrig || eTrig));
+		lights[EDGE_LIGHT].setSmoothBrightness(boolToLight(sTrig || eTrig), args.sampleTime);
+		
 	}
 };
 
@@ -125,18 +124,20 @@ struct G2TWidget : ModuleWidget {
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		// inputs
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1] + 12), module, G2T::GATE_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, G2T::GATE_INPUT));
 		
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, G2T::GATE_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, G2T::INV_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6] - 6), module, G2T::START_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8] - 12), module, G2T::END_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, G2T::GATE_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, G2T::INV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, G2T::START_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, G2T::EDGE_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, G2T::END_OUTPUT));
 		
 		// lights
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2] + 15), module, G2T::GATE_LIGHT));
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5] + 6), module, G2T::START_LIGHT));
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, G2T::END_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW2]), module, G2T::GATE_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW4]), module, G2T::START_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW5]), module, G2T::EDGE_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW6]), module, G2T::END_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

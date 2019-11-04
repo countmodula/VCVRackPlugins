@@ -20,6 +20,22 @@
 </tr>
 
 <tr valign="top">
+<td align="center">5-Nov-2019</td>
+<td align="center">v1.5.1</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Fade Expander</li>
+</ul>
+<ul>
+<b>Module Updates:</b>
+<li>G2T - New combined Start/End output</li>
+<li>Offset Generator - New trigger input and added polyphonic processing</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">27-Oct-2019</td>
 <td align="center">v1.5.0</td>
 <td align="left">

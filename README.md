@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.5.0</h3>
+<h3>Modules - Release 1.5.1</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -51,6 +51,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#Comparator">Comparator</a></li>
 <li><a href="./MANUAL.md#EventArranger">Event Arranger</a></li>
 <li><a href="./MANUAL.md#Fade">Fade</a> <font color="red">* New in v1.5.0</font></li>
+<li><a href="./MANUAL.md#Fade">Fade Expander</a> <font color="red">* New in v1.5.1</font></li>
 <li><a href="./MANUAL.md#GateDelay">Gate Delay</a></li>
 <li><a href="./MANUAL.md#GateModifier">Gate Modifier</a></li>
 <li><a href="./MANUAL.md#G2T">G2T</a></li>
