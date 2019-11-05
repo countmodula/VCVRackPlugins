@@ -65,3 +65,4 @@ extern Model *modelOffsetGenerator;
 extern Model *modelChances;
 extern Model *modelFade;
 extern Model *modelFadeExpander;
+extern Model *modelSequencerExpanderTSG;

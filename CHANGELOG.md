@@ -26,6 +26,7 @@
 <ul>
 <b>New Modules:</b>
 <li>Fade Expander</li>
+<li>Trigger Sequencer Gate Expander</li>
 </ul>
 <ul>
 <b>Module Updates:</b>

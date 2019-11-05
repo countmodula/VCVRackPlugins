@@ -879,6 +879,7 @@ A dual Toggle (T type) flip flop with optional enable. A positive going gate sig
 <tr valign="top" style="border: 0px solid black;">
 <td style="border: 0px solid black;">
 <img src="./img/TriggerSequencer8.png">
+<img src="./img/SequencerExpanderTSG.png">
 </td> 
 </tr>
 <tr style="border: 0px solid black;">
@@ -897,7 +898,10 @@ The following context menu options are available to facilitate initialization an
 <li>Channel <i>x</i>  &rarr; Initialize  &rarr; Entire Channel: Set all controls for the given channel to random values</li>
 <li>Channel <i>x</i>  &rarr; Initialize  &rarr; Gates/Triggers Only: Set only the gate/trigger selection switches for the given channel to random values</li>
 </ul>
-</p>			
+</p>
+<p>
+The <a href="#SequencerExpanderTSG">Trigger Sequencer Gate Expander</a> can be used with this module to add a set of 2 gate outputs per channel. The gates follow the trigger outputs except they remain high for the duration of the step rather following the width of the incoming clock. 
+</p>		
 </td>
 </tr>
 </table>
@@ -909,6 +913,7 @@ The following context menu options are available to facilitate initialization an
 <tr valign="top" style="border: 0px solid black;">
 <td style="border: 0px solid black;">
 <img src="./img/TriggerSequencer16.png">
+<img src="./img/SequencerExpanderTSG.png">
 </td>
 </tr>
 <tr style="border: 0px solid black;">
@@ -927,7 +932,30 @@ The following context menu options are available to facilitate initialization an
 <li>Channel <i>x</i>  &rarr; Initialize  &rarr; Entire Channel: Set all controls for the given channel to random values</li>
 <li>Channel <i>x</i>  &rarr; Initialize  &rarr; Gates/Triggers Only: Set only the gate/trigger selection switches for the given channel to random values</li>
 </ul>
+</p>
+<p>
+The <a href="#SequencerExpanderTSG">Trigger Sequencer Gate Expander</a> can be used with this module to add a set of 2 gate outputs per channel. The gates follow the trigger outputs except they remain high for the duration of the step rather following the width of the incoming clock. 
 </p>			
+</td>
+</tr>
+</table>
+<hr style="width:1000px; border: 1px solid black;"/>
+
+<a id="SequencerExpanderTSG"></a>
+<h3>Trigger Sequencer Gate Expander</h3>
+<table style="width:1000px; border: 0px solid black;">
+<tr valign="top" style="border: 0px solid black;">
+<td width=80 style="border: 0px solid black;">
+<img src="./img/SequencerExpanderTSG.png">
+</td> 
+<td style="border: 0px solid black;">
+An expander that adds 2 gate outputs for each channel if the 8 and 16 Step Trigger sequencers. The gates follow the trigger outputs except they remain high for the duration of the step rather following the width of the incoming clock.
+<p>
+Must be placed directly to the right of the trigger sequencer. For the 8 Step Sequencer, any of other expanders can still be used by placing them to the right of the gate expander.
+</p>
+<p>
+Note this expander will not work with any other sequencers.
+</p>
 </td>
 </tr>
 </table>

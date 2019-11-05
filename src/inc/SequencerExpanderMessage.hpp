@@ -15,9 +15,10 @@
 #define SEQUENCER_EXP_MASTER_MODULE_BASIC 6
 #define SEQUENCER_EXP_MASTER_MODULE_BURSTGENERATOR 7
 
+#define SEQUENCER_EXP_NUM_TRIGGER_OUTS 8
 
 // utility macros 
-#define isExpanderModule(x) x->model == modelSequencerExpanderCV8 || x->model == modelSequencerExpanderOut8 || x->model == modelSequencerExpanderTrig8 || x->model == modelSequencerExpanderRM8 || x->model == modelSequencerExpanderLog8
+#define isExpanderModule(x) x->model == modelSequencerExpanderCV8 || x->model == modelSequencerExpanderOut8 || x->model == modelSequencerExpanderTrig8 || x->model == modelSequencerExpanderRM8 || x->model == modelSequencerExpanderLog8 || x->model == modelSequencerExpanderTSG
 #define isExpandableModule(x) x->model == modelTriggerSequencer8 || x->model == modelStepSequencer8 || x->model == modelBinarySequencer || x->model == modelBasicSequencer8 || x->model == modelBurstGenerator || x->model == modelGatedComparator
 
 struct SequencerExpanderMessage {
@@ -39,7 +40,10 @@ struct SequencerExpanderMessage {
 	int counters[SEQUENCER_EXP_MAX_CHANNELS] = {};
 	bool clockStates[SEQUENCER_EXP_MAX_CHANNELS] = {};
 	bool runningStates[SEQUENCER_EXP_MAX_CHANNELS] = {};
-
+	
+	// for the trigger sequencer expander
+	bool gateStates[SEQUENCER_EXP_NUM_TRIGGER_OUTS] = {};
+	
 	// set the default values to be used if there is no left hand module
 	void setDefaultValues() {
 		setAllChannels(-1);

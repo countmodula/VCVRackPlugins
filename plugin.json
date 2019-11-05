@@ -536,6 +536,15 @@
 		"Controller",
 		"Expander"
 	  ]
+	},
+	{
+	  "slug": "SequencerExpanderTSG",
+	  "name": "Trigger Sequencer Gate Expander",
+	  "description": "Adds gate outputs to the 8 and 16 Step Trigger Sequencers",
+	  "tags": [
+		"Sequencer",
+		"Expander"
+	  ]
 	}
   ]
 }

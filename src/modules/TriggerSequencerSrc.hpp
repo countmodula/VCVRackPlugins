@@ -119,6 +119,9 @@ struct STRUCT_NAME : Module {
 		float run = 10.0f;
 		float clock = 0.0f;
 		float f;
+		
+		bool gateOutputs[SEQUENCER_EXP_NUM_TRIGGER_OUTS] = {};
+		
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			// reset input
 			f = inputs[RESET_INPUTS + r].getNormalVoltage(reset);
@@ -194,6 +197,10 @@ struct STRUCT_NAME : Module {
 				}
 			}
 
+			// save the gates for passing across the gate expander later
+			gateOutputs[r * 2] = outA && (params[MUTE_PARAMS + (r * 2)].getValue() < 0.5f);
+			gateOutputs[(r * 2) + 1] = outB && (params[MUTE_PARAMS + (r * 2) + 1].getValue() < 0.5f);
+					
 			// outputs follow clock width
 			outA &= (running && gateClock[r].high() && (params[MUTE_PARAMS + (r * 2)].getValue() < 0.5f));
 			outB &= (running && gateClock[r].high() && (params[MUTE_PARAMS + (r * 2) + 1].getValue() < 0.5f));
@@ -225,6 +232,11 @@ struct STRUCT_NAME : Module {
 					// in case we ever add less than the expected number of rows, wrap them around to fill the expected buffer size
 					if (++j == TRIGSEQ_NUM_ROWS)
 						j = 0;
+				}
+				
+				// set the gate values for the gate expander
+				for (int i = 0; i < SEQUENCER_EXP_NUM_TRIGGER_OUTS; i++) {
+					messageToExpander->gateStates[i] = gateOutputs[i];
 				}
 	
 				// finally, let all potential expanders know where we came from

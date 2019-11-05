@@ -88,6 +88,7 @@ Follow Count Modula on facebook:
 <li><a href="./MANUAL.md#SRFlipFlop">T Flip Flop</a></li>
 <li><a href="./MANUAL.md#TriggerSequencer8">Trigger Sequencer (8 Step)</a></li>
 <li><a href="./MANUAL.md#TriggerSequencer16">Trigger Sequencer (16 Step)</a></li>
+<li><a href="./MANUAL.md#SequencerExpanderTSG">Trigger Sequencer Gate Expander</a> <font color="red">* New in v1.5.1</font></li>
 <li><a href="./MANUAL.md#VCFrequencyDivider">Voltage Controlled Frequency Divider</a> <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li><a href="./MANUAL.md#VCFrequencyDivider2">Voltage Controlled Frequency Divider II</a></li>
 <li><a href="./MANUAL.md#VCPolarizer">Voltage Controlled Polarizer</a></li>

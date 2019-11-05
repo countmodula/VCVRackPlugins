@@ -66,3 +66,5 @@ p->addModel(modelOffsetGenerator);
 p->addModel(modelChances);
 p->addModel(modelFade);
 p->addModel(modelFadeExpander);
+p->addModel(modelSequencerExpanderTSG);
+

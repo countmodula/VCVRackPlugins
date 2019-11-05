@@ -5,6 +5,7 @@
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/SequencerExpanderMessage.hpp"
 
 #define STRUCT_NAME TriggerSequencer16
 #define WIDGET_NAME TriggerSequencer16Widget
