@@ -108,7 +108,7 @@ struct CVSpreaderWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, CVSpreader::SPREAD_PARAM));
 	
 		// odd/even switch
-		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS6(STD_ROW5)), module, CVSpreader::MODE_PARAM));
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS6(STD_ROW5)), module, CVSpreader::MODE_PARAM));
 		
 		// base and spread input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, CVSpreader::BASE_INPUT));

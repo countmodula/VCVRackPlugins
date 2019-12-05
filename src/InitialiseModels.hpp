@@ -58,6 +58,7 @@ p->addModel(modelSequencerExpanderLog8);
 p->addModel(modelStartupDelay);
 p->addModel(modelRackEarLeft);
 p->addModel(modelRackEarRight);
+p->addModel(modelBlank2HP);
 p->addModel(modelBlank4HP);
 p->addModel(modelBlank8HP);
 p->addModel(modelBlank12HP);
@@ -67,4 +68,8 @@ p->addModel(modelChances);
 p->addModel(modelFade);
 p->addModel(modelFadeExpander);
 p->addModel(modelSequencerExpanderTSG);
+p->addModel(modelVCPulseDivider);
+p->addModel(modelClockedRandomGates);
+p->addModel(modelClockedRandomGateExpanderCV);
+p->addModel(modelClockedRandomGateExpanderLog);
 

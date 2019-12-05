@@ -114,181 +114,73 @@ struct CountModulaKnobWhite : CountModulaKnob {
 //-------------------------------------------------------------------
 // TODO: parameterise the colour
 
-struct CountModulaRotarySwitchRed : CountModulaKnobRed {
+struct CountModulaRotarySwitch : SVGKnob {
+	CountModulaRotarySwitch() {
+		minAngle = -0.83*M_PI;
+		maxAngle = 0.83*M_PI;
+		snap = true;
+		smooth = false;
+	}
+	
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		
+		SVGKnob::onChange(e);
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}
+	
+	
+	// override the base randomizer as it sets switches to invalid values.
+	void randomize() override {
+		SVGKnob::randomize();
+		
+		paramQuantity->setValue(roundf(paramQuantity->getValue()));
+	}	
+	
+};
+
+struct CountModulaRotarySwitchRed : CountModulaRotarySwitch {
 	CountModulaRotarySwitchRed() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobRed.svg")));
 	}
-	
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
-
-struct CountModulaRotarySwitchOrange : CountModulaKnobOrange {
+struct CountModulaRotarySwitchOrange : CountModulaRotarySwitch {
 	CountModulaRotarySwitchOrange() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobOrange.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
 
-struct CountModulaRotarySwitchYellow : CountModulaKnobYellow {
+struct CountModulaRotarySwitchYellow : CountModulaRotarySwitch {
 	CountModulaRotarySwitchYellow() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobYellow.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
 
-struct CountModulaRotarySwitchGreen : CountModulaKnobGreen {
+struct CountModulaRotarySwitchGreen : CountModulaRotarySwitch {
 	CountModulaRotarySwitchGreen() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobGreen.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
-
-struct CountModulaRotarySwitchBlue : CountModulaKnobBlue {
+struct CountModulaRotarySwitchBlue : CountModulaRotarySwitch {
 	CountModulaRotarySwitchBlue() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobBlue.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
-
-struct CountModulaRotarySwitchGrey : CountModulaKnobGrey {
+struct CountModulaRotarySwitchGrey : CountModulaRotarySwitch {
 	CountModulaRotarySwitchGrey() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobGrey.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
-
-struct CountModulaRotarySwitchViolet : CountModulaKnobViolet {
+struct CountModulaRotarySwitchViolet : CountModulaRotarySwitch {
 	CountModulaRotarySwitchViolet() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobViolet.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
-
-struct CountModulaRotarySwitchWhite : CountModulaKnobWhite {
+struct CountModulaRotarySwitchWhite : CountModulaRotarySwitch {
 	CountModulaRotarySwitchWhite() {
-		snap = true;
-		smooth = false;
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobWhite.svg")));
 	}
-
-	// handle the manually entered values
-	void onChange(const event::Change &e) override {
-		
-		SVGKnob::onChange(e);
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}
-	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SVGKnob::randomize();
-		
-		paramQuantity->setValue(roundf(paramQuantity->getValue()));
-	}	
 };
 
 //-------------------------------------------------------------------
@@ -539,6 +431,15 @@ struct CountModulaPBSwitchMomentary : CountModulaPB {
     }
 };
  
+struct CountModulaPBSwitchMomentaryUnlit : CountModulaPB {
+    CountModulaPBSwitchMomentaryUnlit() {
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
+
+		momentary = true;
+    }
+}; 
+ 
 //-------------------------------------------------------------------
 // big square push button
 //-------------------------------------------------------------------
@@ -584,4 +485,59 @@ struct CountModulaPBSwitchMegaMomentaryUnlit : CountModulaPB {
 	
  		momentary = true;
    }
+};
+
+//-------------------------------------------------------------------
+// LED Display
+//-------------------------------------------------------------------
+struct CountModulaDisplayLarge2 : TransparentWidget {
+	std::shared_ptr<Font> font;
+	std::string text;
+
+	CountModulaDisplayLarge2() {
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		box.size = Vec(50, 40);
+	}
+
+	void setCentredPos(Vec pos) {
+		box.pos.x = pos.x - box.size.x/2;
+		box.pos.y = pos.y - box.size.y/2;
+	}
+	
+	void draw(const DrawArgs &args) override {
+		
+		char buffer[3];
+		int l = text.size();
+		if (l > 2)
+			l = 2;
+		
+		text.copy(buffer, l);
+		buffer[l] = '\0';
+		
+		// Background
+		NVGcolor backgroundColor = nvgRGB(0x48, 0x28, 0x28);
+		NVGcolor borderColor = nvgRGB(0x10, 0x10, 0x10);
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 2.0);
+		nvgFillColor(args.vg, backgroundColor);
+		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 1.0);
+		nvgStrokeColor(args.vg, borderColor);
+		nvgStroke(args.vg);
+
+		nvgFontSize(args.vg, 28);
+		nvgFontFaceId(args.vg, font->handle);
+		nvgTextLetterSpacing(args.vg, 1);
+
+		Vec textPos = Vec(3, 34);
+		NVGcolor textColor = nvgRGB(0xff, 0x10, 0x10);
+
+		// render the "off" segments 	
+		nvgFillColor(args.vg, nvgTransRGBA(textColor, 18));
+		nvgText(args.vg, textPos.x, textPos.y, "~~", NULL);
+		
+		// render the "on segments"
+		nvgFillColor(args.vg, textColor);
+		nvgText(args.vg, textPos.x, textPos.y, buffer, NULL);
+	}
 };

@@ -20,6 +20,25 @@
 </tr>
 
 <tr valign="top">
+<td align="center">5-Dec-2019</td>
+<td align="center">v1.6.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Clocked Random Gates</li>
+<li>Clocked Random Gate CV Expander</li>
+<li>Clocked Random Gate Logic Expander</li>
+<li>Voltage Controlled Pulse Divider</li>
+<li>2HP Blank</li>
+</ul>
+<ul>
+<b>General Updates:</b>
+<li>User guides now supplied as pdf files</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">5-Nov-2019</td>
 <td align="center">v1.5.1</td>
 <td align="left">
