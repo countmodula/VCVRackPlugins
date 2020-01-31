@@ -115,8 +115,8 @@ struct VCPolarizerWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VCPolarizer.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 	
 		// knobs
 		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, VCPolarizer::CH1_CVAMOUNT_PARAM));

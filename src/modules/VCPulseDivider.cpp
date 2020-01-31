@@ -108,9 +108,6 @@ struct VCPulseDivider : Module {
 			count = 0;
 		}
 		
-		// are we at or over the current div setting?
-		outN = (gateClock.high() && count >= length);
-		
 		// increment count on positive clock edge
 		if (gateClock.leadingEdge()){
 			count++;
@@ -119,6 +116,9 @@ struct VCPulseDivider : Module {
 				count = 1;
 		}
 
+		// are we at or over the current div setting?
+		outN = (gateClock.high() && count >= length);
+		
 		// are we on the first pulse?
 		out1 = (gateClock.high() && count == 1);		
 		
@@ -145,10 +145,8 @@ struct VCPulseDividerWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VCPulseDivider.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// knobs
 		addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, VCPulseDivider::CV_PARAM));

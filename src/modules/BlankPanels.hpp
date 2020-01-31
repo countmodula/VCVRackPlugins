@@ -53,13 +53,8 @@ struct WIDGET_NAME : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		
-		if (box.size.x > 60) {
-			addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-			addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));	
-		}
+		// screws
+		#include "../components/stdScrews.hpp"	
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

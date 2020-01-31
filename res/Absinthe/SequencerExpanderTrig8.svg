@@ -33,11 +33,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.14375"
-     inkscape:cx="-13.860918"
-     inkscape:cy="198.34653"
+     inkscape:zoom="2.2789474"
+     inkscape:cx="-14.815241"
+     inkscape:cy="190"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:snap-bbox="true"
@@ -46,7 +46,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
@@ -75,7 +75,7 @@
        sodipodi:type="inkscape:offset"
        inkscape:radius="0"
        inkscape:original="M 0 196.45898 L 0 297 L 15.875 297 L 15.875 196.45898 L 0 196.45898 z "
-       style="display:inline;fill:#75a555;fill-opacity:1;stroke-width:0.3310422"
+       style="display:inline;fill:#75a555;stroke-width:0.3310422"
        id="rect3855"
        d="M 0,196.45898 V 297 H 15.875 V 196.45898 Z"
        transform="matrix(2,0,0,1.0000064,0,-196.46023)" />
@@ -85,8 +85,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-196.45832)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <text
        id="text1355"
        y="201.48538"
@@ -101,7 +100,7 @@
     <g
        style="display:inline"
        id="g1405"
-       transform="translate(-23.815802,1.2291667e-6)">
+       transform="translate(-23.815802,1.1526333e-4)">
       <g
          transform="translate(14.334233,3.7455086)"
          id="text956"
@@ -300,7 +299,7 @@
        aria-label="SX-TRIG8"
        style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text926"
-       transform="translate(-15.805581,0.22371579)">
+       transform="translate(-15.805581,0.13022334)">
       <path
          d="m 24.53287,199.79972 v -0.42203 q 0.05684,0.0517 0.134359,0.093 0.07924,0.0413 0.167087,0.0706 0.08785,0.0276 0.1757,0.0431 0.08785,0.0155 0.161919,0.0155 0.258382,0 0.384128,-0.0861 0.127469,-0.0861 0.127469,-0.24977 0,-0.0879 -0.04306,-0.15159 -0.04134,-0.0655 -0.117133,-0.11885 -0.07579,-0.0534 -0.179145,-0.10163 -0.10163,-0.05 -0.218764,-0.10336 -0.125746,-0.0672 -0.234266,-0.13608 -0.108521,-0.0689 -0.18948,-0.15158 -0.07924,-0.0844 -0.125746,-0.18948 -0.04479,-0.10508 -0.04479,-0.24633 0,-0.17397 0.07751,-0.30144 0.07924,-0.12919 0.206706,-0.21188 0.129191,-0.0844 0.292833,-0.12402 0.163642,-0.0413 0.334174,-0.0413 0.387573,0 0.564996,0.0879 v 0.4048 q -0.210151,-0.15159 -0.54088,-0.15159 -0.0913,0 -0.18259,0.0172 -0.08957,0.0172 -0.16192,0.0568 -0.07062,0.0396 -0.11541,0.10163 -0.04479,0.062 -0.04479,0.14986 0,0.0827 0.03445,0.14298 0.03445,0.0603 0.09991,0.11024 0.06718,0.0499 0.16192,0.0982 0.09646,0.0465 0.222208,0.10163 0.129191,0.0672 0.242879,0.14125 0.115411,0.0741 0.201539,0.16365 0.08785,0.0896 0.137803,0.19981 0.05168,0.10852 0.05168,0.24805 0,0.18776 -0.07579,0.31695 -0.07579,0.12919 -0.204984,0.21015 -0.127468,0.081 -0.294555,0.11713 -0.167087,0.0362 -0.353122,0.0362 -0.06201,0 -0.153307,-0.0103 -0.08957,-0.009 -0.184313,-0.0276 -0.09474,-0.0172 -0.179145,-0.0431 -0.08441,-0.0258 -0.13608,-0.0586 z"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"

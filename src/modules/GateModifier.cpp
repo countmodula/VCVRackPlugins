@@ -159,8 +159,8 @@ struct GateModifier : Module {
 		
 		// set the outputs
 		outputs[PULSE_OUTPUT].setVoltage(boolToGate(pulse.getState()));
-		outputs[END_OUTPUT].setVoltage(boolToGate(pgEnd.process(args.sampleTime)));
-		
+		outputs[END_OUTPUT].setVoltage(boolToGate(pgEnd.remaining > 0.0f));
+		pgEnd.process(args.sampleTime);
 		// set the status light
 		lights[PULSE_LIGHT].setSmoothBrightness(boolToLight(pulse.getState()), args.sampleTime);
 		
@@ -174,10 +174,8 @@ struct GateModifierWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/GateModifier.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// knobs
 		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, GateModifier::CV_PARAM));

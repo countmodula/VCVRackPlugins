@@ -22,6 +22,9 @@ if (cTheme != pTheme) {
 		case 4: // Sanguine
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Sanguine/" PANEL_FILE)));
 			break;
+		case 5: // Blue Moon
+			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BlueMoon/" PANEL_FILE)));
+			break;
 		default:
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
 			break;

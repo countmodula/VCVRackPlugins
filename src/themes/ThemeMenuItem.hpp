@@ -46,7 +46,13 @@ struct ThemeMenu : MenuItem {
 		absintheMenuItem->module = module;
 		absintheMenuItem->themeToUse = 2;
 		menu->addChild(absintheMenuItem);
-
+		
+		// add Blue Moon theme menu item
+		ThemeMenuItem *bluemoonMenuItem = createMenuItem<ThemeMenuItem>("Blue Moon", CHECKMARK(module->currentTheme == 5));
+		bluemoonMenuItem->module = module;
+		bluemoonMenuItem->themeToUse = 5;
+		menu->addChild(bluemoonMenuItem);
+		
 		// add Moonlight theme menu item
 		ThemeMenuItem *moonlightMenuItem = createMenuItem<ThemeMenuItem>("Moonlight", CHECKMARK(module->currentTheme == 1));
 		moonlightMenuItem->module = module;
@@ -90,6 +96,12 @@ struct DefaultThemeMenu : MenuItem {
 		absintheMenuItem->themeToUse = 2;
 		menu->addChild(absintheMenuItem);
 
+		// add Blue Moon theme menu item
+		DefaultThemeMenuItem *bluemoonMenuItem = createMenuItem<DefaultThemeMenuItem>("Blue Moon", CHECKMARK(currentDefault == 5));
+		bluemoonMenuItem->module = module;
+		bluemoonMenuItem->themeToUse = 5;
+		menu->addChild(bluemoonMenuItem);		
+		
 		// add Moonlight theme menu item
 		DefaultThemeMenuItem *moonlightMenuItem = createMenuItem<DefaultThemeMenuItem>("Moonlight", CHECKMARK(currentDefault == 1));
 		moonlightMenuItem->module = module;

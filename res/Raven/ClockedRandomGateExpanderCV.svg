@@ -33,9 +33,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.5578948"
-     inkscape:cx="124.93933"
-     inkscape:cy="140.17438"
+     inkscape:zoom="3.2229183"
+     inkscape:cx="45.442533"
+     inkscape:cy="20.540659"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -46,7 +46,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
@@ -100,7 +100,7 @@
     <g
        style="display:inline"
        id="g1405"
-       transform="translate(-19.847052,1.2291667e-6)">
+       transform="translate(-19.847052,1.1526333e-4)">
       <g
          transform="translate(14.334233,3.7455086)"
          id="text956"
@@ -391,7 +391,7 @@
        aria-label="CRGX-CV"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text953"
-       transform="translate(3.9687493)">
+       transform="translate(3.9687493,-0.08798666)">
       <path
          d="m 10.437779,200.01277 q -0.279053,0.14469 -0.6941868,0.14469 -0.5374349,0 -0.8612738,-0.33934 -0.323839,-0.33934 -0.323839,-0.89056 0,-0.59255 0.3634576,-0.95774 0.3651801,-0.36518 0.921563,-0.36518 0.35829,0 0.594279,0.10164 v 0.40652 q -0.249769,-0.14814 -0.5512153,-0.14814 -0.4013536,0 -0.651123,0.25666 -0.2480469,0.25666 -0.2480469,0.68557 0,0.40824 0.2325439,0.65112 0.232544,0.24116 0.6115045,0.24116 0.3496768,0 0.6063368,-0.16536 z"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';stroke-width:0.26458332"

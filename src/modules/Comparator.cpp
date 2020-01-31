@@ -97,8 +97,8 @@ struct ComparatorWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Comparator.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		addParam(createParamCentered<CountModulaKnobGreen>(Vec(45, 75), module, Comparator::THRESHOLD_PARAM));
 

@@ -100,14 +100,9 @@ struct StartupDelay : Module {
 		lights[GATE_LIGHT].setSmoothBrightness(boolToLight(ended), args.sampleTime);
 
 		// process the end trigger
-		if (pgEnd.process(args.sampleTime)) {
-			outputs[TRIG_OUTPUT].setVoltage(10.0f);
-			lights[TRIG_LIGHT].setSmoothBrightness(10.0f, args.sampleTime);
-		}
-		else {
-			outputs[TRIG_OUTPUT].setVoltage(0.0f);
-			lights[TRIG_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
-		}
+		outputs[TRIG_OUTPUT].setVoltage(boolToGate(pgEnd.remaining > 0.0f));
+		lights[TRIG_LIGHT].setSmoothBrightness(boolToLight(pgEnd.remaining > 0.0f), args.sampleTime);	
+		pgEnd.process(args.sampleTime);
 	}
 };
 
@@ -116,8 +111,8 @@ struct StartupDelayWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/StartupDelay.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// params
 		addParam(createParamCentered<CountModulaKnobViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, StartupDelay::DELAY_PARAM));

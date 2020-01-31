@@ -32,12 +32,15 @@ struct STRUCT_NAME : Module {
 	GateProcessor gateClock[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateReset[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateRun[TRIGSEQ_NUM_ROWS];
-	dsp::PulseGenerator pgTrig[TRIGSEQ_NUM_ROWS * 2];
-	
+	dsp::PulseGenerator pgClock[TRIGSEQ_NUM_ROWS * 2];
+		
 	int count[TRIGSEQ_NUM_ROWS] = {}; 
 	int length[TRIGSEQ_NUM_ROWS] = {};
+	bool running[TRIGSEQ_NUM_ROWS] = {};
 	
 	float cvScale = (float)(TRIGSEQ_NUM_STEPS - 1);
+	
+	int startUpCounter = 0;
 	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	SequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
@@ -86,6 +89,20 @@ struct STRUCT_NAME : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.1"));
 		
+		json_t *currentStep = json_array();
+		json_t *clk = json_array();
+		json_t *run = json_array();
+	
+		for (int i = 0; i < TRIGSEQ_NUM_ROWS; i++) {
+			json_array_insert_new(currentStep, i, json_integer(count[i]));
+			json_array_insert_new(clk, i, json_boolean(gateClock[i].high()));
+			json_array_insert_new(run, i, json_boolean(gateRun[i].high()));
+		}
+		
+		json_object_set_new(root, "currentStep", currentStep);
+		json_object_set_new(root, "clockState", clk);
+		json_object_set_new(root, "runState", run);		
+		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
 		
@@ -93,8 +110,37 @@ struct STRUCT_NAME : Module {
 	}
 	
 	void dataFromJson(json_t* root) override {
+		
+		json_t *currentStep = json_object_get(root, "currentStep");
+		json_t *clk = json_object_get(root, "clockState");
+		json_t *run = json_object_get(root, "runState");
+		
+		for (int i = 0; i < TRIGSEQ_NUM_ROWS; i++) {
+			if (currentStep) {
+				json_t *v = json_array_get(currentStep, i);
+				if (v)
+					count[i] = json_integer_value(v);
+			}
+			
+			if (clk) {
+				json_t *v = json_array_get(clk, i);
+				if (v)
+					gateClock[i].preset(json_boolean_value(v));
+			}
+			
+			if (run) {
+				json_t *v = json_array_get(run, i);
+				if (v)
+					gateRun[i].preset(json_boolean_value(v));
+				
+				running[i] = gateRun[i].high();
+			}
+		}
+		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
+		startUpCounter = 20;		
 	}	
 	
 	void onReset() override {
@@ -103,17 +149,18 @@ struct STRUCT_NAME : Module {
 			gateClock[i].reset();
 			gateReset[i].reset();
 			gateRun[i].reset();
+			pgClock[i].reset();
 			count[i] = 0;
 			length[i] = TRIGSEQ_NUM_STEPS;
-		}
-		
-		for (int i = 0; i < TRIGSEQ_NUM_ROWS * 2; i++) {
-			pgTrig[i].reset();
 		}
 	}
 
 	void process(const ProcessArgs &args) override {
 
+		// wait a number of cycles before we use the clock and run inputs to allow them propagate correctly after startup
+		if (startUpCounter > 0)
+			startUpCounter--;
+		
 		// grab all the input values up front
 		float reset = 0.0f;
 		float run = 10.0f;
@@ -128,15 +175,17 @@ struct STRUCT_NAME : Module {
 			gateReset[r].set(f);
 			reset = f;
 			
-			// run input
-			f = inputs[RUN_INPUTS + r].getNormalVoltage(run);
-			gateRun[r].set(f);
-			run = f;
+			if (startUpCounter == 0) {
+				// run input
+				f = inputs[RUN_INPUTS + r].getNormalVoltage(run);
+				gateRun[r].set(f);
+				run = f;
 
-			// clock
-			f = inputs[CLOCK_INPUTS + r].getNormalVoltage(clock); 
-			gateClock[r].set(f);
-			clock = f;
+				// clock
+				f = inputs[CLOCK_INPUTS + r].getNormalVoltage(clock); 
+				gateClock[r].set(f);
+				clock = f;
+			}
 			
 			// sequence length - jack overrides knob
 			if (inputs[CV_INPUTS + r].isConnected()) {
@@ -160,9 +209,22 @@ struct STRUCT_NAME : Module {
 				count[r] = 0;
 			}
 
-			bool running = gateRun[r].high();
-			if (running) {
-				// increment count on positive clock edge
+			// process the clock trigger - we'll use this to allow the run input edge to act like the clock if it arrives shortly after the clock edge
+			bool clockEdge = gateClock[r].leadingEdge();
+			if (clockEdge)
+				pgClock[r].trigger(1e-4f);
+			else
+				clockEdge = (pgClock[r].process(args.sampleTime) && gateRun[r].leadingEdge());
+		
+			if (gateRun[r].low())
+				running[r] = false;
+			
+			// advance count on positive clock edge or the run edge if it is close to the clock edge
+			if (clockEdge && gateRun[r].high()) {
+				
+				// flag that we are now actually running
+				running[r] = true;
+				
 				if (gateClock[r].leadingEdge()){
 					count[r]++;
 					
@@ -202,8 +264,8 @@ struct STRUCT_NAME : Module {
 			gateOutputs[(r * 2) + 1] = outB && (params[MUTE_PARAMS + (r * 2) + 1].getValue() < 0.5f);
 					
 			// outputs follow clock width
-			outA &= (running && gateClock[r].high() && (params[MUTE_PARAMS + (r * 2)].getValue() < 0.5f));
-			outB &= (running && gateClock[r].high() && (params[MUTE_PARAMS + (r * 2) + 1].getValue() < 0.5f));
+			outA &= (running[r] && gateClock[r].high() && (params[MUTE_PARAMS + (r * 2)].getValue() < 0.5f));
+			outB &= (running[r] && gateClock[r].high() && (params[MUTE_PARAMS + (r * 2) + 1].getValue() < 0.5f));
 			
 			// set the outputs accordingly
 			outputs[TRIG_OUTPUTS + (r * 2)].setVoltage(boolToGate(outA));	
@@ -258,10 +320,8 @@ struct WIDGET_NAME : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// add everything row by row
 		int rowOffset = -10;

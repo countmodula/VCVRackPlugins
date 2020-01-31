@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Clock Oscillator
 //	A version of the VCV Rack Fundamental LFO offering Square/Pulse only
+//  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #pragma once
 

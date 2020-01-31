@@ -20,6 +20,40 @@
 </tr>
 
 <tr valign="top">
+<td align="center">31-Jan-2020</td>
+<td align="center">v1.7.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Euclidean Sequencer</li>
+<li>Euclidean Sequencer Expander</li>
+<li>Voltage Scaler</li>
+<li>Polyphonic Min/Max</li>
+<li>Polyphonic Breakout</li>
+<li>Polyphonic Mute</li>
+<li>8 Step Sequencer</li>
+<li>8 Step Sequencer Channel Expander</li>
+<li>16 Step Sequencer</li>
+<li>16 Step Sequencer Channel Expander</li>
+<li>8 x 8 Gate Sequencer</li>
+<li>8 x 16 Gate Sequencer</li>
+<li>Master Reset Controller</li>
+</ul>
+<ul>
+<b>Module Updates:</b>
+<li>Boolean VC Inverter - Now polyphonic.</li>
+<li>Boolean XOR - new mode button to define the XOR behaviour</li>
+<li>All Modules - New theme: Blue Moon</li>
+<li>All Sequencer Modules now save the current step when a patch is closed.</li>
+</ul>
+<ul>
+<b>Issues Resolved:</b>
+<li>VC Pulse divider N Out double triggering some modules</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">5-Dec-2019</td>
 <td align="center">v1.6.0</td>
 <td align="left">

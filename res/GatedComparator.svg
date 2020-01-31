@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.0000002"
-     inkscape:cx="215.00551"
-     inkscape:cy="251.49526"
+     inkscape:zoom="2.2789474"
+     inkscape:cx="75.184759"
+     inkscape:cy="190"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -38,7 +38,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
@@ -113,7 +113,7 @@
     <g
        style="display:inline"
        id="g1405"
-       transform="translate(-0.003302,1.2291667e-6)">
+       transform="translate(-0.003302,1.1526333e-4)">
       <g
          transform="translate(14.334233,3.7455086)"
          id="text956"
@@ -285,7 +285,7 @@
        aria-label="GATED COMPARATOR"
        style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1616"
-       transform="translate(-7.2984335,1.0583333)">
+       transform="translate(-7.2984335,0.92397334)">
       <path
          d="m 31.336588,198.93535 q -0.385851,0.21015 -0.859551,0.21015 -0.547771,0 -0.887113,-0.34107 -0.339341,-0.34106 -0.339341,-0.90261 0,-0.57361 0.370347,-0.94051 0.372071,-0.36863 0.943956,-0.36863 0.411689,0 0.692465,0.12058 v 0.42202 q -0.284221,-0.18948 -0.676962,-0.18948 -0.394463,0 -0.647678,0.26011 -0.251491,0.2601 -0.251491,0.67352 0,0.42546 0.217041,0.67007 0.217041,0.24288 0.589111,0.24288 0.254937,0 0.440972,-0.0982 v -0.58739 h -0.520209 v -0.34451 h 0.928453 z"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"

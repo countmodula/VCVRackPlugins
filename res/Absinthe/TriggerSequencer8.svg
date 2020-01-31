@@ -26,10 +26,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.2789474"
-     inkscape:cx="255"
+     inkscape:cx="180.18476"
      inkscape:cy="190"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:snap-bbox="true"
@@ -38,7 +38,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
@@ -67,7 +67,7 @@
        sodipodi:type="inkscape:offset"
        inkscape:radius="0"
        inkscape:original="M 0 196.45898 L 0 297 L 15.875 297 L 15.875 196.45898 L 0 196.45898 z "
-       style="display:inline;fill:#75a555;fill-opacity:1;stroke-width:0.3310422"
+       style="display:inline;fill:#75a555;stroke-width:0.3310422"
        id="rect3855"
        d="M 0,196.45898 V 297 H 15.875 V 196.45898 Z"
        transform="matrix(8.5,0,0,1.0000064,0,-196.46023)" />
@@ -77,8 +77,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-196.45832)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        ry="0.011693048"
        y="278.99789"
@@ -157,7 +156,7 @@
     <g
        style="display:inline"
        id="g1405"
-       transform="translate(27.777948,1.2291667e-6)">
+       transform="translate(27.777948,1.1526333e-4)">
       <g
          transform="translate(14.334233,3.7455086)"
          id="text956"
@@ -2373,7 +2372,8 @@
     <g
        aria-label="8 STEP TRIGGER SEQUENCER"
        style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       id="text2029">
+       id="text2029"
+       transform="translate(0,-0.12819666)">
       <path
          d="m 44.360773,199.46731 q 0,-0.1068 0.02584,-0.20671 0.02756,-0.0999 0.08096,-0.18431 0.0534,-0.0844 0.134359,-0.15159 0.08096,-0.0672 0.18948,-0.10852 -0.160197,-0.0896 -0.254937,-0.22909 -0.09474,-0.14125 -0.09474,-0.31179 0,-0.13608 0.05512,-0.25149 0.05684,-0.11541 0.155029,-0.19981 0.09991,-0.0844 0.234266,-0.13092 0.134359,-0.0482 0.292833,-0.0482 0.160197,0 0.294556,0.0482 0.136081,0.0482 0.234267,0.13264 0.09991,0.0844 0.155029,0.19981 0.05512,0.11542 0.05512,0.24977 0,0.17054 -0.09474,0.31179 -0.09474,0.13952 -0.251492,0.22909 0.106798,0.0413 0.187758,0.10852 0.08268,0.0655 0.137804,0.14987 0.05512,0.0844 0.08268,0.18431 0.02756,0.0999 0.02756,0.20843 0,0.16192 -0.06029,0.29628 -0.06029,0.13435 -0.16881,0.23082 -0.10852,0.0947 -0.260105,0.14814 -0.151584,0.0534 -0.334174,0.0534 -0.180867,0 -0.332452,-0.0534 -0.149861,-0.0534 -0.260104,-0.14814 -0.108521,-0.0965 -0.170533,-0.23082 -0.06029,-0.13436 -0.06029,-0.29628 z m 0.389296,-0.0344 q 0,0.10507 0.03101,0.18948 0.03101,0.0844 0.08785,0.14297 0.05684,0.0586 0.136081,0.0896 0.08096,0.031 0.179145,0.031 0.09474,0 0.173977,-0.031 0.07924,-0.0327 0.136082,-0.0913 0.05857,-0.0603 0.09129,-0.14298 0.03273,-0.0844 0.03273,-0.18775 0,-0.0947 -0.03101,-0.17743 -0.03101,-0.0844 -0.08785,-0.14641 -0.05684,-0.062 -0.137803,-0.0982 -0.07924,-0.0362 -0.177423,-0.0362 -0.09302,0 -0.173977,0.0344 -0.07924,0.0327 -0.137804,0.0947 -0.05684,0.0603 -0.08957,0.14469 -0.03273,0.0844 -0.03273,0.18432 z m 0.0844,-1.11621 q 0,0.0775 0.02756,0.14469 0.02756,0.0655 0.07407,0.11541 0.04651,0.0482 0.108521,0.0758 0.06373,0.0276 0.136081,0.0276 0.07235,0 0.134359,-0.0276 0.06373,-0.0293 0.110243,-0.0775 0.04823,-0.05 0.07579,-0.11541 0.02756,-0.0672 0.02756,-0.14297 0,-0.0775 -0.02756,-0.1447 -0.02584,-0.0672 -0.07235,-0.11541 -0.04651,-0.0482 -0.110243,-0.0758 -0.06373,-0.0276 -0.137804,-0.0276 -0.07751,0 -0.141249,0.0293 -0.06373,0.0276 -0.110243,0.0775 -0.04479,0.0499 -0.07062,0.11713 -0.02412,0.0655 -0.02412,0.13953 z"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"

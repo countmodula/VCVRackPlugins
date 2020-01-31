@@ -20,7 +20,7 @@ struct XorGate {
 
 	bool isHigh = false;
 	
-	float process (float aIn, float bIn, float cIn, float dIn) {
+	float process (float aIn, float bIn, float cIn, float dIn, bool onehot) {
 		a.set(aIn);
 		b.set(bIn);
 		c.set(cIn);
@@ -33,7 +33,10 @@ struct XorGate {
 		if (c.high()) i++;
 		if (d.high()) i++;
 		
-		isHigh = i == 1;
+		if (onehot)
+			isHigh = i == 1;
+		else
+			isHigh = (1 > 0 && isOdd(i));
 		
 		return boolToGate(isHigh);
 	}
@@ -50,6 +53,7 @@ struct XorGate {
 
 struct BooleanXOR : Module {
 	enum ParamIds {
+		MODE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -78,6 +82,8 @@ struct BooleanXOR : Module {
 	BooleanXOR() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "One-hot mode");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -85,7 +91,7 @@ struct BooleanXOR : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_real(1.2f));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -93,10 +99,17 @@ struct BooleanXOR : Module {
 		return root;
 	}
 	
-	
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
+		json_t *ver = json_object_get(root, "moduleVersion");
+
+		if (ver) {
+			// for modules < v1.2, one-hot was the default so set that here
+			if (json_number_value(ver) < 1.2f)
+				params[MODE_PARAM].setValue(1.0f);
+		}
 	}	
 	
 	void onReset() override {
@@ -112,7 +125,7 @@ struct BooleanXOR : Module {
 		float inD = inputs[D_INPUT].getNormalVoltage(0.0f);
 		
 		//perform the logic
-		float out =  gate.process(inA, inB, inC, inD);
+		float out = gate.process(inA, inB, inC, inD, params[MODE_PARAM].getValue() > 0.5f);
 		outputs[XOR_OUTPUT].setVoltage(out);
 		
 		float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
@@ -125,19 +138,21 @@ struct BooleanXORWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanXOR.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// clock and reset input
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW1]),module, BooleanXOR::A_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW2]),module, BooleanXOR::B_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW3]),module, BooleanXOR::C_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW4]),module, BooleanXOR::D_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW6]),module, BooleanXOR::I_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]),module, BooleanXOR::A_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]),module, BooleanXOR::B_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]),module, BooleanXOR::C_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]),module, BooleanXOR::D_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]),module, BooleanXOR::I_INPUT));
 		
+		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, BooleanXOR::MODE_PARAM));
+	
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW5]), module, BooleanXOR::XOR_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW7]), module, BooleanXOR::INV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, BooleanXOR::XOR_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, BooleanXOR::INV_OUTPUT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

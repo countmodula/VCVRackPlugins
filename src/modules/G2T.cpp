@@ -97,8 +97,10 @@ struct G2T : Module {
 			lights[GATE_LIGHT].setBrightness(0.0f);
 		}
 		
-		bool sTrig = pgStart.process(args.sampleTime);
-		bool eTrig = pgEnd.process(args.sampleTime);
+		bool sTrig = pgStart.remaining > 0.0f;
+		bool eTrig = pgEnd.remaining > 0.0f;
+		pgStart.process(args.sampleTime);
+		pgEnd.process(args.sampleTime);
 		
 		// process the start trigger
 		outputs[START_OUTPUT].setVoltage(boolToGate(sTrig));
@@ -120,8 +122,8 @@ struct G2TWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/G2T.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, G2T::GATE_INPUT));

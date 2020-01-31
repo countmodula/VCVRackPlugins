@@ -38,11 +38,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="131.22886"
-     inkscape:cy="190.69029"
+     inkscape:zoom="2.2789474"
+     inkscape:cx="15.184759"
+     inkscape:cy="190"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:snap-bbox="true"
@@ -77,8 +77,8 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Panel"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     sodipodi:insensitive="true"
+     style="display:inline">
     <rect
        transform="translate(0,-196.45832)"
        id="rect3855"
@@ -86,17 +86,16 @@
        height="100.54166"
        x="-3.3306691e-16"
        y="196.45831"
-       style="fill:#75a555;fill-opacity:1;stroke-width:0.5733819" />
+       style="fill:#75a555;stroke-width:0.5733819" />
   </g>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-196.45832)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
-       style="fill:#528d00;fill-opacity:1;stroke-width:1.11558127"
+       style="fill:#528d00;stroke-width:1.11558127"
        id="rect134"
        width="26.458338"
        height="84.666664"
@@ -248,7 +247,7 @@
        aria-label="/^M^\"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="text956"
-       transform="translate(-1.549031,3.9687501)">
+       transform="translate(-1.549031,3.7456238)">
       <path
          d="m 21.203855,291.40545 v 0.0386 h -0.434082 v -0.0386 q 0.09509,-0.006 0.224621,-0.17088 l 1.094162,-1.4621 q 0.07441,-0.1006 0.07441,-0.12402 0,-0.0372 -0.06615,-0.0482 v -0.0372 h 0.423058 v 0.0372 q -0.09508,0.006 -0.22462,0.17087 l -1.08176,1.46348 q -0.07579,0.10197 -0.07579,0.12402 0,0.0358 0.06615,0.0469 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -314,7 +313,8 @@
     <g
        aria-label="CV SPREADER"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       id="text970">
+       id="text970"
+       transform="translate(0,-0.92803663)">
       <path
          d="m 14.578784,200.85281 q -0.279053,0.14469 -0.694187,0.14469 -0.537435,0 -0.861274,-0.33934 -0.323839,-0.33934 -0.323839,-0.89056 0,-0.59255 0.363458,-0.95773 0.36518,-0.36518 0.921563,-0.36518 0.358289,0 0.594279,0.10163 v 0.40652 q -0.24977,-0.14814 -0.551216,-0.14814 -0.401353,0 -0.651123,0.25666 -0.248047,0.25666 -0.248047,0.68557 0,0.40825 0.232544,0.65113 0.232544,0.24115 0.611505,0.24115 0.349677,0 0.606337,-0.16536 z"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';stroke-width:0.26458332"
@@ -515,18 +515,15 @@
       <path
          d="m 5.9490237,271.73046 q -0.4203016,0 -0.6738607,-0.27699 -0.252181,-0.27698 -0.252181,-0.72071 0,-0.4768 0.2576932,-0.76068 0.2576931,-0.28387 0.7014214,-0.28387 0.4092774,0 0.6587023,0.27561 0.2508029,0.2756 0.2508029,0.72071 0,0.48369 -0.2563151,0.76481 -0.2563151,0.28112 -0.686263,0.28112 z m 0.016536,-1.83279 q -0.3114367,0 -0.5057401,0.22462 -0.1943033,0.22462 -0.1943033,0.5898 0,0.36518 0.1887912,0.58842 0.1901693,0.22187 0.4947157,0.22187 0.325217,0 0.5126302,-0.21222 0.1874132,-0.21222 0.1874132,-0.59394 0,-0.39136 -0.181901,-0.60495 -0.1819011,-0.2136 -0.5016059,-0.2136 z"
          style="stroke-width:0.26458332"
-         id="path1078"
-         inkscape:connector-curvature="0" />
+         id="path1078" />
       <path
          d="m 7.2802087,271.69739 v -1.97611 h 0.5457031 q 1.0445529,0 1.0445529,0.96325 0,0.45751 -0.290766,0.73587 -0.289388,0.27699 -0.7758355,0.27699 z m 0.2315104,-1.76665 v 1.55719 h 0.2949001 q 0.3886068,0 0.6049588,-0.20809 0.216352,-0.20808 0.216352,-0.5898 0,-0.7593 -0.8075304,-0.7593 z"
          style="stroke-width:0.26458332"
-         id="path1080"
-         inkscape:connector-curvature="0" />
+         id="path1080" />
       <path
          d="m 9.2590717,271.69739 v -1.97611 h 0.5457031 q 1.0445532,0 1.0445532,0.96325 0,0.45751 -0.290766,0.73587 -0.289388,0.27699 -0.7758358,0.27699 z m 0.2315104,-1.76665 v 1.55719 h 0.2949002 q 0.3886067,0 0.6049587,-0.20809 0.216352,-0.20808 0.216352,-0.5898 0,-0.7593 -0.8075304,-0.7593 z"
          style="stroke-width:0.26458332"
-         id="path1082"
-         inkscape:connector-curvature="0" />
+         id="path1082" />
     </g>
     <g
        aria-label="EVEN"
@@ -555,7 +552,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:0.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 7.9374999,220.79999 v -7.14375"
        id="path1072"
        inkscape:connector-curvature="0" />
@@ -563,7 +560,7 @@
        inkscape:connector-curvature="0"
        id="path1076"
        d="m 7.9374999,249.90434 v -7.14375"
-       style="fill:none;stroke:#000000;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:none;stroke:#000000;stroke-width:0.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
   <g
      inkscape:groupmode="layer"

@@ -195,6 +195,8 @@ struct EventArranger : Module {
 				// gate transition from 0 to 1 - kick off the trigger
 				pgTrig.trigger(1e-3f);
 			}
+			else 
+				pgTrig.process(args.sampleTime);
 			
 			outputs[GATE_OUTPUT].setVoltage(10.0f);
 			outputs[INV_OUTPUT].setVoltage(0.0f);
@@ -209,22 +211,18 @@ struct EventArranger : Module {
 		currentGate = out;
 
 		// set these last two here as they rely on the above logic
-		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(pgTrig.process(args.sampleTime)));
+		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(pgTrig.remaining > 0.0f));
 		lights[RUN_LIGHT].setBrightness(gateRun.light());
 	}
-
 };
-
 
 struct EventArrangerWidget : ModuleWidget {
 	EventArrangerWidget(EventArranger *module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/EventArranger.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// custom row positions for this module
 		const int STD_ROWS[8] = {

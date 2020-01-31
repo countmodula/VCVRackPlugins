@@ -49,7 +49,7 @@ struct BinarySequencer : Module {
 	};
 
 	int counter = 0;
-
+	int startUpCounter = 0;
 	float clockFreq = 1.0f;
 	float scale = 0.0f;
 	
@@ -101,6 +101,11 @@ struct BinarySequencer : Module {
 
 		json_object_set_new(root, "moduleVersion", json_string("1.4"));
 		
+		json_object_set_new(root, "currentStep", json_integer(counter));
+		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
+		json_object_set_new(root, "runState", json_boolean(gateRun.high()));		
+		json_object_set_new(root, "clockPhase", json_real(clock.phase));
+		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"
 		
@@ -108,8 +113,28 @@ struct BinarySequencer : Module {
 	}	
 
 	void dataFromJson(json_t* root) override {
+		
+		json_t *currentStep = json_object_get(root, "currentStep");
+		json_t *clk = json_object_get(root, "clockState");
+		json_t *run = json_object_get(root, "runState");
+		json_t *phase = json_object_get(root, "clockPhase");
+		
+		if (currentStep)
+			counter = json_integer_value(currentStep);
+		
+		if (clk)
+			gateClock.preset(json_boolean_value(clk));
+
+		if (run)
+			gateRun.preset(json_boolean_value(run));
+
+		if (phase)
+			clock.phase = json_number_value(phase);
+		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
+		startUpCounter = 20;		
 	}		
 	
 	void process(const ProcessArgs &args) override {
@@ -119,7 +144,8 @@ struct BinarySequencer : Module {
 		clock.step(args.sampleTime);
 		
 		// handle the run input
-		gateRun.set(inputs[RUN_INPUT].getNormalVoltage(10.0f));
+		if (startUpCounter == 0)
+			gateRun.set(inputs[RUN_INPUT].getNormalVoltage(10.0f));
 		
 		// handle the reset input
 		if (inputs[RESET_INPUT].isConnected()) {
@@ -138,22 +164,33 @@ struct BinarySequencer : Module {
 		if (gateReset.leadingEdge())
 			counter = 0;
 		
-		// grab the clock input value
-		float internalClock = 5.0f * clock.sqr();
-		float clockState = inputs[CLOCK_INPUT].getNormalVoltage(internalClock);
-		gateClock.set(clockState);
+		// wait a number of cycles before we use the clock and run inputs to allow them propagate correctly after startup
+		if (startUpCounter > 0) {
+			startUpCounter--;
+		}
+		else {
+			// grab the clock input value
+			float internalClock = 5.0f * clock.sqr();
+			float clockState = inputs[CLOCK_INPUT].getNormalVoltage(internalClock);
+			gateClock.set(clockState);
+		}
 		
+		bool trig = false;
 		if (gateRun.high()) {
 			// is it a transition from low to high?
 			if (gateClock.leadingEdge()) {
 				
 				// kick off the trigger
+				trig = true;
 				pgTrig.trigger(1e-3f);
 
 				if (++counter > 255)
 					counter = 0;
 			}
 		}
+		
+		if (!trig)
+			trig = pgTrig.process(args.sampleTime);	
 		
 		// determine current scale
 		if (inputs[SH_INPUT].isConnected()) {
@@ -199,7 +236,7 @@ struct BinarySequencer : Module {
 		outputs[CV_OUTPUT].setVoltage(cv);
 		outputs[INV_OUTPUT].setVoltage(-cv);
 		outputs[CLOCK_OUTPUT].setVoltage(gateClock.value());
-		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(pgTrig.process(args.sampleTime)));
+		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(trig));
 		
 		// blink the light according to the clock
 		lights[CLOCK_LIGHT].setSmoothBrightness(gateClock.light(), args.sampleTime);
@@ -248,10 +285,8 @@ struct BinarySequencerWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BinarySequencer.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// CV knobs
 		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1]), module, BinarySequencer::DIV01_PARAM));

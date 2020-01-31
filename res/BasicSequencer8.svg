@@ -33,9 +33,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.5749999"
-     inkscape:cx="127.57636"
-     inkscape:cy="351.58097"
+     inkscape:zoom="6.4458366"
+     inkscape:cx="34.471223"
+     inkscape:cy="271.22044"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -46,7 +46,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
@@ -132,7 +132,7 @@
     <g
        style="display:inline"
        id="g1405"
-       transform="translate(-7.940802,1.2291667e-6)">
+       transform="translate(-7.940802,1.1526333e-4)">
       <g
          transform="translate(14.334233,3.7455086)"
          id="text956"
@@ -899,36 +899,36 @@
     </g>
     <g
        aria-label="U"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:2.11666656px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:2.11666656px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#010101;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1253">
       <path
          d="m 17.788792,215.90551 q 0,0.62425 -0.591178,0.62425 -0.566374,0 -0.566374,-0.60048 v -0.9064 h 0.24598 v 0.85576 q 0,0.43615 0.338997,0.43615 0.326595,0 0.326595,-0.42065 v -0.87126 h 0.24598 z"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332;fill:#010101;fill-opacity:1"
          id="path1264" />
     </g>
     <g
        aria-label="D"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:2.11666656px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:2.11666656px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#010101;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1257">
       <path
          d="m 16.587096,222.87302 v -1.48208 h 0.427881 q 0.819588,0 0.819588,0.72243 0,0.34313 -0.227376,0.55191 -0.227377,0.20774 -0.609782,0.20774 z m 0.244946,-1.27331 v 1.06557 h 0.196371 q 0.259415,0 0.403076,-0.14263 0.144694,-0.14263 0.144694,-0.40308 0,-0.51986 -0.538469,-0.51986 z"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332;fill:#010101;fill-opacity:1"
          id="path1272" />
     </g>
     <g
        aria-label="B"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:2.11666656px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:2.11666656px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#010101;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1261">
       <path
          d="m 16.719641,219.70003 v -1.48208 h 0.470256 q 0.214974,0 0.340031,0.0941 0.12609,0.094 0.12609,0.24494 0,0.1261 -0.07131,0.21911 -0.07131,0.093 -0.197404,0.13229 v 0.004 q 0.152962,0.0176 0.243913,0.11369 0.09198,0.0951 0.09198,0.24804 0,0.19017 -0.149862,0.308 -0.149862,0.11782 -0.378271,0.11782 z m 0.244947,-1.28468 v 0.42168 h 0.159163 q 0.128158,0 0.200505,-0.0599 0.07338,-0.061 0.07338,-0.17157 0,-0.19017 -0.254248,-0.19017 z m 0,0.61909 v 0.46922 h 0.209806 q 0.137459,0 0.211873,-0.0631 0.07545,-0.0641 0.07545,-0.1757 0,-0.23047 -0.31936,-0.23047 z"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332;fill:#010101;fill-opacity:1"
          id="path1268" />
     </g>
     <g
        aria-label="BASIC SEQUENCER"
        style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1079"
-       transform="translate(-9.7313605,3.4526969)">
+       transform="translate(-9.7313605,3.3052234)">
       <path
          d="m 26.498641,196.7229 v -2.47013 h 0.78376 q 0.358289,0 0.566718,0.15675 0.210151,0.15675 0.210151,0.40824 0,0.21015 -0.118856,0.36518 -0.118856,0.15503 -0.329007,0.22049 v 0.007 q 0.254937,0.0293 0.406521,0.18948 0.153307,0.15847 0.153307,0.41341 0,0.31695 -0.249769,0.51332 -0.24977,0.19637 -0.630453,0.19637 z m 0.408244,-2.14113 v 0.7028 h 0.265272 q 0.213596,0 0.334175,-0.0999 0.122301,-0.10164 0.122301,-0.28595 0,-0.31695 -0.423747,-0.31695 z m 0,1.03181 v 0.78204 h 0.349677 q 0.229099,0 0.353123,-0.10508 0.125746,-0.1068 0.125746,-0.29283 0,-0.38413 -0.532268,-0.38413 z"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"

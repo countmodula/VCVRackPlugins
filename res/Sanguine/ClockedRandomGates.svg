@@ -45,9 +45,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.2789474"
-     inkscape:cx="214.87715"
-     inkscape:cy="187.83271"
+     inkscape:zoom="1.1394737"
+     inkscape:cx="-100.35272"
+     inkscape:cy="259.87539"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -58,7 +58,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="true">
@@ -96,8 +96,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-196.45832)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        style="fill:#6f1e00;stroke-width:0.49991551"
        id="rect1446"
@@ -143,7 +142,7 @@
        aria-label="/^M^\"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="text956-1"
-       transform="translate(32.190306,3.7041668)">
+       transform="translate(32.190306,3.7456238)">
       <path
          d="m 21.203855,291.40545 v 0.0386 h -0.434082 v -0.0386 q 0.09509,-0.006 0.224621,-0.17088 l 1.094162,-1.4621 q 0.07441,-0.1006 0.07441,-0.12402 0,-0.0372 -0.06615,-0.0482 v -0.0372 h 0.423058 v 0.0372 q -0.09508,0.006 -0.22462,0.17087 l -1.08176,1.46348 q -0.07579,0.10197 -0.07579,0.12402 0,0.0358 0.06615,0.0469 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';stroke:#ffffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -235,7 +234,7 @@
        aria-label="CLOCKED RANDOM GATES"
        style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text999"
-       transform="translate(9.9218755)">
+       transform="translate(9.9218755,0.30414334)">
       <path
          d="m 27.99743,199.62063 q -0.279052,0.14469 -0.694186,0.14469 -0.537435,0 -0.861274,-0.33934 -0.323839,-0.33934 -0.323839,-0.89055 0,-0.59256 0.363457,-0.95774 0.36518,-0.36518 0.921563,-0.36518 0.35829,0 0.594279,0.10163 v 0.40652 q -0.249769,-0.14814 -0.551215,-0.14814 -0.401354,0 -0.651123,0.25666 -0.248047,0.25666 -0.248047,0.68558 0,0.40824 0.232544,0.65112 0.232544,0.24115 0.611505,0.24115 0.349677,0 0.606336,-0.16536 z"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"

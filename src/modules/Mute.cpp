@@ -93,6 +93,8 @@ struct Mute : Module {
 				latch = !latch;
 			}
 		}
+
+		params[MUTE_PARAM].setValue(latch ? 1.0f : 0.0f);
 		
 		// calculate the mute factor
 		float mute = (latch ? 0.0f : 1.0f);
@@ -125,10 +127,8 @@ struct MuteWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Mute.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// inputs	
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, Mute::L_INPUT));	
@@ -146,7 +146,7 @@ struct MuteWidget : ModuleWidget {
 		addChild(createLightCentered<LargeLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW4]), module, Mute::MUTE_LIGHT));
 
 		// Mega mute button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMegaMomentaryUnlit>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, Mute::MUTE_PARAM));
+		addParam(createParamCentered<CountModulaPBSwitchMega>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, Mute::MUTE_PARAM));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

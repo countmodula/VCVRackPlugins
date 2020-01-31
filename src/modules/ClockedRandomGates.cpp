@@ -215,8 +215,9 @@ struct ClockedRandomGates : Module {
 		for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i++) {
 			int j = (singleMode || !isPolyphonic ? 0 : i);
 			
-			triggers[i] = pgTrig[i].process(args.sampleTime);
-
+			triggers[i] = pgTrig[i].remaining > 0.0f;
+			pgTrig[i].process(args.sampleTime);
+			
 			gate = boolToGate(outcomes[i]);
 			trig = boolToGate(triggers[i]);
 			clock = boolToGate(outcomes[i] && gateClock[j].high());
@@ -270,10 +271,8 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ClockedRandomGates.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// clock and reset input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, ClockedRandomGates::CLOCK_INPUT));

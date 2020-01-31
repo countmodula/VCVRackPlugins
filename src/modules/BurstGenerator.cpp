@@ -193,20 +193,26 @@ struct BurstGenerator : Module {
 			bursting = false;
 		
 		// set the duration start trigger if we've changed from not bursting to bursting
+		bool startOut = false;
 		if (!prevBursting && bursting) {
 			pgStart.trigger(1e-3f);
 		}
-		
+		else
+			startOut = pgStart.process(args.sampleTime);
+	
 		// set the duration end trigger if we've changed from bursting to not bursting
+		bool endOut = false;
 		if (prevBursting && !bursting) {
 			pgEnd.trigger(1e-3f);
 		}
-			
+		else
+			endOut = pgEnd.process(args.sampleTime);
+		
 		// finally set the outputs as required
 		outputs[PULSES_OUTPUT].setVoltage(boolToGate(bursting && gpClock.high()));
 		outputs[DURATION_OUTPUT].setVoltage(boolToGate(bursting));
-		outputs[START_OUTPUT].setVoltage(boolToGate(pgStart.process(args.sampleTime)));
-		outputs[END_OUTPUT].setVoltage(boolToGate(pgEnd.process(args.sampleTime)));
+		outputs[START_OUTPUT].setVoltage(boolToGate(startOut));
+		outputs[END_OUTPUT].setVoltage(boolToGate(endOut));
 		
 		// blink the clock light according to the clock rate
 		lights[CLOCK_LIGHT].setSmoothBrightness(gpClock.light(), args.sampleTime);
@@ -247,10 +253,8 @@ struct BurstGeneratorWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BurstGenerator.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));	
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// controls
 		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1]), module, BurstGenerator::RATECV_PARAM));

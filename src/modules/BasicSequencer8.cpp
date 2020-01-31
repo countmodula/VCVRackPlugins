@@ -61,11 +61,13 @@ struct BasicSequencer8 : Module {
 	GateProcessor gateClock;
 	GateProcessor gateReset;
 	GateProcessor gateRun;
+	dsp::PulseGenerator pgClock;
 	
 	int count = 0;
 	int length = 8;
 	int direction = 0;
 	int directionMode = 0;
+	bool running = false;
 	
 	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 	
@@ -111,7 +113,8 @@ struct BasicSequencer8 : Module {
 		json_object_set_new(root, "moduleVersion", json_string("1.2"));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
-
+		json_object_set_new(root, "runState", json_boolean(gateRun.high()));
+			
 		// add the theme details
 		#include "../themes/dataToJson.hpp"
 				
@@ -122,12 +125,18 @@ struct BasicSequencer8 : Module {
 		
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *dir = json_object_get(root, "direction");
+		json_t *run = json_object_get(root, "runState");		
 		
 		if (currentStep)
 			count = json_integer_value(currentStep);
 		
 		if (dir)
 			direction = json_integer_value(dir);
+
+		if (run) 
+			gateRun.preset(json_boolean_value(run));
+		
+		running = gateRun.high();
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -137,6 +146,7 @@ struct BasicSequencer8 : Module {
 		gateClock.reset();
 		gateReset.reset();
 		gateRun.reset();
+		pgClock.reset();
 		count = 0;
 		length = SEQ_NUM_STEPS;
 		direction = FORWARD;
@@ -252,40 +262,51 @@ struct BasicSequencer8 : Module {
 			direction = nextDir;
 		}
 
-		bool running = gateRun.high();
-		if (running) {
-			// advance count on positive clock edge
-			if (gateClock.leadingEdge()){
-				if (direction == FORWARD) {
-					count++;
-					
-					if (count > length) {
-						if (nextDir == FORWARD)
-							count = 1;
-						else {
-							// in pendulum mode we change direction here
-							count--;
-							direction = nextDir;
-						}
-					}
-				}
-				else {
-					count--;
-					
-					if (count < 1) {
-						if (nextDir == REVERSE)
-							count = length;
-						else {
-							// in pendulum mode we change direction here
-							count++;
-							direction = nextDir;
-						}
-					}
-				}
+		// process the clock trigger - we'll use this to allow the run input edge to act like the clock if it arrives shortly after the clock edge
+		bool clockEdge = gateClock.leadingEdge();
+		if (clockEdge)
+			pgClock.trigger(1e-4f);
+		else
+			clockEdge = (pgClock.process(args.sampleTime) && gateRun.leadingEdge());
+	
+		if (gateRun.low())
+			running = false;
+		
+		// advance count on positive clock edge or the run edge if it is close to the clock edge
+		if (clockEdge && gateRun.high()) {
+			
+			// flag that we are now actually running
+			running = true;
+			
+			if (direction == FORWARD) {
+				count++;
 				
-				if (count > length)
-					count = length;				
+				if (count > length) {
+					if (nextDir == FORWARD)
+						count = 1;
+					else {
+						// in pendulum mode we change direction here
+						count--;
+						direction = nextDir;
+					}
+				}
 			}
+			else {
+				count--;
+				
+				if (count < 1) {
+					if (nextDir == REVERSE)
+						count = length;
+					else {
+						// in pendulum mode we change direction here
+						count++;
+						direction = nextDir;
+					}
+				}
+			}
+			
+			if (count > length)
+				count = length;				
 		}
 		
 		// now process the lights and outputs
@@ -374,10 +395,8 @@ struct BasicSequencer8Widget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BasicSequencer8.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		// run input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, BasicSequencer8::RUN_INPUT));
@@ -526,7 +545,7 @@ struct BasicSequencer8Widget : ModuleWidget {
 		menu->addChild(randCVMenuItem);
 
 		// trigger only random
-		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Triggers Only");
+		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only");
 		randTrigMenuItem->widget = this;
 		randTrigMenuItem->cvRand = false;
 		menu->addChild(randTrigMenuItem);

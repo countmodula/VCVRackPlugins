@@ -31,6 +31,16 @@ struct CountModulaLightRYG : GrayModuleLightWidget {
 //-------------------------------------------------------------------
 // Lights
 //-------------------------------------------------------------------
+struct WhiteLight : GrayModuleLightWidget {
+	WhiteLight() {
+		addBaseColor(SCHEME_WHITE);
+	}
+};
+
+
+//-------------------------------------------------------------------
+// Lights
+//-------------------------------------------------------------------
 struct CountModulaLightRG : GrayModuleLightWidget {
 	CountModulaLightRG() {
 		addBaseColor(SCHEME_RED);
@@ -441,6 +451,27 @@ struct CountModulaPBSwitchMomentaryUnlit : CountModulaPB {
 }; 
  
 //-------------------------------------------------------------------
+// small square push button
+//-------------------------------------------------------------------
+struct CountModulaPBSwitchMini : CountModulaPB {
+    CountModulaPBSwitchMini() {
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_1.svg")));
+    }
+};
+
+struct CountModulaPBSwitchMiniMomentary : CountModulaPB {
+    CountModulaPBSwitchMiniMomentary() {
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_0.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_1.svg")));
+		
+ 		momentary = true;
+    }
+};
+ 
+ 
+
+//-------------------------------------------------------------------
 // big square push button
 //-------------------------------------------------------------------
 struct CountModulaPBSwitchBig : CountModulaPB {
@@ -490,22 +521,18 @@ struct CountModulaPBSwitchMegaMomentaryUnlit : CountModulaPB {
 //-------------------------------------------------------------------
 // LED Display
 //-------------------------------------------------------------------
-struct CountModulaDisplayLarge2 : TransparentWidget {
+struct CountModulaDisplay : TransparentWidget {
 	std::shared_ptr<Font> font;
 	std::string text;
-
-	CountModulaDisplayLarge2() {
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
-		box.size = Vec(50, 40);
-	}
-
+	float fontSize;
+	Vec textPos;
+	
 	void setCentredPos(Vec pos) {
 		box.pos.x = pos.x - box.size.x/2;
 		box.pos.y = pos.y - box.size.y/2;
 	}
 	
 	void draw(const DrawArgs &args) override {
-		
 		char buffer[3];
 		int l = text.size();
 		if (l > 2)
@@ -525,11 +552,10 @@ struct CountModulaDisplayLarge2 : TransparentWidget {
 		nvgStrokeColor(args.vg, borderColor);
 		nvgStroke(args.vg);
 
-		nvgFontSize(args.vg, 28);
+		nvgFontSize(args.vg, fontSize);
 		nvgFontFaceId(args.vg, font->handle);
 		nvgTextLetterSpacing(args.vg, 1);
 
-		Vec textPos = Vec(3, 34);
 		NVGcolor textColor = nvgRGB(0xff, 0x10, 0x10);
 
 		// render the "off" segments 	
@@ -539,5 +565,23 @@ struct CountModulaDisplayLarge2 : TransparentWidget {
 		// render the "on segments"
 		nvgFillColor(args.vg, textColor);
 		nvgText(args.vg, textPos.x, textPos.y, buffer, NULL);
+	}
+};
+
+struct CountModulaDisplayLarge2 : CountModulaDisplay {
+	CountModulaDisplayLarge2() {
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		fontSize = 28;
+		box.size = Vec(50, 40);
+		textPos = Vec(3, 34);
+	}
+};
+
+struct CountModulaDisplayMini2 : CountModulaDisplay {
+	CountModulaDisplayMini2() {
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		fontSize = 14;
+		box.size = Vec(25, 20);
+		textPos = Vec(1, 17);
 	}
 };

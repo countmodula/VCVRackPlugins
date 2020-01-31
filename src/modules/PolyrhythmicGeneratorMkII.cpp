@@ -222,7 +222,8 @@ struct PolyrhythmicGeneratorMkII : Module {
 			if (!muteAll && params[MUTE_PARAM + i].getValue() < 0.5f ) {
 				switch ((int)(params[OUTPUTMODE_PARAM].getValue())) {
 					case 0: // trigger
-						trigOut = pgTriggers[i].process(args.sampleTime);
+						trigOut = pgTriggers[i].remaining > 0.0f;
+						pgTriggers[i].process(args.sampleTime);
 						break;
 					case 1: // gate
 						trigOut = dividers[i].phase;
@@ -310,7 +311,8 @@ struct PolyrhythmicGeneratorMkII : Module {
 			if (!muteAll && params[MUTE_PARAM + i].getValue() < 0.5f ) {
 				switch ((int)(params[OUTPUTMODE_PARAM].getValue())) {
 					case 0: // trigger
-						trigOut = pgTriggers[i].process(args.sampleTime);
+						trigOut = pgTriggers[i].remaining > 0.0f;
+						pgTriggers[i].process(args.sampleTime);
 						break;
 					case 1: // gate
 						trigOut = legacyDividers[i].phase;
@@ -351,10 +353,8 @@ struct PolyrhythmicGeneratorMkIIWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyrhythmicGeneratorMkII.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// division channels
 		for (int i = 0; i < 8; i++) {

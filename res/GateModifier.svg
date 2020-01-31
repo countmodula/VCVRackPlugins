@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="15.999999"
-     inkscape:cx="61.208025"
-     inkscape:cy="102.83283"
+     inkscape:zoom="2.2789474"
+     inkscape:cx="-89.630482"
+     inkscape:cy="190"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -95,7 +95,7 @@
        aria-label="/^M^\"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="text956"
-       transform="translate(-9.481569,3.704167)">
+       transform="translate(-9.481569,3.7456238)">
       <path
          d="m 21.203855,291.40545 v 0.0386 h -0.434082 v -0.0386 q 0.09509,-0.006 0.224621,-0.17088 l 1.094162,-1.4621 q 0.07441,-0.1006 0.07441,-0.12402 0,-0.0372 -0.06615,-0.0482 v -0.0372 h 0.423058 v 0.0372 q -0.09508,0.006 -0.22462,0.17087 l -1.08176,1.46348 q -0.07579,0.10197 -0.07579,0.12402 0,0.0358 0.06615,0.0469 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -514,7 +514,7 @@
        aria-label="GATE MOD."
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text946"
-       transform="matrix(0.85804037,0,0,1,2.2536087,0)">
+       transform="matrix(0.85804037,0,0,1,4.8994422,-0.13440666)">
       <path
          d="m 8.7488202,199.99373 q -0.3858506,0.21015 -0.8595513,0.21015 -0.5477701,0 -0.887112,-0.34107 -0.3393419,-0.34106 -0.3393419,-0.90261 0,-0.57361 0.3703477,-0.94051 0.3720703,-0.36863 0.9439562,-0.36863 0.4116889,0 0.6924641,0.12058 v 0.42202 q -0.2842203,-0.18948 -0.6769612,-0.18948 -0.3944634,0 -0.6476779,0.26011 -0.251492,0.2601 -0.251492,0.67352 0,0.42546 0.217041,0.67007 0.217041,0.24288 0.5891113,0.24288 0.2549371,0 0.4409722,-0.0982 v -0.58739 H 7.820367 v -0.34451 h 0.9284532 z"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';stroke-width:0.26458332"

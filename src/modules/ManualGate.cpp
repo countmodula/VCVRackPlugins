@@ -91,14 +91,17 @@ struct ManualGate : Module {
 		
 		gate.set(params[GATE_PARAM].getValue() * 10.0f);
 		
+		bool trig = false;
 		if (gate.leadingEdge()) {
 			latch = !latch;
 		
 			// fire off a trigger pulse
 			pgTrig.trigger(1e-3f);
+			trig = true;
 		}
-		
-		
+		else
+			trig = pgTrig.process(args.sampleTime);
+				
 		pmGate.set(params[LENGTH_PARAM].getValue());
 		
 		if (gate.high()) {
@@ -106,7 +109,7 @@ struct ManualGate : Module {
 			pmGate.restart();
 		}
 		
-		outputs[TRIG_OUTPUT].setVoltage(boolToGate(pgTrig.process(args.sampleTime)));
+		outputs[TRIG_OUTPUT].setVoltage(boolToGate(trig));
 		
 		
 		outputs[GATE_OUTPUT].setVoltage(gate.value());
@@ -128,10 +131,8 @@ struct ManualGateWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ManualGate.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// knobs
 		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, ManualGate::LENGTH_PARAM));

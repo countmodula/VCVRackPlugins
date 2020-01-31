@@ -176,11 +176,15 @@ struct Fade : Module {
 			outputs[R_OUTPUT].setVoltage(inputs[R_INPUT].getVoltage(c) * mute, c);
 			
 		// kick off the trigger if we need to (on both start and end of the gate)
-		if(prevRunning != running)
+		bool trig = false;
+		if(prevRunning != running) {
 			pgTrig.trigger(1e-3f);
-
+			trig = true;
+		}
+		else 
+			trig = pgTrig.process(args.sampleTime);
+		
 		// process the gate/triggers/lights etc
-		bool trig = pgTrig.process(args.sampleTime);
 		outputs[GATE_OUTPUT].setVoltage(boolToGate(running));
 		outputs[TRIG_OUTPUT].setVoltage(boolToGate(trig));
 		lights[L_LIGHT].setBrightness(inputs[L_INPUT].isConnected() ? mute : 0.0f);
@@ -214,11 +218,8 @@ struct FadeWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Fade.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-
+		// screws
+		#include "../components/stdScrews.hpp"	
 		
 		// lights
 		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW1] - 19), module, Fade::L_LIGHT));

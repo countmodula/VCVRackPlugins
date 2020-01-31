@@ -76,6 +76,7 @@ const int STD_COL30 = 29;
 const int STD_COL31 = 30;
 const int STD_COL32 = 31;
 
+#define STD_HALF_COLUMN(x) (STD_COLUMN_POSITIONS[x] + STD_COLUMN_POSITIONS[x + 1]) / 2
 
 //------------------------------------------------------------------------
 // standard row definitions

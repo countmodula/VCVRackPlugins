@@ -28,6 +28,16 @@ class GateProcessor {
 			prevState = currentState = false;		
 		}
 		
+		// preset the gate processor
+		void preset(bool value) {
+			if (value) {
+				set(10.0f);
+				prevState = currentState = true;		
+			}
+			else
+				reset();
+		}
+		
 		// gate high indicator
 		bool high() {
 			return currentState;

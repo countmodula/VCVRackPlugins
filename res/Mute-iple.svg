@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.7154858"
-     inkscape:cx="90.317755"
-     inkscape:cy="272.43962"
+     inkscape:zoom="2.2789474"
+     inkscape:cx="15.184759"
+     inkscape:cy="190"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -37,10 +37,11 @@
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1920"
-     inkscape:window-height="1057"
+     inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:bbox-paths="true">
     <inkscape:grid
        type="xygrid"
        id="grid116" />
@@ -100,7 +101,7 @@
        aria-label="/^M^\"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="text956"
-       transform="translate(-1.5490311,3.7041668)">
+       transform="translate(-1.5490311,3.7456238)">
       <path
          d="m 21.203855,291.40545 v 0.0386 h -0.434082 v -0.0386 q 0.09509,-0.006 0.224621,-0.17088 l 1.094162,-1.4621 q 0.07441,-0.1006 0.07441,-0.12402 0,-0.0372 -0.06615,-0.0482 v -0.0372 h 0.423058 v 0.0372 q -0.09508,0.006 -0.22462,0.17087 l -1.08176,1.46348 q -0.07579,0.10197 -0.07579,0.12402 0,0.0358 0.06615,0.0469 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Copperplate Gothic Light';-inkscape-font-specification:'Copperplate Gothic Light, ';stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -326,7 +327,7 @@
        aria-label="MUTE-IPLE"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1546"
-       transform="translate(-0.44564496,201.76669)">
+       transform="translate(-0.44564496,202.10346)">
       <path
          d="m 18.303447,-2.1166666 h -0.406521 v -1.5985242 q 0,-0.1963704 0.02412,-0.4805908 h -0.0069 q -0.0379,0.1619195 -0.06718,0.2325439 l -0.73725,1.8465711 h -0.282498 l -0.738973,-1.8327907 q -0.03101,-0.08096 -0.06546,-0.2463243 h -0.0069 q 0.01378,0.1481391 0.01378,0.4840359 v 1.5950791 h -0.37896 v -2.4701333 h 0.577053 l 0.649401,1.645033 q 0.07407,0.1894802 0.09646,0.2824978 h 0.0086 q 0.06373,-0.1946479 0.103353,-0.289388 l 0.661458,-1.6381428 h 0.556383 z"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Bold';stroke-width:0.26458332"

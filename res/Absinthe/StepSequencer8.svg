@@ -34,8 +34,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.908"
-     inkscape:cx="375"
-     inkscape:cy="190"
+     inkscape:cx="69.572987"
+     inkscape:cy="111.47045"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -75,7 +75,7 @@
        sodipodi:type="inkscape:offset"
        inkscape:radius="0"
        inkscape:original="M 0 196.45898 L 0 297 L 15.875 297 L 15.875 196.45898 L 0 196.45898 z "
-       style="display:inline;fill:#75a555;fill-opacity:1;stroke-width:0.3310422"
+       style="display:inline;fill:#75a555;stroke-width:0.3310422"
        id="rect3855"
        d="M 0,196.45898 V 297 H 15.875 V 196.45898 Z"
        transform="matrix(12.5,0,0,1.0000064,0,-196.46023)" />
@@ -85,8 +85,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-196.45832)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        ry="0.014616304"
        y="258.89957"
@@ -110,7 +109,7 @@
        height="2.6458323"
        width="3.4395835"
        id="rect1870"
-       style="opacity:1;fill:#528d00;fill-opacity:1;stroke:none;stroke-width:0.09776922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.79370081;stroke-opacity:1;paint-order:markers fill stroke" />
+       style="opacity:1;fill:#86bc36;fill-opacity:1;stroke:none;stroke-width:0.09776922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.79370081;stroke-opacity:1;paint-order:markers fill stroke" />
     <rect
        style="opacity:1;fill:#d01910;fill-opacity:1;stroke:none;stroke-width:0.09776922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.79370081;stroke-opacity:1;paint-order:markers fill stroke"
        id="rect1816"
@@ -128,7 +127,7 @@
        id="rect1814"
        style="opacity:1;fill:#e7cc06;fill-opacity:1;stroke:none;stroke-width:0.09776922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.79370081;stroke-opacity:1;paint-order:markers fill stroke" />
     <rect
-       style="opacity:1;fill:#528d00;fill-opacity:1;stroke:none;stroke-width:0.09776922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.79370081;stroke-opacity:1;paint-order:markers fill stroke"
+       style="opacity:1;fill:#86bc36;fill-opacity:1;stroke:none;stroke-width:0.09776922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0.79370081;stroke-opacity:1;paint-order:markers fill stroke"
        id="rect1812"
        width="3.4395835"
        height="2.6458323"
@@ -173,7 +172,7 @@
     <g
        style="display:inline"
        id="g1405"
-       transform="translate(59.527948,1.2291667e-6)">
+       transform="translate(59.527948,1.1526333e-4)">
       <g
          transform="translate(14.334233,3.7455086)"
          id="text956"
@@ -2083,23 +2082,25 @@
     </g>
     <g
        transform="matrix(1.3940377,0,0,1.2963353,-12.791454,-127.91906)"
-       id="g1725">
+       id="g1725"
+       style="stroke:#010101;stroke-opacity:1">
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 19.314583,270.01249 h 1.852083"
          id="path1720"
          inkscape:connector-curvature="0" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 20.6375,269.48332 0.529166,0.52917 -0.529166,0.52916"
          id="path1723"
          inkscape:connector-curvature="0" />
     </g>
     <g
        transform="matrix(1.4162574,0,0,1.1672783,-8.7191267,-94.410962)"
-       id="g1731">
+       id="g1731"
+       style="stroke:#010101;stroke-opacity:1">
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 16.139581,268.16038 h 1.5875 l -0.529166,-0.52916"
          id="path1727"
          inkscape:connector-curvature="0"
@@ -2109,21 +2110,22 @@
          inkscape:connector-curvature="0"
          id="path1729"
          d="m 18.046464,268.72831 h -1.5875 l 0.529166,0.52916"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
     <g
        transform="matrix(1.3940385,0,0,1.2963218,-12.79147,-140.43924)"
-       id="g1737">
+       id="g1737"
+       style="stroke:#010101;stroke-opacity:1">
       <path
          inkscape:connector-curvature="0"
          id="path1733"
          d="M 21.353755,274.77502 H 19.501672"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path1735"
          d="m 20.030838,274.24585 -0.529166,0.52917 0.529166,0.52916"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
     <g
        transform="translate(-1.564114,35.819648)"
@@ -2319,29 +2321,31 @@
        id="path1933" />
     <g
        id="g1939"
-       transform="matrix(1.3940377,0,0,1.2963353,-12.791454,-83.46429)">
+       transform="matrix(1.3940377,0,0,1.2963353,-12.791454,-83.46429)"
+       style="stroke:#010101;stroke-opacity:1">
       <path
          inkscape:connector-curvature="0"
          id="path1935"
          d="m 19.314583,270.01249 h 1.852083"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path1937"
          d="m 20.6375,269.48332 0.529166,0.52917 -0.529166,0.52916"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
     <g
        id="g1945"
-       transform="matrix(1.4162574,0,0,1.1672783,-8.7191267,-49.956316)">
+       transform="matrix(1.4162574,0,0,1.1672783,-8.7191267,-49.956316)"
+       style="stroke:#010101;stroke-opacity:1">
       <path
          sodipodi:nodetypes="ccc"
          inkscape:connector-curvature="0"
          id="path1941"
          d="m 16.139581,268.16038 h 1.5875 l -0.529166,-0.52916"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 18.046464,268.72831 h -1.5875 l 0.529166,0.52916"
          id="path1943"
          inkscape:connector-curvature="0"
@@ -2349,14 +2353,15 @@
     </g>
     <g
        id="g1951"
-       transform="matrix(1.3940385,0,0,1.2963218,-12.79147,-95.984401)">
+       transform="matrix(1.3940385,0,0,1.2963218,-12.79147,-95.984401)"
+       style="stroke:#010101;stroke-opacity:1">
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="M 21.353755,274.77502 H 19.501672"
          id="path1947"
          inkscape:connector-curvature="0" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:none;stroke:#010101;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 20.030838,274.24585 -0.529166,0.52917 0.529166,0.52916"
          id="path1949"
          inkscape:connector-curvature="0" />
@@ -2698,7 +2703,7 @@
        aria-label="DUAL 8 STEP SEQUENCER"
        style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1682"
-       transform="translate(-38.82244,0.26678784)">
+       transform="translate(-38.82244,0.13022334)">
       <path
          d="m 117.51531,199.8979 v -2.47013 h 0.71313 q 1.36598,0 1.36598,1.20406 0,0.57189 -0.37896,0.91984 -0.37896,0.34623 -1.0163,0.34623 z m 0.40824,-2.12218 v 1.77595 h 0.32729 q 0.43236,0 0.67179,-0.23771 0.24116,-0.23771 0.24116,-0.67179 0,-0.86645 -0.89745,-0.86645 z"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI Semi-Bold';stroke-width:0.26458332"

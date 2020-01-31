@@ -30,7 +30,7 @@ struct BooleanVCNOT : Module {
 		NUM_LIGHTS
 	};
 
-	Inverter inverter[2];
+	Inverter inverter;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -59,15 +59,35 @@ struct BooleanVCNOT : Module {
 	}	
 	
 	void onReset() override {
-		for (int i = 0; i < 2; i++)
-			inverter[i].reset();
+		inverter.reset();
 	}
 	
 	void process(const ProcessArgs &args) override {
 		//perform the logic
 		for (int i = 0; i < 2; i++) {
-			float out =  inverter[i].process(inputs[LOGIC_INPUT + i].getVoltage(), inputs[ENABLE_INPUT + i].getNormalVoltage(10.0f));
-			outputs[INV_OUTPUT + i].setVoltage(out);
+			
+			if (inputs[LOGIC_INPUT + i].isConnected()) {
+				int numChannels = inputs[LOGIC_INPUT + i].getChannels();
+				int numInvChannels = inputs[ENABLE_INPUT +i].getChannels();
+				
+				outputs[INV_OUTPUT + i].setChannels(numChannels);
+				bool enable = inputs[ENABLE_INPUT + i].isConnected();
+
+				int e = 0;
+				for (int c = 0; c < numChannels; c++) {
+					float inv = 10.0f;
+					
+					if (enable && e < numInvChannels)
+						inv = inputs[ENABLE_INPUT + i].getVoltage(e);
+					
+					if (numInvChannels > 1)
+						e++;
+					
+					outputs[INV_OUTPUT + i].setVoltage(inverter.process(inputs[LOGIC_INPUT + i].getVoltage(c), inv), c);
+				}
+			}
+			else
+				outputs[INV_OUTPUT + i].channels = 0;
 		}
 	}	
 	
@@ -78,8 +98,8 @@ struct BooleanVCNOTWidget : ModuleWidget {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanVCNOT.svg")));
 
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+		// screws
+		#include "../components/stdScrews.hpp"	
 
 		for (int i = 0; i < 2; i++) {
 			// logic and enable inputs
