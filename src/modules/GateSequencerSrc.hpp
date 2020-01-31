@@ -374,7 +374,7 @@ struct STRUCT_NAME : Module {
 						break;
 					case ADDRESSED:
 						float v = clamp(inputs[ADDRESS_INPUT].getNormalVoltage(10.0f), 0.0f, 10.0f) * params[ADDR_PARAM].getValue();
-						count = (int)((length + 1) * v /100.0f);
+						count = 1 + (int)((length) * v /100.0f);
 						break;
 				}
 				
