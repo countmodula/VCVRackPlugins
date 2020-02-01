@@ -73,7 +73,7 @@ struct STRUCT_NAME : Module {
 	bool prevGate = false;
 	bool running = false;
 		
-	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
+	float lengthCVScale = (float)(SEQ_NUM_STEPS);
 	
 	SequencerChannelMessage rightMessages[2][1]; // messages to right module (expander)
 	

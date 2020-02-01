@@ -65,7 +65,7 @@ struct STRUCT_NAME : Module {
 	bool oneShotEnded = false;
 	bool running = false;
 	
-	float lengthCVScale = (float)(GATESEQ_NUM_STEPS - 1);
+	float lengthCVScale = (float)(GATESEQ_NUM_STEPS);
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
