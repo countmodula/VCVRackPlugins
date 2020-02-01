@@ -80,6 +80,7 @@ struct STRUCT_NAME : Module {
 	bool running[SEQ_NUM_SEQS] = {};
 	dsp::PulseGenerator pgClock[SEQ_NUM_SEQS * 2];
 	
+	float moduleVersion = 1.3f;
 	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 	float stepInputVoltages[SEQ_NUM_STEPS] = {};
 	
@@ -164,7 +165,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.2"));
+		json_object_set_new(root, "moduleVersion", json_real(moduleVersion));
 		
 		json_t *currentStep = json_array();
 		json_t *dir = json_array();
@@ -191,10 +192,14 @@ struct STRUCT_NAME : Module {
 
 	void dataFromJson(json_t *root) override {
 		
+		json_t *version = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *dir = json_object_get(root, "direction");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
+		
+		if (version)
+			moduleVersion = json_number_value(version);				
 		
 		for (int i = 0; i < SEQ_NUM_SEQS; i++) {
 			if (currentStep) {
@@ -223,6 +228,10 @@ struct STRUCT_NAME : Module {
 				running[i] = gateRun[i].high();	
 			}
 		}
+		
+		// older module version, use the old length CV scale
+		if (moduleVersion < 1.3f)
+			lengthCVScale = (float)(SEQ_NUM_STEPS - 1);		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"	

@@ -29,6 +29,8 @@ struct STRUCT_NAME : Module {
 		NUM_LIGHTS
 	};
 	
+	float moduleVersion = 1.1f;
+	
 	GateProcessor gateClock[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateReset[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateRun[TRIGSEQ_NUM_ROWS];
@@ -38,7 +40,7 @@ struct STRUCT_NAME : Module {
 	int length[TRIGSEQ_NUM_ROWS] = {};
 	bool running[TRIGSEQ_NUM_ROWS] = {};
 	
-	float cvScale = (float)(TRIGSEQ_NUM_STEPS - 1);
+	float lengthCVScale = (float)(TRIGSEQ_NUM_STEPS);
 	
 	int startUpCounter = 0;
 	
@@ -87,7 +89,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_real(moduleVersion));
 		
 		json_t *currentStep = json_array();
 		json_t *clk = json_array();
@@ -111,9 +113,13 @@ struct STRUCT_NAME : Module {
 	
 	void dataFromJson(json_t* root) override {
 		
+		json_t *version = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
+		
+		if (version)
+			moduleVersion = json_number_value(version);				
 		
 		for (int i = 0; i < TRIGSEQ_NUM_ROWS; i++) {
 			if (currentStep) {
@@ -136,6 +142,10 @@ struct STRUCT_NAME : Module {
 				running[i] = gateRun[i].high();
 			}
 		}
+		
+		// older module version, use the old length CV scale
+		if (moduleVersion < 1.1f)
+			lengthCVScale = (float)(TRIGSEQ_NUM_STEPS - 1);		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -190,7 +200,7 @@ struct STRUCT_NAME : Module {
 			// sequence length - jack overrides knob
 			if (inputs[CV_INPUTS + r].isConnected()) {
 				// scale the input such that 10V = step 16, 0V = step 1
-				length[r] = (int)(clamp(cvScale/10.0f * inputs[CV_INPUTS + r].getVoltage(), 0.0f, cvScale)) + 1;
+				length[r] = (int)(clamp(lengthCVScale/10.0f * inputs[CV_INPUTS + r].getVoltage(), 0.0f, lengthCVScale)) + 1;
 			}
 			else {
 				length[r] = (int)(params[LENGTH_PARAMS + r].getValue());

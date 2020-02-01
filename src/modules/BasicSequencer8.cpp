@@ -69,7 +69,8 @@ struct BasicSequencer8 : Module {
 	int directionMode = 0;
 	bool running = false;
 	
-	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
+	float lengthCVScale = (float)(SEQ_NUM_STEPS);
+	float moduleVersion = 1.3f;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -110,7 +111,7 @@ struct BasicSequencer8 : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.2"));
+		json_object_set_new(root, "moduleVersion", json_real(moduleVersion));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "runState", json_boolean(gateRun.high()));
@@ -123,9 +124,13 @@ struct BasicSequencer8 : Module {
 
 	void dataFromJson(json_t *root) override {
 		
+		json_t *version = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *dir = json_object_get(root, "direction");
 		json_t *run = json_object_get(root, "runState");		
+		
+		if (version)
+			moduleVersion = json_number_value(version);		
 		
 		if (currentStep)
 			count = json_integer_value(currentStep);
@@ -137,6 +142,10 @@ struct BasicSequencer8 : Module {
 			gateRun.preset(json_boolean_value(run));
 		
 		running = gateRun.high();
+		
+		// older module version, use the old length CV scale
+		if (moduleVersion < 1.3f)
+			lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
