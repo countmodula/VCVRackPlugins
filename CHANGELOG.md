@@ -44,6 +44,9 @@
 <li>Boolean VC Inverter - Now polyphonic.</li>
 <li>Boolean XOR - new mode button to define the XOR behaviour</li>
 <li>All Modules - New theme: Blue Moon</li>
+<li>Basic Sequencer - Length CV range adjusted for easier selection of the final step</li>
+<li>Dual Step Sequencer - Length CV range adjusted for easier selection of the final step</li>
+<li>Trigger Sequencers - Length CV range adjusted for easier selection of the final step</li>
 <li>All Sequencer Modules now save the current step when a patch is closed.</li>
 </ul>
 <ul>
