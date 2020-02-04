@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.7.0</h3>
+<h3>Modules - Release 1.7.1</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -52,21 +52,21 @@ Follow Count Modula on facebook:
 <li>Clocked Random Gate Expander - CV</li>
 <li>Clocked Random Gates Expander - Logic</li>
 <li>Comparator</a></li>
-<li>Euclidean Sequencer <font color="red">* New in v1.7.0</font></li>
-<li>Euclidean Sequencer Expander <font color="red">* New in v1.7.0</font></li>
+<li>Euclidean Sequencer <font color="red">* New in v1.7.1</font></li>
+<li>Euclidean Sequencer Expander <font color="red">* New in v1.7.1</font></li>
 <li>Event Arranger</a></li>
 <li>Fade</li>
 <li>Fade Expander</li>
 <li>Gate Delay</li>
 <li>Gate Modifier</li>
-<li>8 x 8 Gate Sequencer <font color="red">* New in v1.7.0</font></li>
-<li>8 x 16 Gate Sequencer <font color="red">* New in v1.7.0</font></li>
+<li>8 x 8 Gate Sequencer <font color="red">* New in v1.7.1</font></li>
+<li>8 x 16 Gate Sequencer <font color="red">* New in v1.7.1</font></li>
 <li>G2T</li>
 <li>Inverter</li>
 <li>Mangler</li>
 <li>Manual CV</li>
 <li>Manual Gate</li>
-<li>Master Reset Controller <font color="red">* New in v1.7.0</font></li>
+<li>Master Reset Controller <font color="red">* New in v1.7.1</font></li>
 <li>Matrix Mixer</li>
 <li>Minimus Maximus</li>
 <li>Mixer</li>
@@ -95,10 +95,10 @@ Follow Count Modula on facebook:
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Basic 8 Step Sequencer</li>
-<li>8 Step Sequencer <font color="red">* New in v1.7.0</font></li>
-<li>8 Step Sequencer Channel Expander <font color="red">* New in v1.7.0</font></li>
-<li>16 Step Sequencer <font color="red">* New in v1.7.0</font></li>
-<li>16 Step Sequencer Channel Expander <font color="red">* New in v1.7.0</font></li>
+<li>8 Step Sequencer <font color="red">* New in v1.7.1</font></li>
+<li>8 Step Sequencer Channel Expander <font color="red">* New in v1.7.1</font></li>
+<li>16 Step Sequencer <font color="red">* New in v1.7.1</font></li>
+<li>16 Step Sequencer Channel Expander <font color="red">* New in v1.7.1</font></li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop</li>
 <li>Trigger Sequencer (8 Step)</li>
@@ -109,7 +109,7 @@ Follow Count Modula on facebook:
 <li>Voltage Controlled Polarizer</li>
 <li>Voltage Controlled Pulse Divider</li>
 <li>Voltage Controlled Switch</li>
-<li>Voltage Scaler <font color="red">* New in v1.7.0</font></li>
+<li>Voltage Scaler <font color="red">* New in v1.7.1</font></li>
 <li>CGS Based Modules
 <ul>
 <li>CV Spreader</li>
