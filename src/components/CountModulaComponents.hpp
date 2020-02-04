@@ -31,16 +31,6 @@ struct CountModulaLightRYG : GrayModuleLightWidget {
 //-------------------------------------------------------------------
 // Lights
 //-------------------------------------------------------------------
-struct WhiteLight : GrayModuleLightWidget {
-	WhiteLight() {
-		addBaseColor(SCHEME_WHITE);
-	}
-};
-
-
-//-------------------------------------------------------------------
-// Lights
-//-------------------------------------------------------------------
 struct CountModulaLightRG : GrayModuleLightWidget {
 	CountModulaLightRG() {
 		addBaseColor(SCHEME_RED);
