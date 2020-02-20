@@ -109,6 +109,55 @@ struct CountModulaKnobWhite : CountModulaKnob {
 	}
 };
 
+// coloured knobs - mega
+struct CountModulaKnobMegaRed : CountModulaKnob {
+	CountModulaKnobMegaRed() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaRed.svg")));
+	}
+};
+
+struct CountModulaKnobMegaOrange : CountModulaKnob {
+	CountModulaKnobMegaOrange() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaOrange.svg")));
+	}
+};
+
+struct CountModulaKnobMegaYellow : CountModulaKnob {
+	CountModulaKnobMegaYellow() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaYellow.svg")));
+	}
+};
+
+struct CountModulaKnobMegaGreen : CountModulaKnob {
+	CountModulaKnobMegaGreen() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaGreen.svg")));
+	}
+};
+
+struct CountModulaKnobMegaBlue : CountModulaKnob {
+	CountModulaKnobMegaBlue() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaBlue.svg")));
+	}
+};
+
+struct CountModulaKnobMegaViolet : CountModulaKnob {
+	CountModulaKnobMegaViolet() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaViolet.svg")));
+	}
+};
+
+struct CountModulaKnobMegaGrey : CountModulaKnob {
+	CountModulaKnobMegaGrey() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaGrey.svg")));
+	}
+};
+
+struct CountModulaKnobMegaWhite : CountModulaKnob {
+	CountModulaKnobMegaWhite() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMegaWhite.svg")));
+	}
+};
+
 //-------------------------------------------------------------------
 // rotary switches
 //-------------------------------------------------------------------

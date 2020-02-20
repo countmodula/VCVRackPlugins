@@ -18,6 +18,30 @@
 <th align="center">Release</th>
 <th align="left">Notes</th>
 </tr>
+<tr valign="top">
+<td align="center">??-??-2020</td>
+<td align="center">v1.8.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Attenuverter - Single attenuverter/attenuator.</li>
+<li>Poly Chances - Polyphonic Bernoulli Gate</li>
+<li>Poly VC Switch - Polyphonic Voltage Controlled Switch</li>
+<li>Polyphonic Manual CV - Generates constant polyphonic CV values</li>
+<li>Poly VC Polarizer - Polyphonic Voltage Controlled Polarizer</li>
+<li>Poly Logic - Boolean Logic from a single polyphonic input</li>
+<li>Signal Manifold - Replicates a mono/poly input signal to a selected number of channels in a poly output signal</li>
+<li>SG8 - 8 Step Sequencer expander adding individual gate outputs</li>
+<li>SG16 - 16 Step Sequencer expander adding individual gate outputs</li>
+<li>Poly G2T - polyphonic gate to trigger converter</li>
+</ul>
+<ul>
+<b>Module Updates:</b>
+<li>VC Polarizer - Polarization/amplification rationalized. A 10V CV input now gives 2 x amplification</li>
+<li>Chances - new toggle mode added.</li>
+</ul>
+</td>
+</tr>
 
 <tr valign="top">
 <td align="center">04-Feb-2020</td>

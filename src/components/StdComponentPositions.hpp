@@ -135,6 +135,7 @@ const int STD_ROW8 = 7;
 
 
 // half row calculations
+int STD_HALF_ROWS5(int row);
 int STD_HALF_ROWS6(int row);
 int STD_HALF_ROWS7(int row);
 int STD_HALF_ROWS8(int row);

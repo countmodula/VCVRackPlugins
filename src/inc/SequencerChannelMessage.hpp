@@ -1,20 +1,20 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Sequencer channel message
 //	For passing sequence details to and from the standard 8/16 step sequencers 
-//  and the sequencer channel expander module
+//  and the sequencer channel expander module and gate expander modules
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 
 // utility macros 
 #if SEQ_NUM_STEPS == 8
-	#define isExpanderModule(x) x->model == modelSequencerChannel8
-	#define isExpandableModule(x) x->model == modelSequencer8 || x->model == modelSequencerChannel8
+	#define isExpanderModule(x) x->model == modelSequencerChannel8 || x->model == modelSequencerGates8
+	#define isExpandableModule(x) x->model == modelSequencer8 || x->model == modelSequencerChannel8 || x->model == modelSequencerGates8
 #endif
 
 
 #if SEQ_NUM_STEPS == 16
-	#define isExpanderModule(x) x->model == modelSequencerChannel16
-	#define isExpandableModule(x) x->model == modelSequencer16 || x->model == modelSequencerChannel16
+	#define isExpanderModule(x) x->model == modelSequencerChannel16 || x->model == modelSequencerGates16
+	#define isExpandableModule(x) x->model == modelSequencer16 || x->model == modelSequencerChannel16 || x->model == modelSequencerGates16
 #endif
 
 struct SequencerChannelMessage {

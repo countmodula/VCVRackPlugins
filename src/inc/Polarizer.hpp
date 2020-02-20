@@ -7,11 +7,12 @@
 struct Polarizer {
 	float positiveLevel = 0.0f;
 	float negativeLevel = 0.0f;
+	float out = 0.0f;
 	
 	float process(float in, float manual, float cv, float cvLevel) {
 
-		float multiplier = manual + (cv * cvLevel / 2.0f);
-		float out = in * multiplier;
+		float multiplier = manual + (cv * cvLevel / 5.0f); // 10V cv = 2 x amplification
+		out = in * multiplier;
 		out = clamp(out, -10.0f, 10.0f); 
 			
 		positiveLevel = multiplier > 0.0f ? fminf(multiplier, 1.0f) : 0.0f;

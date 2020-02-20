@@ -144,8 +144,10 @@ struct STRUCT_NAME : Module {
 		}
 		
 		// older module version, use the old length CV scale
-		if (moduleVersion < 1.1f)
+		if (moduleVersion < 1.1f) {
 			lengthCVScale = (float)(TRIGSEQ_NUM_STEPS - 1);		
+		}
+		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"

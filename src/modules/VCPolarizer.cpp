@@ -105,6 +105,7 @@ struct VCPolarizer : Module {
 		for (int c = 0; c < n; c++)
 			outputs[CH2_SIGNAL_OUTPUT].setVoltage(polarizer2.process(inputs[CH2_SIGNAL_INPUT].getVoltage(c), manual, cv, cvAmount), c);
 
+		
 		lights[CH2_POS_LIGHT].setSmoothBrightness(polarizer2.positiveLevel, args.sampleTime);
 		lights[CH2_NEG_LIGHT].setSmoothBrightness(polarizer2.negativeLevel, args.sampleTime);
 	}

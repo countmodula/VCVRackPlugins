@@ -65,7 +65,7 @@ struct PolyMinMax : Module {
 		
 		if (inputs[SIGNAL_INPUT].isConnected()) {		
 
-			// how many hannels are we dealing with?
+			// how many channels are we dealing with?
 			numChannels = inputs[SIGNAL_INPUT].getChannels();
 			outputs[ASC_OUTPUT].setChannels(numChannels);
 			outputs[DESC_OUTPUT].setChannels(numChannels);
