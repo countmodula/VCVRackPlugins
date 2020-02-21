@@ -63,9 +63,14 @@ struct BooleanAND : Module {
 		NUM_LIGHTS
 	};
 
-	AndGate gate;
-	Inverter inverter;
+	AndGate gate[PORT_MAX_CHANNELS];
+	Inverter inverter[PORT_MAX_CHANNELS];
 
+	int numChans, bChannels, cChannels, dChannels, iChannels;
+	float inA, inB, inC, inD;
+	float out;
+	bool iConnected;
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
@@ -79,7 +84,7 @@ struct BooleanAND : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_string("1.2"));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -87,30 +92,71 @@ struct BooleanAND : Module {
 		return root;
 	}
 	
-		
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 	}	
 	
 	void onReset() override {
-		gate.reset();
-		inverter.reset();
+		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
+			gate[i].reset();
+			inverter[i].reset();
+		}
 	}
 
 	void process(const ProcessArgs &args) override {
-		// grab and normalise the inputs
-		float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
-		float inB = inputs[B_INPUT].getNormalVoltage(inA);
-		float inC = inputs[C_INPUT].getNormalVoltage(inB);
-		float inD = inputs[D_INPUT].getNormalVoltage(inC);
+
+		iConnected  = inputs[I_INPUT].isConnected();
 		
-		//perform the logic
-		float out =  gate.process(inA, inB, inC, inD);
-		outputs[AND_OUTPUT].setVoltage(out);
-		
-		float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
-		outputs[INV_OUTPUT].setVoltage(notOut);
+		if (inputs[A_INPUT].isConnected()) {
+	
+			// input A determines number of channels we'll work with
+			numChans = inputs[A_INPUT].getChannels();
+			bChannels = inputs[B_INPUT].getChannels();
+			cChannels = inputs[C_INPUT].getChannels();
+			dChannels = inputs[D_INPUT].getChannels();
+
+			outputs[AND_OUTPUT].setChannels(numChans);
+			outputs[INV_OUTPUT].setChannels(numChans);
+			
+			for (int c = 0; c < numChans; c++) {
+				inA = inputs[A_INPUT].getPolyVoltage(c);
+				inB = c < bChannels ? inputs[B_INPUT].getVoltage(c) : inA;
+				inC = c < cChannels ? inputs[C_INPUT].getVoltage(c) : inB;
+				inD = c < dChannels ? inputs[D_INPUT].getVoltage(c) : inC;
+				
+				//perform the logic
+				out =  gate[c].process(inA, inB, inC, inD);
+				outputs[AND_OUTPUT].setVoltage(out, c);
+			
+				if (!iConnected)
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(out), c);		
+			}
+	
+			if (iConnected) {
+				iChannels = inputs[I_INPUT].getChannels();
+				outputs[INV_OUTPUT].setChannels(iChannels);
+				for (int c = 0; c < iChannels; c++) {
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(inputs[I_INPUT].getVoltage(c)), c);
+				}
+			}
+		}
+		else {
+			outputs[AND_OUTPUT].setChannels(1);
+			outputs[AND_OUTPUT].setVoltage(0.0f);
+			
+			if (iConnected) {
+				iChannels = inputs[I_INPUT].getChannels();
+				outputs[INV_OUTPUT].setChannels(iChannels);
+				for (int c = 0; c < iChannels; c++) {
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(inputs[I_INPUT].getVoltage(c)), c);
+				}
+			}
+			else {
+				outputs[INV_OUTPUT].setChannels(1);
+				outputs[INV_OUTPUT].setVoltage(10.0f);
+			}
+		}
 	}	
 };
 

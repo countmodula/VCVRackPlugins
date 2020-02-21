@@ -21,13 +21,13 @@ struct OrGate {
 	bool isHigh = false;
 	
 	float process (float aIn, float bIn, float cIn, float dIn) {
-		a.set(aIn);
-		b.set(bIn);
-		c.set(cIn);
-		d.set(dIn);
-
+		
 		// process the OR function
-		isHigh = a.high()|| b.high() || c.high() || d.high();
+		isHigh = false;
+		isHigh |= a.set(aIn);
+		isHigh |= b.set(bIn);
+		isHigh |= c.set(cIn);
+		isHigh |= d.set(dIn);
 		
 		return boolToGate(isHigh);
 	}
@@ -63,9 +63,14 @@ struct BooleanOR : Module {
 		NUM_LIGHTS
 	};
 
-	OrGate gate;
-	Inverter inverter;
+	OrGate gate[PORT_MAX_CHANNELS];
+	Inverter inverter[PORT_MAX_CHANNELS];
 
+	int numChans, bChannels, cChannels, dChannels, iChannels;
+	float inA, inB, inC, inD;
+	float out;
+	bool iConnected;
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
@@ -79,7 +84,7 @@ struct BooleanOR : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.1"));
+		json_object_set_new(root, "moduleVersion", json_string("1.2"));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"				
@@ -94,25 +99,65 @@ struct BooleanOR : Module {
 	}	
 	
 	void onReset() override {
-		gate.reset();
-		inverter.reset();
+		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
+			gate[i].reset();
+			inverter[i].reset();
+		}
 	}
 
 	void process(const ProcessArgs &args) override {
-		// grab and normalise the inputs
-		float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
-		float inB = inputs[B_INPUT].getNormalVoltage(inA);
-		float inC = inputs[C_INPUT].getNormalVoltage(inB);
-		float inD = inputs[D_INPUT].getNormalVoltage(inC);
+		iConnected  = inputs[I_INPUT].isConnected();
 		
-		//perform the logic
-		float out =  gate.process(inA, inB, inC, inD);
-		outputs[OR_OUTPUT].setVoltage(out);
-		
-		float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
-		outputs[INV_OUTPUT].setVoltage(notOut);
-	}
+		if (inputs[A_INPUT].isConnected()) {
 	
+			// input A determines number of channels we'll work with
+			numChans = inputs[A_INPUT].getChannels();
+			bChannels = inputs[B_INPUT].getChannels();
+			cChannels = inputs[C_INPUT].getChannels();
+			dChannels = inputs[D_INPUT].getChannels();
+
+			outputs[OR_OUTPUT].setChannels(numChans);
+			outputs[INV_OUTPUT].setChannels(numChans);
+			
+			for (int c = 0; c < numChans; c++) {
+				inA = inputs[A_INPUT].getPolyVoltage(c);
+				inB = c < bChannels ? inputs[B_INPUT].getVoltage(c) : inA;
+				inC = c < cChannels ? inputs[C_INPUT].getVoltage(c) : inB;
+				inD = c < dChannels ? inputs[D_INPUT].getVoltage(c) : inC;
+				
+				//perform the logic
+				out =  gate[c].process(inA, inB, inC, inD);
+				outputs[OR_OUTPUT].setVoltage(out, c);
+			
+				if (!iConnected)
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(out), c);		
+			}
+	
+			if (iConnected) {
+				iChannels = inputs[I_INPUT].getChannels();
+				outputs[INV_OUTPUT].setChannels(iChannels);
+				for (int c = 0; c < iChannels; c++) {
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(inputs[I_INPUT].getVoltage(c)), c);
+				}
+			}
+		}
+		else {
+			outputs[OR_OUTPUT].setChannels(1);
+			outputs[OR_OUTPUT].setVoltage(0.0f);
+			
+			if (iConnected) {
+				iChannels = inputs[I_INPUT].getChannels();
+				outputs[INV_OUTPUT].setChannels(iChannels);
+				for (int c = 0; c < iChannels; c++) {
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(inputs[I_INPUT].getVoltage(c)), c);
+				}
+			}
+			else {
+				outputs[INV_OUTPUT].setChannels(1);
+				outputs[INV_OUTPUT].setVoltage(10.0f);
+			}
+		}
+	}
 };
 
 struct BooleanORWidget : ModuleWidget {

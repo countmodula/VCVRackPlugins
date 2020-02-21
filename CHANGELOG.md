@@ -39,6 +39,9 @@
 <b>Module Updates:</b>
 <li>VC Polarizer - Polarization/amplification rationalized. A 10V CV input now gives 2 x amplification</li>
 <li>Chances - new toggle mode added.</li>
+<li>Boolean AND Gate - now polyphonic</li>
+<li>Boolean OR Gate - now polyphonic</li>
+<li>Boolean XOR Gate - now polyphonic</li>
 </ul>
 </td>
 </tr>

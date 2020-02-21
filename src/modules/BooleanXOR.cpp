@@ -21,22 +21,23 @@ struct XorGate {
 	bool isHigh = false;
 	
 	float process (float aIn, float bIn, float cIn, float dIn, bool onehot) {
-		a.set(aIn);
-		b.set(bIn);
-		c.set(cIn);
-		d.set(dIn);
+		int i = 0;
+		i += (int)(a.set(aIn));
+		i += (int)(b.set(bIn));
+		i += (int)(c.set(cIn));
+		i += (int)(d.set(dIn));
 
 		// process the XOR function
-		int i = 0;
-		if (a.high()) i++;
-		if (b.high()) i++;
-		if (c.high()) i++;
-		if (d.high()) i++;
+		// int i = 0;
+		// if (a.high()) i++;
+		// if (b.high()) i++;
+		// if (c.high()) i++;
+		// if (d.high()) i++;
 		
 		if (onehot)
 			isHigh = i == 1;
 		else
-			isHigh = (1 > 0 && isOdd(i));
+			isHigh = (i > 0 && isOdd(i));
 		
 		return boolToGate(isHigh);
 	}
@@ -73,9 +74,14 @@ struct BooleanXOR : Module {
 		NUM_LIGHTS
 	};
 
-	XorGate gate;
-	Inverter inverter;
+	XorGate gate[PORT_MAX_CHANNELS];
+	Inverter inverter[PORT_MAX_CHANNELS];
 
+	int numChans, bChannels, cChannels, dChannels, iChannels;
+	float inA, inB, inC, inD;
+	float out;
+	bool iConnected, oneHot;
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
@@ -91,7 +97,7 @@ struct BooleanXOR : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_real(1.2f));
+		json_object_set_new(root, "moduleVersion", json_real(1.3f));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -113,23 +119,81 @@ struct BooleanXOR : Module {
 	}	
 	
 	void onReset() override {
-		gate.reset();
-		inverter.reset();
+		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
+			gate[i].reset();
+			inverter[i].reset();
+		}
 	}
 	
 	void process(const ProcessArgs &args) override {
-		// grab and normalise the inputs
-		float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
-		float inB = inputs[B_INPUT].getNormalVoltage(0.0f);
-		float inC = inputs[C_INPUT].getNormalVoltage(0.0f);
-		float inD = inputs[D_INPUT].getNormalVoltage(0.0f);
 		
-		//perform the logic
-		float out = gate.process(inA, inB, inC, inD, params[MODE_PARAM].getValue() > 0.5f);
-		outputs[XOR_OUTPUT].setVoltage(out);
+		iConnected  = inputs[I_INPUT].isConnected();
 		
-		float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
-		outputs[INV_OUTPUT].setVoltage(notOut);
+		if (inputs[A_INPUT].isConnected()) {
+
+			// what mode are we in?
+			oneHot = (params[MODE_PARAM].getValue() > 0.5f);
+		
+			// input A determines number of channels we'll work with
+			numChans = inputs[A_INPUT].getChannels();
+			bChannels = inputs[B_INPUT].getChannels();
+			cChannels = inputs[C_INPUT].getChannels();
+			dChannels = inputs[D_INPUT].getChannels();
+
+			outputs[XOR_OUTPUT].setChannels(numChans);
+			outputs[INV_OUTPUT].setChannels(numChans);
+			
+			for (int c = 0; c < numChans; c++) {
+				inA = inputs[A_INPUT].getPolyVoltage(c);
+				inB = c < bChannels ? inputs[B_INPUT].getVoltage(c) : 0.0f;
+				inC = c < cChannels ? inputs[C_INPUT].getVoltage(c) : 0.0f;
+				inD = c < dChannels ? inputs[D_INPUT].getVoltage(c) : 0.0f;
+				
+				//perform the logic
+				out = gate[c].process(inA, inB, inC, inD, oneHot);
+				outputs[XOR_OUTPUT].setVoltage(out, c);
+			
+				if (!iConnected)
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(out), c);		
+			}
+	
+			if (iConnected) {
+				iChannels = inputs[I_INPUT].getChannels();
+				outputs[INV_OUTPUT].setChannels(iChannels);
+				for (int c = 0; c < iChannels; c++) {
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(inputs[I_INPUT].getVoltage(c)), c);
+				}
+			}
+		}
+		else {
+			outputs[XOR_OUTPUT].setChannels(1);
+			outputs[XOR_OUTPUT].setVoltage(0.0f);
+			
+			if (iConnected) {
+				iChannels = inputs[I_INPUT].getChannels();
+				outputs[INV_OUTPUT].setChannels(iChannels);
+				for (int c = 0; c < iChannels; c++) {
+					outputs[INV_OUTPUT].setVoltage(inverter[c].process(inputs[I_INPUT].getVoltage(c)), c);
+				}
+			}
+			else {
+				outputs[INV_OUTPUT].setChannels(1);
+				outputs[INV_OUTPUT].setVoltage(10.0f);
+			}
+		}
+				
+		// // grab and normalise the inputs
+		// float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
+		// float inB = inputs[B_INPUT].getNormalVoltage(0.0f);
+		// float inC = inputs[C_INPUT].getNormalVoltage(0.0f);
+		// float inD = inputs[D_INPUT].getNormalVoltage(0.0f);
+		
+		// //perform the logic
+		// float out = gate.process(inA, inB, inC, inD, params[MODE_PARAM].getValue() > 0.5f);
+		// outputs[XOR_OUTPUT].setVoltage(out);
+		
+		// float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
+		// outputs[INV_OUTPUT].setVoltage(notOut);
 	}
 };
 
