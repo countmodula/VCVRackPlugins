@@ -1,7 +1,7 @@
 {
   "slug": "CountModula",
   "name": "Count Modula",
-  "version": "1.8.0beta",
+  "version": "1.8.0",
   "license": "GPL-3.0-only",
   "brand": "Count Modula",
   "author": "Adam Verspaget",
@@ -45,7 +45,8 @@
       "name": "Boolean AND Gate",
       "description": "4 input boolean AND/NAND gate",
       "tags": [
-        "Logic"
+        "Logic",
+		"Polyphonic"
       ]
     },
     {
@@ -53,7 +54,8 @@
       "name": "Boolean OR Gate",
       "description": "4 input boolean OR/NOR gate",
       "tags": [
-        "Logic"
+        "Logic",
+		"Polyphonic"
       ]
     },
     {
@@ -71,7 +73,8 @@
       "name": "Boolean XOR Gate",
       "description": "4 input boolean XOR/XNOR gate",
       "tags": [
-        "Logic"
+        "Logic",
+		"Polyphonic"
       ]
     },
     {
@@ -751,7 +754,6 @@
       "description": "A basic manual CV generator with a range of output voltages",
       "tags": [
         "Polyphonic",
-		"Controller",
 		"Utility",
 		"Controller"
       ]
@@ -799,8 +801,8 @@
       "name": "gate to Trigger Converter",
       "description": "Description.",
       "tags": [
-        "Utility"
-      ]
+        "Utility",
+		"Polyphonic"     ]
     }
   ]
 }

@@ -138,7 +138,7 @@ struct AttenuverterWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, Attenuverter::MODE_PARAM));
 
 		// lights
-		addChild(createLightCentered<MediumLight<CountModulaLightRG>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, Attenuverter::LEVEL_LIGHT));
+		addChild(createLightCentered<LargeLight<CountModulaLightRG>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, Attenuverter::LEVEL_LIGHT));
 		
 		
 		for (int i = 0; i < 2; i ++) {

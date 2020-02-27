@@ -19,7 +19,7 @@
 <th align="left">Notes</th>
 </tr>
 <tr valign="top">
-<td align="center">??-??-2020</td>
+<td align="center">28-02-2020</td>
 <td align="center">v1.8.0</td>
 <td align="left">
 <ul>
