@@ -18,6 +18,18 @@
 <th align="center">Release</th>
 <th align="left">Notes</th>
 </tr>
+
+<tr valign="top">
+<td align="center">01-03-2020</td>
+<td align="center">v1.8.1</td>
+<td align="left">
+<ul>
+<b>Issues Resolved:</b>
+<li>Attenuverter - incorrect knob function when adding new module.</li>
+</ul>
+</td>
+</tr>
+
 <tr valign="top">
 <td align="center">28-02-2020</td>
 <td align="center">v1.8.0</td>

@@ -41,7 +41,7 @@ struct Attenuverter : Module {
 	Attenuverter() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(ATTENUATE_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
+		configParam(ATTENUATE_PARAM, -1.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
 		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
 
 		// set the theme from the current default value
