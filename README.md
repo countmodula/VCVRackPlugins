@@ -35,9 +35,16 @@ Follow Count Modula on facebook:
 </p>
 <ul>
 
+<li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router <font color="red">* New in v1.9.0</font></li>
+<li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router <font color="red">* New in v1.9.0</font></li>
+<li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector <font color="red">* New in v1.9.0</font></li>
+<li>Switch 16-1 - 16 To 1 VC Sequential Switch/Selector <font color="red">* New in v1.9.0</font></li>
+<li>8 Step Sequencer Trigger Expander <font color="red">* New in v1.9.0</font></li>
+<li>16 Step Sequencer Trigger Expander <font color="red">* New in v1.9.0</font></li>
+
 <li>Analogue Shift Register</li>
 <li>Attenuator</li>
-<li>Attenuverter <font color="red">* New in v1.8.0</font></li>
+<li>Attenuverter</li>
 <li>Basic 8 Step Sequencer</li>
 <li>Binary Sequencer</li>
 <li>Blank Panels</li>
@@ -78,14 +85,14 @@ Follow Count Modula on facebook:
 <li>Mute-iple</li>
 <li>Offset Generator</font></li>
 <li>Polyphonic Breakout</li>
-<li>Poly Chances <font color="red">* New in v1.8.0</font></li>
-<li>Poly Gate to Trigger <font color="red">* New in v1.8.0</font></li>
-<li>Poly Logic <font color="red">* New in v1.8.0</font></li>
-<li>Polyphonic Manual CV <font color="red">* New in v1.8.0</font></li>
+<li>Poly Chances</li>
+<li>Poly Gate to Trigger</li>
+<li>Poly Logic</li>
+<li>Polyphonic Manual CV</li>
 <li>Polyphonic Min/Max</li>
 <li>Polyphonic Mute</li>
-<li>Poly VC Polarizer <font color="red">* New in v1.8.0</font></li>
-<li>Poly VC Switch <font color="red">* New in v1.8.0</font></li>
+<li>Poly VC Polarizer</li>
+<li>Poly VC Switch</li>
 <li>Polyrhythmic Generator <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li>Polyrhythmic Generator MkII</li>
 <li>Rack Ears</li>
@@ -99,17 +106,17 @@ Follow Count Modula on facebook:
 </ul>
 </li>
 <li>Shepard Generator</li>
-<li>Signal Manifold <font color="red">* New in v1.8.0</font></li>
+<li>Signal Manifold</li>
 <li>SR Flip Flop</li>
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Basic 8 Step Sequencer</li>
 <li>8 Step Sequencer</li>
 <li>8 Step Sequencer Channel Expander</li>
-<li>8 Step Sequencer Gate Expander <font color="red">* New in v1.8.0</font></li>
+<li>8 Step Sequencer Gate Expander</li>
 <li>16 Step Sequencer</li>
 <li>16 Step Sequencer Channel Expander</li>
-<li>16 Step Sequencer Gate Expander <font color="red">* New in v1.8.0</font></li>
+<li>16 Step Sequencer Gate Expander</li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop</li>
 <li>Trigger Sequencer (8 Step)</li>

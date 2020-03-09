@@ -61,10 +61,10 @@ struct STRUCT_NAME : Module {
 	dsp::PulseGenerator pgClock;
 	
 	int startUpCounter = 0;
-	int count;
-	int length;
-	int direction;
-	int directionMode;
+	int count = 0;
+	int length = SEQ_NUM_STEPS;
+	int direction = FORWARD;
+	int directionMode = FORWARD;
 	bool oneShot = false;
 	bool oneShotEnded = false;
 	float moduleVersion = 0.0f;
