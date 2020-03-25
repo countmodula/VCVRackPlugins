@@ -321,6 +321,7 @@ struct CountModulaToggle2P : SvgSwitch {
 			paramQuantity->setValue(0.0f);
 	}
 	
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
 	void onDoubleClick(const event::DoubleClick& e) override {
 		reset();
 	}		
@@ -361,6 +362,7 @@ struct CountModulaToggle2P : SvgSwitch {
 			pos = 0;
 		}
 	}
+#endif
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -400,7 +402,8 @@ struct CountModulaToggle2P90 : SvgSwitch {
 		else
 			paramQuantity->setValue(0.0f);
 	}
-	
+
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
 	void onDoubleClick(const event::DoubleClick& e) override {
 		reset();
 	}	
@@ -441,6 +444,7 @@ struct CountModulaToggle2P90 : SvgSwitch {
 			pos = 0;
 		}
 	}	
+#endif
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -484,6 +488,7 @@ struct CountModulaToggle3P : SvgSwitch {
 			paramQuantity->setValue(0.0f);
 	}
 
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
 	void onDoubleClick(const event::DoubleClick& e) override {
 		reset();
 	}	
@@ -524,6 +529,7 @@ struct CountModulaToggle3P : SvgSwitch {
 			pos = 0;
 		}
 	}
+#endif
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -569,6 +575,7 @@ struct CountModulaToggle3P90 : SvgSwitch {
 			paramQuantity->setValue(0.0f);
 	}
 
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
 	void onDragStart(const event::DragStart& e) override {
 		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
 			return;
@@ -609,7 +616,8 @@ struct CountModulaToggle3P90 : SvgSwitch {
 			pos = 0;
 		}
 	}	
-	
+#endif
+
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SvgSwitch::randomize();

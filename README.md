@@ -35,17 +35,11 @@ Follow Count Modula on facebook:
 </p>
 <ul>
 
-<li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router <font color="red">* New in v1.9.0</font></li>
-<li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router <font color="red">* New in v1.9.0</font></li>
-<li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector <font color="red">* New in v1.9.0</font></li>
-<li>Switch 16-1 - 16 To 1 VC Sequential Switch/Selector <font color="red">* New in v1.9.0</font></li>
-<li>8 Step Sequencer Trigger Expander <font color="red">* New in v1.9.0</font></li>
-<li>16 Step Sequencer Trigger Expander <font color="red">* New in v1.9.0</font></li>
-
 <li>Analogue Shift Register</li>
 <li>Attenuator</li>
 <li>Attenuverter</li>
 <li>Basic 8 Step Sequencer</li>
+<li>Binary Comparator <font color="red">* New in v1.9.0</font></li>
 <li>Binary Sequencer</li>
 <li>Blank Panels</li>
 <li>Boolean Logic Modules
@@ -56,7 +50,10 @@ Follow Count Modula on facebook:
 <li>XOR</li>
 </ul>
 </li>
+<li>Bus Route - Switched gate combiner/router <font color="red">* New in v1.9.0</font></li>
+<li>Bus Route 2 - Switched gate combiner <font color="red">* New in v1.9.0</font></li>
 <li>Chances</a></li>
+<li>Clock Divider - a standard clock divider <font color="red">* New in v1.9.0</font></li>
 <li>Clocked Random Gates</li>
 <li>Clocked Random Gate Expander - CV</li>
 <li>Clocked Random Gates Expander - Logic</li>
@@ -76,6 +73,7 @@ Follow Count Modula on facebook:
 <li>Manual CV</li>
 <li>Manual Gate</li>
 <li>Master Reset Controller</li>
+<li>Matrix Combiner - Gate combiner/switched multiple <font color="red">* New in v1.9.0</font></li>
 <li>Matrix Mixer</li>
 <li>Minimus Maximus</li>
 <li>Mixer</li>
@@ -110,13 +108,19 @@ Follow Count Modula on facebook:
 <li>SR Flip Flop</li>
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
+<li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router <font color="red">* New in v1.9.0</font></li>
+<li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router <font color="red">* New in v1.9.0</font></li>
+<li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector <font color="red">* New in v1.9.0</font></li>
+<li>Switch 16-1 - 16 To 1 VC Sequential Switch/Selector <font color="red">* New in v1.9.0</font></li>
 <li>Basic 8 Step Sequencer</li>
 <li>8 Step Sequencer</li>
 <li>8 Step Sequencer Channel Expander</li>
 <li>8 Step Sequencer Gate Expander</li>
+<li>8 Step Sequencer Trigger Expander <font color="red">* New in v1.9.0</font></li>
 <li>16 Step Sequencer</li>
 <li>16 Step Sequencer Channel Expander</li>
 <li>16 Step Sequencer Gate Expander</li>
+<li>16 Step Sequencer Trigger Expander <font color="red">* New in v1.9.0</font></li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop</li>
 <li>Trigger Sequencer (8 Step)</li>

@@ -863,12 +863,39 @@
 		"Logic"
 	  ]
 	},
+	{
+	  "slug": "BusRoute2",
+	  "name": "Bus Route",
+	  "description": "Switched gate combiner",
+	  "tags": [
+		"Switch",
+		"Logic"
+	  ]
+	},
+	{
+	  "slug": "MatrixCombiner",
+	  "name": "Matrix Combiner",
+	  "description": "Gate combiner/switched multiple",
+	  "tags": [
+		"Switch",
+		"Logic",
+		"Multiple"
+	  ]
+	},
     {
       "slug": "ClockDivider",
       "name": "Clock Divider",
       "description": "Clock divider with up/down mode and optional trigger outputs",
       "tags": [
         "Clock modulator"
+      ]
+    },
+    {
+      "slug": "BinaryComparator",
+      "name": "Binary Comparator",
+      "description": "Compares two binary words",
+      "tags": [
+        "Logic"
       ]
     }
   ]

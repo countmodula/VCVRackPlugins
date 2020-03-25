@@ -37,8 +37,11 @@
 <li>Switch 16-1 - 16 To 1 VC Sequential Switch/Selector</li>
 <li>8 Step Sequencer Trigger Expander</li>
 <li>16 Step Sequencer Trigger Expander</li>
-<li>Bus Route - Switched gate combiner</li>
+<li>Bus Route - Switched gate combiner/router</li>
+<li>Bus Route 2 - Switched gate combiner</li>
+<li>Matrix Combiner - Gate combiner/switched multiple</li>
 <li>Clock Divider - a standard clock divider</li>
+<li>Binary Comparator</li>
 </ul>
 </td>
 </tr>            

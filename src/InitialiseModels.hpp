@@ -101,4 +101,7 @@ p->addModel(modelSwitch16To1);
 p->addModel(modelSequencerTriggers8);
 p->addModel(modelSequencerTriggers16);
 p->addModel(modelBusRoute);
+p->addModel(modelBusRoute2);
 p->addModel(modelClockDivider);
+p->addModel(modelBinaryComparator);
+p->addModel(modelMatrixCombiner);

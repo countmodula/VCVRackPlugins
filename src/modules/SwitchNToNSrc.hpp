@@ -236,7 +236,7 @@ struct STRUCT_NAME : Module {
 		
 		// direction - jack overrides the switch
 		if (inputs[DIRECTION_INPUT].isConnected()) {
-			float dirCV = clamp(inputs[DIRECTION_INPUT].getVoltage(), 0.0f, 8.99f);
+			float dirCV = clamp(inputs[DIRECTION_INPUT].getVoltage(), 0.0f, 4.99f);
 			directionMode = (int)floor(dirCV);
 		}
 		else
@@ -379,8 +379,10 @@ struct STRUCT_NAME : Module {
 			}
 		}
 		else {
-			for (int i = 0; i < SEQ_NUM_STEPS; i++)
-				outputs[SIGNAL_OUTPUTS + i].channels = 0;
+			for (int i = 0; i < SEQ_NUM_STEPS; i++) {
+				outputs[SIGNAL_OUTPUTS + i].setChannels(1);
+				outputs[SIGNAL_OUTPUTS + i].setVoltage(0.0f);
+			}
 		}
 #endif
 #ifdef N_TO_ONE

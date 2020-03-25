@@ -99,4 +99,7 @@ extern Model *modelSwitch16To1;
 extern Model *modelSequencerTriggers8;
 extern Model *modelSequencerTriggers16;
 extern Model *modelBusRoute;
+extern Model *modelBusRoute2;
 extern Model *modelClockDivider;
+extern Model *modelBinaryComparator;
+extern Model *modelMatrixCombiner;
