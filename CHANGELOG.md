@@ -20,14 +20,9 @@
 </tr>
 
 <tr valign="top">
-<td align="center">??-??-2020</td>
+<td align="center">26-03-2020</td>
 <td align="center">v1.9.0</td>
 <td align="left">
-
-<ul>
-<b>Module Updates:</b>
-<li>All modules - All toggle switches now operate with click and drag to set the position rather than click to cycle through positions</li>
-</ul>
 
 <ul>
 <b>New Modules:</b>
