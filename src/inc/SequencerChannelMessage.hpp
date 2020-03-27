@@ -7,14 +7,14 @@
 
 // utility macros 
 #if SEQ_NUM_STEPS == 8
-	#define isExpanderModule(x) x->model == modelSequencerChannel8 || x->model == modelSequencerGates8
-	#define isExpandableModule(x) x->model == modelSequencer8 || x->model == modelSequencerChannel8 || x->model == modelSequencerGates8
+	#define isExpanderModule(x) x->model == modelSequencerChannel8 || x->model == modelSequencerGates8 || x->model == modelSequencerTriggers8 
+	#define isExpandableModule(x) x->model == modelSequencer8 || x->model == modelSequencerChannel8 || x->model == modelSequencerGates8 || x->model == modelSequencerTriggers8 
 #endif
 
 
 #if SEQ_NUM_STEPS == 16
-	#define isExpanderModule(x) x->model == modelSequencerChannel16 || x->model == modelSequencerGates16
-	#define isExpandableModule(x) x->model == modelSequencer16 || x->model == modelSequencerChannel16 || x->model == modelSequencerGates16
+	#define isExpanderModule(x) x->model == modelSequencerChannel16 || x->model == modelSequencerGates16 || x->model == modelSequencerTriggers16 
+	#define isExpandableModule(x) x->model == modelSequencer16 || x->model == modelSequencerChannel16 || x->model == modelSequencerGates16 || x->model == modelSequencerTriggers16 
 #endif
 
 struct SequencerChannelMessage {

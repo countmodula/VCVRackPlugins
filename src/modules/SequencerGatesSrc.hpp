@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Standard Sequencer Channel Engine
+//	/^M^\ Count Modula Plugin for VCV Rack - Standard sequencer trigger/gate expander
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 struct STRUCT_NAME : Module {
@@ -20,6 +20,9 @@ struct STRUCT_NAME : Module {
 	};
 	
 	int count;
+#if defined TRIGGER_OUTPUTS
+	bool clock;
+#endif
 	float moduleVersion = 0.0f;
 	
 	// Expander details
@@ -71,7 +74,9 @@ struct STRUCT_NAME : Module {
 
 		bool running = false;
 		count = 0;
-
+#if defined TRIGGER_OUTPUTS
+		clock = false;
+#endif		
 		// grab the detail from the left hand module if we have one
 		messagesFromMaster = 0; 
 		if (leftExpander.module) {
@@ -79,6 +84,9 @@ struct STRUCT_NAME : Module {
 					
 				messagesFromMaster = (SequencerChannelMessage *)(leftExpander.consumerMessage);
 
+#if defined TRIGGER_OUTPUTS
+				clock = messagesFromMaster->clockState;
+#endif
 				count = messagesFromMaster->counter;
 				running = messagesFromMaster->runningState;
 			}
@@ -87,8 +95,11 @@ struct STRUCT_NAME : Module {
 		// process the step switches, cv and set the length/active step lights etc
 		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 			// set step and length lights here
+#if defined TRIGGER_OUTPUTS
+			bool stepActive = (c + 1 == count) && running && clock;
+#else
 			bool stepActive = (c + 1 == count) && running;
-
+#endif
 			// now we can set the outputs and lights
 			outputs[GATE_OUTPUTS + c].setVoltage(boolToGate(stepActive));
 			lights[STEP_LIGHTS + c].setBrightness(boolToLight(stepActive));			

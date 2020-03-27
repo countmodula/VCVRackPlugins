@@ -20,6 +20,28 @@
 </tr>
 
 <tr valign="top">
+<td align="center">26-03-2020</td>
+<td align="center">v1.9.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router</li>
+<li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router</li>
+<li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector</li>
+<li>Switch 16-1 - 16 To 1 VC Sequential Switch/Selector</li>
+<li>8 Step Sequencer Trigger Expander</li>
+<li>16 Step Sequencer Trigger Expander</li>
+<li>Bus Route - Switched gate combiner/router</li>
+<li>Bus Route 2 - Switched gate combiner</li>
+<li>Matrix Combiner - Gate combiner/switched multiple</li>
+<li>Clock Divider - a standard clock divider</li>
+<li>Binary Comparator</li>
+</ul>
+</td>
+</tr>            
+
+<tr valign="top">
 <td align="center">01-03-2020</td>
 <td align="center">v1.8.1</td>
 <td align="left">
@@ -28,8 +50,7 @@
 <li>Attenuverter - incorrect knob function when adding new module.</li>
 </ul>
 </td>
-</tr>
-
+</tr>            
 <tr valign="top">
 <td align="center">28-02-2020</td>
 <td align="center">v1.8.0</td>

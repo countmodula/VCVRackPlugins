@@ -297,12 +297,17 @@ struct CountModulaRotarySwitch5PosWhite : CountModulaRotarySwitchWhite {
 // on-off toggle switch
 //-------------------------------------------------------------------
 struct CountModulaToggle2P : SvgSwitch {
+	int pos;
+	int neg;
+
 	CountModulaToggle2P() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_2.svg")));
 
 		// no shadow for switches
 		shadow->opacity = 0.0f;
+
+		neg = pos = 0;
 	}
 	
 	// handle the manually entered values
@@ -315,6 +320,49 @@ struct CountModulaToggle2P : SvgSwitch {
 		else
 			paramQuantity->setValue(0.0f);
 	}
+	
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
+	void onDoubleClick(const event::DoubleClick& e) override {
+		reset();
+	}		
+	
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+		
+		pos = 0;
+		neg=0;
+	}
+	
+	void onDragEnd(const event::DragEnd& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+	}
+	
+	void onDragMove(const event::DragMove& e) override {
+		
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+
+		if (e.mouseDelta.y < 0.0f) {
+			neg = 0;
+			pos++;
+		}
+		else if (e.mouseDelta.y > 0.0f) {
+			pos = 0;
+			neg++;
+		}
+		
+		if (neg > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
+			neg = 0;
+		}
+		else if (pos > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
+			pos = 0;
+		}
+	}
+#endif
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -331,12 +379,17 @@ struct CountModulaToggle2P : SvgSwitch {
 // on-off toggle switch - sideways
 //-------------------------------------------------------------------
 struct CountModulaToggle2P90 : SvgSwitch {
+	int pos;
+	int neg;
+	
 	CountModulaToggle2P90() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_2.svg")));
 
 		// no shadow for switches
 		shadow->opacity = 0.0f;
+
+		neg = pos = 0;
 	}
 	
 	// handle the manually entered values
@@ -349,6 +402,49 @@ struct CountModulaToggle2P90 : SvgSwitch {
 		else
 			paramQuantity->setValue(0.0f);
 	}
+
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
+	void onDoubleClick(const event::DoubleClick& e) override {
+		reset();
+	}	
+	
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+		
+		pos = 0;
+		neg=0;
+	}
+	
+	void onDragEnd(const event::DragEnd& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+	}
+	
+	void onDragMove(const event::DragMove& e) override {
+		
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+
+		if (e.mouseDelta.x < 0.0f) {
+			neg = 0;
+			pos++;
+		}
+		else if (e.mouseDelta.x > 0.0f) {
+			pos = 0;
+			neg++;
+		}
+		
+		if (neg > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
+			neg = 0;
+		}
+		else if (pos > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
+			pos = 0;
+		}
+	}	
+#endif
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -365,6 +461,9 @@ struct CountModulaToggle2P90 : SvgSwitch {
 // on-off-on toggle switch
 //-------------------------------------------------------------------
 struct CountModulaToggle3P : SvgSwitch {
+	int pos;
+	int neg;
+	
 	CountModulaToggle3P() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_1.svg")));
@@ -372,6 +471,8 @@ struct CountModulaToggle3P : SvgSwitch {
 		
 		// no shadow for switches
 		shadow->opacity = 0.0f;
+		
+		neg = pos = 0;
 	}
 
 	// handle the manually entered values
@@ -387,6 +488,48 @@ struct CountModulaToggle3P : SvgSwitch {
 			paramQuantity->setValue(0.0f);
 	}
 
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
+	void onDoubleClick(const event::DoubleClick& e) override {
+		reset();
+	}	
+	
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+		
+		pos = 0;
+		neg=0;
+	}
+	
+	void onDragEnd(const event::DragEnd& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+	}
+	
+	void onDragMove(const event::DragMove& e) override {
+		
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+
+		if (e.mouseDelta.y < 0.0f) {
+			neg = 0;
+			pos++;
+		}
+		else if (e.mouseDelta.y > 0.0f) {
+			pos = 0;
+			neg++;
+		}
+		
+		if (neg > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
+			neg = 0;
+		}
+		else if (pos > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
+			pos = 0;
+		}
+	}
+#endif
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
@@ -405,6 +548,9 @@ struct CountModulaToggle3P : SvgSwitch {
 // on-off-on toggle switch - sideways
 //-------------------------------------------------------------------
 struct CountModulaToggle3P90 : SvgSwitch {
+	int pos;
+	int neg;
+	
 	CountModulaToggle3P90() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_1.svg")));
@@ -412,6 +558,8 @@ struct CountModulaToggle3P90 : SvgSwitch {
 		
 		// no shadow for switches
 		shadow->opacity = 0.0f;
+		
+		neg = pos = 0;
 	}
 
 	// handle the manually entered values
@@ -427,7 +575,49 @@ struct CountModulaToggle3P90 : SvgSwitch {
 			paramQuantity->setValue(0.0f);
 	}
 
+#ifdef NEW_TOGGLE_CHANGE_METHOD	
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+		
+		pos = 0;
+		neg=0;
+	}
 	
+	void onDoubleClick(const event::DoubleClick& e) override {
+		reset();
+	}	
+	
+	void onDragEnd(const event::DragEnd& e) override {
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+	}
+	
+	void onDragMove(const event::DragMove& e) override {
+		
+		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+			return;
+
+		if (e.mouseDelta.x < 0.0f) {
+			neg = 0;
+			pos++;
+		}
+		else if (e.mouseDelta.x > 0.0f) {
+			pos = 0;
+			neg++;
+		}
+		
+		if (neg > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
+			neg = 0;
+		}
+		else if (pos > 5) {
+			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
+			pos = 0;
+		}
+	}	
+#endif
+
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
 		SvgSwitch::randomize();
