@@ -515,6 +515,22 @@
         "Blank"
       ]
 	},
+    {
+      "slug": "Blank20HP",
+      "name": "Blank Panel - 20HP",
+      "description": "20HP blank panel",
+      "tags": [
+        "Blank"
+      ]
+	},
+    {
+      "slug": "Blank24HP",
+      "name": "Blank Panel - 24HP",
+      "description": "24HP blank panel",
+      "tags": [
+        "Blank"
+      ]
+	},
 	{
 	  "slug": "OffsetGenerator",
 	  "name": "Offset Generator",

@@ -105,3 +105,5 @@ p->addModel(modelBusRoute2);
 p->addModel(modelClockDivider);
 p->addModel(modelBinaryComparator);
 p->addModel(modelMatrixCombiner);
+p->addModel(modelBlank20HP);
+p->addModel(modelBlank24HP);
