@@ -9,7 +9,7 @@ struct LagProcessor {
 
 	float out = 0.0f;
 
-	float process(float in, float shape, float rise, float fall) {
+	float process(float in, float shape, float rise, float fall, float sampleTime) {
 
 		// minimum and maximum slopes in volts per second
 		const float slewMin = 0.1;
@@ -22,14 +22,14 @@ struct LagProcessor {
 		// Rise
 		if (in > out) {
 			float slew = slewMax * powf(slewMin / slewMax, rise);
-			out += slew * crossfade(1.0f, shapeScale * (in - out), shape) * APP->engine->getSampleTime();
+			out += slew * crossfade(1.0f, shapeScale * (in - out), shape) * sampleTime;
 			if (out > in)
 				out = in;
 		}
 		// Fall
 		else if (in < out) {
 			float slew = slewMax * powf(slewMin / slewMax, fall);
-			out -= slew * crossfade(1.0f, shapeScale * (out - in), shape) * APP->engine->getSampleTime();
+			out -= slew * crossfade(1.0f, shapeScale * (out - in), shape) * sampleTime;
 			if (out < in)
 				out = in;
 		}

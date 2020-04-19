@@ -98,7 +98,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));

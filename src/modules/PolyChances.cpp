@@ -32,8 +32,6 @@ struct PolyChances : Module {
 		NUM_LIGHTS
 	};
 
-	float moduleVersion = 1.1f;	
-	
 	GateProcessor gateTriggers[16];
 	
 	bool latch = false;
@@ -69,7 +67,7 @@ struct PolyChances : Module {
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
-		json_object_set_new(root, "moduleVersion", json_real(moduleVersion));
+		json_object_set_new(root, "moduleVersion", json_integer(2));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -78,11 +76,6 @@ struct PolyChances : Module {
 	}
 
 	void dataFromJson(json_t* root) override {
-		json_t *version = json_object_get(root, "moduleVersion");
-
-		if (version)
-			moduleVersion = json_number_value(version);	
-		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 	}

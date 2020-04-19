@@ -20,6 +20,20 @@
 </tr>
 
 <tr valign="top">
+<td align="center">??-??-2020</td>
+<td align="center">v1.10.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Cable Palette - Cable colour picker</li>
+<li>Event Timer - Clocked/realtime event timer</li>
+<li>Arpeggiator</li>
+</ul>
+</td>
+</tr> 
+
+<tr valign="top">
 <td align="center">26-03-2020</td>
 <td align="center">v1.9.0</td>
 <td align="left">

@@ -60,7 +60,7 @@ struct MuteIple : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -110,11 +110,11 @@ struct MuteIple : Module {
 			// apply the soft mode response if we need to
 			if (softMute[i]) {
 				// soft mode - apply some slew to soften the switch
-				mute = slew[i].process(mute, 1.0f, 0.1f, 0.1f);
+				mute = slew[i].process(mute, 1.0f, 0.1f, 0.1f, args.sampleTime);
 			}
 			else {
 				// hard mode - keep slew in sync but don't use it
-				slew[i].process(mute, 1.0f, 0.01f, 0.01f);
+				slew[i].process(mute, 1.0f, 0.01f, 0.01f, args.sampleTime);
 			}
 			
 			// determine the number of channels and send the inputs to the outputs

@@ -1,7 +1,7 @@
 {
   "slug": "CountModula",
   "name": "Count Modula",
-  "version": "1.9.0",
+  "version": "1.10.0DEV",
   "license": "GPL-3.0-only",
   "brand": "Count Modula",
   "author": "Adam Verspaget",
@@ -913,6 +913,30 @@
       "tags": [
         "Logic"
       ]
-    }
-  ]
+    },
+	{
+	  "slug": "EventTimer",
+	  "name": "Event Timer",
+	  "description": "Clocked/realtime event timer",
+	  "tags": [
+		"Clock modulator"
+	  ]
+	},
+	{
+	  "slug": "Palette",
+	  "name": "Cable Palette",
+	  "description": "Cable colour picker",
+	  "tags": [
+		"Utility"
+	  ]
+	},
+		{
+		  "slug": "Arpeggiator",
+		  "name": "Arpeggiator",
+		  "description": "Arpeggiator with user definable patterns",
+		  "tags": [
+			"Arpeggiator"
+		  ]
+		}
+	]
 }

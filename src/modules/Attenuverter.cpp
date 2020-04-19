@@ -56,7 +56,7 @@ struct Attenuverter : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 
 		json_object_set_new(root, "mode", json_integer(mode));
 		

@@ -41,8 +41,6 @@ struct STRUCT_NAME : Module {
 	float cv = 0.0f;
 	bool prevGate = false;
 
-	float moduleVersion = 0.0f;
-	
 	// Expander details
 	SequencerChannelMessage leftMessages[2][1];	// messages from left module (master)
 	SequencerChannelMessage rightMessages[2][1]; // messages to right module (expander)
@@ -94,7 +92,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_real(1.0f));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		json_object_set_new(root, "channel", json_integer(userChannel));
 		
 		// add the theme details
@@ -109,13 +107,9 @@ struct STRUCT_NAME : Module {
 		#include "../themes/dataFromJson.hpp"		
 		
 		json_t *ch = json_object_get(root, "channel");
-		json_t *ver = json_object_get(root, "moduleVersion");
 
 		if (ch)
 			userChannel = json_integer_value(ch);				
-	
-		if (ver)
-			moduleVersion = json_number_value(ver);
 	
 		doRedraw = true;
 	}

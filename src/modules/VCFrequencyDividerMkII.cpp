@@ -79,7 +79,7 @@ struct VCFrequencyDividerMkII : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("2.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(2));
 		json_object_set_new(root, "antiAlias", json_boolean(antiAlias));
 		json_object_set_new(root, "legacyMode", json_boolean(legacyMode));
 		

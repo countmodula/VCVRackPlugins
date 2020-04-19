@@ -105,3 +105,6 @@ extern Model *modelBinaryComparator;
 extern Model *modelMatrixCombiner;
 extern Model *modelBlank20HP;
 extern Model *modelBlank24HP;
+extern Model *modelEventTimer;
+extern Model *modelPalette;
+extern Model *modelArpeggiator;
