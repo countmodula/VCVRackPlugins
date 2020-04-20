@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
+#include "../inc/SlewLimiter.hpp"
 #include "../inc/Utility.hpp"
 
 // set the module name for the theme selection functions
@@ -22,20 +23,12 @@ const int CUSTOM_ROWS5[5] = {
 	326
 };	
 
-const float CUSTOM_ROWS6[6] = {
-	74.0f,
-	124.4f,
-	174.8f,
-	225.2f,
-	275.6f,
-	326.0f
-};	
-
 struct Arpeggiator : Module {
 	enum ParamIds {
 		LENGTH_PARAM,
 		MODE_PARAM,
 		SORT_PARAM,
+		GLIDE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -48,6 +41,7 @@ struct Arpeggiator : Module {
 	enum OutputIds {
 		GATE_OUTPUT,
 		CV_OUTPUT,
+		ACCENT_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -100,14 +94,20 @@ struct Arpeggiator : Module {
 	bool prevGateout = false;
 	bool skip = false;
 	float cv = 0.0f;
+	bool accentOut = false;
 	bool reset = false;
-	
+
+	float glideTime = 0.0f;
+	float octaveOut = 0.0f;
 	int currentDirection = UP_MODE;
 	
 	int octave[ARP_NUM_STEPS] = {};
 	int pattern[ARP_NUM_STEPS] = {};
-	
+	bool glide[ARP_NUM_STEPS] = {};
+	bool accent[ARP_NUM_STEPS] = {};
 	float octaves[NUM_OCTAVES] = {-1.0f, 0.0f, 1.0f};
+
+	LagProcessor slew;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -122,6 +122,7 @@ struct Arpeggiator : Module {
 		configParam(LENGTH_PARAM, 1.0f, 8.0f, 1.0f, "Pattern length");
 		configParam(MODE_PARAM, 0.0f, 4.0f, 3.0f, "Arpeggiator mode");
 		configParam(SORT_PARAM, 0.0f, 2.0f, 1.0f, "Sort order");
+		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -130,6 +131,7 @@ struct Arpeggiator : Module {
 	void onReset() override {
 		gpClock.reset();
 		gpReset.reset();
+		slew.reset();
 		
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++)
 			gpGate[i].reset();
@@ -150,14 +152,20 @@ struct Arpeggiator : Module {
 		
 		json_t *pat = json_array();
 		json_t *oct = json_array();
+		json_t *gld = json_array();
+		json_t *acc = json_array();
 	
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
 			json_array_insert_new(pat, i, json_integer(pattern[i]));
 			json_array_insert_new(oct, i, json_integer(octave[i]));
+			json_array_insert_new(gld, i, json_boolean(glide[i]));
+			json_array_insert_new(acc, i, json_boolean(accent[i]));	
 		}
 		
 		json_object_set_new(root, "pattern", pat);
 		json_object_set_new(root, "octave", oct);		
+		json_object_set_new(root, "glide", gld);		
+		json_object_set_new(root, "accent", acc);		
 
 		return root;
 	}
@@ -168,6 +176,8 @@ struct Arpeggiator : Module {
 			
 		json_t *pat = json_object_get(root, "pattern");
 		json_t *oct = json_object_get(root, "octave");
+		json_t *gld = json_object_get(root, "glide");
+		json_t *acc = json_object_get(root, "accent");
 
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
 			if (pat) {
@@ -180,6 +190,18 @@ struct Arpeggiator : Module {
 				json_t *v = json_array_get(oct, i);
 				if (v)
 					octave[i] = json_integer_value(v);
+			}
+
+			if (gld) {
+				json_t *v = json_array_get(gld, i);
+				if (v)
+					glide[i] = json_boolean_value(v);
+			}
+
+			if (acc) {
+				json_t *v = json_array_get(acc, i);
+				if (v)
+					accent[i] = json_boolean_value(v);
 			}
 		}
 	}
@@ -313,9 +335,16 @@ struct Arpeggiator : Module {
 			// reset the note counter back to the start where required (wrap around or new chord being played)
 			if (noteCount >= numCVs)
 				noteCount = 0;
+			
+			accentOut = accent[patternCount] && gate; //using gate not gateOut so the accent stays high for the duration of the step
+			octaveOut = octaves[octave[patternCount]];
+			glideTime = (glide[patternCount] && gate) ? params[GLIDE_PARAM].getValue() * 0.5f : 0.0f;
 		}
 		else {
 			skip = false;
+			accentOut = false;
+			glideTime = 0.0f;
+			octaveOut = 0.0f;
 			
 			// advance the clock in the appropriate direction
 			if (gateOut && gpClock.leadingEdge()) {
@@ -363,10 +392,10 @@ struct Arpeggiator : Module {
 		// process the assembled CVs
 		if (gateOut && gpClock.leadingEdge()) {
 			if (numCVs > 0) {
-				cv = cvList[noteCount] + (skip ? 0.0f : octaves[octave[patternCount]]);
+				cv = cvList[noteCount] + octaveOut;
 			}
 		}
-		
+	
 		// set the lights
 		for(int i = 0; i < PORT_MAX_CHANNELS ; i++) {
 		
@@ -391,9 +420,15 @@ struct Arpeggiator : Module {
 			}
 		}
 		
+		
+		// apply glide
+		float cvOut = slew.process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
+
+		
 		// output the gate and cv values
 		outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut));
-		outputs[CV_OUTPUT].setVoltage(cv);
+		outputs[CV_OUTPUT].setVoltage(cvOut);
+		outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut));
 		
 		// save for net time through - this will be used to determine the gate leading edge
 		prevGateout = gateOut;
@@ -462,6 +497,68 @@ struct OctaveButton : OpaqueWidget {
 	}
 };
 
+struct GlideButton : OpaqueWidget {
+	Arpeggiator* module;
+	NVGcolor activeColor;
+	NVGcolor inactiveColor;
+	int row = 0;
+	
+	void draw(const DrawArgs& args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		if (module)
+			nvgFillColor(args.vg, row < module->patternLength && module->glide[row] ? activeColor : inactiveColor);
+		else
+			nvgFillColor(args.vg, inactiveColor);
+		
+		nvgFill(args.vg);
+		
+		nvgStrokeWidth(args.vg, 1.2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}
+
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			if (row < module->patternLength) {
+				module->glide[row] = !module->glide[row];
+			}
+		}
+		OpaqueWidget::onDragStart(e);
+	}
+};
+
+struct AccentButton : OpaqueWidget {
+	Arpeggiator* module;
+	NVGcolor activeColor;
+	NVGcolor inactiveColor;
+	int row = 0;
+	
+	void draw(const DrawArgs& args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		if (module)
+			nvgFillColor(args.vg, row < module->patternLength && module->accent[row] ? activeColor : inactiveColor);
+		else
+			nvgFillColor(args.vg, inactiveColor);
+		
+		nvgFill(args.vg);
+		
+		nvgStrokeWidth(args.vg, 1.2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}
+
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			if (row < module->patternLength) {
+				module->accent[row] = !module->accent[row];
+			}
+		}
+		OpaqueWidget::onDragStart(e);
+	}
+};
+
 struct ArpeggiatorWidget : ModuleWidget {
 
 	const NVGcolor activePatternColors[4] = {SCHEME_RED, SCHEME_YELLOW, SCHEME_GREEN, SCHEME_BLUE};
@@ -476,14 +573,15 @@ struct ArpeggiatorWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 
 		// inputs
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], CUSTOM_ROWS6[STD_ROW1]), module, Arpeggiator::CV_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], CUSTOM_ROWS6[STD_ROW2]), module, Arpeggiator::GATE_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], CUSTOM_ROWS6[STD_ROW3]), module, Arpeggiator::CLOCK_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], CUSTOM_ROWS6[STD_ROW4]), module, Arpeggiator::RESET_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW1]), module, Arpeggiator::CV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW2]), module, Arpeggiator::GATE_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW3]), module, Arpeggiator::CLOCK_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW4]), module, Arpeggiator::RESET_INPUT));
 
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], CUSTOM_ROWS6[STD_ROW5]), module, Arpeggiator::CV_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], CUSTOM_ROWS6[STD_ROW6]), module, Arpeggiator::GATE_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW5]), module, Arpeggiator::CV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW6]), module, Arpeggiator::GATE_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW7]), module, Arpeggiator::ACCENT_OUTPUT));
 
 		// pattern/octave buttons and lights
 		float offset = 0.0f;
@@ -501,13 +599,12 @@ struct ArpeggiatorWidget : ModuleWidget {
 				patternButton->value = j;
 				patternButton->activeColor = activePatternColors[j];
 				patternButton->inactiveColor = inactiveColor;
-				
 				addChild(patternButton);		
 				k += 20;
 			}
 			
 			// octave buttons
-			k = -2;
+			k = 1;
 			for (int j = 0; j < 3; j ++) {
 				OctaveButton* octaveButton = new OctaveButton();
 				octaveButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL6] + k, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
@@ -517,25 +614,47 @@ struct ArpeggiatorWidget : ModuleWidget {
 				octaveButton->value = j;
 				octaveButton->activeColor = activeOctaveColors[j];
 				octaveButton->inactiveColor = inactiveColor;
-				
 				addChild(octaveButton);		
 				k += 20;
 			}
 			
-			offset += 27.0f;
+			// glide buttons
+			k = -14;
+			GlideButton* glideButton = new GlideButton();
+			glideButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
+			glideButton->box.size = Vec(14, 14);
+			glideButton->module = module;
+			glideButton->row = i;
+			glideButton->activeColor = SCHEME_GREEN;
+			glideButton->inactiveColor = inactiveColor;
+			addChild(glideButton);		
+			
+			// accent buttons
+			k = 14;
+			AccentButton* accentButton = new AccentButton();
+			accentButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
+			accentButton->box.size = Vec(14, 14);
+			accentButton->module = module;
+			accentButton->row = i;
+			accentButton->activeColor = SCHEME_GREEN;
+			accentButton->inactiveColor = inactiveColor;
+			addChild(accentButton);		
+			
+			offset += 27.f;
 		}
 		
 		// length, mode and note order switches
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::SORT_PARAM));
 		addParam(createParamCentered<CountModulaRotarySwitch5PosWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL5], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::MODE_PARAM));
 		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL7], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::LENGTH_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL9], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::GLIDE_PARAM));
 		
 		// cv status lights
-		offset = 0.0f;
+		offset = 12.0f;
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
-			addChild(createLightCentered<SmallLight<CountModulaLightWB>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + offset, STD_ROWS8[STD_ROW1] - 4), module, Arpeggiator::CV_LIGHTS + (i * 2)));
+			addChild(createLightCentered<SmallLight<CountModulaLightWB>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + offset, STD_ROWS8[STD_ROW1] - 4), module, Arpeggiator::CV_LIGHTS + (i * 2)));
 			
-			offset += 12.0f;
+			offset += 12.2f;
 		}
 	}
 	
