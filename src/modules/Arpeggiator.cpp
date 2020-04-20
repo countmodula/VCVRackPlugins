@@ -36,6 +36,7 @@ struct Arpeggiator : Module {
 		CV_INPUT,
 		CLOCK_INPUT,
 		RESET_INPUT,
+		HOLD_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -66,9 +67,9 @@ struct Arpeggiator : Module {
 	};
 
 	enum NoteOrderIds {
-		HILOW_ORDER,
+		DESC_ORDER,
 		INPUT_ORDER,
-		LOWHI_ORDER
+		ASC_ORDER
 	};
 	
 	enum DirectionIds {
@@ -83,12 +84,20 @@ struct Arpeggiator : Module {
 	GateProcessor gpClock;
 	GateProcessor gpGate[PORT_MAX_CHANNELS];
 	GateProcessor gpReset;
+	GateProcessor gpHold;
 
 	float cvList[PORT_MAX_CHANNELS] = {};
+	float cvListHeld[PORT_MAX_CHANNELS] = {};
 	int noteCount = 0;
 
 	int patternLength = ARP_NUM_STEPS;
 	int patternCount = 0;
+	
+	bool gate = false;
+	int numGates = 0;
+	int numCVs = 0;	
+	bool holdCV = false;
+	bool hold = false;
 	
 	bool gateOut = false;
 	bool prevGateout = false;
@@ -154,19 +163,27 @@ struct Arpeggiator : Module {
 		json_t *oct = json_array();
 		json_t *gld = json_array();
 		json_t *acc = json_array();
+		json_t *cvl = json_array();
 	
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
 			json_array_insert_new(pat, i, json_integer(pattern[i]));
 			json_array_insert_new(oct, i, json_integer(octave[i]));
 			json_array_insert_new(gld, i, json_boolean(glide[i]));
 			json_array_insert_new(acc, i, json_boolean(accent[i]));	
+			json_array_insert_new(cvl, i, json_real(cvListHeld[i]));
 		}
-		
+
+		json_object_set_new(root, "numCVs", json_integer(numCVs));
+		json_object_set_new(root, "hold", json_boolean(hold));
+		json_object_set_new(root, "gate", json_boolean(gate));
+		json_object_set_new(root, "nc", json_integer(noteCount));
+		json_object_set_new(root, "pc", json_integer(patternCount));
 		json_object_set_new(root, "pattern", pat);
 		json_object_set_new(root, "octave", oct);		
 		json_object_set_new(root, "glide", gld);		
-		json_object_set_new(root, "accent", acc);		
-
+		json_object_set_new(root, "accent", acc);
+		json_object_set_new(root, "cvList", cvl);
+			
 		return root;
 	}
 
@@ -174,10 +191,16 @@ struct Arpeggiator : Module {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 			
+		json_t *ncv = json_object_get(root, "numCVs");
+		json_t *hld = json_object_get(root, "hold");
+		json_t *gte = json_object_get(root, "gate");
+		json_t *nc = json_object_get(root, "nc");
+		json_t *pc = json_object_get(root, "pc");
 		json_t *pat = json_object_get(root, "pattern");
 		json_t *oct = json_object_get(root, "octave");
 		json_t *gld = json_object_get(root, "glide");
 		json_t *acc = json_object_get(root, "accent");
+		json_t *cvl = json_object_get(root, "cvList");
 
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
 			if (pat) {
@@ -203,7 +226,29 @@ struct Arpeggiator : Module {
 				if (v)
 					accent[i] = json_boolean_value(v);
 			}
+			
+			if (cvl) {
+				json_t *v = json_array_get(cvl, i);
+				if (v)
+					cvList[i] = cvListHeld[i] = json_real_value(v);
+			}
 		}
+		
+		if (ncv)
+			numCVs = json_integer_value(ncv);
+
+		if (hld)
+			hold = json_boolean_value(hld);
+
+		if (gte)
+			gate = json_boolean_value(gte);
+		
+		if (nc)
+			noteCount = json_integer_value(nc);
+		
+		if (pc)
+			patternCount = json_integer_value(pc);
+		
 	}
 	
 	void process(const ProcessArgs &args) override {
@@ -214,19 +259,37 @@ struct Arpeggiator : Module {
 		// determine the mode
 		int mode = (int)(params[MODE_PARAM].getValue());
 
-		// process the gate and cv inputs
-		bool gate = false;
+		// handle the hold input - this overrides the button
+		if (inputs[HOLD_INPUT].isConnected()) {
+			holdCV = true;
+			hold = gpHold.set(inputs[HOLD_INPUT].getVoltage());
+		}
+		else
+			holdCV = false;
 		
-		int numGates = inputs[GATE_INPUT].getChannels();
-		int numCVs = 0;
-		if (numGates > 0) {
-			for (int c = 0; c < numGates; c++) {
-				if (c < numGates) {
+		// are we in hold?
+		if (hold) {
+			// yes - use the gate and cv data we already have
+			if (gate) {
+				for (int c = 0; c < numCVs; c++) {
+					// add CV to the list for later
+					cvList[numCVs] = cvListHeld[numCVs];
+				}
+			}
+		}
+		else {
+			// no - process the gate and cv inputs
+			gate = false;
+			numGates = inputs[GATE_INPUT].getChannels();
+			numCVs = 0;
+			if (numGates > 0) {
+				for (int c = 0; c < numGates; c++) {
 					if (gpGate[c].set(inputs[GATE_INPUT].getVoltage(c))) {
 						gate = true;
 						
 						// add CV to the list for later
-						cvList[numCVs++] = inputs[CV_INPUT].getVoltage(c);
+						cvListHeld[numCVs] = cvList[numCVs] = inputs[CV_INPUT].getVoltage(c);
+						numCVs++;
 					}
 				}
 			}
@@ -235,14 +298,14 @@ struct Arpeggiator : Module {
 		// preprocess the note order if required
 		int sort = (int)(params[SORT_PARAM].getValue());
 		switch (sort) {
-			case LOWHI_ORDER:
+			case ASC_ORDER:
 				// sort into ascending order
-				std::sort(cvList, cvList + PORT_MAX_CHANNELS);
+				std::sort(cvList, cvList + numCVs);
 				break;
-			case HILOW_ORDER:
+			case DESC_ORDER:
 				// sort into descending order 
-				std::sort(cvList, cvList + PORT_MAX_CHANNELS);
-				std::reverse(cvList, cvList + PORT_MAX_CHANNELS);
+				std::sort(cvList, cvList + numCVs);
+				std::reverse(cvList, cvList + numCVs);
 				break;
 			case INPUT_ORDER:
 			default:
@@ -258,7 +321,7 @@ struct Arpeggiator : Module {
 		if (gpReset.leadingEdge())
 			reset = true;
 		
-		// quantize the gate outout to the clock leading edge
+		// quantize the gate output to the clock leading edge
 		if (gpClock.leadingEdge()) {
 			gateOut = gate;
 		}			
@@ -341,6 +404,7 @@ struct Arpeggiator : Module {
 			glideTime = (glide[patternCount] && gate) ? params[GLIDE_PARAM].getValue() * 0.5f : 0.0f;
 		}
 		else {
+			// the following are not relevant to these modes
 			skip = false;
 			accentOut = false;
 			glideTime = 0.0f;
@@ -423,14 +487,13 @@ struct Arpeggiator : Module {
 		
 		// apply glide
 		float cvOut = slew.process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
-
 		
 		// output the gate and cv values
 		outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut));
 		outputs[CV_OUTPUT].setVoltage(cvOut);
 		outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut));
 		
-		// save for net time through - this will be used to determine the gate leading edge
+		// save for next time through - this will be used to determine the gate leading edge
 		prevGateout = gateOut;
 	}
 };
@@ -559,6 +622,35 @@ struct AccentButton : OpaqueWidget {
 	}
 };
 
+struct HoldButton : OpaqueWidget {
+	Arpeggiator* module;
+	NVGcolor activeColor;
+	NVGcolor inactiveColor;
+
+	void draw(const DrawArgs& args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		if (module)
+			nvgFillColor(args.vg,module->hold ? activeColor : inactiveColor);
+		else
+			nvgFillColor(args.vg, inactiveColor);
+		
+		nvgFill(args.vg);
+		
+		nvgStrokeWidth(args.vg, 2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}
+
+	void onDragStart(const event::DragStart& e) override {
+		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			if (!module->holdCV)
+				module->hold = !module->hold;
+		}
+		OpaqueWidget::onDragStart(e);
+	}
+};
+
 struct ArpeggiatorWidget : ModuleWidget {
 
 	const NVGcolor activePatternColors[4] = {SCHEME_RED, SCHEME_YELLOW, SCHEME_GREEN, SCHEME_BLUE};
@@ -573,15 +665,16 @@ struct ArpeggiatorWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 
 		// inputs
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW1]), module, Arpeggiator::CV_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW2]), module, Arpeggiator::GATE_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW3]), module, Arpeggiator::CLOCK_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW4]), module, Arpeggiator::RESET_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, Arpeggiator::HOLD_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, Arpeggiator::CV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, Arpeggiator::GATE_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, Arpeggiator::CLOCK_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, Arpeggiator::RESET_INPUT));
 
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW5]), module, Arpeggiator::CV_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW6]), module, Arpeggiator::GATE_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW7]), module, Arpeggiator::ACCENT_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, Arpeggiator::CV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, Arpeggiator::GATE_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, Arpeggiator::ACCENT_OUTPUT));
 
 		// pattern/octave buttons and lights
 		float offset = 0.0f;
@@ -649,6 +742,15 @@ struct ArpeggiatorWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL7], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::LENGTH_PARAM));
 		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL9], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::GLIDE_PARAM));
 		
+		// hold button
+		HoldButton* holdButton = new HoldButton();
+		holdButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL2] - 5, STD_ROWS8[STD_ROW1] - 11);
+		holdButton->box.size = Vec(22, 22);
+		holdButton->module = module;
+		holdButton->activeColor = SCHEME_GREEN;
+		holdButton->inactiveColor = inactiveColor;
+		addChild(holdButton);		
+
 		// cv status lights
 		offset = 12.0f;
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {

@@ -134,10 +134,6 @@ struct STRUCT_NAME : Module {
 		json_t *dir = json_object_get(root, "direction");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
-		json_t *ver = json_object_get(root, "version");
-
-		if (ver)
-			moduleVersion = json_number_value(ver);		
 		
 		if (currentStep)
 			count = json_integer_value(currentStep);
