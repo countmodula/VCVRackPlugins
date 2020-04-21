@@ -129,7 +129,7 @@ struct Arpeggiator : Module {
 		}
 
 		configParam(LENGTH_PARAM, 1.0f, 8.0f, 1.0f, "Pattern length");
-		configParam(MODE_PARAM, 0.0f, 4.0f, 3.0f, "Arpeggiator mode");
+		configParam(MODE_PARAM, 0.0f, 4.0f, 0.0f, "Arpeggiator mode");
 		configParam(SORT_PARAM, 0.0f, 2.0f, 1.0f, "Sort order");
 		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide");
 
@@ -140,16 +140,38 @@ struct Arpeggiator : Module {
 	void onReset() override {
 		gpClock.reset();
 		gpReset.reset();
+		gpHold.reset();
+		
 		slew.reset();
 		
-		for (int i = 0; i < PORT_MAX_CHANNELS; i++)
+		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
 			gpGate[i].reset();
+			cvList[i] = 0.0f;
+			cvListHeld[i] = 0.0f;
+		}
 		
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
 			pattern[i] = 0;
 			octave[i] = 1;
+			glide[i] = false;
+			accent[i] = false;
 		}
+		
+		holdCV = false;
+		hold = false;
+		gate =  false;
+		numCVs = 0;
 	}
+	
+	void onRandomize() override {
+		// randomize the pattern, octave, glide and accent buttons
+		for (int i = 0; i < ARP_NUM_STEPS; i++) {
+			pattern[i] = (int)(random::uniform() * 3.999);
+			octave[i] = (int)(random::uniform() * 2.999);
+			glide[i] = random::uniform() > 0.5f;
+			accent[i] = random::uniform() > 0.5f;
+		}
+	}	
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
