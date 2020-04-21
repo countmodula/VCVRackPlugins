@@ -16,11 +16,11 @@
 
 // using custom rows to accommodate the row of status light at the top of the module
 const int CUSTOM_ROWS5[5] = {
-	74,
-	137,
-	200,
-	263,
-	326
+	85,
+	148,
+	211,
+	274,
+	337
 };	
 
 struct Arpeggiator : Module {
@@ -544,8 +544,13 @@ struct PatternButton : OpaqueWidget {
 
 	void onDragStart(const event::DragStart& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (row < module->patternLength)
-				module->pattern[row] = value;
+			if (row < module->patternLength) {
+				// click when lit toggles the button set to the default of 0
+				if (module->pattern[row] == value)
+					module->pattern[row] = 0;
+				else 
+					module->pattern[row] = value;
+			}
 		}
 		OpaqueWidget::onDragStart(e);
 	}
@@ -575,8 +580,13 @@ struct OctaveButton : OpaqueWidget {
 
 	void onDragStart(const event::DragStart& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (row < module->patternLength)
-				module->octave[row] = value;
+			if (row < module->patternLength) {
+				// click when lit toggles the button set back the default of 1
+				if (module->octave[row] == value)
+					module->octave[row] = 1;
+				else
+					module->octave[row] = value;
+			}
 		}
 		OpaqueWidget::onDragStart(e);
 	}
@@ -675,7 +685,7 @@ struct HoldButton : OpaqueWidget {
 
 struct ArpeggiatorWidget : ModuleWidget {
 
-	const NVGcolor activePatternColors[4] = {SCHEME_RED, SCHEME_YELLOW, SCHEME_GREEN, SCHEME_BLUE};
+	const NVGcolor activePatternColors[4] = {SCHEME_GREEN, SCHEME_RED, SCHEME_YELLOW, SCHEME_BLUE};
 	const NVGcolor activeOctaveColors[4] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
 	const NVGcolor inactiveColor = nvgRGB(0x5a, 0x5a, 0x5a);
 
@@ -774,9 +784,9 @@ struct ArpeggiatorWidget : ModuleWidget {
 		addChild(holdButton);		
 
 		// cv status lights
-		offset = 12.0f;
+		offset = 10.5f;
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
-			addChild(createLightCentered<SmallLight<CountModulaLightWB>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + offset, STD_ROWS8[STD_ROW1] - 4), module, Arpeggiator::CV_LIGHTS + (i * 2)));
+			addChild(createLightCentered<SmallLight<CountModulaLightWB>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + offset, STD_ROWS8[STD_ROW1]), module, Arpeggiator::CV_LIGHTS + (i * 2)));
 			
 			offset += 12.2f;
 		}

@@ -42,6 +42,8 @@ struct Palette : Module {
 	Palette() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configParam(LOCK_PARAM, 0.0f, 1.0f, 0.0f, "Lock current colour");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
