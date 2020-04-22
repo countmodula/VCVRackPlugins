@@ -55,7 +55,7 @@ struct Palette : Module {
 		json_t *root = json_object();
 
 		json_object_set_new(root, "moduleVersion", json_integer(1));
-		json_object_set_new(root, "color", json_integer(APP->scene->rack->nextCableColorId));	
+		json_object_set_new(root, "color", json_integer(nextColorID));	
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"				
@@ -68,27 +68,31 @@ struct Palette : Module {
 		json_t *col = json_object_get(root, "color");
 
 		startColorID = -1;
-		if (col)
+		if (col) {
 			startColorID = json_integer_value(col);		
-		
+			DEBUG("setting startColorID = %d", startColorID);
+		}
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 	}	
 	
 	void process(const ProcessArgs &args) override {
 
-		int colorID = APP->scene->rack->nextCableColorId;
 	
-		// if we have locked the colour, continue with the colour we had chosen at the time the patch was saved 
-		if (startColorID >= 0 && params[LOCK_PARAM].getValue() > 0.5f) {
-			APP->scene->rack->nextCableColorId = colorID = startColorID;
+		// continue with the colour we had chosen at the time the patch was saved 
+		if (startColorID >= 0) {
+			DEBUG("setting color to startup color %d", startColorID);
+			APP->scene->rack->nextCableColorId = startColorID;
 			nextColorID = startColorID = -1;
 			doChange = true;
 		}
 		
+		int colorID = APP->scene->rack->nextCableColorId;
+		
 		// if we're locked, keep the next colour as the current colour
 		if (!doChange) {
 			if (colorID != nextColorID && params[LOCK_PARAM].getValue() > 0.5f) {
+				DEBUG("forcing color to locked color %d", nextColorID);
 				if (nextColorID >= 0)
 					colorID = APP->scene->rack->nextCableColorId = nextColorID;
 			}
@@ -97,6 +101,7 @@ struct Palette : Module {
 		// update the LEDs if there's been a change
 		if (count == 0 || doChange) {
 			if (nextColorID != colorID) {
+				DEBUG("setting lights color to %d", colorID);
 				for (int i = 0; i < NUM_COLOURS; i++) {
 					lights[SELECT_LIGHTS + i].setBrightness(boolToLight(i == colorID));
 				}
@@ -106,6 +111,7 @@ struct Palette : Module {
 			}
 		}
 		
+		// update the display every 8th cycle
 		if (++count > 8)
 			count = 0;
 		

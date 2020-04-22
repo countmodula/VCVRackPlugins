@@ -206,10 +206,12 @@ struct EventTimer : Module {
 		}
 
 		// set running flag on trigger leading edge
-		if (gpTrigger.leadingEdge()) {
+		if (!end && gpTrigger.leadingEdge()) {
+			if (!running)
+				currentTime = 0.0f;
+			
 			running = true;
-			currentTime = 0.0f;
-		}		
+		}
 		
 		// process the internal clock
 		currentTime += args.sampleTime;
