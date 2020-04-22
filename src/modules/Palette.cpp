@@ -14,6 +14,7 @@
 #define PANEL_FILE "Palette.svg"
 
 #define NUM_COLOURS 7
+#define MAX_COLOURS 15
 
 struct Palette : Module {
 	enum ParamIds {
@@ -27,7 +28,7 @@ struct Palette : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
-		ENUMS(SELECT_LIGHTS, NUM_COLOURS),
+		ENUMS(SELECT_LIGHTS, MAX_COLOURS),
 		NUM_LIGHTS
 	};
 
@@ -35,6 +36,8 @@ struct Palette : Module {
 	int startColorID = -1;
 	int nextColorID = -1;
 	int count = 0;
+	
+	int numColoursToUse = NUM_COLOURS;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -69,19 +72,20 @@ struct Palette : Module {
 
 		startColorID = -1;
 		if (col) {
-			startColorID = json_integer_value(col);		
-			DEBUG("setting startColorID = %d", startColorID);
+			startColorID = json_integer_value(col);
+			
+			if (startColorID >= (int)(settings::cableColors.size()))
+				startColorID = 0;
 		}
+		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 	}	
 	
 	void process(const ProcessArgs &args) override {
 
-	
 		// continue with the colour we had chosen at the time the patch was saved 
 		if (startColorID >= 0) {
-			DEBUG("setting color to startup color %d", startColorID);
 			APP->scene->rack->nextCableColorId = startColorID;
 			nextColorID = startColorID = -1;
 			doChange = true;
@@ -92,7 +96,6 @@ struct Palette : Module {
 		// if we're locked, keep the next colour as the current colour
 		if (!doChange) {
 			if (colorID != nextColorID && params[LOCK_PARAM].getValue() > 0.5f) {
-				DEBUG("forcing color to locked color %d", nextColorID);
 				if (nextColorID >= 0)
 					colorID = APP->scene->rack->nextCableColorId = nextColorID;
 			}
@@ -101,8 +104,7 @@ struct Palette : Module {
 		// update the LEDs if there's been a change
 		if (count == 0 || doChange) {
 			if (nextColorID != colorID) {
-				DEBUG("setting lights color to %d", colorID);
-				for (int i = 0; i < NUM_COLOURS; i++) {
+				for (int i = 0; i < numColoursToUse; i++) {
 					lights[SELECT_LIGHTS + i].setBrightness(boolToLight(i == colorID));
 				}
 				
@@ -158,7 +160,7 @@ struct CountModulaBezel : TransparentWidget {
 		
 		// Background
 		nvgBeginPath(args.vg);
-		nvgCircle(args.vg, box.size.x, box.size.y, 7.0); // 7mm for  5mm LED
+		nvgCircle(args.vg, box.size.x, box.size.y, 5.0); // 5mm for  3mm LED
 		nvgFillColor(args.vg, nvgRGBA(0x00, 0x00, 0x00, 0xA0));
 		nvgFill(args.vg);
 	}
@@ -172,14 +174,21 @@ struct PaletteWidget : ModuleWidget {
 		// screws
 		#include "../components/stdScrews.hpp"	
 
-		// add the buttons and lights for each of the first 6 available colours
+		// add the buttons and lights for each of the first 7 available colours
 		if (!settings::cableColors.empty()) {
 			
-			int x = settings::cableColors.empty() ? 0: clamp(settings::cableColors.size(), 0, NUM_COLOURS);
-
+			int x = settings::cableColors.empty() ? 0: clamp(settings::cableColors.size(), 0, MAX_COLOURS);
+			
+			bool showAll = false;
+			if (x > NUM_COLOURS) {
+				showAll = true;
+				module->numColoursToUse = MAX_COLOURS;
+			}
+			
 			NVGcolor color;
 			bool enabled;
-			for (int i = 0; i < NUM_COLOURS; i++) {
+			
+			for (int i = 0; i < module->numColoursToUse; i++) {
 				
 				if (i < x) {
 					color = settings::cableColors[i];
@@ -191,17 +200,30 @@ struct PaletteWidget : ModuleWidget {
 				}
 				
 				ColourButton* colourButton = new ColourButton();
-				colourButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL1] - 25, STD_ROWS8[STD_ROW1 + i] - 15);
-				colourButton->box.size = Vec(50, 30);
+				if ( showAll) {
+					colourButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL1] - 25, STD_ROWS8[STD_ROW1] + (i * 19.0) - 15);
+					colourButton->box.size = Vec(50, 15);
+				}
+				else {
+					colourButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL1] - 25, STD_ROWS8[STD_ROW1 + i] - 15);
+					colourButton->box.size = Vec(50, 30);
+				}
+				
 				colourButton->module = module;
 				colourButton->color = color;
 				colourButton->colorID = i;
 				colourButton->enabled = enabled;
 				addChild(colourButton);
 				
-				addChild(createWidgetCentered<CountModulaBezel>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1 + i])));
 				
-				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1 + i]), module, Palette::SELECT_LIGHTS + i));
+				if (showAll) {
+					addChild(createWidgetCentered<CountModulaBezel>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1]+ (i * 19.0) - 7.5)));
+					addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1] + (i * 19.0) - 7.5), module, Palette::SELECT_LIGHTS + i));
+				}
+				else {
+					addChild(createWidgetCentered<CountModulaBezel>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1 + i])));
+					addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1 + i]), module, Palette::SELECT_LIGHTS + i));
+				}
 			}
 		}
 		
