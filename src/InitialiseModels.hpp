@@ -108,5 +108,4 @@ p->addModel(modelMatrixCombiner);
 p->addModel(modelBlank20HP);
 p->addModel(modelBlank24HP);
 p->addModel(modelEventTimer);
-p->addModel(modelPalette);
 p->addModel(modelArpeggiator);

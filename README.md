@@ -53,7 +53,6 @@ Follow Count Modula on facebook:
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
 <li>Chances</a></li>
-<li>Cable Palette <font color="red">* New in v1.9.0</font></li>
 <li>Clock Divider - a standard clock divider </li>
 <li>Clocked Random Gates</li>
 <li>Clocked Random Gate Expander - CV</li>

@@ -26,7 +26,6 @@
 
 <ul>
 <b>New Modules:</b>
-<li>Cable Palette - Cable colour picker</li>
 <li>Event Timer - Clocked/realtime event timer</li>
 <li>Arpeggiator</li>
 </ul>

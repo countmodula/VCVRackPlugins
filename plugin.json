@@ -922,14 +922,6 @@
 		"Clock modulator"
 	  ]
 	},
-	{
-	  "slug": "Palette",
-	  "name": "Cable Palette",
-	  "description": "Cable colour picker",
-	  "tags": [
-		"Utility"
-	  ]
-	},
 		{
 		  "slug": "Arpeggiator",
 		  "name": "Arpeggiator",
