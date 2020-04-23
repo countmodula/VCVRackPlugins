@@ -79,6 +79,9 @@ struct Arpeggiator : Module {
 		DOWN_MODE,
 		PENDULUM_MODE,
 		RANDOM_MODE,
+		MIDDLEOUT_MODE,
+		OUTSIDEIN_MODE,
+		FFB_MODE,
 		PROGRAMME_MODE,
 		NUM_MODES		
 	};
@@ -124,7 +127,24 @@ struct Arpeggiator : Module {
 	float octaves[NUM_OCTAVES] = {-1.0f, 0.0f, 1.0f};
 
 	LagProcessor slew;
-	
+
+	const int mapMidOut[16][16] = {	{ 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 1,  2,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 1,  2,  0,  3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 2,  3,  1,  4,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 2,  3,  1,  4,  0,  5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 3,  4,  2,  5,  1,  6,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 3,  4,  2,  5,  1,  6,  0,  7, -1, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 4,  5,  3,  6,  2,  7,  1,  8,  0, -1, -1, -1, -1, -1, -1, -1}, 
+									{ 4,  5,  3,  6,  2,  7,  1,  8,  0,  9, -1, -1, -1, -1, -1, -1}, 
+									{ 5,  6,  4,  7,  3,  8,  2,  9,  1, 10,  0, -1, -1, -1, -1, -1}, 
+									{ 5,  6,  4,  7,  3,  8,  2,  9,  1, 10,  0, 11, -1, -1, -1, -1}, 
+									{ 6,  7,  5,  8,  4,  9,  3, 10,  1, 11,  1, 12,  0, -1, -1, -1}, 
+									{ 6,  7,  5,  8,  4,  9,  3, 10,  1, 11,  1, 12,  0, 13, -1, -1}, 
+									{ 7,  8,  6,  9,  5, 10,  4, 11,  3, 12,  2, 13,  1, 14,  0, -1}, 
+									{ 7,  8,  6,  9,  5, 10,  4, 11,  3, 12,  2, 13,  1, 14,  0, 15}};
+
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
@@ -136,7 +156,7 @@ struct Arpeggiator : Module {
 		}
 
 		configParam(LENGTH_PARAM, 1.0f, 8.0f, 1.0f, "Pattern length");
-		configParam(MODE_PARAM, 0.0f, 4.0f, 0.0f, "Arpeggiator mode");
+		configParam(MODE_PARAM, 0.0f, 7.0f, 0.0f, "Sequence");
 		configParam(SORT_PARAM, 0.0f, 2.0f, 1.0f, "Sort order");
 		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide");
 		configParam(OCTAVE_PARAM, 0.0f, 1.0f, 1.0f, "Octve processing on/off");
@@ -357,10 +377,9 @@ struct Arpeggiator : Module {
 			reset = true;
 		
 		// quantize the gate output to the clock leading edge
-		if (gpClock.leadingEdge()) {
+		if (gpClock.leadingEdge())
 			gateOut = gate;
-		}			
-
+		
 		// always start over with on a new gate signal
 		if (gateOut && !prevGateout) {
 			patternCount = patternLength;
@@ -368,7 +387,9 @@ struct Arpeggiator : Module {
 			// always start pendulum mode on the up phase
 			if (mode == PENDULUM_MODE)
 				currentDirection = DOWN_MODE;
-
+			else if (mode == FFB_MODE)
+				currentDirection = UP_MODE;
+				
 			if(mode == PROGRAMME_MODE)
 				noteCount = numCVs - 1;
 			else
@@ -376,9 +397,8 @@ struct Arpeggiator : Module {
 		}
 
 		// advance the pattern counter on every clock edge
-		if (gateOut && gpClock.leadingEdge()) {
+		if (gateOut && gpClock.leadingEdge())
 			patternCount++;
-		}
 		
 		if (reset || patternCount >= patternLength)
 			patternCount = 0;
@@ -438,22 +458,38 @@ struct Arpeggiator : Module {
 		else {
 			// the following are not relevant to these modes
 			skip = false;
-			// accentOut = false;
-			// glideTime = 0.0f;
-			// octaveOut = 0.0f;
 			
 			// advance the clock in the appropriate direction
 			if (gateOut && gpClock.leadingEdge()) {
 				
-				if(mode == PENDULUM_MODE)
-					currentDirection = reset ? UP_MODE : currentDirection;
-				else
-					currentDirection = mode;
+				switch (mode) {
+					case FFB_MODE:
+					case PENDULUM_MODE:
+						currentDirection = reset ? UP_MODE : currentDirection;
+						break;
+					case MIDDLEOUT_MODE:
+						currentDirection = UP_MODE;
+						break;
+					case OUTSIDEIN_MODE:
+							currentDirection = DOWN_MODE;
+							break;
+					default:
+						currentDirection = mode;
+						break;
+				}
 				
 				switch (currentDirection) {
 					case UP_MODE:
 						if (reset)
-								noteCount = 0;
+							noteCount = 0;
+						else if (mode == FFB_MODE) {
+							noteCount = noteCount + 2;
+							
+							if (noteCount >= numCVs)
+								noteCount = noteCount - numCVs;
+							
+							currentDirection = DOWN_MODE;
+						}
 						else if (++noteCount >= numCVs) {
 							if (mode == PENDULUM_MODE) {
 								noteCount = numCVs - 1;
@@ -465,7 +501,13 @@ struct Arpeggiator : Module {
 						break;
 					case DOWN_MODE:
 						if (reset)
+							noteCount = numCVs - 1;
+						else if (mode == FFB_MODE) {
+							if (--noteCount < 0)
 								noteCount = numCVs - 1;
+							
+							currentDirection = UP_MODE;
+						}
 						else if (--noteCount < 0) {
 							if (mode == PENDULUM_MODE) {
 								noteCount = 0;
@@ -490,11 +532,15 @@ struct Arpeggiator : Module {
 		accentOut = noteProcessingEnabled && accent[patternCount] && gate; //using gate not gateOut so the accent stays high for the duration of the step
 		glideTime = (noteProcessingEnabled && glide[patternCount] && gate) ? params[GLIDE_PARAM].getValue() * 0.5f : 0.0f;
 		
+		// finally remap to corrct note if we're in a mapped mode
+		int noteToUse = noteCount;
+		if (numCVs > 0 && (mode == MIDDLEOUT_MODE || mode == OUTSIDEIN_MODE))
+			noteToUse =  mapMidOut[numCVs-1][noteToUse];
+		
 		// process the assembled CVs
 		if (gateOut && gpClock.leadingEdge()) {
-			if (numCVs > 0) {
-				cv = cvList[noteCount] + octaveOut;
-			}
+			if (numCVs > 0)
+				cv = cvList[noteToUse] + octaveOut;
 		}
 	
 		// set the lights
@@ -505,7 +551,7 @@ struct Arpeggiator : Module {
 				lights[STEP_LIGHTS + (i * 2) + 1].setBrightness(boolToLight(i < patternLength));
 			}
 			
-			if (gateOut && clockOut && i == noteCount) {
+			if (gateOut && clockOut && i == noteToUse) {
 				lights[CV_LIGHTS + (i * 2)].setBrightness(1.0f); // white is current position
 				lights[CV_LIGHTS + (i * 2) + 1].setBrightness(0.0f); // blue is note data present 
 			}
@@ -779,7 +825,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 		
 		// length, mode and note order switches
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 11, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::SORT_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitch5PosWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::MODE_PARAM));
+		addParam(createParamCentered<CountModulaRotarySwitchWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::MODE_PARAM));
 		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL7] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::LENGTH_PARAM));
 		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL9] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::GLIDE_PARAM));
 	
