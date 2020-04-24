@@ -115,7 +115,7 @@ struct Arpeggiator : Module {
 	float octaveOut = 0.0f;
 	int currentDirection = UP_MODE;
 	
-	
+	int sort = -1;
 	int mode = UP_MODE;
 	bool noteProcessingEnabled = true;
 	bool octaveProcessingEnabled = true;
@@ -307,8 +307,10 @@ struct Arpeggiator : Module {
 		// determine the pattern length
 		patternLength = clamp((int)(params[LENGTH_PARAM].getValue()), 1, ARP_NUM_STEPS);
 
-		// determine the mode
+		// determine the sort and sequence modes
+		int prevSort = sort;
 		mode = (int)(params[MODE_PARAM].getValue());
+		sort = (int)(params[SORT_PARAM].getValue());
 
 		// which functiions are turned on?
 		noteProcessingEnabled = params[NOTE_PARAM].getValue() > 0.5f;
@@ -325,10 +327,10 @@ struct Arpeggiator : Module {
 		// are we in hold?
 		if (hold) {
 			// yes - use the gate and cv data we already have
-			if (gate) {
+			if (gate && prevSort != sort) {
 				for (int c = 0; c < numCVs; c++) {
 					// add CV to the list for later
-					cvList[numCVs] = cvListHeld[numCVs];
+					cvList[c] = cvListHeld[c];
 				}
 			}
 		}
@@ -351,7 +353,6 @@ struct Arpeggiator : Module {
 		}
 
 		// preprocess the note order if required
-		int sort = (int)(params[SORT_PARAM].getValue());
 		switch (sort) {
 			case ASC_ORDER:
 				// sort into ascending order
