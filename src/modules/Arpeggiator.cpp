@@ -50,6 +50,7 @@ struct Arpeggiator : Module {
 	enum LightIds {
 		ENUMS(STEP_LIGHTS, ARP_NUM_STEPS * 2),
 		ENUMS(CV_LIGHTS, PORT_MAX_CHANNELS * 2),
+		POLY_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -101,6 +102,7 @@ struct Arpeggiator : Module {
 	bool gate = false;
 	int numGates = 0;
 	int numCVs = 0;	
+	int maxChannels = -1;
 	bool holdCV = false;
 	bool hold = false;
 	
@@ -114,6 +116,7 @@ struct Arpeggiator : Module {
 	float glideTime = 0.0f;
 	float octaveOut = 0.0f;
 	int currentDirection = UP_MODE;
+	bool polyOutputs = false;
 	
 	int sort = -1;
 	int mode = UP_MODE;
@@ -125,7 +128,7 @@ struct Arpeggiator : Module {
 	bool glide[ARP_NUM_STEPS] = {};
 	bool accent[ARP_NUM_STEPS] = {};
 	float octaves[NUM_OCTAVES] = {-1.0f, 0.0f, 1.0f};
-
+	
 	LagProcessor slew;
 
 	const int mapMidOut[16][16] = {	{ 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
@@ -229,11 +232,14 @@ struct Arpeggiator : Module {
 		json_object_set_new(root, "gate", json_boolean(gate));
 		json_object_set_new(root, "nc", json_integer(noteCount));
 		json_object_set_new(root, "pc", json_integer(patternCount));
+		json_object_set_new(root, "polyOutputs", json_boolean(polyOutputs));	
 		json_object_set_new(root, "pattern", pat);
 		json_object_set_new(root, "octave", oct);		
 		json_object_set_new(root, "glide", gld);		
 		json_object_set_new(root, "accent", acc);
 		json_object_set_new(root, "cvList", cvl);
+		
+		
 			
 		return root;
 	}
@@ -247,6 +253,8 @@ struct Arpeggiator : Module {
 		json_t *gte = json_object_get(root, "gate");
 		json_t *nc = json_object_get(root, "nc");
 		json_t *pc = json_object_get(root, "pc");
+		json_t *po = json_object_get(root, "polyOutputs");
+		
 		json_t *pat = json_object_get(root, "pattern");
 		json_t *oct = json_object_get(root, "octave");
 		json_t *gld = json_object_get(root, "glide");
@@ -300,6 +308,9 @@ struct Arpeggiator : Module {
 		if (pc)
 			patternCount = json_integer_value(pc);
 		
+		if (po)
+			polyOutputs = json_boolean_value(po);
+		
 	}
 	
 	void process(const ProcessArgs &args) override {
@@ -316,6 +327,9 @@ struct Arpeggiator : Module {
 		noteProcessingEnabled = params[NOTE_PARAM].getValue() > 0.5f;
 		octaveProcessingEnabled = params[OCTAVE_PARAM].getValue() > 0.5f;
 		
+		// process the clock input
+		bool clockOut = gpClock.set(inputs[CLOCK_INPUT].getVoltage());
+		
 		// handle the hold input - this overrides the button
 		if (inputs[HOLD_INPUT].isConnected()) {
 			holdCV = true;
@@ -325,7 +339,7 @@ struct Arpeggiator : Module {
 			holdCV = false;
 		
 		// are we in hold?
-		if (hold) {
+		if (hold || !gpClock.leadingEdge()) {
 			// yes - use the gate and cv data we already have
 			if (gate && prevSort != sort) {
 				for (int c = 0; c < numCVs; c++) {
@@ -369,8 +383,6 @@ struct Arpeggiator : Module {
 				break;
 		}
 
-		// process the clock input
-		bool clockOut = gpClock.set(inputs[CLOCK_INPUT].getVoltage());
 
 		// process the reset input
 		gpReset.set(inputs[RESET_INPUT].getVoltage());
@@ -504,6 +516,9 @@ struct Arpeggiator : Module {
 						if (reset)
 							noteCount = numCVs - 1;
 						else if (mode == FFB_MODE) {
+							if (noteCount >= numCVs)
+								noteCount = numCVs;
+							
 							if (--noteCount < 0)
 								noteCount = numCVs - 1;
 							
@@ -523,6 +538,12 @@ struct Arpeggiator : Module {
 						currentDirection = UP_MODE; // must do this so the switch back to pendulum works
 						break;
 				}
+				
+				if (noteCount >= numCVs)
+					noteCount = numCVs - 1;
+				
+				if (noteCount < 0)
+					noteCount = 0;					
 				
 				reset = false;
 			}
@@ -546,10 +567,9 @@ struct Arpeggiator : Module {
 	
 		// set the lights
 		for(int i = 0; i < PORT_MAX_CHANNELS ; i++) {
-		
 			if ( i < ARP_NUM_STEPS) {
 				lights[STEP_LIGHTS + (i * 2)].setBrightness(boolToLight(gateOut && i == patternCount));
-				lights[STEP_LIGHTS + (i * 2) + 1].setBrightness(boolToLight(i < patternLength));
+				lights[STEP_LIGHTS + (i * 2) + 1].setBrightness(boolToLight(i < patternLength && i != patternCount));
 			}
 			
 			if (gateOut && clockOut && i == noteToUse) {
@@ -562,15 +582,35 @@ struct Arpeggiator : Module {
 			}
 		}
 		
+		lights[POLY_LIGHT].setBrightness(boolToLight(polyOutputs));
 		
 		// apply glide
 		float cvOut = slew.process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
 		
 		// output the gate and cv values
-		outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut));
-		outputs[CV_OUTPUT].setVoltage(cvOut);
-		outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut));
-		
+		if (polyOutputs) {
+			maxChannels = std::max(maxChannels, numCVs);
+
+			outputs[GATE_OUTPUT].setChannels(maxChannels);
+			outputs[CV_OUTPUT].setChannels(maxChannels);
+			outputs[ACCENT_OUTPUT].setChannels(maxChannels);
+			
+			outputs[CV_OUTPUT].setVoltage(cvOut, noteToUse);
+			
+			for (int i = 0; i < maxChannels; i++) {
+			outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut && i == noteToUse), i);
+				outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut && i == noteToUse), i);
+			}
+		}
+		else {
+			outputs[GATE_OUTPUT].setChannels(1);
+			outputs[CV_OUTPUT].setChannels(1);
+			outputs[ACCENT_OUTPUT].setChannels(1);
+			
+			outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut), 0);
+			outputs[CV_OUTPUT].setVoltage(cvOut, 0);
+			outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut), 0);
+		}
 		// save for next time through - this will be used to determine the gate leading edge
 		prevGateout = gateOut;
 	}
@@ -850,10 +890,24 @@ struct ArpeggiatorWidget : ModuleWidget {
 			
 			offset += 12.2f;
 		}
+		
+		//poly light
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW7]), module, Arpeggiator::POLY_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
+
+
+	// poly/mono selection menu item
+	struct PolyMenuItem : MenuItem {
+		Arpeggiator *module;
+		
+		void onAction(const event::Action &e) override {
+			module->polyOutputs = !module->polyOutputs;
+		}
+	};
+
 
 	void appendContextMenu(Menu *menu) override {
 		Arpeggiator *module = dynamic_cast<Arpeggiator*>(this->module);
@@ -864,6 +918,11 @@ struct ArpeggiatorWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+		
+		PolyMenuItem *polyMenuItem = createMenuItem<PolyMenuItem>("Polyphonic Outputs", CHECKMARK(module->polyOutputs));
+		polyMenuItem->module = module;
+		menu->addChild(polyMenuItem);		
+	
 	}	
 	
 	void step() override {
