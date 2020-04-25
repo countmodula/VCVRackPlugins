@@ -59,6 +59,7 @@ struct Arpeggiator : Module {
 		PATTERN_DOWN,
 		PATTERN_REPEAT,
 		PATTERN_REST,
+		PATTERN_SKIP,
 		NUM_PATTERNS
 	};
 	
@@ -161,7 +162,7 @@ struct Arpeggiator : Module {
 		configParam(LENGTH_PARAM, 1.0f, 8.0f, 1.0f, "Pattern length");
 		configParam(MODE_PARAM, 0.0f, 7.0f, 0.0f, "Sequence");
 		configParam(SORT_PARAM, 0.0f, 2.0f, 1.0f, "Sort order");
-		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide");
+		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide", "", 0.0f, 10.0f, 0.0f);
 		configParam(OCTAVE_PARAM, 0.0f, 1.0f, 1.0f, "Octve processing on/off");
 		configParam(NOTE_PARAM, 0.0f, 1.0f, 1.0f, "Note processing on/off");
 
@@ -438,6 +439,19 @@ struct Arpeggiator : Module {
 						// stay on the same note
 						skip = false;
 						break;
+					case PATTERN_SKIP:
+						if (reset)
+							noteCount = 0;
+						
+						// skip to the next note
+						noteCount = noteCount + 2;
+						
+						// wrap around if we exceed the number of notes
+						if (noteCount >= numCVs)
+							noteCount -= numCVs;
+						
+						break;
+						
 					case PATTERN_REST:
 						if (reset)
 							noteCount = 0;
@@ -569,7 +583,7 @@ struct Arpeggiator : Module {
 		for(int i = 0; i < PORT_MAX_CHANNELS ; i++) {
 			if ( i < ARP_NUM_STEPS) {
 				lights[STEP_LIGHTS + (i * 2)].setBrightness(boolToLight(gateOut && i == patternCount));
-				lights[STEP_LIGHTS + (i * 2) + 1].setBrightness(boolToLight(i < patternLength && i != patternCount));
+				lights[STEP_LIGHTS + (i * 2) + 1].setBrightness(boolToLight(i < patternLength && !(gateOut && i == patternCount)));
 			}
 			
 			if (gateOut && clockOut && i == noteToUse) {
@@ -598,7 +612,7 @@ struct Arpeggiator : Module {
 			outputs[CV_OUTPUT].setVoltage(cvOut, noteToUse);
 			
 			for (int i = 0; i < maxChannels; i++) {
-			outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut && i == noteToUse), i);
+				outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut && i == noteToUse), i);
 				outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut && i == noteToUse), i);
 			}
 		}
@@ -781,8 +795,8 @@ struct HoldButton : OpaqueWidget {
 
 struct ArpeggiatorWidget : ModuleWidget {
 
-	const NVGcolor activePatternColors[4] = {SCHEME_GREEN, SCHEME_RED, SCHEME_YELLOW, SCHEME_BLUE};
-	const NVGcolor activeOctaveColors[4] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
+	const NVGcolor activePatternColors[5] = {SCHEME_GREEN, SCHEME_RED, SCHEME_YELLOW, SCHEME_BLUE, SCHEME_PURPLE};
+	const NVGcolor activeOctaveColors[3] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
 	const NVGcolor inactiveColor = nvgRGB(0x5a, 0x5a, 0x5a);
 
 	ArpeggiatorWidget(Arpeggiator *module) {
@@ -811,7 +825,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 
 			// pattern buttons
 			int k = 10;
-			for (int j = 0; j < 4; j++) {
+			for (int j = 0; j < 5; j++) {
 				PatternButton* patternButton = new PatternButton();
 				patternButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL3] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
 				patternButton->box.size = Vec(14, 14);
@@ -825,7 +839,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 			}
 			
 			// octave buttons
-			k = 1;
+			k = 21;
 			for (int j = 0; j < 3; j ++) {
 				OctaveButton* octaveButton = new OctaveButton();
 				octaveButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL6] + k, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
@@ -840,7 +854,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 			}
 			
 			// glide buttons
-			k = -14;
+			k = 6;
 			GlideButton* glideButton = new GlideButton();
 			glideButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
 			glideButton->box.size = Vec(14, 14);
@@ -851,9 +865,9 @@ struct ArpeggiatorWidget : ModuleWidget {
 			addChild(glideButton);		
 			
 			// accent buttons
-			k = 14;
+			k = 4	;
 			AccentButton* accentButton = new AccentButton();
-			accentButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
+			accentButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL10] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
 			accentButton->box.size = Vec(14, 14);
 			accentButton->module = module;
 			accentButton->row = i;
@@ -865,14 +879,14 @@ struct ArpeggiatorWidget : ModuleWidget {
 		}
 		
 		// length, mode and note order switches
-		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 11, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::SORT_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::MODE_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL7] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::LENGTH_PARAM));
-		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL9] + 15, CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::GLIDE_PARAM));
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::SORT_PARAM));
+		addParam(createParamCentered<CountModulaRotarySwitchWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL6], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::MODE_PARAM));
+		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL8], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::LENGTH_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL10], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::GLIDE_PARAM));
 	
 		// octave and note processing bypass buttons
-		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_HALF_COLUMN(STD_COL3) + 10, STD_ROWS8[STD_ROW8] - 20), module, Arpeggiator::OCTAVE_PARAM));
-		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_HALF_COLUMN(STD_COL3) + 10, STD_ROWS8[STD_ROW8] + 15), module, Arpeggiator::NOTE_PARAM));
+		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] - 20), module, Arpeggiator::OCTAVE_PARAM));
+		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] + 15), module, Arpeggiator::NOTE_PARAM));
 		
 		// hold button
 		HoldButton* holdButton = new HoldButton();
@@ -884,11 +898,11 @@ struct ArpeggiatorWidget : ModuleWidget {
 		addChild(holdButton);		
 
 		// cv status lights
-		offset = 10.5f;
+		offset = 10.0f;
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
 			addChild(createLightCentered<SmallLight<CountModulaLightWB>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + offset, STD_ROWS8[STD_ROW1]), module, Arpeggiator::CV_LIGHTS + (i * 2)));
 			
-			offset += 12.2f;
+			offset += 13.6f;
 		}
 		
 		//poly light
