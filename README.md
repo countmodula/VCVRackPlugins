@@ -35,7 +35,6 @@ Follow Count Modula on facebook:
 </p>
 <ul>
 <li>Analogue Shift Register</li>
-<li>Arpeggiator <font color="red">* New in v1.9.0</font></li>
 <li>Attenuator</li>
 <li>Attenuverter</li>
 <li>Basic 8 Step Sequencer</li>
@@ -61,7 +60,7 @@ Follow Count Modula on facebook:
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
 <li>Event Arranger</a></li>
-<li>Event Timer <font color="red">* New in v1.9.0</font></li>
+<li>Event Timer <font color="red">* New in v1.10.0</font></li>
 <li>Fade</li>
 <li>Fade Expander</li>
 <li>Gate Delay</li>
@@ -109,6 +108,7 @@ Follow Count Modula on facebook:
 <li>SR Flip Flop</li>
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
+<li>Super Arpeggiator <font color="red">* New in v1.10.0</font></li>
 <li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router </li>
 <li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router </li>
 <li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector </li>

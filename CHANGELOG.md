@@ -20,14 +20,14 @@
 </tr>
 
 <tr valign="top">
-<td align="center">??-??-2020</td>
+<td align="center">04-05-2020</td>
 <td align="center">v1.10.0</td>
 <td align="left">
 
 <ul>
 <b>New Modules:</b>
 <li>Event Timer - Clocked/realtime event timer</li>
-<li>Arpeggiator</li>
+<li>Super Arpeggiator</li>
 </ul>
 </td>
 </tr> 
