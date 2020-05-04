@@ -5,3 +5,4 @@
 //----------------------------------------------------------------------------
 int currentTheme = 0;
 int prevTheme = 0;
+NVGcolor bezelColor = nvgRGB(0x00, 0x00, 0x00); // default to black

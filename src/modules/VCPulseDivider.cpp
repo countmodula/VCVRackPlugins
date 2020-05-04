@@ -77,7 +77,7 @@ struct VCPulseDivider : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 			
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -169,6 +169,7 @@ struct VCPulseDividerWidget : ModuleWidget {
 		// LED display
 		CountModulaDisplayLarge2 *display = new CountModulaDisplayLarge2();
 		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]));
+		display->text =  "  ";
 		addChild(display);
 		
 		if (module)

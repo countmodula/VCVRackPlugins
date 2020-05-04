@@ -99,7 +99,7 @@ struct BinarySequencer : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.4"));
+		json_object_set_new(root, "moduleVersion", json_integer(5));
 		
 		json_object_set_new(root, "currentStep", json_integer(counter));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
@@ -230,7 +230,7 @@ struct BinarySequencer : Module {
 		cv = clamp(cv * scale, -10.0f, 10.0f);
 		
 		// apply lag
-		cv = slew.process(cv, params[LAGSHAPE_PARAM].getValue(), params[LAG_PARAM].getValue(), params[LAG_PARAM].getValue());
+		cv = slew.process(cv, params[LAGSHAPE_PARAM].getValue(), params[LAG_PARAM].getValue(), params[LAG_PARAM].getValue(), args.sampleTime);
 		
 		// set the outputs
 		outputs[CV_OUTPUT].setVoltage(cv);

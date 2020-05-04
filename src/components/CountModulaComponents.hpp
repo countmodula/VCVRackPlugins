@@ -17,6 +17,7 @@ struct CountModulaScrew : SVGScrew {
 	}
 };
 
+
 //-------------------------------------------------------------------
 // Lights
 //-------------------------------------------------------------------
@@ -28,13 +29,17 @@ struct CountModulaLightRYG : GrayModuleLightWidget {
 	}
 };
 
-//-------------------------------------------------------------------
-// Lights
-//-------------------------------------------------------------------
 struct CountModulaLightRG : GrayModuleLightWidget {
 	CountModulaLightRG() {
 		addBaseColor(SCHEME_RED);
 		addBaseColor(SCHEME_GREEN);
+	}
+};
+
+struct CountModulaLightWB : GrayModuleLightWidget {
+	CountModulaLightWB() {
+		addBaseColor(SCHEME_WHITE);
+		addBaseColor(SCHEME_BLUE);
 	}
 };
 
@@ -755,6 +760,7 @@ struct CountModulaDisplay : TransparentWidget {
 	std::string text;
 	float fontSize;
 	Vec textPos;
+	int numChars = 2;
 	
 	void setCentredPos(Vec pos) {
 		box.pos.x = pos.x - box.size.x/2;
@@ -762,13 +768,13 @@ struct CountModulaDisplay : TransparentWidget {
 	}
 	
 	void draw(const DrawArgs &args) override {
-		char buffer[3];
+		char buffer[numChars+1];
 		int l = text.size();
-		if (l > 2)
-			l = 2;
+		if (l > numChars)
+			l = numChars;
 		
 		text.copy(buffer, l);
-		buffer[l] = '\0';
+		buffer[numChars] = '\0';
 		
 		// Background
 		NVGcolor backgroundColor = nvgRGB(0x48, 0x28, 0x28);
@@ -799,6 +805,7 @@ struct CountModulaDisplay : TransparentWidget {
 
 struct CountModulaDisplayLarge2 : CountModulaDisplay {
 	CountModulaDisplayLarge2() {
+		numChars = 2;
 		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
 		fontSize = 28;
 		box.size = Vec(50, 40);
@@ -806,8 +813,19 @@ struct CountModulaDisplayLarge2 : CountModulaDisplay {
 	}
 };
 
+struct CountModulaDisplayLarge3 : CountModulaDisplay {
+	CountModulaDisplayLarge3() {
+		numChars = 3;
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		fontSize = 28;
+		box.size = Vec(75, 40);
+		textPos = Vec(3, 34);
+	}
+};
+
 struct CountModulaDisplayMini2 : CountModulaDisplay {
 	CountModulaDisplayMini2() {
+		numChars = 2;	
 		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
 		fontSize = 14;
 		box.size = Vec(25, 20);

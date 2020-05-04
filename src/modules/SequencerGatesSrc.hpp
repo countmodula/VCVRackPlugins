@@ -23,7 +23,6 @@ struct STRUCT_NAME : Module {
 #if defined TRIGGER_OUTPUTS
 	bool clock;
 #endif
-	float moduleVersion = 0.0f;
 	
 	// Expander details
 	SequencerChannelMessage leftMessages[2][1];	// messages from left module (master)
@@ -51,7 +50,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_real(1.0f));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -63,11 +62,6 @@ struct STRUCT_NAME : Module {
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"		
-		
-		json_t *ver = json_object_get(root, "moduleVersion");
-
-		if (ver)
-			moduleVersion = json_number_value(ver);
 	}
 
 	void process(const ProcessArgs &args) override {

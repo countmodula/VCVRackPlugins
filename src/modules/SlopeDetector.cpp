@@ -61,7 +61,7 @@ struct SlopeDetector : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"			
@@ -81,7 +81,7 @@ struct SlopeDetector : Module {
 		// apply lag
 		range = (params[RANGE_PARAM].getValue() > 0.5f ? 1.0f : 0.5f);
 		lagAmt = (0.1f + params[SENSE_PARAM].getValue()) * range;
-		cvLag = lag.process(cv, 1.0f, lagAmt, lagAmt);
+		cvLag = lag.process(cv, 1.0f, lagAmt, lagAmt, args.sampleTime);
 		
 		// determine if we're rising or falling based on the lagged value
 		// applying a bit of hysteresis to avoid double triggering.

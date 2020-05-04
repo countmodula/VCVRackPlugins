@@ -116,7 +116,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
@@ -134,10 +134,6 @@ struct STRUCT_NAME : Module {
 		json_t *dir = json_object_get(root, "direction");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
-		json_t *ver = json_object_get(root, "version");
-
-		if (ver)
-			moduleVersion = json_number_value(ver);		
 		
 		if (currentStep)
 			count = json_integer_value(currentStep);

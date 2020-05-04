@@ -60,7 +60,7 @@ struct Mute : Module {
 	
 	json_t* dataToJson() override {
 		json_t* root = json_object();
-		json_object_set_new(root, "moduleVersion", json_string("1.0"));
+		json_object_set_new(root, "moduleVersion", json_integer(1));
 		json_object_set_new(root, "Latch", json_boolean(latch));
 		
 		// add the theme details
@@ -100,11 +100,11 @@ struct Mute : Module {
 		float mute = (latch ? 0.0f : 1.0f);
 		if (params[MODE_PARAM].getValue() > 0.5) {
 			// soft mode - apply some slew to soften the switch
-			mute = slew.process(mute, 1.0f, 0.1f, 0.1f);
+			mute = slew.process(mute, 1.0f, 0.1f, 0.1f, args.sampleTime);
 		}
 		else {
 			// hard mode - keep slew in sync but don't use it
-			slew.process(mute, 1.0f, 0.01f, 0.01f);
+			slew.process(mute, 1.0f, 0.01f, 0.01f, args.sampleTime);
 		}
 
 		lights[MUTE_LIGHT].setSmoothBrightness(boolToLight(latch), args.sampleTime);

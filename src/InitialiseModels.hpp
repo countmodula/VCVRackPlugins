@@ -107,3 +107,5 @@ p->addModel(modelBinaryComparator);
 p->addModel(modelMatrixCombiner);
 p->addModel(modelBlank20HP);
 p->addModel(modelBlank24HP);
+p->addModel(modelEventTimer);
+p->addModel(modelArpeggiator);
