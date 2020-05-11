@@ -20,6 +20,18 @@
 </tr>
 
 <tr valign="top">
+<td align="center">??-??-2020</td>
+<td align="center">v1.11.0</td>
+<td align="left">
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #51. Mute now retains mute setting on save</li>
+</ul>
+</td>
+</tr> 
+
+<tr valign="top">
 <td align="center">04-05-2020</td>
 <td align="center">v1.10.0</td>
 <td align="left">

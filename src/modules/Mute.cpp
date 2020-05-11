@@ -76,6 +76,8 @@ struct Mute : Module {
 			latch = json_is_true(jsonLatch);
 		}
 	
+		gate.preset(latch);
+		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"	
 	}
