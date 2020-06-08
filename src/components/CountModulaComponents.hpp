@@ -58,7 +58,7 @@ struct CountModulaJack : SVGPort {
 // TODO: parameterise the colour
 
 // base knob
-struct CountModulaKnob : SVGKnob {
+struct CountModulaKnob : SvgKnob {
 	CountModulaKnob() {
 		minAngle = -0.83*M_PI;
 		maxAngle = 0.83*M_PI;
@@ -168,7 +168,7 @@ struct CountModulaKnobMegaWhite : CountModulaKnob {
 //-------------------------------------------------------------------
 // TODO: parameterise the colour
 
-struct CountModulaRotarySwitch : SVGKnob {
+struct CountModulaRotarySwitch : SvgKnob {
 	CountModulaRotarySwitch() {
 		minAngle = -0.83*M_PI;
 		maxAngle = 0.83*M_PI;
@@ -179,7 +179,7 @@ struct CountModulaRotarySwitch : SVGKnob {
 	// handle the manually entered values
 	void onChange(const event::Change &e) override {
 		
-		SVGKnob::onChange(e);
+		SvgKnob::onChange(e);
 		
 		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}
@@ -187,7 +187,7 @@ struct CountModulaRotarySwitch : SVGKnob {
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
-		SVGKnob::randomize();
+		SvgKnob::randomize();
 		
 		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	

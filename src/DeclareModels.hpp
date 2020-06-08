@@ -107,3 +107,5 @@ extern Model *modelBlank20HP;
 extern Model *modelBlank24HP;
 extern Model *modelEventTimer;
 extern Model *modelArpeggiator;
+extern Model *modelHyperManiacalLFO;
+extern Model *modelHyperManiacalLFOExpander;

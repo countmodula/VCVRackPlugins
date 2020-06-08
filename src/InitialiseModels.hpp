@@ -109,3 +109,5 @@ p->addModel(modelBlank20HP);
 p->addModel(modelBlank24HP);
 p->addModel(modelEventTimer);
 p->addModel(modelArpeggiator);
+p->addModel(modelHyperManiacalLFO);
+p->addModel(modelHyperManiacalLFOExpander);
