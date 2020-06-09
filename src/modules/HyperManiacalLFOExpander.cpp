@@ -71,7 +71,6 @@ struct HyperManiacalLFOExpander : Module {
 	
 	void process(const ProcessArgs &args) override {
 
-		//		bool unipolar = params[MODE_PARAM].getValue() < 0.5f;
 		if (leftExpander.module && isExpandableModule(leftExpander.module)) {
 			messagesFromMaster = (HyperManiacalLFOExpanderMessage *)(leftExpander.consumerMessage);
 			
