@@ -37,6 +37,8 @@ struct Fade : Module {
 		R_LIGHT,
 		GATE_LIGHT,
 		TRIG_LIGHT,
+		FADEIN_LIGHT,
+		FADEOUT_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -55,11 +57,17 @@ struct Fade : Module {
 	bool running = false;
 	dsp::PulseGenerator  pgTrig;
 	
+	float recordTime = 0.0f;
+	int hours = 0, minutes = 0, seconds = 0;
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
 	FadeExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 	
+	CountModulaDisplayMini2 *hDisplay;
+	CountModulaDisplayMini2 *mDisplay;
+	CountModulaDisplayMini2 *sDisplay;	
 	
 	Fade() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -79,6 +87,11 @@ struct Fade : Module {
 		stage = OFF_STAGE;
 		running = false;
 		pgTrig.reset();
+		
+		hours = minutes = seconds = 0;
+		sDisplay->text = string::f("%02d", seconds);
+		mDisplay->text = string::f("%02d", minutes);
+		hDisplay->text = string::f("%02d", hours);		
 	}	
 	
 	json_t* dataToJson() override {
@@ -94,7 +107,7 @@ struct Fade : Module {
 	void dataFromJson(json_t* root) override {
 		
 		// grab the theme details
-		#include "../themes/dataFromJson.hpp"	
+		#include "../themes/dataFromJson.hpp"
 	}
 		
 	void process(const ProcessArgs &args) override {
@@ -109,7 +122,42 @@ struct Fade : Module {
 		if (gate || running) {
 			running = true;
 			
-			time += args.sampleTime;
+			time = time + args.sampleTime;
+			
+			// // process the recording timer
+			if (!prevRunning) {
+				recordTime = 0.0f;
+				hours = minutes = seconds = 0;
+				
+				// update the display
+				sDisplay->text = string::f("%02d", seconds);
+				mDisplay->text = string::f("%02d", minutes);
+				hDisplay->text = string::f("%02d", hours);
+			}
+			else	
+				recordTime = recordTime + args.sampleTime;
+
+			// update the hour/minute/second counters
+			if (recordTime >= 1.0f) {
+				recordTime = recordTime - 1.0f;
+
+				if (hours < 99 || minutes < 59 || seconds < 59) {
+					if (++seconds > 59)
+					{
+						seconds = 0;
+						
+						if(++minutes > 59) {
+							minutes = 0;						
+							hours++;
+						}
+					}
+				}
+
+				// and update the display
+				sDisplay->text = string::f("%02d", seconds);
+				mDisplay->text = string::f("%02d", minutes);
+				hDisplay->text = string::f("%02d", hours);
+			}
 			
 			// switch to next stage if required
 			switch (stage) {
@@ -187,11 +235,16 @@ struct Fade : Module {
 		// process the gate/triggers/lights etc
 		outputs[GATE_OUTPUT].setVoltage(boolToGate(running));
 		outputs[TRIG_OUTPUT].setVoltage(boolToGate(trig));
+		
 		lights[L_LIGHT].setBrightness(inputs[L_INPUT].isConnected() ? mute : 0.0f);
 		lights[R_LIGHT].setBrightness(inputs[R_INPUT].isConnected() ? mute : 0.0f);
 		lights[GATE_LIGHT].setBrightness(boolToLight(running));
 		lights[TRIG_LIGHT].setSmoothBrightness(boolToLight(trig), args.sampleTime);
-	
+		
+		// nice feedback for the fading stages
+		lights[FADEIN_LIGHT].setBrightness(boolToLight(stage == ATTACK_STAGE));
+		lights[FADEOUT_LIGHT].setBrightness(boolToLight(stage == DECAY_STAGE));
+		
 		// save for next time
 		prevRunning = running;
 		
@@ -226,6 +279,9 @@ struct FadeWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW2] - 19), module, Fade::R_LIGHT));
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW3] - 19), module, Fade::GATE_LIGHT));
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW3] - 19), module, Fade::TRIG_LIGHT));
+
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 16, STD_ROWS6[STD_ROW4] - 25), module, Fade::FADEIN_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 16, STD_ROWS6[STD_ROW4] - 25), module, Fade::FADEOUT_LIGHT));
 	
 		// inputs	
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, Fade::L_INPUT));	
@@ -242,7 +298,29 @@ struct FadeWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, Fade::OUT_PARAM ));
 		
 		// Mega mute button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMega>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, Fade::FADE_PARAM));
+		addParam(createParamCentered<CountModulaPBSwitchMega>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM));
+		
+		// hour/minute/second displays
+		CountModulaDisplayMini2 *hDisp = new CountModulaDisplayMini2();
+		hDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5] - 10));
+		hDisp->text = "00";
+		addChild(hDisp);
+
+		CountModulaDisplayMini2 *mDisp = new CountModulaDisplayMini2();
+		mDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW5] - 10));
+		mDisp->text = "00";
+		addChild(mDisp);
+
+		CountModulaDisplayMini2 *sDisp = new CountModulaDisplayMini2();
+		sDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5] - 10));
+		sDisp->text = "00";
+		addChild(sDisp);
+		
+		if (module) {
+			module->hDisplay = hDisp;
+			module->mDisplay = mDisp;
+			module->sDisplay = sDisp;
+		}		
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

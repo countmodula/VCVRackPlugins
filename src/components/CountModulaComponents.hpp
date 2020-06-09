@@ -10,7 +10,7 @@ using namespace rack;
 //-------------------------------------------------------------------
 // screws
 //-------------------------------------------------------------------
-struct CountModulaScrew : SVGScrew {
+struct CountModulaScrew : SvgScrew {
 	CountModulaScrew() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/ScrewHex.svg")));
 		box.size = sw->box.size;
@@ -46,7 +46,7 @@ struct CountModulaLightWB : GrayModuleLightWidget {
 //-------------------------------------------------------------------
 // Ports
 //-------------------------------------------------------------------
-struct CountModulaJack : SVGPort {
+struct CountModulaJack : SvgPort {
 	CountModulaJack() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Jack.svg")));
 	}
