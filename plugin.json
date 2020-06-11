@@ -948,6 +948,14 @@
 			"LFO",
 			"Expander"
 		  ]
+		},
+		{
+		  "slug": "LightStrip",
+		  "name": "Light Strip",
+		  "description": "Illuminated Blanking Panel",
+		  "tags": [
+			"Blank"
+		  ]
 		}
 	]
 }

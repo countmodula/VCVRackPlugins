@@ -109,3 +109,4 @@ extern Model *modelEventTimer;
 extern Model *modelArpeggiator;
 extern Model *modelHyperManiacalLFO;
 extern Model *modelHyperManiacalLFOExpander;
+extern Model *modelLightStrip;
