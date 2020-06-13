@@ -11,6 +11,10 @@ extern Plugin *pluginInstance;
 // Forward-declare each Model, defined in each module source file
 #include "DeclareModels.hpp"
 
+// settings file 
+json_t * readSettings();
+void saveSettings(json_t *rootJ);
+
 // theme functions
 int readDefaultTheme();
 void saveDefaultTheme(int theme);

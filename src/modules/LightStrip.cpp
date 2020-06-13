@@ -41,25 +41,66 @@ struct LightStrip : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
-	float rValue = 0.3f;
-	float gValue = 0.6f;
+	float rValue = 0.294f;
+	float gValue = 0.635999858f;
 	float bValue = 0.0f;
 	
 	float prValue = 0.0f;
 	float pgValue = 0.0f;
 	float pbValue = 0.0f;
 	
+	// read the default color value from the global count modula settings file
+	void readDefaultColor() {
+		
+		// default to the, um, default colour...
+		rValue = 0.294f;
+		gValue = 0.635999858f;
+		bValue = 0.0f;		
+		
+		// read the settings file
+		json_t *rootJ = readSettings();
+		
+		// read the default color details
+		json_t* color = json_object_get(rootJ, "lightStripDefaultColor");
+		double r, g, b;
+		if (color) {
+			json_unpack(color, "[f, f, f]", &r, &g, &b);
+			rValue = r;
+			gValue = g;
+			bValue = b;
+		}		
+
+		// houskeeping
+		json_decref(rootJ);
+	}
+
+	// save the given color value in the global count modula settings file
+	void saveDefaultColor() {
+		// read the settings file
+		json_t *rootJ = readSettings();
+		
+		// set the default color value
+		json_t* color = json_pack("[f, f, f]", rValue, gValue, bValue);
+		json_object_set_new(rootJ, "lightStripDefaultColor", color);
+		
+		// save the updated data
+		saveSettings(rootJ);
+		
+		// houskeeping
+		json_decref(rootJ);
+	}	
+		
 	LightStrip() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+		
+		readDefaultColor();
 	}
 
 	void onReset() override {
-		rValue = 0.3f;
-		gValue = 0.6f;
-		bValue = 0.0f;
+		readDefaultColor();
 	}
 	
 	void onRandomize() override {
@@ -105,7 +146,7 @@ struct LightStrip : Module {
 			lights[STRIP_LIGHT + 2].setBrightness(bValue); 	// blue
 			
 			prValue = rValue;
-			prValue = gValue;
+			pgValue = gValue;
 			pbValue = bValue;
 		}
 	}
@@ -190,7 +231,6 @@ struct RevertMenuItem : MenuItem {
 	float bOriginal = 0.0f;
 
 	void onAction(const event::Action &e) override {
-		module->prValue = -1.0f; // ensure we always update the lights 
 		module->rValue = rOriginal;
 		module->gValue = gOriginal;
 		module->bValue = bOriginal;
@@ -204,8 +244,6 @@ struct ColorMenu : MenuItem {
 	Menu *createChildMenu() override {
 		Menu *menu = new Menu;
 	
-		menu->addChild(createMenuItem("Adjust Colour:"));
-
 		ColorSlider* rSlider = new ColorSlider("Red", &(module->rValue), module->rValue);
 		menu->addChild(rSlider);	
 		
@@ -224,7 +262,17 @@ struct ColorMenu : MenuItem {
 
 		return menu;	
 	}
-};	
+};
+
+// default colour setting menu item
+struct DefaultColorMenuItem : MenuItem {
+	LightStrip *module;
+	
+	void onAction(const event::Action &e) override {
+		module->saveDefaultColor();
+	}
+};
+
 //----------------------------------------------------------------
 
 struct LightStripWidget : ModuleWidget {
@@ -252,13 +300,18 @@ struct LightStripWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
-		
-		// Colour select
-		ColorMenu *colorMenu = createMenuItem<ColorMenu>("Colour", RIGHT_ARROW);
+	
+		menu->addChild(createMenuLabel("Strip Colour"));
+	
+		// colour adjust
+		ColorMenu *colorMenu = createMenuItem<ColorMenu>("Adjust", RIGHT_ARROW);
 		colorMenu->module = module;
 		menu->addChild(colorMenu);
 		
-		
+		// set default colour
+		DefaultColorMenuItem *defaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Set current as default");
+		defaultColorMenuItem->module = module;
+		menu->addChild(defaultColorMenuItem);	
 	}
 	
 	void step() override {
