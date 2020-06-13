@@ -1,27 +1,13 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Hyper Maniacal LFO Module
-//  Oscillator section based on the VCV VCO by Andrew Belt
+//	/^M^\ Count Modula Plugin for VCV Rack - Light strip
+// LED Light strip blank module
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
-#include "../inc/GateProcessor.hpp"
-#include "../inc/SlewLimiter.hpp"
-#include "../inc/Utility.hpp"
 
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME LightStrip
 #define PANEL_FILE "LightStrip.svg"
-
-#define ARP_NUM_STEPS 8
-
-// using custom rows to accommodate the row of status light at the top of the module
-const int CUSTOM_ROWS5[5] = {
-	85,
-	148,
-	211,
-	274,
-	337
-};	
 
 struct LightStrip : Module {
 	enum ParamIds {
@@ -51,6 +37,9 @@ struct LightStrip : Module {
 	
 	float rRevert, gRevert, bRevert;
 	
+	bool narrowMode = false;
+	bool prevMode = false;
+	
 	void saveRevertValues() {
 		rRevert = rValue;
 		gRevert = gValue;
@@ -63,6 +52,9 @@ struct LightStrip : Module {
 		bValue = bRevert;
 	}
 	
+	ModuleLightWidget* lightStripWidget;
+	float widePos;
+
 	// read the default color value from the global count modula settings file
 	void readDefaultColor() {
 		
@@ -103,6 +95,41 @@ struct LightStrip : Module {
 		// houskeeping
 		json_decref(rootJ);
 	}	
+				
+	bool readDefaultSize() {
+		// default to wide
+		bool narrow = false;	
+		
+		// read the settings file
+		json_t *rootJ = readSettings();
+		
+		// read the default size details
+		json_t *defSize = json_object_get(rootJ, "lightStripNarrowIsDefault");
+		if (defSize) {
+			narrow = json_boolean_value(defSize);
+		}		
+	
+		// houskeeping
+		json_decref(rootJ);
+		
+		return narrow;
+	}
+	
+	// save the given color value in the global count modula settings file
+	void saveDefaultSize(bool narrow) {
+		// read the settings file
+		json_t *rootJ = readSettings();
+		
+		// set the default size value
+		json_object_set_new(rootJ, "lightStripNarrowIsDefault", json_boolean(narrow));
+		narrowMode = narrow;
+	
+		// save the updated data
+		saveSettings(rootJ);
+		
+		// houskeeping
+		json_decref(rootJ);
+	}			
 		
 	LightStrip() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -111,6 +138,8 @@ struct LightStrip : Module {
 		#include "../themes/setDefaultTheme.hpp"
 		
 		readDefaultColor();
+		narrowMode = readDefaultSize();
+
 	}
 
 	void onReset() override {
@@ -131,6 +160,8 @@ struct LightStrip : Module {
 		json_t* color = json_pack("[f, f, f]", rValue, gValue, bValue);
 		json_object_set_new(root, "color", color);
 				
+		json_object_set_new(root, "narrowMode", json_boolean(narrowMode));				
+				
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
 		
@@ -149,6 +180,13 @@ struct LightStrip : Module {
 			gValue = g;
 			bValue = b;
 		}
+		
+		json_t *stripSize = json_object_get(root, "narrowMode");
+		if (stripSize) {
+			narrowMode = json_boolean_value(stripSize);
+		}			
+		
+		prevMode = !narrowMode;
 	}
 	
 	void process(const ProcessArgs &args) override {
@@ -188,9 +226,9 @@ struct CountModulaLightStrip : TBase {
 	}
 };
 
-//--------------------------------------------------------------
+//----------------------------------------------------------------
 // colour menu stuff
-//--------------------------------------------------------------
+//----------------------------------------------------------------
 struct ColorQuantity : Quantity {
 	float *colorValue;
 	float defaultValue;
@@ -318,6 +356,49 @@ struct ColorMenu : MenuItem {
 };
 
 //----------------------------------------------------------------
+// strip size menu stuff
+//----------------------------------------------------------------
+
+//strip size menu item
+struct StripSizeMenuItem : MenuItem {
+	LightStrip *module;
+	
+	void onAction(const event::Action &e) override {
+		module->narrowMode = !module->narrowMode;
+	}
+};
+
+// strip size default menu item
+struct DefaultStripSizeMenuItem : MenuItem {
+	LightStrip *module;
+	bool value;
+	void onAction(const event::Action &e) override {
+		module->saveDefaultSize(value);
+	}
+};
+
+struct StripSizeMenu : MenuItem {
+	LightStrip *module;
+	
+	Menu *createChildMenu() override {
+		Menu *menu = new Menu;
+
+		// strip size menu
+		StripSizeMenuItem *stripSizeMenuItem = createMenuItem<StripSizeMenuItem>("Narrow Strip", CHECKMARK(module->narrowMode));
+		stripSizeMenuItem->module = module;
+		menu->addChild(stripSizeMenuItem);
+		
+		// default strip size
+		bool narrow = module->readDefaultSize();
+		DefaultStripSizeMenuItem *defaultStripSizeMenuItem = createMenuItem<DefaultStripSizeMenuItem>("Narrow Strip As Default", CHECKMARK(narrow));
+		defaultStripSizeMenuItem->module = module;
+		defaultStripSizeMenuItem->value = !narrow;
+		menu->addChild(defaultStripSizeMenuItem);
+	
+		return menu;	
+	}
+};
+//----------------------------------------------------------------
 
 struct LightStripWidget : ModuleWidget {
 
@@ -326,8 +407,15 @@ struct LightStripWidget : ModuleWidget {
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LightStrip.svg")));
 
 		// light strip
-		addChild(createLightCentered<RectangleLight<CountModulaLightStrip<BlackRedGreenBlueLight>>>(Vec(RACK_GRID_WIDTH / 2.0, STD_ROWS5[STD_ROW3]), module, LightStrip::STRIP_LIGHT));
-
+		if (module) {
+			module->lightStripWidget = createLightCentered<RectangleLight<CountModulaLightStrip<BlackRedGreenBlueLight>>>(Vec(RACK_GRID_WIDTH / 2.0, STD_ROWS5[STD_ROW3]), module, LightStrip::STRIP_LIGHT);
+			module->widePos = module->lightStripWidget->box.pos.x;
+		
+			addChild(module->lightStripWidget);
+		}
+		else
+			addChild(createLightCentered<RectangleLight<CountModulaLightStrip<BlackRedGreenBlueLight>>>(Vec(RACK_GRID_WIDTH / 2.0, STD_ROWS5[STD_ROW3]), module, LightStrip::STRIP_LIGHT));
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 	}
@@ -346,6 +434,11 @@ struct LightStripWidget : ModuleWidget {
 		#include "../themes/themeMenus.hpp"
 	
 		// colour menu
+		StripSizeMenu *sizeMenu = createMenuItem<StripSizeMenu>("Strip Size", RIGHT_ARROW);
+		sizeMenu->module = module;
+		menu->addChild(sizeMenu);
+		
+		// colour menu
 		ColorMenu *colorMenu = createMenuItem<ColorMenu>("Strip Colour", RIGHT_ARROW);
 		colorMenu->module = module;
 		menu->addChild(colorMenu);
@@ -355,6 +448,22 @@ struct LightStripWidget : ModuleWidget {
 		if (module) {
 			// process any change of theme
 			#include "../themes/step.hpp"
+			
+			if (((LightStrip*)module)->narrowMode != ((LightStrip*)module)->prevMode)
+			{
+				ModuleLightWidget* lightStripWidget = ((LightStrip*)module)->lightStripWidget;
+				
+				if (((LightStrip*)module)->narrowMode) {
+					lightStripWidget->box.size = app::mm2px(math::Vec(1.5, 115.0));
+					lightStripWidget->box.pos.x = 5.25;
+				}
+				else {
+					lightStripWidget->box.size = app::mm2px(math::Vec(3.176, 115.0));
+					lightStripWidget->box.pos.x = ((LightStrip*)module)->widePos; 
+				}
+				
+				((LightStrip*)module)->prevMode = ((LightStrip*)module)->narrowMode;
+			}
 		}
 		
 		Widget::step();
