@@ -49,6 +49,20 @@ struct LightStrip : Module {
 	float pgValue = 0.0f;
 	float pbValue = 0.0f;
 	
+	float rRevert, gRevert, bRevert;
+	
+	void saveRevertValues() {
+		rRevert = rValue;
+		gRevert = gValue;
+		bRevert = bValue;
+	}
+	
+	void restoreRevertValues() {
+		rValue = rRevert;
+		gValue = gRevert;
+		bValue = bRevert;
+	}
+	
 	// read the default color value from the global count modula settings file
 	void readDefaultColor() {
 		
@@ -225,25 +239,21 @@ struct ColorSlider : ui::Slider {
 // revert menu item
 struct RevertMenuItem : MenuItem {
 	LightStrip *module;
-
-	float rOriginal = 0.0f;;
-	float gOriginal = 0.0f;
-	float bOriginal = 0.0f;
-
+	float *rOrig, *gOrig, *bOrig;
 	void onAction(const event::Action &e) override {
-		module->rValue = rOriginal;
-		module->gValue = gOriginal;
-		module->bValue = bOriginal;
+		module->restoreRevertValues();
 	}
 };	
 
 // colour menu item
-struct ColorMenu : MenuItem {
+struct ColorSliderMenu : MenuItem {
 	LightStrip *module;
 	
 	Menu *createChildMenu() override {
+		
 		Menu *menu = new Menu;
-	
+		
+		menu->addChild(createMenuLabel("Adjust Colour"));
 		ColorSlider* rSlider = new ColorSlider("Red", &(module->rValue), module->rValue);
 		menu->addChild(rSlider);	
 		
@@ -253,11 +263,8 @@ struct ColorMenu : MenuItem {
 		ColorSlider* bSlider = new ColorSlider("Blue", &(module->bValue), module->bValue);
 		menu->addChild(bSlider);
 
-		RevertMenuItem* revertMenuItem = createMenuItem<RevertMenuItem>("Revert");
+		RevertMenuItem* revertMenuItem = createMenuItem<RevertMenuItem>("Revert Changes");
 		revertMenuItem->module = module;
-		revertMenuItem->rOriginal = module->rValue;
-		revertMenuItem->gOriginal = module->gValue;
-		revertMenuItem->bOriginal = module->bValue;
 		menu->addChild(revertMenuItem);
 
 		return menu;	
@@ -267,9 +274,46 @@ struct ColorMenu : MenuItem {
 // default colour setting menu item
 struct DefaultColorMenuItem : MenuItem {
 	LightStrip *module;
+	bool save = true;
 	
 	void onAction(const event::Action &e) override {
-		module->saveDefaultColor();
+		if (save)
+			module->saveDefaultColor();
+		else
+		{
+			module->readDefaultColor();
+			module->saveRevertValues();
+		}
+	}
+};
+
+struct ColorMenu : MenuItem {
+	LightStrip *module;
+	
+	Menu *createChildMenu() override {
+		
+		module->saveRevertValues();
+		
+		Menu *menu = new Menu;
+
+		// set default colour
+		DefaultColorMenuItem *setDefaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Save as default");
+		setDefaultColorMenuItem->module = module;
+		setDefaultColorMenuItem->save = true;
+		menu->addChild(setDefaultColorMenuItem);
+		
+		// get default colour
+		DefaultColorMenuItem *getDefaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Revert to default");
+		getDefaultColorMenuItem->module = module;
+		getDefaultColorMenuItem->save = false;
+		menu->addChild(getDefaultColorMenuItem);	
+	
+		// colour adjust
+		ColorSliderMenu *colorMenu = createMenuItem<ColorSliderMenu>("Select Colour", RIGHT_ARROW);
+		colorMenu->module = module;
+		menu->addChild(colorMenu);
+	
+		return menu;	
 	}
 };
 
@@ -301,17 +345,10 @@ struct LightStripWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 	
-		menu->addChild(createMenuLabel("Strip Colour"));
-	
-		// colour adjust
-		ColorMenu *colorMenu = createMenuItem<ColorMenu>("Adjust", RIGHT_ARROW);
+		// colour menu
+		ColorMenu *colorMenu = createMenuItem<ColorMenu>("Strip Colour", RIGHT_ARROW);
 		colorMenu->module = module;
 		menu->addChild(colorMenu);
-		
-		// set default colour
-		DefaultColorMenuItem *defaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Set current as default");
-		defaultColorMenuItem->module = module;
-		menu->addChild(defaultColorMenuItem);	
 	}
 	
 	void step() override {
