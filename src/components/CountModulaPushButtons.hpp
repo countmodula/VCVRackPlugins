@@ -75,7 +75,6 @@ struct CountModulaLitPB : SvgSwitch {
 		// Move center of light to center of box
 		light->box.pos = box.size.div(2).minus(light->box.size.div(2));
 		addChild(light);
-	
 	}
 	
 	void onChange(const event::Change& e) override {

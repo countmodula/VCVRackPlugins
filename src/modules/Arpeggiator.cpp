@@ -632,14 +632,14 @@ struct Arpeggiator : Module {
 	}
 };
 
-struct PatternButton : OpaqueWidget {
+struct PatternButton : LightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
 	int value;
 	int row = 0;
 	
-	void draw(const DrawArgs& args) override {
+	void drawLight(const DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module)
@@ -654,28 +654,35 @@ struct PatternButton : OpaqueWidget {
 		nvgStroke(args.vg);
 	}
 
-	void onDragStart(const event::DragStart& e) override {
+	void onButton(const event::Button& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (row < module->patternLength && module->mode == Arpeggiator::PROGRAMME_MODE) {
-				// click when lit toggles the button set to the default of 0
-				if (module->pattern[row] == value)
-					module->pattern[row] = 0;
-				else 
-					module->pattern[row] = value;
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				if (row < module->patternLength && module->mode == Arpeggiator::PROGRAMME_MODE) {
+					// click when lit toggles the button set to the default of 0
+					if (module->pattern[row] == value)
+						module->pattern[row] = 0;
+					else 
+						module->pattern[row] = value;
+				}
 			}
+					
+			e.consume(this);	
 		}
-		OpaqueWidget::onDragStart(e);
+		
+		LightWidget::onButton(e);
 	}
 };
 
-struct OctaveButton : OpaqueWidget {
+struct OctaveButton : LightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
 	int value;
 	int row = 0;
 	
-	void draw(const DrawArgs& args) override {
+	void drawLight(const DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module && module->octaveProcessingEnabled)
@@ -690,27 +697,34 @@ struct OctaveButton : OpaqueWidget {
 		nvgStroke(args.vg);
 	}
 
-	void onDragStart(const event::DragStart& e) override {
+	void onButton(const event::Button& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (module->octaveProcessingEnabled && row < module->patternLength) {
-				// click when lit toggles the button set back the default of 1
-				if (module->octave[row] == value)
-					module->octave[row] = 1;
-				else
-					module->octave[row] = value;
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				if (module->octaveProcessingEnabled && row < module->patternLength) {
+					// click when lit toggles the button set back the default of 1
+					if (module->octave[row] == value)
+						module->octave[row] = 1;
+					else
+						module->octave[row] = value;
+				}
 			}
+			
+			e.consume(this);
 		}
-		OpaqueWidget::onDragStart(e);
+		
+		LightWidget::onButton(e);
 	}
 };
 
-struct GlideButton : OpaqueWidget {
+struct GlideButton : LightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
 	int row = 0;
 	
-	void draw(const DrawArgs& args) override {
+	void drawLight(const DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module && module->noteProcessingEnabled)
@@ -725,23 +739,30 @@ struct GlideButton : OpaqueWidget {
 		nvgStroke(args.vg);
 	}
 
-	void onDragStart(const event::DragStart& e) override {
+	void onButton(const event::Button& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (module->noteProcessingEnabled && row < module->patternLength) {
-				module->glide[row] = !module->glide[row];
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				if (module->noteProcessingEnabled && row < module->patternLength) {
+					module->glide[row] = !module->glide[row];
+				}
 			}
+			
+			e.consume(this);
 		}
-		OpaqueWidget::onDragStart(e);
+		
+		LightWidget::onButton(e);
 	}
 };
 
-struct AccentButton : OpaqueWidget {
+struct AccentButton : LightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
 	int row = 0;
 	
-	void draw(const DrawArgs& args) override {
+	void drawLight(const DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module && module->noteProcessingEnabled)
@@ -756,22 +777,29 @@ struct AccentButton : OpaqueWidget {
 		nvgStroke(args.vg);
 	}
 
-	void onDragStart(const event::DragStart& e) override {
+	void onButton(const event::Button& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (module->noteProcessingEnabled && row < module->patternLength) {
-				module->accent[row] = !module->accent[row];
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				if (module->noteProcessingEnabled && row < module->patternLength) {
+					module->accent[row] = !module->accent[row];
+				}
 			}
+			
+			e.consume(this);
 		}
-		OpaqueWidget::onDragStart(e);
+		
+		LightWidget::onButton(e);
 	}
 };
 
-struct HoldButton : OpaqueWidget {
+struct HoldButton : LightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
 
-	void draw(const DrawArgs& args) override {
+	void drawLight(const DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module)
@@ -786,12 +814,18 @@ struct HoldButton : OpaqueWidget {
 		nvgStroke(args.vg);
 	}
 
-	void onDragStart(const event::DragStart& e) override {
+	void onButton(const event::Button& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			if (!module->holdCV)
-				module->hold = !module->hold;
+			e.stopPropagating();
+			if (e.action ==GLFW_PRESS) {
+				if (!module->holdCV)
+					module->hold = !module->hold;
+			}
+			
+			e.consume(this);
 		}
-		OpaqueWidget::onDragStart(e);
+		
+		LightWidget::onButton(e);
 	}
 };
 
