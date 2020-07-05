@@ -32,6 +32,7 @@ struct Mute : Module {
 	};
 	enum LightIds {
 		MUTE_LIGHT,
+		MUTE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -148,7 +149,7 @@ struct MuteWidget : ModuleWidget {
 		addChild(createLightCentered<LargeLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW4]), module, Mute::MUTE_LIGHT));
 
 		// Mega mute button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMega>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, Mute::MUTE_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMega<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, Mute::MUTE_PARAM, Mute::MUTE_PARAM_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

@@ -39,6 +39,8 @@ struct GateDelayMT : Module {
 		DIRECT_LIGHT,
 		ENUMS(DELAYED_LIGHTS, 8),
 		MIX_LIGHT,
+		MIXDIR_PARAM_LIGHT,
+		ENUMS(MIXDEL_PARAM_LIGHTS, 8),
 		NUM_LIGHTS
 	}; 
 
@@ -165,7 +167,7 @@ struct GateDelayMTWidget : ModuleWidget {
 		// direct output
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, GateDelayMT::DIRECT_OUTPUT));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW2]), module, GateDelayMT::DIRECT_LIGHT));
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, GateDelayMT::MIXDIR_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, GateDelayMT::MIXDIR_PARAM, GateDelayMT::MIXDIR_PARAM_LIGHT));
 			
 		// mix output
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2]), module, GateDelayMT::MIX_OUTPUT));
@@ -177,7 +179,7 @@ struct GateDelayMTWidget : ModuleWidget {
 			for (int j = 0; j < 4; j++) {
 				addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::DELAYED_OUTPUTS + k));
 				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::DELAYED_LIGHTS + k));
-				addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::MIXDEL_PARAMS + k));
+				addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1 + i], STD_ROWS6[STD_ROW3 + j]), module, GateDelayMT::MIXDEL_PARAMS + k, GateDelayMT::MIXDEL_PARAM_LIGHTS + k));
 			
 				k++;
 			}

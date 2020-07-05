@@ -207,6 +207,7 @@ struct HyperManiacalLFO : Module {
 	};
 	enum LightIds {
 		ENUMS(LFO_LIGHTS, 6),
+		MODE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -414,7 +415,7 @@ struct HyperManiacalLFOWidget : ModuleWidget {
 		}
 		
 		// mode switch
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::MODE_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::MODE_PARAM, HyperManiacalLFO::MODE_PARAM_LIGHT));
 		
 		// glide controls switch
 		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::GLIDE_PARAM));

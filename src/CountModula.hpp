@@ -20,6 +20,7 @@ int readDefaultTheme();
 void saveDefaultTheme(int theme);
 
 #include "components/CountModulaComponents.hpp"
+#include "components/CountModulaPushButtons.hpp"
 #include "components/StdComponentPositions.hpp"
 
 

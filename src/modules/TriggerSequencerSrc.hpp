@@ -26,6 +26,7 @@ struct STRUCT_NAME : Module {
 		ENUMS(STEP_LIGHTS, TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
 		ENUMS(TRIG_LIGHTS, TRIGSEQ_NUM_ROWS * 2),
 		ENUMS(LENGTH_LIGHTS,  TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
+		ENUMS(MUTE_PARAM_LIGHTS, TRIGSEQ_NUM_ROWS * 2),
 		NUM_LIGHTS
 	};
 	
@@ -376,7 +377,7 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			// output lights, mute buttons and jacks
 			for (int i = 0; i < 2; i++) {
-				addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::MUTE_PARAMS + + (r * 2) + i));
+				addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::MUTE_PARAMS + + (r * 2) + i, STRUCT_NAME::MUTE_PARAM_LIGHTS + + (r * 2) + i));
 				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 1], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::TRIG_LIGHTS + (r * 2) + i));
 				addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 2], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::TRIG_OUTPUTS + (r * 2) + i));
 			}

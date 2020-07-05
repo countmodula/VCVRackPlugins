@@ -39,6 +39,7 @@ struct Fade : Module {
 		TRIG_LIGHT,
 		FADEIN_LIGHT,
 		FADEOUT_LIGHT,
+		FADE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -297,8 +298,8 @@ struct FadeWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, Fade::IN_PARAM));
 		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, Fade::OUT_PARAM ));
 		
-		// Mega mute button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMega>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM));
+		// Mega button - non-standard position
+		addParam(createParamCentered<CountModulaLEDPushButtonMega<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM, Fade::FADE_PARAM_LIGHT));
 		
 		// hour/minute/second displays
 		CountModulaDisplayMini2 *hDisp = new CountModulaDisplayMini2();

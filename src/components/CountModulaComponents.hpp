@@ -17,7 +17,6 @@ struct CountModulaScrew : SvgScrew {
 	}
 };
 
-
 //-------------------------------------------------------------------
 // Lights
 //-------------------------------------------------------------------
@@ -636,121 +635,7 @@ struct CountModulaToggle3P90 : SvgSwitch {
 	}
 };
 
-//-------------------------------------------------------------------
-// push button base
-//-------------------------------------------------------------------
-struct CountModulaPB :  SvgSwitch {
-	CountModulaPB() {
-		// no shadow for switches or buttons
-		shadow->opacity = 0.0f;
-	}
 
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
-		
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}
-};
-
-//-------------------------------------------------------------------
-// push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitch : CountModulaPB {
-    CountModulaPBSwitch() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchMomentary : CountModulaPB {
-    CountModulaPBSwitchMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_1.svg")));
-
-		momentary = true;
-    }
-};
- 
-struct CountModulaPBSwitchMomentaryUnlit : CountModulaPB {
-    CountModulaPBSwitchMomentaryUnlit() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-
-		momentary = true;
-    }
-}; 
- 
-//-------------------------------------------------------------------
-// small square push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitchMini : CountModulaPB {
-    CountModulaPBSwitchMini() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchMiniMomentary : CountModulaPB {
-    CountModulaPBSwitchMiniMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_1.svg")));
-		
- 		momentary = true;
-    }
-};
- 
- 
-
-//-------------------------------------------------------------------
-// big square push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitchBig : CountModulaPB {
-    CountModulaPBSwitchBig() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchBigMomentary : CountModulaPB {
-    CountModulaPBSwitchBigMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_1.svg")));
-		
- 		momentary = true;
-    }
-};
- 
-//-------------------------------------------------------------------
-// really big square push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitchMega : CountModulaPB {
-    CountModulaPBSwitchMega() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchMegaMomentary : CountModulaPB {
-    CountModulaPBSwitchMegaMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_1.svg")));
-
- 		momentary = true;
-   }
-};
-
-struct CountModulaPBSwitchMegaMomentaryUnlit : CountModulaPB {
-    CountModulaPBSwitchMegaMomentaryUnlit() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-	
- 		momentary = true;
-   }
-};
 
 //-------------------------------------------------------------------
 // LED Display
@@ -830,5 +715,55 @@ struct CountModulaDisplayMini2 : CountModulaDisplay {
 		fontSize = 14;
 		box.size = Vec(25, 20);
 		textPos = Vec(1, 17);
+	}
+};
+
+//-------------------------------------------------------------------
+// LC Display
+//-------------------------------------------------------------------
+struct CountModulaLCDisplay : ui::Label {
+	std::shared_ptr<Font> font;
+	math::Vec textOffset;
+	NVGcolor color;
+
+	CountModulaLCDisplay() {
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/LEDCalculator.ttf"));
+		color = nvgRGB(0xff, 0xd7, 0x14);
+		textOffset = math::Vec(5, 5);
+	}
+
+	void draw(const DrawArgs& args) override{
+		nvgScissor(args.vg, RECT_ARGS(args.clipBox));
+
+		// Background
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0, 0, box.size.x, box.size.y, 5.0);
+		nvgFillColor(args.vg, nvgRGB(0x00, 0x20, 0x00));
+		nvgFill(args.vg);
+
+		// Text
+		if (font->handle >= 0) {
+
+			bndSetFont(font->handle);
+			
+			float x;
+			switch (alignment) {
+				default:
+				case LEFT_ALIGNMENT: {
+					x = 0.0;
+				} break;
+				case RIGHT_ALIGNMENT: {
+					x = box.size.x - bndLabelWidth(args.vg, -1, text.c_str());
+				} break;
+				case CENTER_ALIGNMENT: {
+					x = (box.size.x - bndLabelWidth(args.vg, -1, text.c_str())) / 2.0;
+				} break;
+			}			
+			
+			bndIconLabelValue(args.vg, x, 0.0, box.size.x, box.size.y, -1, color, BND_LEFT, fontSize, text.c_str(), NULL);
+			bndSetFont(APP->window->uiFont->handle);
+		}
+
+		nvgResetScissor(args.vg);
 	}
 };

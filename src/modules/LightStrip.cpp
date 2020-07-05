@@ -204,6 +204,9 @@ struct LightStrip : Module {
 	}
 };
 
+//----------------------------------------------------------------
+// custom lights 
+//----------------------------------------------------------------
 // special black background RGB light
 template <typename TBase = app::ModuleLightWidget>
 struct TBlackRedGreenBlueLight : TBase {

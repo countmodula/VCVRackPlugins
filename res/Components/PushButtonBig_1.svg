@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="43.882511"
-   height="43.882511"
-   viewBox="0 0 11.610581 11.610581"
+   width="37.795277"
+   height="37.795277"
+   viewBox="0 0 10 10"
    version="1.1"
    id="svg20198"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="PushButtonBig_1.svg">
   <defs
      id="defs20192" />
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.839192"
-     inkscape:cx="-1.4484344"
-     inkscape:cy="20.518313"
+     inkscape:cx="31.936587"
+     inkscape:cy="17.474767"
      inkscape:document-units="mm"
      inkscape:current-layer="g20169-3"
      showgrid="false"
@@ -49,7 +49,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -57,7 +57,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-80.57476,-112.94621)">
+     transform="translate(-81.380047,-113.75152)">
     <g
        transform="matrix(0.33514843,0,0,-0.33529537,-224.0132,506.00388)"
        id="g20169"

@@ -35,6 +35,7 @@ struct ManualGate : Module {
 	};
 	enum LightIds {
 		LATCH_LIGHT,
+		GATE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 	
@@ -151,7 +152,7 @@ struct ManualGateWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW2]), module, ManualGate::LATCH_LIGHT));
 
 		// Mega manual button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMegaMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, ManualGate::GATE_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMegaMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, ManualGate::GATE_PARAM, ManualGate::GATE_PARAM_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

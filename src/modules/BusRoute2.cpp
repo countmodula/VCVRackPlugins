@@ -14,9 +14,9 @@
 struct BusRoute2 : Module {
 
 	enum ParamIds {
-		ENUMS(BUS_A_PARAMS, 7),
-		ENUMS(BUS_B_PARAMS, 7),
-		NUM_PARAMS
+		ENUMS(BUS_A_PARAM, 7),
+		ENUMS(BUS_B_PARAM, 7),
+		NUM_PARAM
 	};
 	
 	enum InputIds {
@@ -33,6 +33,8 @@ struct BusRoute2 : Module {
 	enum LightIds {
 		A_LIGHT,
 		B_LIGHT,
+		ENUMS(BUS_A_PARAM_LIGHT, 7),
+		ENUMS(BUS_B_PARAM_LIGHT, 7),
 		NUM_LIGHTS
 	};
 
@@ -43,12 +45,12 @@ struct BusRoute2 : Module {
 	#include "../themes/variables.hpp"
 	
 	BusRoute2() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		config(NUM_PARAM, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		// step params
 		for (int s = 0; s < 7; s++) {
-			configParam(BUS_A_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus A Select");
-			configParam(BUS_B_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus B Select");
+			configParam(BUS_A_PARAM + s, 0.0f, 1.0f, 0.0f, "Bus A Select");
+			configParam(BUS_B_PARAM + s, 0.0f, 1.0f, 0.0f, "Bus B Select");
 		}
 
 		// set the theme from the current default value
@@ -89,8 +91,8 @@ struct BusRoute2 : Module {
 			
 			// determine the output values
 			if (gates[i].high()) {
-				aOut |= (params[BUS_A_PARAMS + i].getValue() > 0.5f);
-				bOut |= (params[BUS_B_PARAMS + i].getValue() > 0.5f);
+				aOut |= (params[BUS_A_PARAM + i].getValue() > 0.5f);
+				bOut |= (params[BUS_B_PARAM + i].getValue() > 0.5f);
 			}
 		}
 			
@@ -114,9 +116,9 @@ struct BusRoute2Widget : ModuleWidget {
 
 		// inputs and switches
 		for (int s = 0; s < 7; s++) {
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1 + s]), module, BusRoute2::BUS_A_PARAMS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1 + s]), module, BusRoute2::BUS_A_PARAM + s, BusRoute2::BUS_A_PARAM_LIGHT + s));
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, BusRoute2::GATE_INPUTS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, BusRoute2::BUS_B_PARAMS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, BusRoute2::BUS_B_PARAM + s, BusRoute2::BUS_B_PARAM_LIGHT + s));
 		}
 
 		// output lights

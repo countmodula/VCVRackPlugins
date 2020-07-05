@@ -51,6 +51,8 @@ struct Arpeggiator : Module {
 		ENUMS(STEP_LIGHTS, ARP_NUM_STEPS * 2),
 		ENUMS(CV_LIGHTS, PORT_MAX_CHANNELS * 2),
 		POLY_LIGHT,
+		OCTAVE_PARAM_LIGHT,
+		NOTE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -885,8 +887,8 @@ struct ArpeggiatorWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL10], CUSTOM_ROWS5[STD_ROW5]), module, Arpeggiator::GLIDE_PARAM));
 	
 		// octave and note processing bypass buttons
-		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] - 20), module, Arpeggiator::OCTAVE_PARAM));
-		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] + 15), module, Arpeggiator::NOTE_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] - 20), module, Arpeggiator::OCTAVE_PARAM, Arpeggiator::OCTAVE_PARAM_LIGHT));
+		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] + 15), module, Arpeggiator::NOTE_PARAM, Arpeggiator::NOTE_PARAM_LIGHT));
 		
 		// hold button
 		HoldButton* holdButton = new HoldButton();

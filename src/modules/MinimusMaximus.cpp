@@ -41,6 +41,8 @@ struct MinimusMaximus : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		BIAS_ON_PARAM_LIGHT,
+		MODE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -140,9 +142,9 @@ struct MinimusMaximusWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 
 		// controls
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_ON_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_ON_PARAM, MinimusMaximus::BIAS_ON_PARAM_LIGHT));
 		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::BIAS_PARAM));
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::MODE_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, MinimusMaximus::MODE_PARAM, MinimusMaximus::MODE_PARAM_LIGHT));
 		
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, MinimusMaximus::A_INPUT));

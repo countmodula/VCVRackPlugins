@@ -37,6 +37,8 @@ struct EventArranger : Module {
 		RUN_LIGHT,
 		GATE_LIGHT,
 		ENUMS(BIT_LIGHT, 15),
+		RESET_PARAM_LIGHT,
+		RUN_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -245,8 +247,8 @@ struct EventArrangerWidget : ModuleWidget {
 		}
 		
 		// buttons
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS[STD_ROW7]), module, EventArranger::RUN_PARAM));
-		addParam(createParamCentered<CountModulaPBSwitchMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS[STD_ROW7]), module, EventArranger::RESET_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS[STD_ROW7]), module, EventArranger::RUN_PARAM, EventArranger::RUN_PARAM_LIGHT));
+		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS[STD_ROW7]), module, EventArranger::RESET_PARAM, EventArranger::RESET_PARAM_LIGHT));
 
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS[STD_ROW8]), module, EventArranger::CLOCK_INPUT));
