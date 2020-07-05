@@ -69,7 +69,7 @@ Follow Count Modula on facebook:
 <li>8 x 16 Gate Sequencer</li>
 <li>Gate to Trigger</li>
 <li>Inverter</li>
-<li>Light Srrip - LED Blank <font color="red">* New in v1.11.0</font></li>
+<li>Light Strip - LED Blank <font color="red">* New in v1.11.0</font></li>
 <li>Mangler</li>
 <li>Manual CV</li>
 <li>Manual Gate</li>
