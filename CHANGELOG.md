@@ -25,6 +25,17 @@
 <td align="left">
 
 <ul>
+<b>New Modules:</b>
+<li>Hyper Maniacal LFO</li>
+<li>Light strip - LED blank</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Convert all push buttons LED buttons</li>
+</ul>
+
+<ul>
 <b>Issues Resolved:</b>
 <li>Issue #51. Mute now retains mute setting on save</li>
 </ul>
