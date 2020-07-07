@@ -4,6 +4,7 @@
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
+#include "../components/CountModulaLEDDisplay.hpp"
 #include "../inc/FrequencyDivider.hpp"
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Utility.hpp"
@@ -42,7 +43,7 @@ struct EventTimer : Module {
 		NUM_LIGHTS
 	};
 
-	CountModulaDisplayLarge3 *divDisplay;
+	CountModulaLEDDisplayLarge3 *divDisplay;
 		
 	char lengthString[4];
 	GateProcessor gpTrigger;
@@ -320,7 +321,7 @@ struct EventTimerWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 13, STD_ROWS6[STD_ROW6] - 19), module, EventTimer::ENDT_LIGHT));
 	
 		// LED display
-		CountModulaDisplayLarge3 *display = new CountModulaDisplayLarge3();
+		CountModulaLEDDisplayLarge3 *display = new CountModulaLEDDisplayLarge3();
 		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
 		display->text =  "   ";
 		addChild(display);

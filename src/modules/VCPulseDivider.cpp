@@ -4,6 +4,7 @@
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
+#include "../components/CountModulaLEDDisplay.hpp"
 #include "../inc/FrequencyDivider.hpp"
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Utility.hpp"
@@ -37,7 +38,7 @@ struct VCPulseDivider : Module {
 	};
 
 	
-	CountModulaDisplayLarge2 *divDisplay;
+	CountModulaLEDDisplayLarge2 *divDisplay;
 		
 	char lengthString[4];
 	GateProcessor gateClock;
@@ -167,7 +168,7 @@ struct VCPulseDividerWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, VCPulseDivider::DIVN_LIGHT));
 	
 		// LED display
-		CountModulaDisplayLarge2 *display = new CountModulaDisplayLarge2();
+		CountModulaLEDDisplayLarge2 *display = new CountModulaLEDDisplayLarge2();
 		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]));
 		display->text =  "  ";
 		addChild(display);

@@ -4,7 +4,7 @@
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
-#include "../inc/SlewLimiter.hpp"
+#include "../components/CountModulaLEDDisplay.hpp"
 #include "../inc/Utility.hpp"
 
 #include "../inc/FadeExpanderMessage.hpp"
@@ -66,9 +66,9 @@ struct Fade : Module {
 	
 	FadeExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 	
-	CountModulaDisplayMini2 *hDisplay;
-	CountModulaDisplayMini2 *mDisplay;
-	CountModulaDisplayMini2 *sDisplay;	
+	CountModulaLEDDisplayMini2 *hDisplay;
+	CountModulaLEDDisplayMini2 *mDisplay;
+	CountModulaLEDDisplayMini2 *sDisplay;	
 	
 	Fade() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -299,20 +299,20 @@ struct FadeWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, Fade::OUT_PARAM ));
 		
 		// Mega button - non-standard position
-		addParam(createParamCentered<CountModulaLEDPushButtonMega<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM, Fade::FADE_PARAM_LIGHT));
+		addParam(createParamCentered<CountModulaLEDPushButtonMega<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM, Fade::FADE_PARAM_LIGHT));
 		
 		// hour/minute/second displays
-		CountModulaDisplayMini2 *hDisp = new CountModulaDisplayMini2();
+		CountModulaLEDDisplayMini2 *hDisp = new CountModulaLEDDisplayMini2();
 		hDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5] - 10));
 		hDisp->text = "00";
 		addChild(hDisp);
 
-		CountModulaDisplayMini2 *mDisp = new CountModulaDisplayMini2();
+		CountModulaLEDDisplayMini2 *mDisp = new CountModulaLEDDisplayMini2();
 		mDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW5] - 10));
 		mDisp->text = "00";
 		addChild(mDisp);
 
-		CountModulaDisplayMini2 *sDisp = new CountModulaDisplayMini2();
+		CountModulaLEDDisplayMini2 *sDisp = new CountModulaLEDDisplayMini2();
 		sDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5] - 10));
 		sDisp->text = "00";
 		addChild(sDisp);

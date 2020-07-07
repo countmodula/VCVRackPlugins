@@ -4,6 +4,7 @@
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
+#include "../components/CountModulaLEDDisplay.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/GateProcessor.hpp"
 #include "../inc/EuclideanAlgorithm.hpp"
@@ -82,9 +83,9 @@ struct Euclid : Module {
 	
 	short stepnum = 0;
 	char buffer[10];
-	CountModulaDisplayMini2 *lengthDisplay;
-	CountModulaDisplayMini2 *hitsDisplay;
-	CountModulaDisplayMini2 *shiftDisplay;
+	CountModulaLEDDisplayMini2 *lengthDisplay;
+	CountModulaLEDDisplayMini2 *hitsDisplay;
+	CountModulaLEDDisplayMini2 *shiftDisplay;
 	
 	int startUpCounter = 0;
 	int count = -1;
@@ -463,15 +464,15 @@ struct EuclidWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<BlueLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL8] + 15, STD_ROWS6[STD_ROW4] - 19), module, Euclid::END_LIGHT));
 		
 		// parameter displays
-		CountModulaDisplayMini2 *lengthDisp = new CountModulaDisplayMini2();
+		CountModulaLEDDisplayMini2 *lengthDisp = new CountModulaLEDDisplayMini2();
 		lengthDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]));
 		addChild(lengthDisp);
 
-		CountModulaDisplayMini2 *hitsDisp = new CountModulaDisplayMini2();
+		CountModulaLEDDisplayMini2 *hitsDisp = new CountModulaLEDDisplayMini2();
 		hitsDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL8], STD_ROWS6[STD_ROW1]));
 		addChild(hitsDisp);
 
-		CountModulaDisplayMini2 *shiftDisp = new CountModulaDisplayMini2();
+		CountModulaLEDDisplayMini2 *shiftDisp = new CountModulaLEDDisplayMini2();
 		shiftDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS6[STD_ROW1]));
 		addChild(shiftDisp);
 		
