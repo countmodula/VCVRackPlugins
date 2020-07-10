@@ -112,4 +112,4 @@ p->addModel(modelArpeggiator);
 p->addModel(modelHyperManiacalLFO);
 p->addModel(modelHyperManiacalLFOExpander);
 p->addModel(modelLightStrip);
-
+p->addModel(modelPalette);
