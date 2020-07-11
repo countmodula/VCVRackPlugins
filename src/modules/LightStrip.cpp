@@ -204,206 +204,205 @@ struct LightStrip : Module {
 	}
 };
 
-//----------------------------------------------------------------
-// custom lights 
-//----------------------------------------------------------------
-// special black background RGB light
-template <typename TBase = app::ModuleLightWidget>
-struct TBlackRedGreenBlueLight : TBase {
-	TBlackRedGreenBlueLight() {
-		this->bgColor = nvgRGB(0, 0, 0); // black when all leds off
-		this->borderColor = nvgRGBA(0, 0, 0, 0x60);
-		
-		this->addBaseColor(nvgRGB(0xff, 0x00, 0x00)); // bright red
-		this->addBaseColor(nvgRGB(0x00, 0xff, 0x00)); // bright green
-		this->addBaseColor(nvgRGB(0x00, 0x00, 0xff)); // bright blue
-	}
-};
-typedef TBlackRedGreenBlueLight<> BlackRedGreenBlueLight;
-
-// special tall thin strip light
-template <typename TBase>
-struct CountModulaLightStrip : TBase {
-	CountModulaLightStrip() {
-		this->box.size = app::mm2px(math::Vec(3.176, 115.0));
-	}
-};
-
-//----------------------------------------------------------------
-// colour menu stuff
-//----------------------------------------------------------------
-struct ColorQuantity : Quantity {
-	float *colorValue;
-	float defaultValue;
-	std::string text;
-	
-	ColorQuantity(std::string label, float *value, float defValue) {
-		defaultValue = clamp(defValue, 0.0f, 1.0f);
-		colorValue = value;
-		defValue = defValue;
-		text = label;
-	}
-	
-	void setValue(float value) override {
-		*colorValue = clamp(value, 0.0f, 1.0f);
-	}
-	float getValue() override {
-		return *colorValue;
-	}
-	std::string getLabel() override {
-		return text;
-	}
-	float getDisplayValue() override {
-		return getValue() * 100;
-	}
-	void setDisplayValue(float displayValue) override {
-		setValue(displayValue / 100);
-	}	
-	float getDefaultValue() override {
-		return defaultValue;
-	}
-	std::string getUnit() override {
-		return "%";
-	}
-};
-
-struct ColorSlider : ui::Slider {
-	ColorSlider(std::string label, float *value, float defValue) {
-		quantity = new ColorQuantity(label, value, defValue);
-		this->box.size.x = 200.0;
-	}
-	~ColorSlider() {
-		delete quantity;
-	}
-};
-
-// revert menu item
-struct RevertMenuItem : MenuItem {
-	LightStrip *module;
-	float *rOrig, *gOrig, *bOrig;
-	void onAction(const event::Action &e) override {
-		module->restoreRevertValues();
-	}
-};	
-
-// colour menu item
-struct ColorSliderMenu : MenuItem {
-	LightStrip *module;
-	
-	Menu *createChildMenu() override {
-		
-		Menu *menu = new Menu;
-		
-		menu->addChild(createMenuLabel("Adjust Colour"));
-		ColorSlider* rSlider = new ColorSlider("Red", &(module->rValue), module->rValue);
-		menu->addChild(rSlider);	
-		
-		ColorSlider* gSlider = new ColorSlider("Green", &(module->gValue), module->gValue);
-		menu->addChild(gSlider);	
-		
-		ColorSlider* bSlider = new ColorSlider("Blue", &(module->bValue), module->bValue);
-		menu->addChild(bSlider);
-
-		RevertMenuItem* revertMenuItem = createMenuItem<RevertMenuItem>("Revert Changes");
-		revertMenuItem->module = module;
-		menu->addChild(revertMenuItem);
-
-		return menu;	
-	}
-};
-
-// default colour setting menu item
-struct DefaultColorMenuItem : MenuItem {
-	LightStrip *module;
-	bool save = true;
-	
-	void onAction(const event::Action &e) override {
-		if (save)
-			module->saveDefaultColor();
-		else
-		{
-			module->readDefaultColor();
-			module->saveRevertValues();
-		}
-	}
-};
-
-struct ColorMenu : MenuItem {
-	LightStrip *module;
-	
-	Menu *createChildMenu() override {
-		
-		module->saveRevertValues();
-		
-		Menu *menu = new Menu;
-
-		// set default colour
-		DefaultColorMenuItem *setDefaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Save as default");
-		setDefaultColorMenuItem->module = module;
-		setDefaultColorMenuItem->save = true;
-		menu->addChild(setDefaultColorMenuItem);
-		
-		// get default colour
-		DefaultColorMenuItem *getDefaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Revert to default");
-		getDefaultColorMenuItem->module = module;
-		getDefaultColorMenuItem->save = false;
-		menu->addChild(getDefaultColorMenuItem);	
-	
-		// colour adjust
-		ColorSliderMenu *colorMenu = createMenuItem<ColorSliderMenu>("Select Colour", RIGHT_ARROW);
-		colorMenu->module = module;
-		menu->addChild(colorMenu);
-	
-		return menu;	
-	}
-};
-
-//----------------------------------------------------------------
-// strip size menu stuff
-//----------------------------------------------------------------
-
-//strip size menu item
-struct StripSizeMenuItem : MenuItem {
-	LightStrip *module;
-	
-	void onAction(const event::Action &e) override {
-		module->narrowMode = !module->narrowMode;
-	}
-};
-
-// strip size default menu item
-struct DefaultStripSizeMenuItem : MenuItem {
-	LightStrip *module;
-	bool value;
-	void onAction(const event::Action &e) override {
-		module->saveDefaultSize(value);
-	}
-};
-
-struct StripSizeMenu : MenuItem {
-	LightStrip *module;
-	
-	Menu *createChildMenu() override {
-		Menu *menu = new Menu;
-
-		// strip size menu
-		StripSizeMenuItem *stripSizeMenuItem = createMenuItem<StripSizeMenuItem>("Narrow Strip", CHECKMARK(module->narrowMode));
-		stripSizeMenuItem->module = module;
-		menu->addChild(stripSizeMenuItem);
-		
-		// default strip size
-		bool narrow = module->readDefaultSize();
-		DefaultStripSizeMenuItem *defaultStripSizeMenuItem = createMenuItem<DefaultStripSizeMenuItem>("Narrow Strip As Default", CHECKMARK(narrow));
-		defaultStripSizeMenuItem->module = module;
-		defaultStripSizeMenuItem->value = !narrow;
-		menu->addChild(defaultStripSizeMenuItem);
-	
-		return menu;	
-	}
-};
-//----------------------------------------------------------------
-
 struct LightStripWidget : ModuleWidget {
+	//----------------------------------------------------------------
+	// custom lights 
+	//----------------------------------------------------------------
+	// special black background RGB light
+	template <typename TBase = app::ModuleLightWidget>
+	struct TBlackRedGreenBlueLight : TBase {
+		TBlackRedGreenBlueLight() {
+			this->bgColor = nvgRGB(0, 0, 0); // black when all leds off
+			this->borderColor = nvgRGBA(0, 0, 0, 0x60);
+			
+			this->addBaseColor(nvgRGB(0xff, 0x00, 0x00)); // bright red
+			this->addBaseColor(nvgRGB(0x00, 0xff, 0x00)); // bright green
+			this->addBaseColor(nvgRGB(0x00, 0x00, 0xff)); // bright blue
+		}
+	};
+	typedef TBlackRedGreenBlueLight<> BlackRedGreenBlueLight;
+
+	// special tall thin strip light
+	template <typename TBase>
+	struct CountModulaLightStrip : TBase {
+		CountModulaLightStrip() {
+			this->box.size = app::mm2px(math::Vec(3.176, 115.0));
+		}
+	};
+
+	//----------------------------------------------------------------
+	// colour menu stuff
+	//----------------------------------------------------------------
+	struct ColorQuantity : Quantity {
+		float *colorValue;
+		float defaultValue;
+		std::string text;
+		
+		ColorQuantity(std::string label, float *value, float defValue) {
+			defaultValue = clamp(defValue, 0.0f, 1.0f);
+			colorValue = value;
+			defValue = defValue;
+			text = label;
+		}
+		
+		void setValue(float value) override {
+			*colorValue = clamp(value, 0.0f, 1.0f);
+		}
+		float getValue() override {
+			return *colorValue;
+		}
+		std::string getLabel() override {
+			return text;
+		}
+		float getDisplayValue() override {
+			return getValue() * 100;
+		}
+		void setDisplayValue(float displayValue) override {
+			setValue(displayValue / 100);
+		}	
+		float getDefaultValue() override {
+			return defaultValue;
+		}
+		std::string getUnit() override {
+			return "%";
+		}
+	};
+
+	struct ColorSlider : ui::Slider {
+		ColorSlider(std::string label, float *value, float defValue) {
+			quantity = new ColorQuantity(label, value, defValue);
+			this->box.size.x = 200.0;
+		}
+		~ColorSlider() {
+			delete quantity;
+		}
+	};
+
+	// revert menu item
+	struct RevertMenuItem : MenuItem {
+		LightStrip *module;
+		float *rOrig, *gOrig, *bOrig;
+		void onAction(const event::Action &e) override {
+			module->restoreRevertValues();
+		}
+	};	
+
+	// colour menu item
+	struct ColorSliderMenu : MenuItem {
+		LightStrip *module;
+		
+		Menu *createChildMenu() override {
+			
+			Menu *menu = new Menu;
+			
+			menu->addChild(createMenuLabel("Adjust Colour"));
+			ColorSlider* rSlider = new ColorSlider("Red", &(module->rValue), module->rValue);
+			menu->addChild(rSlider);	
+			
+			ColorSlider* gSlider = new ColorSlider("Green", &(module->gValue), module->gValue);
+			menu->addChild(gSlider);	
+			
+			ColorSlider* bSlider = new ColorSlider("Blue", &(module->bValue), module->bValue);
+			menu->addChild(bSlider);
+
+			RevertMenuItem* revertMenuItem = createMenuItem<RevertMenuItem>("Revert Changes");
+			revertMenuItem->module = module;
+			menu->addChild(revertMenuItem);
+
+			return menu;	
+		}
+	};
+
+	// default colour setting menu item
+	struct DefaultColorMenuItem : MenuItem {
+		LightStrip *module;
+		bool save = true;
+		
+		void onAction(const event::Action &e) override {
+			if (save)
+				module->saveDefaultColor();
+			else
+			{
+				module->readDefaultColor();
+				module->saveRevertValues();
+			}
+		}
+	};
+
+	struct ColorMenu : MenuItem {
+		LightStrip *module;
+		
+		Menu *createChildMenu() override {
+			
+			module->saveRevertValues();
+			
+			Menu *menu = new Menu;
+
+			// set default colour
+			DefaultColorMenuItem *setDefaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Save as default");
+			setDefaultColorMenuItem->module = module;
+			setDefaultColorMenuItem->save = true;
+			menu->addChild(setDefaultColorMenuItem);
+			
+			// get default colour
+			DefaultColorMenuItem *getDefaultColorMenuItem = createMenuItem<DefaultColorMenuItem>("Revert to default");
+			getDefaultColorMenuItem->module = module;
+			getDefaultColorMenuItem->save = false;
+			menu->addChild(getDefaultColorMenuItem);	
+		
+			// colour adjust
+			ColorSliderMenu *colorMenu = createMenuItem<ColorSliderMenu>("Select Colour", RIGHT_ARROW);
+			colorMenu->module = module;
+			menu->addChild(colorMenu);
+		
+			return menu;	
+		}
+	};
+
+	//----------------------------------------------------------------
+	// strip size menu stuff
+	//----------------------------------------------------------------
+
+	//strip size menu item
+	struct StripSizeMenuItem : MenuItem {
+		LightStrip *module;
+		
+		void onAction(const event::Action &e) override {
+			module->narrowMode = !module->narrowMode;
+		}
+	};
+
+	// strip size default menu item
+	struct DefaultStripSizeMenuItem : MenuItem {
+		LightStrip *module;
+		bool value;
+		void onAction(const event::Action &e) override {
+			module->saveDefaultSize(value);
+		}
+	};
+
+	struct StripSizeMenu : MenuItem {
+		LightStrip *module;
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			// strip size menu
+			StripSizeMenuItem *stripSizeMenuItem = createMenuItem<StripSizeMenuItem>("Narrow Strip", CHECKMARK(module->narrowMode));
+			stripSizeMenuItem->module = module;
+			menu->addChild(stripSizeMenuItem);
+			
+			// default strip size
+			bool narrow = module->readDefaultSize();
+			DefaultStripSizeMenuItem *defaultStripSizeMenuItem = createMenuItem<DefaultStripSizeMenuItem>("Narrow Strip As Default", CHECKMARK(narrow));
+			defaultStripSizeMenuItem->module = module;
+			defaultStripSizeMenuItem->value = !narrow;
+			menu->addChild(defaultStripSizeMenuItem);
+		
+			return menu;	
+		}
+	};
+//----------------------------------------------------------------
 
 	LightStripWidget(LightStrip *module) {
 		setModule(module);
