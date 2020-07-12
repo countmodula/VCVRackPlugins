@@ -523,13 +523,19 @@ struct PaletteWidget : ModuleWidget {
 		}
 		
 		void draw(const DrawArgs& args) override {
+			
+			NVGcolor bezelColor = module ? module->bezelColor : SCHEME_BLACK;
+			
+			if (!enabled)
+				bezelColor.a = 0.25;
+			
 			nvgBeginPath(args.vg);
 			nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 1.0);
 			nvgFillColor(args.vg, color);
 			nvgFill(args.vg);
 			
 			nvgStrokeWidth(args.vg, 1.2);
-			nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+			nvgStrokeColor(args.vg, bezelColor);
 			nvgStroke(args.vg);
 		}
 
