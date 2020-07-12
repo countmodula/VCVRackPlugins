@@ -83,6 +83,7 @@ Follow Count Modula on facebook:
 <li>Mute</li>
 <li>Mute-iple</li>
 <li>Offset Generator</font></li>
+<li>Palette <font color="red">* New in v1.11.0</font></li>
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
 <li>Poly Gate to Trigger</li>
