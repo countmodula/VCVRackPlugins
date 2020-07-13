@@ -35,6 +35,7 @@ struct ClockedRandomGateExpanderLog : Module {
 		ENUMS(STEP_LIGHTS, CRG_EXP_NUM_CHANNELS),
 		AND_LIGHT,
 		OR_LIGHT,
+		ENUMS(STEP_LOGIC_PARAM_LIGHTS, CRG_EXP_NUM_CHANNELS),
 		NUM_LIGHTS
 	};
 	
@@ -260,7 +261,7 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 		// row lights and knobs
 		for (int s = 0; s < CRG_EXP_NUM_CHANNELS; s++) {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, ClockedRandomGateExpanderLog::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + s]), module, ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + s));
+			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + s]), module, ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + s, ClockedRandomGateExpanderLog::STEP_LOGIC_PARAM_LIGHTS + s));
 		}
 
 		// logic lights

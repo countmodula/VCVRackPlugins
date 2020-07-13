@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.10.0</h3>
+<h3>Modules - Release 1.11.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -60,7 +60,7 @@ Follow Count Modula on facebook:
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
 <li>Event Arranger</a></li>
-<li>Event Timer <font color="red">* New in v1.10.0</font></li>
+<li>Event Timer</li>
 <li>Fade</li>
 <li>Fade Expander</li>
 <li>Gate Delay</li>
@@ -69,6 +69,7 @@ Follow Count Modula on facebook:
 <li>8 x 16 Gate Sequencer</li>
 <li>Gate to Trigger</li>
 <li>Inverter</li>
+<li>Light Strip - LED Blank <font color="red">* New in v1.11.0</font></li>
 <li>Mangler</li>
 <li>Manual CV</li>
 <li>Manual Gate</li>
@@ -82,6 +83,7 @@ Follow Count Modula on facebook:
 <li>Mute</li>
 <li>Mute-iple</li>
 <li>Offset Generator</font></li>
+<li>Palette <font color="red">* New in v1.11.0</font></li>
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
 <li>Poly Gate to Trigger</li>
@@ -108,7 +110,7 @@ Follow Count Modula on facebook:
 <li>SR Flip Flop</li>
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
-<li>Super Arpeggiator <font color="red">* New in v1.10.0</font></li>
+<li>Super Arpeggiator</li>
 <li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router </li>
 <li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router </li>
 <li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector </li>
@@ -144,6 +146,7 @@ Follow Count Modula on facebook:
 <li>GC-LOGIC: Trigger/Gate Logic Expander</li>
 </ul>
 </li>
+<li>Hyper Maniacal LFO & Expander <font color="red">* New in v1.11.0</font></li>
 <li>Slope Detector</li>
 </ul>
 </li>

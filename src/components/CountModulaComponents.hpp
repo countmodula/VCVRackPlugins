@@ -10,13 +10,12 @@ using namespace rack;
 //-------------------------------------------------------------------
 // screws
 //-------------------------------------------------------------------
-struct CountModulaScrew : SVGScrew {
+struct CountModulaScrew : SvgScrew {
 	CountModulaScrew() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/ScrewHex.svg")));
 		box.size = sw->box.size;
 	}
 };
-
 
 //-------------------------------------------------------------------
 // Lights
@@ -46,7 +45,7 @@ struct CountModulaLightWB : GrayModuleLightWidget {
 //-------------------------------------------------------------------
 // Ports
 //-------------------------------------------------------------------
-struct CountModulaJack : SVGPort {
+struct CountModulaJack : SvgPort {
 	CountModulaJack() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Jack.svg")));
 	}
@@ -58,7 +57,7 @@ struct CountModulaJack : SVGPort {
 // TODO: parameterise the colour
 
 // base knob
-struct CountModulaKnob : SVGKnob {
+struct CountModulaKnob : SvgKnob {
 	CountModulaKnob() {
 		minAngle = -0.83*M_PI;
 		maxAngle = 0.83*M_PI;
@@ -168,7 +167,7 @@ struct CountModulaKnobMegaWhite : CountModulaKnob {
 //-------------------------------------------------------------------
 // TODO: parameterise the colour
 
-struct CountModulaRotarySwitch : SVGKnob {
+struct CountModulaRotarySwitch : SvgKnob {
 	CountModulaRotarySwitch() {
 		minAngle = -0.83*M_PI;
 		maxAngle = 0.83*M_PI;
@@ -179,7 +178,7 @@ struct CountModulaRotarySwitch : SVGKnob {
 	// handle the manually entered values
 	void onChange(const event::Change &e) override {
 		
-		SVGKnob::onChange(e);
+		SvgKnob::onChange(e);
 		
 		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}
@@ -187,7 +186,7 @@ struct CountModulaRotarySwitch : SVGKnob {
 	
 	// override the base randomizer as it sets switches to invalid values.
 	void randomize() override {
-		SVGKnob::randomize();
+		SvgKnob::randomize();
 		
 		paramQuantity->setValue(roundf(paramQuantity->getValue()));
 	}	
@@ -633,202 +632,5 @@ struct CountModulaToggle3P90 : SvgSwitch {
 			paramQuantity->setValue(1.0f);
 		else
 			paramQuantity->setValue(0.0f);
-	}
-};
-
-//-------------------------------------------------------------------
-// push button base
-//-------------------------------------------------------------------
-struct CountModulaPB :  SvgSwitch {
-	CountModulaPB() {
-		// no shadow for switches or buttons
-		shadow->opacity = 0.0f;
-	}
-
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
-		
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}
-};
-
-//-------------------------------------------------------------------
-// push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitch : CountModulaPB {
-    CountModulaPBSwitch() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchMomentary : CountModulaPB {
-    CountModulaPBSwitchMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_1.svg")));
-
-		momentary = true;
-    }
-};
- 
-struct CountModulaPBSwitchMomentaryUnlit : CountModulaPB {
-    CountModulaPBSwitchMomentaryUnlit() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-
-		momentary = true;
-    }
-}; 
- 
-//-------------------------------------------------------------------
-// small square push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitchMini : CountModulaPB {
-    CountModulaPBSwitchMini() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchMiniMomentary : CountModulaPB {
-    CountModulaPBSwitchMiniMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMini_1.svg")));
-		
- 		momentary = true;
-    }
-};
- 
- 
-
-//-------------------------------------------------------------------
-// big square push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitchBig : CountModulaPB {
-    CountModulaPBSwitchBig() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchBigMomentary : CountModulaPB {
-    CountModulaPBSwitchBigMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonBig_1.svg")));
-		
- 		momentary = true;
-    }
-};
- 
-//-------------------------------------------------------------------
-// really big square push button
-//-------------------------------------------------------------------
-struct CountModulaPBSwitchMega : CountModulaPB {
-    CountModulaPBSwitchMega() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_1.svg")));
-    }
-};
-
-struct CountModulaPBSwitchMegaMomentary : CountModulaPB {
-    CountModulaPBSwitchMegaMomentary() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_1.svg")));
-
- 		momentary = true;
-   }
-};
-
-struct CountModulaPBSwitchMegaMomentaryUnlit : CountModulaPB {
-    CountModulaPBSwitchMegaMomentaryUnlit() {
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButtonMega_0.svg")));
-	
- 		momentary = true;
-   }
-};
-
-//-------------------------------------------------------------------
-// LED Display
-//-------------------------------------------------------------------
-struct CountModulaDisplay : TransparentWidget {
-	std::shared_ptr<Font> font;
-	std::string text;
-	float fontSize;
-	Vec textPos;
-	int numChars = 2;
-	
-	void setCentredPos(Vec pos) {
-		box.pos.x = pos.x - box.size.x/2;
-		box.pos.y = pos.y - box.size.y/2;
-	}
-	
-	void draw(const DrawArgs &args) override {
-		char buffer[numChars+1];
-		int l = text.size();
-		if (l > numChars)
-			l = numChars;
-		
-		text.copy(buffer, l);
-		buffer[numChars] = '\0';
-		
-		// Background
-		NVGcolor backgroundColor = nvgRGB(0x48, 0x28, 0x28);
-		NVGcolor borderColor = nvgRGB(0x10, 0x10, 0x10);
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 2.0);
-		nvgFillColor(args.vg, backgroundColor);
-		nvgFill(args.vg);
-		nvgStrokeWidth(args.vg, 1.0);
-		nvgStrokeColor(args.vg, borderColor);
-		nvgStroke(args.vg);
-
-		nvgFontSize(args.vg, fontSize);
-		nvgFontFaceId(args.vg, font->handle);
-		nvgTextLetterSpacing(args.vg, 1);
-
-		NVGcolor textColor = nvgRGB(0xff, 0x10, 0x10);
-
-		// render the "off" segments 	
-		nvgFillColor(args.vg, nvgTransRGBA(textColor, 18));
-		nvgText(args.vg, textPos.x, textPos.y, "~~", NULL);
-		
-		// render the "on segments"
-		nvgFillColor(args.vg, textColor);
-		nvgText(args.vg, textPos.x, textPos.y, buffer, NULL);
-	}
-};
-
-struct CountModulaDisplayLarge2 : CountModulaDisplay {
-	CountModulaDisplayLarge2() {
-		numChars = 2;
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
-		fontSize = 28;
-		box.size = Vec(50, 40);
-		textPos = Vec(3, 34);
-	}
-};
-
-struct CountModulaDisplayLarge3 : CountModulaDisplay {
-	CountModulaDisplayLarge3() {
-		numChars = 3;
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
-		fontSize = 28;
-		box.size = Vec(75, 40);
-		textPos = Vec(3, 34);
-	}
-};
-
-struct CountModulaDisplayMini2 : CountModulaDisplay {
-	CountModulaDisplayMini2() {
-		numChars = 2;	
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
-		fontSize = 14;
-		box.size = Vec(25, 20);
-		textPos = Vec(1, 17);
 	}
 };

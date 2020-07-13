@@ -12,7 +12,7 @@
 
 struct BinaryComparator : Module {
 	enum ParamIds {
-		ENUMS(MUTE_PARAMS, 8),
+		ENUMS(BIT_PARAMS, 8),
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -36,6 +36,7 @@ struct BinaryComparator : Module {
 		GTE_LIGHT,
 		GT_LIGHT,
 		NE_LIGHT,
+		ENUMS(BIT_PARAM_LIGHTS, 8),
 		NUM_LIGHTS
 	};
 
@@ -54,7 +55,7 @@ struct BinaryComparator : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		for (int i = 0; i < 8 ; i++) {
-			configParam(MUTE_PARAMS + i, 0.0f, 1.0f, 0.0f, "Mute");
+			configParam(BIT_PARAMS + i, 0.0f, 1.0f, 0.0f, "Compare bit");
 		}
 
 		// set the theme from the current default value
@@ -95,7 +96,7 @@ struct BinaryComparator : Module {
 			if (gpA[i].set(inputs[A_INPUTS + i].getVoltage()))
 				a = a + bitMask;
 			
-			if (gpB[i].set(inputs[B_INPUTS + i].getNormalVoltage(params[MUTE_PARAMS + i].getValue() * 10.0f)))
+			if (gpB[i].set(inputs[B_INPUTS + i].getNormalVoltage(params[BIT_PARAMS + i].getValue() * 10.0f)))
 				b = b + bitMask;
 			
 			bitMask = bitMask << 1;
@@ -135,7 +136,7 @@ struct BinaryComparatorWidget : ModuleWidget {
 		for (int i = 0; i < 8 ; i++) {
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1 + i]), module, BinaryComparator::A_INPUTS + i));	
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_ROWS8[STD_ROW1 + i]), module, BinaryComparator::B_INPUTS + i));	
-			addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + i]), module, BinaryComparator::MUTE_PARAMS + i));
+			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + i]), module, BinaryComparator::BIT_PARAMS + i, BinaryComparator::BIT_PARAM_LIGHTS + i));
 		}
 		
 		// outputs

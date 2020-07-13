@@ -32,6 +32,8 @@ struct PolyMute : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		ENUMS(MUTE_PARAM_LIGHTS, NUM_CHANS),
+		MASTER_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -148,14 +150,14 @@ struct PolyMuteWidget : ModuleWidget {
 		// mute buttons
 		int j = 0;
 		for (int i = 0; i < NUM_CHANS ; i++) {
-			addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[i < NUM_ROWS ? STD_COL3 : STD_COL5], STD_ROWS8[STD_ROW1 + j]), module, PolyMute::MUTE_PARAMS + i));
+			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[i < NUM_ROWS ? STD_COL3 : STD_COL5], STD_ROWS8[STD_ROW1 + j]), module, PolyMute::MUTE_PARAMS + i, PolyMute::MUTE_PARAM_LIGHTS + i));
 			if (++j == NUM_ROWS)
 				j = 0;
 		}
 		
 		// master
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, PolyMute::MASTER_INPUT));
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, PolyMute::MASTER_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, PolyMute::MASTER_PARAM, PolyMute::MASTER_PARAM_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

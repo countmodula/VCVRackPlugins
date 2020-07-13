@@ -31,6 +31,7 @@ struct PolyVCSwitch : Module {
 	};
 	enum LightIds {
 		ENUMS(SELECT_LIGHT, 32),
+		MANUAL_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -159,7 +160,7 @@ struct PolyVCSwitchWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS7[STD_ROW1]), module, PolyVCSwitch::CV_INPUT));
 
 		// manual selection
-		addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS7[STD_ROW2]), module, PolyVCSwitch::MANUAL_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS7[STD_ROW2]), module, PolyVCSwitch::MANUAL_PARAM, PolyVCSwitch::MANUAL_PARAM_LIGHT));
 	
 		// 1 - 2
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 10, STD_ROWS7[STD_ROW5]), module, PolyVCSwitch::A_INPUT));

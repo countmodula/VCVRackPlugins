@@ -40,6 +40,7 @@ struct BurstGenerator : Module {
 	};
 	enum LightIds {
 		CLOCK_LIGHT,
+		MANUAL_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -265,7 +266,7 @@ struct BurstGeneratorWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW3]), module, BurstGenerator::PULSES_PARAM));
 		
 		// manual trigger button
-		addParam(createParamCentered<CountModulaPBSwitchBigMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, BurstGenerator::MANUAL_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonBigMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, BurstGenerator::MANUAL_PARAM, BurstGenerator::MANUAL_PARAM_LIGHT));
 		
 		// inputs
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, BurstGenerator::RATECV_INPUT));

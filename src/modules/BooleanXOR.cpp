@@ -71,6 +71,7 @@ struct BooleanXOR : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		MODE_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -181,19 +182,6 @@ struct BooleanXOR : Module {
 				outputs[INV_OUTPUT].setVoltage(10.0f);
 			}
 		}
-				
-		// // grab and normalise the inputs
-		// float inA = inputs[A_INPUT].getNormalVoltage(0.0f);
-		// float inB = inputs[B_INPUT].getNormalVoltage(0.0f);
-		// float inC = inputs[C_INPUT].getNormalVoltage(0.0f);
-		// float inD = inputs[D_INPUT].getNormalVoltage(0.0f);
-		
-		// //perform the logic
-		// float out = gate.process(inA, inB, inC, inD, params[MODE_PARAM].getValue() > 0.5f);
-		// outputs[XOR_OUTPUT].setVoltage(out);
-		
-		// float notOut = inverter.process(inputs[I_INPUT].getNormalVoltage(out));
-		// outputs[INV_OUTPUT].setVoltage(notOut);
 	}
 };
 
@@ -212,7 +200,7 @@ struct BooleanXORWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]),module, BooleanXOR::D_INPUT));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]),module, BooleanXOR::I_INPUT));
 		
-		addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, BooleanXOR::MODE_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, BooleanXOR::MODE_PARAM, BooleanXOR::MODE_PARAM_LIGHT));
 	
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, BooleanXOR::XOR_OUTPUT));

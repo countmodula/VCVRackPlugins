@@ -20,6 +20,31 @@
 </tr>
 
 <tr valign="top">
+<td align="center">12-07-2020</td>
+<td align="center">v1.11.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Hyper Maniacal LFO and Expander</li>
+<li>Light strip - LED blank</li>
+<li>Palette - Cable colour manager</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Convert all push buttons LED buttons</li>
+<li>Fade now displaye the recording length and has indicators for the fade-in/out stages</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #51. Mute now retains mute setting on save</li>
+</ul>
+</td>
+</tr> 
+
+<tr valign="top">
 <td align="center">04-05-2020</td>
 <td align="center">v1.10.0</td>
 <td align="left">

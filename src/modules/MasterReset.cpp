@@ -31,6 +31,7 @@ struct MasterReset : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		RESET_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 	
@@ -84,7 +85,7 @@ struct MasterReset : Module {
 		}
 		else {
 			isResetting = pgReset.process(args.sampleTime);
-		}
+		}	
 		
 		// process the poly enabled clock input first
 		float clk = 0.0f;
@@ -128,11 +129,8 @@ struct MasterResetWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW5]), module, MasterReset::RESET_INPUT));	
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW5]), module, MasterReset::RESET_OUTPUT));	
 		
-		// lights
-		//addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW2]), module, MasterReset::LATCH_LIGHT));
-
 		// Mega manual button - non-standard position
-		addParam(createParamCentered<CountModulaPBSwitchMegaMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, MasterReset::RESET_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMegaMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW7]), module, MasterReset::RESET_PARAM, MasterReset::RESET_PARAM_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

@@ -26,6 +26,7 @@ struct MuteIple : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		ENUMS(MUTE_PARAM_LIGHTS, 8),
 		NUM_LIGHTS
 	};
 
@@ -149,7 +150,7 @@ struct MuteIpleWidget : ModuleWidget {
 		
 		// outputs/lights
 		for (int i = 0; i < 8 ; i++) {
-			addParam(createParamCentered<CountModulaPBSwitch>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + i]), module, MuteIple::MUTE_PARAMS + i));
+			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + i]), module, MuteIple::MUTE_PARAMS + i, MuteIple::MUTE_PARAM_LIGHTS + i));
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + i]), module, MuteIple::SIGNAL_OUTPUTS + i));	
 		}
 	}

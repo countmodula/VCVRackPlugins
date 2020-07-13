@@ -1,0 +1,14 @@
+{
+  "plugin": "CountModula",
+  "version": "1.11.0",
+  "model": "LightStrip",
+  "params": [],
+  "data": {
+    "moduleVersion": 1,
+    "color": [
+	  0.835633576,
+	  0.0290000029,
+	  0.0
+    ]
+  }
+}

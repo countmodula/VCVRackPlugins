@@ -46,6 +46,12 @@ struct MatrixCombiner : Module {
 		D_LIGHT,
 		E_LIGHT,
 		F_LIGHT,
+		ENUMS(BUS_A_PARAM_LIGHTS, 7),
+		ENUMS(BUS_B_PARAM_LIGHTS, 7),
+		ENUMS(BUS_C_PARAM_LIGHTS, 7),
+		ENUMS(BUS_D_PARAM_LIGHTS, 7),
+		ENUMS(BUS_E_PARAM_LIGHTS, 7),
+		ENUMS(BUS_F_PARAM_LIGHTS, 7),
 		NUM_LIGHTS
 	};
 
@@ -166,12 +172,12 @@ struct MatrixCombinerWidget : ModuleWidget {
 		// inputs and buttons
 		for (int s = 0; s < 7; s++) {
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::GATE_INPUTS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 10, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_A_PARAMS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_B_PARAMS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 30, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_C_PARAMS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 40, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_D_PARAMS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL6] + 50, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_E_PARAMS + s));
-			addParam(createParamCentered<CountModulaPBSwitchMini>(Vec(STD_COLUMN_POSITIONS[STD_COL7] + 60, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_F_PARAMS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 10, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_A_PARAMS + s, MatrixCombiner::BUS_A_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_B_PARAMS + s, MatrixCombiner::BUS_B_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 30, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_C_PARAMS + s, MatrixCombiner::BUS_C_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 40, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_D_PARAMS + s, MatrixCombiner::BUS_D_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL6] + 50, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_E_PARAMS + s, MatrixCombiner::BUS_E_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL7] + 60, STD_ROWS8[STD_ROW1 + s]), module, MatrixCombiner::BUS_F_PARAMS + s, MatrixCombiner::BUS_F_PARAM_LIGHTS + s));
 		}
 		
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, MatrixCombiner::MODE_PARAM));

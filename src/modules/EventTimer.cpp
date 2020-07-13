@@ -4,6 +4,7 @@
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
+#include "../components/CountModulaLEDDisplay.hpp"
 #include "../inc/FrequencyDivider.hpp"
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Utility.hpp"
@@ -35,10 +36,14 @@ struct EventTimer : Module {
 		CLOCK_LIGHT,
 		END_LIGHT,
 		ENDT_LIGHT,
+		ENUMS(UP_PARAM_LIGHTS, 3),
+		ENUMS(DN_PARAM_LIGHTS, 3),
+		TRIGGER_PARAM_LIGHT,
+		RESET_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
-	CountModulaDisplayLarge3 *divDisplay;
+	CountModulaLEDDisplayLarge3 *divDisplay;
 		
 	char lengthString[4];
 	GateProcessor gpTrigger;
@@ -293,8 +298,8 @@ struct EventTimerWidget : ModuleWidget {
 		// up/down buttons
 		int offset[3] = {4, 0, -4};
 		for (int i = 0; i < 3; i ++) {
-			addParam(createParamCentered<CountModulaPBSwitchMiniMomentary>(Vec(STD_COLUMN_POSITIONS[i] + offset[i], STD_ROWS6[STD_ROW1] - 7), module, EventTimer::UP_PARAMS + i));
-			addParam(createParamCentered<CountModulaPBSwitchMiniMomentary>(Vec(STD_COLUMN_POSITIONS[i] + offset[i], STD_ROWS6[STD_ROW2] + 6), module, EventTimer::DN_PARAMS + i));
+			addParam(createParamCentered<CountModulaLEDPushButtonMiniMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[i] + offset[i], STD_ROWS6[STD_ROW1] - 7), module, EventTimer::UP_PARAMS + i, EventTimer::UP_PARAM_LIGHTS + i));
+			addParam(createParamCentered<CountModulaLEDPushButtonMiniMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[i] + offset[i], STD_ROWS6[STD_ROW2] + 6), module, EventTimer::DN_PARAMS + i, EventTimer::DN_PARAM_LIGHTS + i));
 		}
 		
 		// clock, trigger and reset input
@@ -303,8 +308,8 @@ struct EventTimerWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, EventTimer::CLOCK_INPUT));
 	
 		// clock and reset buttons
-		addParam(createParamCentered<CountModulaPBSwitchMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, EventTimer::TRIGGER_PARAM));
-		addParam(createParamCentered<CountModulaPBSwitchMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, EventTimer::RESET_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, EventTimer::TRIGGER_PARAM, EventTimer::TRIGGER_PARAM_LIGHT));
+		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, EventTimer::RESET_PARAM, EventTimer::RESET_PARAM_LIGHT));
 	
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, EventTimer::END_OUTPUT));
@@ -316,7 +321,7 @@ struct EventTimerWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 13, STD_ROWS6[STD_ROW6] - 19), module, EventTimer::ENDT_LIGHT));
 	
 		// LED display
-		CountModulaDisplayLarge3 *display = new CountModulaDisplayLarge3();
+		CountModulaLEDDisplayLarge3 *display = new CountModulaLEDDisplayLarge3();
 		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
 		display->text =  "   ";
 		addChild(display);
