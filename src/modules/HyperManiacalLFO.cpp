@@ -7,6 +7,7 @@
 #include "../inc/SlewLimiter.hpp"
 #include "../inc/Utility.hpp"
 #include "../inc/HyperManiacalLFOExpanderMessage.hpp"
+#include "../inc/MegalomaniacControllerMessage.hpp"
 
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME HyperManiacalLFO
@@ -214,7 +215,8 @@ struct HyperManiacalLFO : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 
-	HyperManiacalLFOExpanderMessage rightMessages[2][1]; // messages to right module (expander)
+	HyperManiacalLFOExpanderMessage rightMessages[2][1]; 	// messages to right module (expander)
+	MegalomaniacControllerMessage leftMessages[2][1];		// messages from left module (controller)
 	
 	VoltageControlledOscillator<8, 8, float_4> lfos[2];
 	
@@ -244,6 +246,10 @@ struct HyperManiacalLFO : Module {
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];			
+
+		// controller
+		leftExpander.producerMessage = leftMessages[0];
+		leftExpander.consumerMessage = leftMessages[1];
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -287,11 +293,23 @@ struct HyperManiacalLFO : Module {
 
 		messageToExpander->unipolar = params[MODE_PARAM].getValue() < 0.5f;
 
+		// grab details from the contoller if present
+		MegalomaniacControllerMessage *messageFromController;
+		if (leftExpander.module && isControllerModule(leftExpander.module))
+			messageFromController = (MegalomaniacControllerMessage*)(leftExpander.consumerMessage);
+		else
+			messageFromController = new MegalomaniacControllerMessage();
+
 		float osc_pitch[8] = {};
 		for (int i = 0; i < 6; i++) {
-			osc_pitch[i] = params[FREQ_PARAMS + i].getValue();
+			osc_pitch[i] = params[FREQ_PARAMS + i].getValue() + messageFromController->fmValue[i];
 			
-			switch ((int)(params[RANGE_SW_PARAMS + i].getValue())) {
+			// determine the range - need to reverse the order from the controller
+			int range = 3 - messageFromController->selectedRange[i];
+			if (range > 2)
+				range = (int)(params[RANGE_SW_PARAMS + i].getValue());
+			
+			switch (range) {
 				case 2: // high 45 Hz - 11.6kHz
 					osc_pitch[i] += 5.5;
 					break;
@@ -329,18 +347,26 @@ struct HyperManiacalLFO : Module {
 		float oscValues = 0.0f;
 
 		for (int i = 0; i < 6; i++) {
-			switch ((int)(params[WAVE_SEL_PARAMS + i].getValue())) {
+			
+			// determine the waveform selection
+			int wave = messageFromController->selectedWaveform[i] - 1;
+			if (wave < 0)
+				wave = (int)(params[WAVE_SEL_PARAMS + i].getValue());
+			
+			// if we have a controller, apply the mix levels
+			float mix = messageFromController-> mixLevel[i];
+			switch (wave) {
 				case 1:
-					oscValues += (messageToExpander->sin[i] * lvl);
+					oscValues += (messageToExpander->sin[i] * lvl * mix);
 					break;
 				case 2:
-					oscValues += (messageToExpander->saw[i] * lvl);
+					oscValues += (messageToExpander->saw[i] * lvl * mix);
 					break;
 				case 3:
-					oscValues += (messageToExpander->tri[i] * lvl);
+					oscValues += (messageToExpander->tri[i] * lvl * mix);
 					break;
 				case 4:
-					oscValues += (messageToExpander->sqr[i] * lvl);
+					oscValues += (messageToExpander->sqr[i] * lvl * mix);
 					break;
 				default:
 					break;

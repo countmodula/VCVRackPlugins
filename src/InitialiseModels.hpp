@@ -113,3 +113,6 @@ p->addModel(modelHyperManiacalLFO);
 p->addModel(modelHyperManiacalLFOExpander);
 p->addModel(modelLightStrip);
 p->addModel(modelPalette);
+p->addModel(modelMegalomaniac);
+p->addModel(modelSingleSRFlipFlop);
+p->addModel(modelSingleTFlipFlop);

@@ -665,8 +665,35 @@ struct PaletteWidget : ModuleWidget {
 			// add the theme menu items
 			#include "../themes/themeMenus.hpp"
 		}
-	}	
+	}
 	
+	const char *hotKeys = "123456789";
+	
+	void onHoverKey(const event::HoverKey &e) override {
+		const char* key = glfwGetKeyName(e.key, 0);
+
+		if (e.action == GLFW_PRESS && key && (e.mods & RACK_MOD_MASK) == (0x00)) {
+			if (*key >= '1' && *key <= '9') {
+				// colour selection hotkeys
+				size_t i = *key - '1';			
+				if (!settings::cableColors.empty() && i < settings::cableColors.size()) {
+					
+					APP->scene->rack->nextCableColorId = i;
+					((Palette*)(module))->doChange = true;
+				}
+			}
+			else if (*key == 'l') {
+				// lock hotkey
+				if (module->params[Palette::LOCK_PARAM].getValue() > 0.5)
+					module->params[Palette::LOCK_PARAM].setValue(0.0);
+				else
+					module->params[Palette::LOCK_PARAM].setValue(1.0);
+			}
+		}
+		Widget::onHoverKey(e);
+	}
+	
+
 	void step() override {
 		if (module) {
 			Palette *m = (Palette *)module;
