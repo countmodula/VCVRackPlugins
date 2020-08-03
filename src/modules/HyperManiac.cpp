@@ -94,7 +94,7 @@ struct Megalomaniac : Module {
 				messageToModule->selectedWaveform[i] = 0;
 				
 			// range select 0-2 = U, 2-4 = L, 4-6 = H
-			if (inputs[RANGECV_INPUTS].isConnected())
+			if (inputs[RANGECV_INPUTS +i].isConnected())
 				messageToModule->selectedRange[i] = 1 + (int)(clamp(inputs[RANGECV_INPUTS + i].getVoltage()/2.0f, 0.0f, 2.0f));
 			else
 				messageToModule->selectedRange[i] = 0;
