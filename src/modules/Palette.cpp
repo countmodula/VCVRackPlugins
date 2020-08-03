@@ -690,7 +690,7 @@ struct PaletteWidget : ModuleWidget {
 					module->params[Palette::LOCK_PARAM].setValue(1.0);
 			}
 		}
-		Widget::onHoverKey(e);
+		ModuleWidget::onHoverKey(e);
 	}
 	
 
