@@ -1,7 +1,7 @@
 {
   "slug": "CountModula",
   "name": "Count Modula",
-  "version": "1.12.0Dev",
+  "version": "1.12.0",
   "license": "GPL-3.0-only",
   "brand": "Count Modula",
   "author": "Adam Verspaget",
@@ -967,7 +967,7 @@
 		},
 		{
 		  "slug": "Megalomaniac",
-		  "name": "Megalomaniac - Hyper Maniacal LFO Control Expander",
+		  "name": "Megalomaniac - Hyper Maniacal LFO CV Expander",
 		  "description": "Voltage control over the Hyper Maniacal LFO",
 		  "tags": [
 			"LFO",
