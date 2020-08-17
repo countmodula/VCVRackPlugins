@@ -38,10 +38,6 @@
 <li>Palette now has hot keys to select and lock cable colours.
 </ul>
 
-<ul>
-<b>Issues Resolved:</b>
-<li>Issue #51. Mute now retains mute setting on save</li>
-</ul>
 </td>
 </tr> 
 
