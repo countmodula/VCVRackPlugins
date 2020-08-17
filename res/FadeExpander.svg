@@ -14,7 +14,7 @@
    viewBox="0 0 15.875001 100.54167"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="FadeExpander.svg">
   <defs
      id="defs2" />
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.2789474"
-     inkscape:cx="-194.44572"
-     inkscape:cy="190"
+     inkscape:zoom="3.0442808"
+     inkscape:cx="-13.571462"
+     inkscape:cy="196.96765"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -78,28 +78,28 @@
      transform="translate(0,-196.45832)"
      style="display:inline">
     <rect
-       style="fill:#b3b3b3;stroke-width:0.12681349"
+       style="fill:#b3b3b3;stroke-width:0.19469805"
        id="rect1953"
        width="14.287499"
-       height="11.112336"
-       x="0.79374999"
-       y="-214.97916"
+       height="26.193752"
+       x="0.79375029"
+       y="-229.79582"
        transform="scale(1,-1)" />
     <rect
        transform="scale(1,-1)"
-       y="-273.71387"
+       y="-288.00415"
        x="0.79374999"
-       height="28.572102"
+       height="28.310417"
        width="14.2875"
        id="rect1951"
-       style="fill:#b3b3b3;stroke-width:0.20334519" />
+       style="fill:#b3b3b3;stroke-width:0.20241186" />
     <rect
-       style="fill:#b3b3b3;stroke-width:0.20334519"
+       style="fill:#b3b3b3;stroke-width:0.20335554"
        id="rect897"
        width="14.2875"
-       height="28.572102"
-       x="0.79374999"
-       y="-244.60959"
+       height="28.575006"
+       x="0.79374981"
+       y="-258.89999"
        transform="scale(1,-1)" />
     <g
        id="g1020"
@@ -179,7 +179,7 @@
     </g>
     <g
        id="g1880"
-       transform="translate(-3.6380205)">
+       transform="translate(-3.6380205,14.548239)">
       <path
          d="m 10.635698,250.02024 h -0.23151 v -1.97611 h 0.23151 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -193,7 +193,7 @@
     </g>
     <g
        id="g1910"
-       transform="translate(-3.5732528)">
+       transform="translate(-3.5732528,14.535511)">
       <path
          d="m 9.7537542,264.57638 q -0.4203016,0 -0.6738606,-0.27699 -0.252181,-0.27699 -0.252181,-0.72071 0,-0.4768 0.2576931,-0.76068 0.2576932,-0.28388 0.7014215,-0.28388 0.4092778,0 0.6587018,0.27561 0.250803,0.27561 0.250803,0.72072 0,0.48369 -0.256315,0.76481 -0.256315,0.28112 -0.6862628,0.28112 z m 0.016537,-1.83279 q -0.3114366,0 -0.50574,0.22462 -0.1943034,0.22462 -0.1943034,0.5898 0,0.36518 0.1887912,0.58842 0.1901693,0.22186 0.4947157,0.22186 0.3252173,0 0.5126303,-0.21222 0.187414,-0.21221 0.187414,-0.59393 0,-0.39136 -0.181901,-0.60496 -0.181901,-0.21359 -0.5016068,-0.21359 z"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -255,7 +255,7 @@
        aria-label="FADING"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1914"
-       transform="translate(-3.6435326,0.52916667)">
+       transform="translate(-3.6435326,15.077406)">
       <path
          d="M 7.876866,245.49167 H 7.1051646 v 0.68351 h 0.7138238 v 0.20808 H 7.1051646 v 0.87506 H 6.8736542 v -1.97611 H 7.876866 Z"
          style="stroke-width:0.26458332"
@@ -288,7 +288,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <g
-       transform="translate(0,196.01351)"
+       transform="translate(0,210.5184)"
        id="g1935"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        aria-label="RUN">
@@ -310,16 +310,16 @@
     </g>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 5.2429635,220.7664 v -1.78491 h 3.9193256 v 1.78491 h 1.4697469"
+       d="m 5.2429635,235.27129 v -1.78491 h 3.9193256 v 1.78491 h 1.4697469"
        id="path1937"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 5.24296,235.34622 v -1.7849 h 0.489916 v 1.7849 h 3.429415 v -1.7849 h 0.489917 v 1.7849 h 0.979832"
+       d="m 5.24296,249.85111 v -1.7849 h 0.489916 v 1.7849 h 3.429415 v -1.7849 h 0.489917 v 1.7849 h 0.979832"
        id="path1939"
        inkscape:connector-curvature="0" />
     <g
-       transform="translate(-3.6435326,15.02337)"
+       transform="translate(-3.6435326,29.558887)"
        id="g1967"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        aria-label="FADING">
@@ -358,7 +358,7 @@
        aria-label="START/STOP"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        id="text1971"
-       transform="matrix(0.8654886,0,0,1,-4.3172489,0.71625531)">
+       transform="matrix(0.8654886,0,0,1,-4.3172489,15.221039)">
       <path
          d="m 6.5167425,232.36172 v -0.27285 q 0.046853,0.0413 0.1116211,0.0744 0.066146,0.0331 0.1378038,0.0565 0.073036,0.022 0.1460721,0.0345 0.073036,0.0124 0.1350477,0.0124 0.213596,0 0.3183269,-0.0786 0.1061089,-0.0799 0.1061089,-0.22875 0,-0.0799 -0.035829,-0.13918 -0.034451,-0.0593 -0.096463,-0.10749 -0.062012,-0.0496 -0.1474501,-0.0937 -0.08406,-0.0455 -0.181901,-0.0951 -0.1033529,-0.0524 -0.1929253,-0.10611 -0.089573,-0.0537 -0.1557184,-0.11851 -0.066146,-0.0648 -0.1047309,-0.14608 -0.037207,-0.0827 -0.037207,-0.19292 0,-0.13505 0.059256,-0.23427 0.059256,-0.10059 0.1557184,-0.16536 0.096463,-0.0648 0.219108,-0.0965 0.1240235,-0.0317 0.252181,-0.0317 0.2921441,0 0.4258138,0.0703 v 0.26045 q -0.1750108,-0.12127 -0.4492404,-0.12127 -0.075792,0 -0.1515842,0.0165 -0.075792,0.0152 -0.1350478,0.051 -0.059256,0.0358 -0.096463,0.0923 -0.037207,0.0565 -0.037207,0.13781 0,0.0758 0.027561,0.13091 0.028939,0.0551 0.08406,0.1006 0.055121,0.0455 0.1336697,0.0882 0.079926,0.0427 0.1832791,0.0937 0.1061089,0.0524 0.2011936,0.11024 0.095085,0.0579 0.1667426,0.12816 0.071658,0.0703 0.1129991,0.15572 0.042719,0.0854 0.042719,0.19568 0,0.14607 -0.057878,0.24805 -0.0565,0.10059 -0.1543403,0.16398 -0.096463,0.0634 -0.2232421,0.091 -0.1267796,0.0289 -0.2673395,0.0289 -0.046853,0 -0.1157552,-0.008 -0.068902,-0.007 -0.1405599,-0.0221 -0.071658,-0.0138 -0.1364257,-0.0344 -0.06339,-0.0221 -0.1019749,-0.0482 z"
          style="stroke-width:0.26458332"
@@ -408,6 +408,52 @@
          d="m 20.824913,231.69475 v 0.7469 h -0.231511 v -1.97611 h 0.542947 q 0.316949,0 0.490582,0.15434 0.175011,0.15434 0.175011,0.43546 0,0.28112 -0.194304,0.46027 -0.192925,0.17914 -0.522276,0.17914 z m 0,-1.01974 v 0.81028 h 0.242534 q 0.239779,0 0.36518,-0.10886 0.12678,-0.11025 0.12678,-0.31006 0,-0.39136 -0.463021,-0.39136 z"
          style="stroke-width:0.26458332"
          id="path1991"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       aria-label="INVERTED"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222223px;line-height:1.25;font-family:'Yu Gothic UI';-inkscape-font-specification:'Yu Gothic UI';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       id="text904"
+       transform="translate(-5.0477536,-0.70298987)">
+      <path
+         d="M 7.1051646,221.59373 H 6.8736542 v -1.9761 h 0.2315104 z"
+         style="stroke-width:0.26458332"
+         id="path906"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 9.2163192,221.59373 H 8.9324433 l -1.0169922,-1.57509 q -0.038585,-0.0593 -0.06339,-0.12403 h -0.00827 q 0.011024,0.0634 0.011024,0.27148 v 1.42764 H 7.623307 v -1.9761 h 0.3004123 l 0.9894315,1.55029 q 0.062012,0.0965 0.079926,0.13229 h 0.00551 q -0.01378,-0.0854 -0.01378,-0.29076 v -1.39182 h 0.2315105 z"
+         style="stroke-width:0.26458332"
+         id="path908"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 11.20345,219.61763 -0.731738,1.9761 h -0.254937 l -0.7165799,-1.9761 h 0.2576932 l 0.5470807,1.56683 q 0.02618,0.0758 0.03996,0.17501 h 0.0055 q 0.01102,-0.0827 0.04547,-0.17777 l 0.558105,-1.56407 z"
+         style="stroke-width:0.26458332"
+         id="path910"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 12.534635,221.59373 h -1.047309 v -1.9761 h 1.003212 v 0.20946 h -0.771702 v 0.65732 h 0.713824 v 0.20809 h -0.713824 v 0.69177 h 0.815799 z"
+         style="stroke-width:0.26458332"
+         id="path912"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 14.331597,221.59373 h -0.275608 l -0.330729,-0.55397 q -0.04547,-0.0772 -0.08819,-0.13091 -0.04272,-0.0551 -0.0882,-0.0896 -0.0441,-0.0344 -0.09646,-0.0496 -0.05099,-0.0165 -0.115755,-0.0165 h -0.190169 v 0.8406 h -0.23151 v -1.9761 h 0.5898 q 0.129536,0 0.238401,0.0331 0.110243,0.0317 0.190169,0.0978 0.0813,0.0662 0.126779,0.16537 0.04548,0.0978 0.04548,0.23013 0,0.10335 -0.03169,0.19017 -0.03032,0.0854 -0.0882,0.15296 -0.0565,0.0675 -0.137804,0.11576 -0.07993,0.0469 -0.180523,0.073 v 0.006 q 0.04961,0.0221 0.08544,0.051 0.03721,0.0276 0.07028,0.0661 0.03307,0.0386 0.06477,0.0882 0.03307,0.0482 0.07304,0.113 z m -1.185113,-1.76664 v 0.71658 h 0.314193 q 0.08682,0 0.159852,-0.0262 0.07441,-0.0262 0.128158,-0.0744 0.05374,-0.0496 0.08406,-0.11989 0.03032,-0.0717 0.03032,-0.15985 0,-0.15847 -0.103353,-0.24667 -0.101975,-0.0896 -0.296278,-0.0896 z"
+         style="stroke-width:0.26458332"
+         id="path914"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 15.770269,219.82709 h -0.570508 v 1.76664 h -0.23151 v -1.76664 h -0.56913 v -0.20946 h 1.371148 z"
+         style="stroke-width:0.26458332"
+         id="path916"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 17.126259,221.59373 H 16.07895 v -1.9761 h 1.003212 v 0.20946 H 16.31046 v 0.65732 h 0.713824 v 0.20809 H 16.31046 v 0.69177 h 0.815799 z"
+         style="stroke-width:0.26458332"
+         id="path918"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 17.506597,221.59373 v -1.9761 H 18.0523 q 1.044553,0 1.044553,0.96325 0,0.45751 -0.290766,0.73587 -0.289388,0.27698 -0.775835,0.27698 z m 0.231511,-1.76664 v 1.55718 h 0.2949 q 0.388607,0 0.604959,-0.20808 0.216352,-0.20808 0.216352,-0.5898 0,-0.7593 -0.807531,-0.7593 z"
+         style="stroke-width:0.26458332"
+         id="path920"
          inkscape:connector-curvature="0" />
     </g>
   </g>

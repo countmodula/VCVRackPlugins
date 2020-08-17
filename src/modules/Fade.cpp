@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../components/CountModulaLEDDisplay.hpp"
+#include "../inc/SlewLimiter.hpp"
 #include "../inc/Utility.hpp"
 
 #include "../inc/FadeExpanderMessage.hpp"
@@ -18,6 +19,10 @@ struct Fade : Module {
 		FADE_PARAM,
 		IN_PARAM,
 		OUT_PARAM,
+		MON_PARAM,
+#ifdef TIMES_TEN_ENABLED
+		XTEN_PARAM,
+#endif
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -40,6 +45,10 @@ struct Fade : Module {
 		FADEIN_LIGHT,
 		FADEOUT_LIGHT,
 		FADE_PARAM_LIGHT,
+		MON_PARAM_LIGHT,
+#ifdef TIMES_TEN_ENABLED
+		XTEN_PARAM_LIGHT,
+#endif
 		NUM_LIGHTS
 	};
 
@@ -57,8 +66,10 @@ struct Fade : Module {
 	bool prevRunning = false;
 	bool running = false;
 	dsp::PulseGenerator  pgTrig;
-	
+	LagProcessor monitorSlew;
+		
 	float recordTime = 0.0f;
+	bool timesTen = false;
 	int hours = 0, minutes = 0, seconds = 0;
 	
 	// add the variables we'll use when managing themes
@@ -76,6 +87,10 @@ struct Fade : Module {
 		configParam(IN_PARAM, 0.1f, 10.0f, 3.0f, "Fade-in time", " S");
 		configParam(OUT_PARAM, 0.1f, 10.0f, 3.0f, "Fade-out time", " S");
 		configParam(FADE_PARAM, 0.0f, 1.0f, 0.0f, "Start/stop");
+		configParam(MON_PARAM, 0.0f, 1.0f, 0.0f, "Monitor");
+#ifdef TIMES_TEN_ENABLED
+		configParam(XTEN_PARAM, 0.0f, 1.0f, 0.0f, "Times x 10");
+#endif
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -88,6 +103,7 @@ struct Fade : Module {
 		stage = OFF_STAGE;
 		running = false;
 		pgTrig.reset();
+		monitorSlew.reset();
 		
 		hours = minutes = seconds = 0;
 		sDisplay->text = string::f("%02d", seconds);
@@ -99,6 +115,8 @@ struct Fade : Module {
 		json_t* root = json_object();
 		json_object_set_new(root, "moduleVersion", json_integer(1));
 		
+		json_object_set_new(root, "timesTen", json_boolean(timesTen));
+
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
 
@@ -107,17 +125,48 @@ struct Fade : Module {
 
 	void dataFromJson(json_t* root) override {
 		
+		json_t *ten = json_object_get(root, "timesTen");
+		
+		if (ten) 
+			timesTen = json_boolean_value(ten);
+
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 	}
 		
 	void process(const ProcessArgs &args) override {
+
+		// process monitor pass through button
+		bool monitor = (params[MON_PARAM].getValue() > 0.5f);
+		if (running) {
+			// disable monitor function if already running
+			monitor =  false;
+			params[MON_PARAM].setValue(0.0f);
+		}
+
+		// process fade start/stop button
+		bool gate = (params[FADE_PARAM].getValue() > 0.5f);
+		if (monitor) {
+			// disable fade if monitoring
+			gate = running = false;
+			params[FADE_PARAM].setValue(0.0f);
+		}
 		
-		// grab the fade time settings
+#ifdef TIMES_TEN_ENABLED
+		// determine time factor - disallow switching during attack or decay as it causes volume jumps
+		if (stage != ATTACK_STAGE && stage != DECAY_STAGE)
+			timesTen = params[XTEN_PARAM].getValue() > 0.5;
+		else
+			params[XTEN_PARAM].setValue(timesTen ? 1.0f : 0.0f);
+		
+		// grab the fade time settings and apply the current factor
+		float factor = timesTen ? 10.0f : 1.0f;
+		float fadeIn = params[IN_PARAM].getValue() * factor;
+		float fadeOut = params[OUT_PARAM].getValue() * factor;
+#else
 		float fadeIn = params[IN_PARAM].getValue();
 		float fadeOut = params[OUT_PARAM].getValue();
-
-		bool gate = (params[FADE_PARAM].getValue() > 0.5f);
+#endif
 		
 		// only process if we're gated or already running
 		if (gate || running) {
@@ -125,7 +174,7 @@ struct Fade : Module {
 			
 			time = time + args.sampleTime;
 			
-			// // process the recording timer
+			// process the recording timer
 			if (!prevRunning) {
 				recordTime = 0.0f;
 				hours = minutes = seconds = 0;
@@ -212,6 +261,11 @@ struct Fade : Module {
 					break;			
 			}			
 		}
+		else {
+			// are we monitoring?
+			mute = monitor ? 1.0f : 0.0f;
+			mute = monitorSlew.process(mute, 1.0f, 0.1f, 0.1f, args.sampleTime);
+		}
 		
 		// process the signals
 		int numChannelsL = inputs[L_INPUT].getChannels();
@@ -276,8 +330,8 @@ struct FadeWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// lights
-		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW1] - 19), module, Fade::L_LIGHT));
-		addChild(createLightCentered<SmallLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW2] - 19), module, Fade::R_LIGHT));
+		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW1] - 19), module, Fade::L_LIGHT));
+		addChild(createLightCentered<SmallLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW2] - 19), module, Fade::R_LIGHT));
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW3] - 19), module, Fade::GATE_LIGHT));
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW3] - 19), module, Fade::TRIG_LIGHT));
 
@@ -285,12 +339,12 @@ struct FadeWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 16, STD_ROWS6[STD_ROW4] - 25), module, Fade::FADEOUT_LIGHT));
 	
 		// inputs	
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, Fade::L_INPUT));	
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, Fade::R_INPUT));	
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, Fade::L_INPUT));	
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, Fade::R_INPUT));	
 
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1]), module, Fade::L_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, Fade::R_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1]), module, Fade::L_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW2]), module, Fade::R_OUTPUT));	
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, Fade::GATE_OUTPUT));	
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, Fade::TRIG_OUTPUT));	
 
@@ -301,6 +355,13 @@ struct FadeWidget : ModuleWidget {
 		// Mega button - non-standard position
 		addParam(createParamCentered<CountModulaLEDPushButtonMega<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM, Fade::FADE_PARAM_LIGHT));
 		
+		// monitor and times 10 buttons
+#ifdef TIMES_TEN_ENABLED
+		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3] - 4), module, Fade::MON_PARAM, Fade::MON_PARAM_LIGHT));
+		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<YellowLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW3] - 4), module, Fade::XTEN_PARAM, Fade::XTEN_PARAM_LIGHT));
+#else
+		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW3] - 4), module, Fade::MON_PARAM, Fade::MON_PARAM_LIGHT));
+#endif	
 		// hour/minute/second displays
 		CountModulaLEDDisplayMini2 *hDisp = new CountModulaLEDDisplayMini2();
 		hDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5] - 10));

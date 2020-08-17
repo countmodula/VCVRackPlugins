@@ -111,3 +111,6 @@ extern Model *modelHyperManiacalLFO;
 extern Model *modelHyperManiacalLFOExpander;
 extern Model *modelLightStrip;
 extern Model *modelPalette;
+extern Model *modelMegalomaniac;
+extern Model *modelSingleSRFlipFlop;
+extern Model *modelSingleTFlipFlop;

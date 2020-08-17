@@ -25,6 +25,7 @@ struct FadeExpander : Module {
 		TRIG_OUTPUT,
 		FI_OUTPUT,
 		FO_OUTPUT,
+		INV_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -102,6 +103,7 @@ struct FadeExpander : Module {
 			pgTrig.trigger(1e-3f);
 		
 		outputs[ENV_OUTPUT].setVoltage(envelope);
+		outputs[INV_OUTPUT].setVoltage(-envelope);
 		
 		bool trig = pgTrig.remaining > 0.0f;
 		pgTrig.process(args.sampleTime);
@@ -131,17 +133,18 @@ struct FadeExpanderWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 
 		// lights
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW2] - 19), module, FadeExpander::GATE_LIGHT));
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW3] - 19), module, FadeExpander::TRIG_LIGHT));
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW4] - 19), module, FadeExpander::FI_LIGHT));
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW5] - 19), module, FadeExpander::FO_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW3] - 19), module, FadeExpander::GATE_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW4] - 19), module, FadeExpander::TRIG_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW5] - 19), module, FadeExpander::FI_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW6] - 19), module, FadeExpander::FO_LIGHT));
 	
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, FadeExpander::ENV_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, FadeExpander::GATE_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, FadeExpander::TRIG_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, FadeExpander::FI_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, FadeExpander::FO_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, FadeExpander::INV_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, FadeExpander::GATE_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, FadeExpander::TRIG_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, FadeExpander::FI_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, FadeExpander::FO_OUTPUT));	
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - SR Flip Flop (Latch) Logic Gate Module
 //	A dual set/reset latch with gate enable
-//  Copyright (C) 2019  Adam Verspaget
+//  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -60,6 +60,16 @@ struct SRLatch {
 	float NQ() {
 		return boolToGate(stateNQ);
 	}
+	
+	// gets the current "Q" output light value
+	float QLight() {
+		return boolToLight(stateQ);
+	}
+	
+	// gets the current not Q output light value
+	float NQLight() {
+		return boolToLight(stateNQ);
+	}	
 };
 
 struct SRFlipFlop : Module {
@@ -162,7 +172,7 @@ struct SRFlipFlop : Module {
 			
 			// set outputs according to latch states
 			outputs[Q_OUTPUT + i].setVoltage(flipflop[i].Q());
-			lights[STATE_LIGHT + i].setSmoothBrightness(flipflop[i].Q(), args.sampleTime);
+			lights[STATE_LIGHT + i].setSmoothBrightness(flipflop[i].QLight(), args.sampleTime);
 			outputs[NQ_OUTPUT + i].setVoltage(flipflop[i].NQ());
 		}
 	}
@@ -216,4 +226,140 @@ struct SRFlipFlopWidget : ModuleWidget {
 	}		
 };
 
+
+// reset the module name for the theme selection functions
+#undef THEME_MODULE_NAME
+#undef PANEL_FILE
+#define THEME_MODULE_NAME SingleSRFlipFlop
+#define PANEL_FILE "SRFF.svg"
+
+struct SingleSRFlipFlop : Module {
+	enum ParamIds {
+		NUM_PARAMS
+	};
+	enum InputIds {
+		S_INPUT,
+		R_INPUT,
+		ENABLE_INPUT,
+		NUM_INPUTS
+	};
+	enum OutputIds {
+		Q_OUTPUT,
+		NQ_OUTPUT,
+		NUM_OUTPUTS
+	};
+	enum LightIds {
+		Q_LIGHT,
+		NQ_LIGHT,
+		NUM_LIGHTS
+	};
+
+	SRLatch flipflop;
+
+	// add the variables we'll use when managing themes
+	#include "../themes/variables.hpp"
+	
+	SingleSRFlipFlop() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		// set the theme from the current default value
+		#include "../themes/setDefaultTheme.hpp"
+	}
+	
+	void onReset() override {
+		flipflop.reset();
+	}
+
+
+	json_t *dataToJson() override {
+		json_t *root = json_object();
+
+		json_object_set_new(root, "moduleVersion", json_integer(1));
+		
+		// flip flop states
+		json_object_set_new(root, "QState", json_boolean(flipflop.stateQ));
+		json_object_set_new(root, "NQState", json_boolean(flipflop.stateNQ));
+		
+		// add the theme details
+		#include "../themes/dataToJson.hpp"		
+		
+		return root;
+	}
+	
+	void dataFromJson(json_t *root) override {
+
+		// flip flop states
+		json_t *QState = json_object_get(root, "QState");
+		json_t *NQState = json_object_get(root, "NQState");
+	
+		if (QState)
+			flipflop.stateQ = json_boolean_value(QState);
+
+		if (NQState)
+			flipflop.stateNQ =  json_boolean_value(NQState);
+		
+		// grab the theme details
+		#include "../themes/dataFromJson.hpp"		
+	}	
+
+	void process(const ProcessArgs &args) override {
+		
+		//perform the latch logic
+		flipflop.process(inputs[S_INPUT].getVoltage(), inputs[R_INPUT].getVoltage(), inputs[ENABLE_INPUT].getNormalVoltage(10.0f));
+		
+		// set outputs according to latch states
+		outputs[Q_OUTPUT].setVoltage(flipflop.Q());
+		lights[Q_LIGHT].setSmoothBrightness(flipflop.QLight(), args.sampleTime);
+		outputs[NQ_OUTPUT].setVoltage(flipflop.NQ());
+		lights[NQ_LIGHT].setSmoothBrightness(flipflop.NQLight(), args.sampleTime);
+	}
+};
+
+struct SingleSRFlipFlopWidget : ModuleWidget {
+	SingleSRFlipFlopWidget(SingleSRFlipFlop *module) {
+		setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SRFF.svg")));
+
+		// screws
+		#include "../components/stdScrews.hpp"	
+		
+		// inputs
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW1]), module, SingleSRFlipFlop::S_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW2]), module, SingleSRFlipFlop::ENABLE_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW3]), module, SingleSRFlipFlop::R_INPUT));
+		
+		// outputs
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW4]), module, SingleSRFlipFlop::Q_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW5]), module, SingleSRFlipFlop::NQ_OUTPUT));
+		
+		// lights
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 12.5, STD_ROWS5[STD_ROW4] - 20), module, SingleSRFlipFlop::Q_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 12.5, STD_ROWS5[STD_ROW5] - 20), module, SingleSRFlipFlop::NQ_LIGHT));
+	}
+	
+	// include the theme menu item struct we'll when we add the theme menu items
+	#include "../themes/ThemeMenuItem.hpp"
+
+	void appendContextMenu(Menu *menu) override {
+		SingleSRFlipFlop *module = dynamic_cast<SingleSRFlipFlop*>(this->module);
+		assert(module);
+
+		// blank separator
+		menu->addChild(new MenuSeparator());
+		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+	}	
+	
+	void step() override {
+		if (module) {
+			// process any change of theme
+			#include "../themes/step.hpp"
+		}
+		
+		Widget::step();
+	}		
+};
+
 Model *modelSRFlipFlop = createModel<SRFlipFlop, SRFlipFlopWidget>("SRFlipFlop");
+Model *modelSingleSRFlipFlop = createModel<SingleSRFlipFlop, SingleSRFlipFlopWidget>("SingleSRFlipFlop");

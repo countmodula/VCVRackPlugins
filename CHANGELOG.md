@@ -20,7 +20,33 @@
 </tr>
 
 <tr valign="top">
-<td align="center">12-07-2020</td>
+<td align="center">17-Aug-2020</td>
+<td align="center">v1.12.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Megalomaniac - Hyper Maniacal LFO CV Expander</li>
+<li>Single SR FLip Flop</li>
+<li>Single T FLip Flop</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Fade Expander now has an inverted envelope out </li>
+<li>Fade now has a "monitor" mode button to allow the output to be monitored without starting the recording</li>
+<li>Palette now has hot keys to select and lock cable colours.
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #51. Mute now retains mute setting on save</li>
+</ul>
+</td>
+</tr> 
+
+<tr valign="top">
+<td align="center">12-Jul-2020</td>
 <td align="center">v1.11.0</td>
 <td align="left">
 
@@ -45,7 +71,7 @@
 </tr> 
 
 <tr valign="top">
-<td align="center">04-05-2020</td>
+<td align="center">04-May-2020</td>
 <td align="center">v1.10.0</td>
 <td align="left">
 
@@ -58,7 +84,7 @@
 </tr> 
 
 <tr valign="top">
-<td align="center">26-03-2020</td>
+<td align="center">26-Mar-2020</td>
 <td align="center">v1.9.0</td>
 <td align="left">
 
@@ -80,7 +106,7 @@
 </tr>            
 
 <tr valign="top">
-<td align="center">01-03-2020</td>
+<td align="center">01-Mar-2020</td>
 <td align="center">v1.8.1</td>
 <td align="left">
 <ul>
@@ -90,7 +116,7 @@
 </td>
 </tr>            
 <tr valign="top">
-<td align="center">28-02-2020</td>
+<td align="center">28-Feb-2020</td>
 <td align="center">v1.8.0</td>
 <td align="left">
 <ul>
@@ -155,7 +181,7 @@
 </tr>
 
 <tr valign="top">
-<td align="center">5-Dec-2019</td>
+<td align="center">05-Dec-2019</td>
 <td align="center">v1.6.0</td>
 <td align="left">
 <ul>
@@ -174,7 +200,7 @@
 </tr>
 
 <tr valign="top">
-<td align="center">5-Nov-2019</td>
+<td align="center">05-Nov-2019</td>
 <td align="center">v1.5.1</td>
 <td align="left">
 <ul>
@@ -252,7 +278,7 @@
 </tr>
 
 <tr valign="top">
-<td align="center">24-August-2019</td>
+<td align="center">24-Aug-2019</td>
 <td align="center">v1.3.0</td>
 <td align="left">
 <ul>
@@ -265,7 +291,7 @@
 </td>
 </tr>
 <tr valign="top">
-<td align="center">29-July-2019</td>
+<td align="center">29-Jul-2019</td>
 <td align="center">v1.2.1</td>
 <td align="left">
 <ul>
@@ -284,7 +310,7 @@
 </td>
 </tr>	
 <tr valign="top">
-<td align="center">21-July-2019</td>
+<td align="center">21-Jul-2019</td>
 <td align="center">v1.2.0</td>
 <td align="left">
 <ul>
