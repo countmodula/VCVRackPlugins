@@ -218,6 +218,9 @@ struct HyperManiacalLFO : Module {
 	HyperManiacalLFOExpanderMessage rightMessages[2][1]; 	// messages to right module (expander)
 	MegalomaniacControllerMessage leftMessages[2][1];		// messages from left module (controller)
 	
+	HyperManiacalLFOExpanderMessage dummyExpndrMessage;
+	MegalomaniacControllerMessage	dummyCntrlrMessage;
+	
 	VoltageControlledOscillator<8, 8, float_4> lfos[2];
 	
 	LagProcessor slew;
@@ -289,7 +292,7 @@ struct HyperManiacalLFO : Module {
 		if (rightExpander.module && isExpanderModule(rightExpander.module))
 			messageToExpander = (HyperManiacalLFOExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
 		else
-			messageToExpander = new HyperManiacalLFOExpanderMessage();
+			messageToExpander = &dummyExpndrMessage;
 
 		messageToExpander->unipolar = params[MODE_PARAM].getValue() < 0.5f;
 
@@ -298,7 +301,7 @@ struct HyperManiacalLFO : Module {
 		if (leftExpander.module && isControllerModule(leftExpander.module))
 			messageFromController = (MegalomaniacControllerMessage*)(leftExpander.consumerMessage);
 		else
-			messageFromController = new MegalomaniacControllerMessage();
+			messageFromController = &dummyCntrlrMessage;
 
 		float osc_pitch[8] = {};
 		for (int i = 0; i < 6; i++) {

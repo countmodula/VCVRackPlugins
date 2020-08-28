@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.12.0</h3>
+<h3>Modules - Release 1.12.1</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>

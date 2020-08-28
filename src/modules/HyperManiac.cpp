@@ -38,6 +38,8 @@ struct Megalomaniac : Module {
 
 	MegalomaniacControllerMessage rightMessages[2][1]; // messages to right module (hyper maniacal LFO)
 
+	MegalomaniacControllerMessage dummyCntrlrMessage;
+	
 	short updateCounter;
 	
 	Megalomaniac() {
@@ -52,8 +54,8 @@ struct Megalomaniac : Module {
 
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
-		rightExpander.consumerMessage = rightMessages[1];			
-		
+		rightExpander.consumerMessage = rightMessages[1];
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -84,7 +86,7 @@ struct Megalomaniac : Module {
 		if (rightExpander.module && isControllableModule(rightExpander.module))
 			messageToModule = (MegalomaniacControllerMessage*)(rightExpander.module->leftExpander.producerMessage);
 		else
-			messageToModule = new MegalomaniacControllerMessage();
+			messageToModule = &dummyCntrlrMessage;
 		
 		for (int i = 0; i < 6; i++) {
 			// wave select 0-2 = off, 2 -4 = Sin etc.
