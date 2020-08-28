@@ -20,6 +20,19 @@
 </tr>
 
 <tr valign="top">
+<td align="center">28-Aug-2020</td>
+<td align="center">v1.12.0</td>
+<td align="left">
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #61. Memory leak in Hyper Maniacal LFO</li>
+</ul>
+</td>
+</tr> 
+
+
+<tr valign="top">
 <td align="center">17-Aug-2020</td>
 <td align="center">v1.12.0</td>
 <td align="left">
