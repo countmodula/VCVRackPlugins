@@ -71,6 +71,12 @@ struct ThemeMenu : MenuItem {
 		sanguineMenuItem->themeToUse = 4;
 		menu->addChild(sanguineMenuItem);		
 		
+		// add Trick or Treat menu item
+		ThemeMenuItem *trickOrTreatMenuItem = createMenuItem<ThemeMenuItem>("Trick or Treat", CHECKMARK(module->currentTheme == 6));
+		trickOrTreatMenuItem->module = module;
+		trickOrTreatMenuItem->themeToUse = 6;
+		menu->addChild(trickOrTreatMenuItem);		
+			
 		return menu;	
 	}
 };
@@ -119,6 +125,12 @@ struct DefaultThemeMenu : MenuItem {
 		sanguineMenuItem->module = module;
 		sanguineMenuItem->themeToUse = 4;
 		menu->addChild(sanguineMenuItem);
+		
+		// add Trick or Treat menu item
+		DefaultThemeMenuItem *trickOrTreatMenuItem = createMenuItem<DefaultThemeMenuItem>("Trick or Treat", CHECKMARK(currentDefault == 6));
+		trickOrTreatMenuItem->module = module;
+		trickOrTreatMenuItem->themeToUse = 6;
+		menu->addChild(trickOrTreatMenuItem);			
 		
 		return menu;	
 	}

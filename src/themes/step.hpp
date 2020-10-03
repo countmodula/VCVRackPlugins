@@ -12,7 +12,7 @@ if (cTheme != pTheme) {
 	switch (cTheme) {
 		case 1:	// Moonlight
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Moonlight/" PANEL_FILE)));
-			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // black
+			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // white
 			break;
 		case 2: // Absinthe
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Absinthe/" PANEL_FILE)));
@@ -20,15 +20,19 @@ if (cTheme != pTheme) {
 			break;
 		case 3: // Raven
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Raven/" PANEL_FILE)));
-			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // black
+			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // white
 			break;
 		case 4: // Sanguine
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Sanguine/" PANEL_FILE)));
-			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // black
+			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // white
 			break;
 		case 5: // Blue Moon
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BlueMoon/" PANEL_FILE)));
-			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // black
+			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0xff, 0xff, 0xff); // white
+			break;
+		case 6: // Trick or Treat
+			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/TrickOrTreat/" PANEL_FILE)));
+			((THEME_MODULE_NAME*)module)->bezelColor = nvgRGB(0x00, 0x00, 0x00); // black
 			break;
 		default:
 			setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
