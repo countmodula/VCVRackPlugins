@@ -226,9 +226,11 @@ struct STRUCT_NAME : Module {
 			bool clockEdge = gateClock[r].leadingEdge();
 			if (clockEdge)
 				pgClock[r].trigger(1e-4f);
-			else
-				clockEdge = (pgClock[r].process(args.sampleTime) && gateRun[r].leadingEdge());
-		
+			else if (pgClock[r].process(args.sampleTime)) {
+				// if within cooey of the clock edge, run or reset is treated as a clock edge.
+				clockEdge = (gateRun[r].leadingEdge() || gateReset[r].leadingEdge());
+			}
+			
 			if (gateRun[r].low())
 				running[r] = false;
 			
@@ -238,12 +240,10 @@ struct STRUCT_NAME : Module {
 				// flag that we are now actually running
 				running[r] = true;
 				
-				if (gateClock[r].leadingEdge()){
-					count[r]++;
+				count[r]++;
 					
-					if (count[r] > length[r])
-						count[r] = 1;
-				}
+				if (count[r] > length[r])
+					count[r] = 1;
 			}
 			
 			// now process the lights and outputs

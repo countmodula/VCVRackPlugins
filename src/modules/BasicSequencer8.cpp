@@ -275,9 +275,11 @@ struct BasicSequencer8 : Module {
 		bool clockEdge = gateClock.leadingEdge();
 		if (clockEdge)
 			pgClock.trigger(1e-4f);
-		else
-			clockEdge = (pgClock.process(args.sampleTime) && gateRun.leadingEdge());
-	
+		else if (pgClock.process(args.sampleTime)) {
+			// if within cooey of the clock edge, run or reset is treated as a clock edge.
+			clockEdge = (gateRun.leadingEdge() || gateReset.leadingEdge());
+		}
+		
 		if (gateRun.low())
 			running = false;
 		
