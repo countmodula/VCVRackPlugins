@@ -33,15 +33,16 @@ struct Attenuator : Module {
 		NUM_LIGHTS
 	};
 
-	Polarizer polarizer;
-
+	bool bipolar;
+	bool prevBipolar;
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
 	Attenuator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CH1_ATTENUATION_PARAM, 0.0f, 1.0f, 0.5f, "Attenuation/Attenuversion");
+		configParam(CH1_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation/Attenuversion", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Attenuvert");
 
@@ -50,7 +51,8 @@ struct Attenuator : Module {
 	}
 
 	void onReset() override {
-		polarizer.reset();
+		prevBipolar = bipolar = false;
+		paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = 0.0f;
 	}
 
 	json_t *dataToJson() override {
@@ -67,6 +69,11 @@ struct Attenuator : Module {
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
+		prevBipolar = params[CH1_MODE_PARAM].getValue() > 0.5f;
+		
+		// adjust the min value based on the chosen mode mode
+		paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = (prevBipolar ? -1.0f : 0.0f);
 	}		
 	
 	void process(const ProcessArgs &args) override {
@@ -74,26 +81,37 @@ struct Attenuator : Module {
 		float att1 = params[CH1_ATTENUATION_PARAM].getValue();
 		float att2 = params[CH2_ATTENUATION_PARAM].getValue();
 
-		bool bipolar = params[CH1_MODE_PARAM].getValue() > 0.5f;
+		bipolar = params[CH1_MODE_PARAM].getValue() > 0.5f;
 		
+		if (prevBipolar != bipolar) {
+			// adjust the min value based on the chosen mode mode
+			paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = (bipolar ? -1.0f : 0.0f);
+
+			// on change of mode, adjust the control value so it stays in the same position
+			switch (bipolar) {
+				case true:
+					params[CH1_ATTENUATION_PARAM].setValue((att1/1.0f * 2.0f) - 1.0f);
+					break;
+				case false:
+					params[CH1_ATTENUATION_PARAM].setValue((att1 + 1.0f) / 2.0f);
+					break;
+			}
+		}
+
+		prevBipolar = bipolar;
+			
 		// channel 1
 		if (inputs[CH1_SIGNAL_INPUT].isConnected()) {
 			// cable connected grab number of channels and process accordingly
 			int n = inputs[CH1_SIGNAL_INPUT].getChannels();
 			
 			outputs[CH1_SIGNAL_OUTPUT].setChannels(n);
-			for (int c = 0; c < n; c++) {
-				if (bipolar)
-					outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer.process(inputs[CH1_SIGNAL_INPUT].getVoltage(c), -1.0f + (att1 * 2), 0.0f, 0.0f), c);
-				else
-					outputs[CH1_SIGNAL_OUTPUT].setVoltage(inputs[CH1_SIGNAL_INPUT].getVoltage(c) * att1, c);
-			}
+			for (int c = 0; c < n; c++)
+				outputs[CH1_SIGNAL_OUTPUT].setVoltage(inputs[CH1_SIGNAL_INPUT].getVoltage(c) * att1, c);
 		}
 		else {
 			// nothing connected, we're acting as a CV source
 			if (bipolar)
-				outputs[CH1_SIGNAL_OUTPUT].setVoltage(polarizer.process(10.0f, -1.0f + (att1 * 2), 0.0f, 0.0f));
-			else
 				outputs[CH1_SIGNAL_OUTPUT].setVoltage(10.0f * att1);
 		}
 		
