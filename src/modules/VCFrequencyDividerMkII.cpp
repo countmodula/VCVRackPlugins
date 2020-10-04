@@ -136,9 +136,13 @@ struct VCFrequencyDividerMkII : Module {
 };
 
 struct VCFrequencyDividerMkIIWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	VCFrequencyDividerMkIIWidget(VCFrequencyDividerMkII *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VCFrequencyDividerMkII.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

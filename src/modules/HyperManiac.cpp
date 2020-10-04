@@ -129,9 +129,12 @@ struct Megalomaniac : Module {
 
 struct MegalomaniacWidget : ModuleWidget {
 	
+	std::string panelName;
+	
 	MegalomaniacWidget(Megalomaniac *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Megalomaniac.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

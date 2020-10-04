@@ -130,10 +130,13 @@ struct GateDelay : Module {
 };
 
 struct GateDelayWidget : ModuleWidget { 
+
+	std::string panelName;
+	
 	GateDelayWidget(GateDelay *module) {
 		setModule(module);
-
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/GateDelay.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

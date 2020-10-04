@@ -94,9 +94,13 @@ struct CVSpreader : Module {
 };
 
 struct CVSpreaderWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	CVSpreaderWidget(CVSpreader *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/CVSpreader.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

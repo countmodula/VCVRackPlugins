@@ -117,9 +117,13 @@ struct VoltageScaler : Module {
 };
 
 struct VoltageScalerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	VoltageScalerWidget(VoltageScaler *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VoltageScaler.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

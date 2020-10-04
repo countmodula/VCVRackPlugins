@@ -106,9 +106,13 @@ struct Breakout : Module {
 };
 
 struct BreakoutWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BreakoutWidget(Breakout *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Breakout.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

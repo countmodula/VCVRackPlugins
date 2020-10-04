@@ -401,9 +401,13 @@ struct Euclid : Module {
 };
 
 struct EuclidWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	EuclidWidget(Euclid *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Euclid.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

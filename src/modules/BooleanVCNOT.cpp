@@ -94,9 +94,13 @@ struct BooleanVCNOT : Module {
 };
 
 struct BooleanVCNOTWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BooleanVCNOTWidget(BooleanVCNOT *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanVCNOT.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

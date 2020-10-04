@@ -179,9 +179,13 @@ struct SRFlipFlop : Module {
 };
 
 struct SRFlipFlopWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	SRFlipFlopWidget(SRFlipFlop *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SRFlipFlop.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -316,9 +320,13 @@ struct SingleSRFlipFlop : Module {
 };
 
 struct SingleSRFlipFlopWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	SingleSRFlipFlopWidget(SingleSRFlipFlop *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SRFF.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

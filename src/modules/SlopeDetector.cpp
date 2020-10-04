@@ -128,9 +128,13 @@ struct SlopeDetector : Module {
 };
 
 struct SlopeDetectorWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	SlopeDetectorWidget(SlopeDetector *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SlopeDetector.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

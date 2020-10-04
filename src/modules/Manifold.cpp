@@ -90,9 +90,13 @@ struct Manifold : Module {
 };
 
 struct ManifoldWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ManifoldWidget(Manifold *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Manifold.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

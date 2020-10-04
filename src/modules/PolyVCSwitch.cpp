@@ -149,9 +149,13 @@ struct PolyVCSwitch : Module {
 
 
 struct PolyVCSwitchWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyVCSwitchWidget(PolyVCSwitch *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyVCSwitch.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

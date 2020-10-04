@@ -94,10 +94,13 @@ struct HyperManiacalLFOExpander : Module {
 };
 
 struct HyperManiacalLFOExpanderWidget : ModuleWidget {
+
+	std::string panelName;
 	
 	HyperManiacalLFOExpanderWidget(HyperManiacalLFOExpander *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/HyperManiacalLFOExpander.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

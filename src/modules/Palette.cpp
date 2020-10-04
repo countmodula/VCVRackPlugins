@@ -577,11 +577,14 @@ struct PaletteWidget : ModuleWidget {
 		}
 	};
 
+
+	std::string panelName;
+	
 	PaletteWidget(Palette *module) {
 		setModule(module);
 		bool moduleEnabled = (module ? module->running : true);
-		
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, moduleEnabled ? "res/Palette.svg" : "res/PaletteDisabled.svg")));
+		panelName = moduleEnabled ? "Palette.svg" : "PaletteDisabled.svg";
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

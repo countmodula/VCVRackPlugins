@@ -126,9 +126,13 @@ struct Mute : Module {
 };
 
 struct MuteWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	MuteWidget(Mute *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Mute.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -92,9 +92,13 @@ struct Mixer : Module {
 };
 
 struct MixerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	MixerWidget(Mixer *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Mixer.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

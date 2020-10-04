@@ -161,9 +161,13 @@ struct BooleanOR : Module {
 };
 
 struct BooleanORWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BooleanORWidget(BooleanOR *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanOR.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

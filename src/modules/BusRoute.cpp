@@ -111,9 +111,13 @@ struct BusRoute : Module {
 };
 
 struct BusRouteWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BusRouteWidget(BusRoute *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BusRoute.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

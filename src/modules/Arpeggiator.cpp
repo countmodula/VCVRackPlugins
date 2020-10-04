@@ -835,9 +835,12 @@ struct ArpeggiatorWidget : ModuleWidget {
 	const NVGcolor activeOctaveColors[3] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
 	const NVGcolor inactiveColor = nvgRGB(0x5a, 0x5a, 0x5a);
 
+	std::string panelName;
+	
 	ArpeggiatorWidget(Arpeggiator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Arpeggiator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

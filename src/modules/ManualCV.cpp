@@ -70,9 +70,13 @@ struct ManualCV : Module {
 };
 
 struct ManualCVWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ManualCVWidget(ManualCV *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ManualCV.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

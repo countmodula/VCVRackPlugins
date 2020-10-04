@@ -162,9 +162,13 @@ struct PolyG2T : Module {
 };
 
 struct PolyG2TWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyG2TWidget(PolyG2T *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyG2T.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

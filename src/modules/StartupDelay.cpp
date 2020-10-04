@@ -107,9 +107,13 @@ struct StartupDelay : Module {
 };
 
 struct StartupDelayWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	StartupDelayWidget(StartupDelay *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/StartupDelay.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

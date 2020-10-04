@@ -176,9 +176,13 @@ struct PolyChances : Module {
 };
 
 struct PolyChancesWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyChancesWidget(PolyChances *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyChances.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

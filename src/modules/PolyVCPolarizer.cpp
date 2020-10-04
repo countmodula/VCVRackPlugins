@@ -113,9 +113,13 @@ struct PolyVCPolarizer : Module {
 };
 
 struct PolyVCPolarizerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyVCPolarizerWidget(PolyVCPolarizer *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyVCPolarizer.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

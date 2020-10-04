@@ -123,9 +123,13 @@ struct MorphShaper : Module {
 };
 
 struct MorphShaperWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	MorphShaperWidget(MorphShaper *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MorphShaper.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

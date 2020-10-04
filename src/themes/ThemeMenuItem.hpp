@@ -21,7 +21,7 @@ struct DefaultThemeMenuItem : MenuItem {
 	
 	void onAction(const event::Action &e) override {
 		// write the setting
-		saveDefaultTheme(themeToUse);
+		saveDefaultIntegerValue("DefaultTheme", themeToUse);
 		
 		// might as well set the current theme too
 		module->currentTheme = themeToUse;
@@ -88,7 +88,7 @@ struct DefaultThemeMenu : MenuItem {
 	Menu *createChildMenu() override {
 		Menu *menu = new Menu;
 		
-		int currentDefault = readDefaultTheme();
+		int currentDefault = readDefaultIntegerValue("DefaultTheme");
 
 		// add Standard theme menu item
 		DefaultThemeMenuItem *standardMenuItem = createMenuItem<DefaultThemeMenuItem>("Silver", CHECKMARK(currentDefault == 0));

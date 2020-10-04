@@ -99,9 +99,13 @@ struct Rectifier : Module {
 };
 
 struct RectifierWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	RectifierWidget(Rectifier *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Rectifier.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

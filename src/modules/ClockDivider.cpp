@@ -172,9 +172,13 @@ struct ClockDivider : Module {
 };
 
 struct ClockDividerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ClockDividerWidget(ClockDivider *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ClockDivider.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

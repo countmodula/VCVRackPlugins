@@ -255,9 +255,13 @@ struct SequencerExpanderTrig8 : Module {
 };
 
 struct SequencerExpanderTrig8Widget : ModuleWidget {
+
+	std::string panelName;
+	
 	SequencerExpanderTrig8Widget(SequencerExpanderTrig8 *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SequencerExpanderTrig8.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

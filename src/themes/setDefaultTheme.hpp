@@ -4,4 +4,4 @@
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
-currentTheme = readDefaultTheme();
+currentTheme = readDefaultIntegerValue("DefaultTheme");

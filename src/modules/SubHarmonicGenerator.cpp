@@ -114,9 +114,13 @@ struct SubHarmonicGenerator : Module {
 };
 
 struct SubHarmonicGeneratorWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	SubHarmonicGeneratorWidget(SubHarmonicGenerator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SubHarmonicGenerator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

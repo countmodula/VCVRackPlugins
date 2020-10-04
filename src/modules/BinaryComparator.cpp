@@ -125,9 +125,13 @@ struct BinaryComparator : Module {
 
 
 struct BinaryComparatorWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BinaryComparatorWidget(BinaryComparator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BinaryComparator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

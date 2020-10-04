@@ -108,9 +108,13 @@ struct PolyMinMax : Module {
 };
 
 struct PolyMinMaxWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyMinMaxWidget(PolyMinMax *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyMinMax.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

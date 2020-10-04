@@ -161,9 +161,13 @@ struct BooleanAND : Module {
 };
 
 struct BooleanANDWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BooleanANDWidget(BooleanAND *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanAND.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

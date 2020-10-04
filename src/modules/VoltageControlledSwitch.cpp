@@ -120,9 +120,13 @@ struct VoltageControlledSwitch : Module {
 
 
 struct VoltageControlledSwitchWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	VoltageControlledSwitchWidget(VoltageControlledSwitch *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/VoltageControlledSwitch.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

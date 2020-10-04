@@ -162,9 +162,13 @@ struct Mangler : Module {
 };
 
 struct ManglerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ManglerWidget(Mangler *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Mangler.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

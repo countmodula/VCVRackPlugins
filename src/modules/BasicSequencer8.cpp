@@ -402,9 +402,13 @@ struct BasicSequencer8 : Module {
 };
 
 struct BasicSequencer8Widget : ModuleWidget {
+
+	std::string panelName;
+	
 	BasicSequencer8Widget(BasicSequencer8 *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BasicSequencer8.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

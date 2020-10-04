@@ -49,9 +49,13 @@ struct BlankPanel : Module {
 };
 
 struct WIDGET_NAME : ModuleWidget {
+
+	std::string panelName;
+	
 	WIDGET_NAME(BlankPanel *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -139,9 +139,13 @@ struct ShepardGenerator : Module {
 };
 
 struct ShepardGeneratorWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ShepardGeneratorWidget(ShepardGenerator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ShepardGenerator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

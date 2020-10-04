@@ -322,9 +322,13 @@ struct Fade : Module {
 };
 
 struct FadeWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	FadeWidget(Fade *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Fade.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

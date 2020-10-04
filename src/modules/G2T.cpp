@@ -118,9 +118,13 @@ struct G2T : Module {
 };
 
 struct G2TWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	G2TWidget(G2T *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/G2T.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	
