@@ -92,19 +92,33 @@ struct WIDGET_NAME : ModuleWidget {
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 
-			// add Standard panel menu item
+			// add Standard panel style menu item
 			PanelMenuItem *standardMenuItem = createMenuItem<PanelMenuItem>("Count Modula Logo", CHECKMARK(module->panelType == 0));
 			standardMenuItem->module = module;
 			standardMenuItem->panelToUse = 0;
 			menu->addChild(standardMenuItem);
 			
-			// add minimalist (nologo) panel menu item
+			// add Minimalist (nologo) panel style menu item
 			PanelMenuItem *nologoMenuItem = createMenuItem<PanelMenuItem>("Minimalist", CHECKMARK(module->panelType == 1));
 			nologoMenuItem->module = module;
 			nologoMenuItem->panelToUse = 1;
 			menu->addChild(nologoMenuItem);
 			
-			return menu;	
+			
+			// add Release the Bats panel style menu item
+			PanelMenuItem *batsMenuItem = createMenuItem<PanelMenuItem>("Release the Bats", CHECKMARK(module->panelType == 2));
+			batsMenuItem->module = module;
+			batsMenuItem->panelToUse = 2;
+			menu->addChild(batsMenuItem);			
+			
+			// add Rockin' Bones panel style menu item
+			PanelMenuItem *bonesMenuItem = createMenuItem<PanelMenuItem>("Rockin' Bones", CHECKMARK(module->panelType == 3));
+			bonesMenuItem->module = module;
+			bonesMenuItem->panelToUse = 3;
+			menu->addChild(bonesMenuItem);		
+			
+			return menu;				
+			
 		}
 	};	
 		
@@ -117,7 +131,7 @@ struct WIDGET_NAME : ModuleWidget {
 			// write the setting
 			saveDefaultIntegerValue("DefaulRackEarPanelType", panelToUse);
 			
-			// might as well set the current theme too
+			// might as well set the current panel style too
 			module->panelType = panelToUse;
 		}
 	};		
@@ -132,17 +146,29 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			int currentDefault = readDefaultIntegerValue("DefaulRackEarPanelType");
 
-			// add Standard theme menu item
+			// add Standard panel style item
 			DefaultPanelMenuItem *standardMenuItem = createMenuItem<DefaultPanelMenuItem>("Count Modula Logo", CHECKMARK(currentDefault == 0));
 			standardMenuItem->module = module;
 			standardMenuItem->panelToUse = 0;
 			menu->addChild(standardMenuItem);
 			
-			// add Absinthe theme menu item
+			// add Minimalist panel style item
 			DefaultPanelMenuItem *nologoMenuItem = createMenuItem<DefaultPanelMenuItem>("Minimalist", CHECKMARK(currentDefault == 1));
 			nologoMenuItem->module = module;
 			nologoMenuItem->panelToUse = 1;
 			menu->addChild(nologoMenuItem);
+			
+			// add Release the Bats panel style item
+			DefaultPanelMenuItem *batsMenuItem = createMenuItem<DefaultPanelMenuItem>("Release the Bats", CHECKMARK(currentDefault == 2));
+			batsMenuItem->module = module;
+			batsMenuItem->panelToUse = 2;
+			menu->addChild(batsMenuItem);			
+			
+			// add Rockin' Bones panel style item
+			DefaultPanelMenuItem *bonesMenuItem = createMenuItem<DefaultPanelMenuItem>("Rockin' Bones", CHECKMARK(currentDefault == 3));
+			bonesMenuItem->module = module;
+			bonesMenuItem->panelToUse = 3;
+			menu->addChild(bonesMenuItem);				
 			
 			return menu;	
 		}
@@ -178,10 +204,18 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			if (cPanel != pPanel) {
 				switch (cPanel) {
-					case 1: // blank
+					case 1: // minimalist (no logo)
 						panelName = PANEL_FILE1;
 						break;
-					
+						
+					case 2: // release the bats
+						panelName = PANEL_FILE2;
+						break;
+
+					case 3: // rockin' bones
+						panelName = PANEL_FILE3;
+						break;
+						
 					default: // anything else = Count Modula Logo
 						panelName = PANEL_FILE;
 						break;
