@@ -155,9 +155,13 @@ struct PolyLogic : Module {
 };
 
 struct PolyLogicWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyLogicWidget(PolyLogic *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyLogic.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

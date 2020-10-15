@@ -132,9 +132,13 @@ struct PolyMute : Module {
 };
 
 struct PolyMuteWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyMuteWidget(PolyMute *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyMute.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

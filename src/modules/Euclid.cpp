@@ -290,8 +290,10 @@ struct Euclid : Module {
 		bool clockEdge = gateClock.leadingEdge();
 		if (clockEdge)
 			pgClock.trigger(1e-4f);
-		else
-			clockEdge = (pgClock.process(args.sampleTime) && gateRun.leadingEdge());
+		else if (pgClock.process(args.sampleTime)) {
+			// if within cooey of the clock edge, run or reset is treated as a clock edge.
+			clockEdge = (gateRun.leadingEdge() || gateReset.leadingEdge());
+		}
 	
 		if (gateRun.low())
 			running = false;
@@ -399,9 +401,13 @@ struct Euclid : Module {
 };
 
 struct EuclidWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	EuclidWidget(Euclid *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Euclid.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -92,8 +92,11 @@ struct Arpeggiator : Module {
 	
 	GateProcessor gpClock;
 	GateProcessor gpGate[PORT_MAX_CHANNELS];
+	GateProcessor gpAnyGate;
+	
 	GateProcessor gpReset;
 	GateProcessor gpHold;
+	dsp::PulseGenerator pgClock;
 
 	float cvList[PORT_MAX_CHANNELS] = {};
 	float cvListHeld[PORT_MAX_CHANNELS] = {};
@@ -108,6 +111,7 @@ struct Arpeggiator : Module {
 	int maxChannels = -1;
 	bool holdCV = false;
 	bool hold = false;
+	bool waitingForGate = false;
 	
 	bool gateOut = false;
 	bool prevGateout = false;
@@ -176,7 +180,7 @@ struct Arpeggiator : Module {
 		gpClock.reset();
 		gpReset.reset();
 		gpHold.reset();
-		
+		gpAnyGate.reset();
 		slew.reset();
 		
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
@@ -196,6 +200,7 @@ struct Arpeggiator : Module {
 		hold = false;
 		gate =  false;
 		numCVs = 0;
+		waitingForGate = false;
 	}
 	
 	void onRandomize() override {
@@ -332,6 +337,32 @@ struct Arpeggiator : Module {
 		
 		// process the clock input
 		bool clockOut = gpClock.set(inputs[CLOCK_INPUT].getVoltage());
+		bool clockEdge = gpClock.leadingEdge();
+		
+		// wrangle the clock edge if we need to
+		gpAnyGate.set(inputs[GATE_INPUT].getVoltageSum());
+		if (gpAnyGate.low()) {
+			if (clockEdge) {
+				// clock has arrived and there's no gate signal, delay the clock edge until a gate arrives or we reach the end of the delay period
+				pgClock.trigger(1e-4f);
+				clockEdge = false;
+				waitingForGate = true;
+			}
+			else {
+				// not a clock edge, so we must check for the end of the delay time
+				bool x = waitingForGate;
+				waitingForGate = pgClock.process(args.sampleTime);
+				
+				if (x && !waitingForGate)
+					clockEdge = true;				
+			}
+		}
+		else if (waitingForGate && gpAnyGate.leadingEdge()) {
+			// if within cooey of the clock edge, gate edge is treated as a clock edge.
+			clockEdge = true;
+			waitingForGate = false;
+			pgClock.reset();
+		}
 		
 		// handle the hold input - this overrides the button
 		if (inputs[HOLD_INPUT].isConnected()) {
@@ -342,7 +373,7 @@ struct Arpeggiator : Module {
 			holdCV = false;
 		
 		// are we in hold?
-		if (hold || !gpClock.leadingEdge()) {
+		if (hold || !clockEdge) {
 			// yes - use the gate and cv data we already have
 			if (gate && prevSort != sort) {
 				for (int c = 0; c < numCVs; c++) {
@@ -352,6 +383,7 @@ struct Arpeggiator : Module {
 			}
 		}
 		else {
+			
 			// no - process the gate and cv inputs
 			gate = false;
 			numGates = inputs[GATE_INPUT].getChannels();
@@ -393,7 +425,7 @@ struct Arpeggiator : Module {
 			reset = true;
 		
 		// quantize the gate output to the clock leading edge
-		if (gpClock.leadingEdge())
+		if (clockEdge)
 			gateOut = gate;
 		
 		// always start over with on a new gate signal
@@ -413,7 +445,7 @@ struct Arpeggiator : Module {
 		}
 
 		// advance the pattern counter on every clock edge
-		if (gateOut && gpClock.leadingEdge())
+		if (gateOut && clockEdge)
 			patternCount++;
 		
 		if (reset || patternCount >= patternLength)
@@ -423,7 +455,7 @@ struct Arpeggiator : Module {
 		if (mode == PROGRAMME_MODE) {
 
 			// advance the note counter based on the selected pattern on every clock edge
-			if (gateOut && gpClock.leadingEdge()) {
+			if (gateOut && clockEdge) {
 				switch  (pattern[patternCount]) {
 					case PATTERN_DOWN:
 						//go back a note
@@ -489,7 +521,7 @@ struct Arpeggiator : Module {
 			skip = false;
 			
 			// advance the clock in the appropriate direction
-			if (gateOut && gpClock.leadingEdge()) {
+			if (gateOut && clockEdge) {
 				
 				switch (mode) {
 					case FFB_MODE:
@@ -576,7 +608,7 @@ struct Arpeggiator : Module {
 			noteToUse =  mapMidOut[numCVs-1][noteToUse];
 		
 		// process the assembled CVs
-		if (gateOut && gpClock.leadingEdge()) {
+		if (gateOut && clockEdge) {
 			if (numCVs > 0)
 				cv = cvList[noteToUse] + octaveOut;
 		}
@@ -835,9 +867,12 @@ struct ArpeggiatorWidget : ModuleWidget {
 	const NVGcolor activeOctaveColors[3] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
 	const NVGcolor inactiveColor = nvgRGB(0x5a, 0x5a, 0x5a);
 
+	std::string panelName;
+	
 	ArpeggiatorWidget(Arpeggiator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Arpeggiator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

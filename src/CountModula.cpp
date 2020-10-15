@@ -43,31 +43,31 @@ json_t * readSettings() {
 	return rootJ;
 }
 
-// read the default theme value from the global count modula settings file
-int readDefaultTheme() {
-	int theme = 0; // default to the standard theme
+// read the given default integer value from the global count modula settings file
+int readDefaultIntegerValue(std::string setting) {
+	int value = 0; // default to the standard value
 	
 	// read the settings file
 	json_t *rootJ = readSettings();
 	
-	// get the default theme value
-	json_t* jsonTheme = json_object_get(rootJ, "DefaultTheme");
-	if (jsonTheme)
-		theme = json_integer_value(jsonTheme);
+	// get the default value
+	json_t* jsonValue = json_object_get(rootJ, setting.c_str());
+	if (jsonValue)
+		value = json_integer_value(jsonValue);
 
 	// houskeeping
 	json_decref(rootJ);
 	
-	return theme;
+	return value;
 }
 
-// save the given theme value in the global count modula settings file
-void saveDefaultTheme(int theme) {
+// save the given integer value in the global count modula settings file
+void saveDefaultIntegerValue(std::string setting, int value) {
 	// read the settings file
 	json_t *rootJ = readSettings();
 	
 	// set the default theme value
-	json_object_set_new(rootJ, "DefaultTheme", json_integer(theme));
+	json_object_set_new(rootJ, setting.c_str(), json_integer(value));
 
 	// save the updated data
 	saveSettings(rootJ);
@@ -75,6 +75,7 @@ void saveDefaultTheme(int theme) {
 	// houskeeping
 	json_decref(rootJ);
 }
+
 
 
 

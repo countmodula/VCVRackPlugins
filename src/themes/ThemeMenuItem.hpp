@@ -21,7 +21,7 @@ struct DefaultThemeMenuItem : MenuItem {
 	
 	void onAction(const event::Action &e) override {
 		// write the setting
-		saveDefaultTheme(themeToUse);
+		saveDefaultIntegerValue("DefaultTheme", themeToUse);
 		
 		// might as well set the current theme too
 		module->currentTheme = themeToUse;
@@ -71,6 +71,12 @@ struct ThemeMenu : MenuItem {
 		sanguineMenuItem->themeToUse = 4;
 		menu->addChild(sanguineMenuItem);		
 		
+		// add Trick or Treat menu item
+		ThemeMenuItem *trickOrTreatMenuItem = createMenuItem<ThemeMenuItem>("Trick or Treat", CHECKMARK(module->currentTheme == 6));
+		trickOrTreatMenuItem->module = module;
+		trickOrTreatMenuItem->themeToUse = 6;
+		menu->addChild(trickOrTreatMenuItem);		
+			
 		return menu;	
 	}
 };
@@ -82,7 +88,7 @@ struct DefaultThemeMenu : MenuItem {
 	Menu *createChildMenu() override {
 		Menu *menu = new Menu;
 		
-		int currentDefault = readDefaultTheme();
+		int currentDefault = readDefaultIntegerValue("DefaultTheme");
 
 		// add Standard theme menu item
 		DefaultThemeMenuItem *standardMenuItem = createMenuItem<DefaultThemeMenuItem>("Silver", CHECKMARK(currentDefault == 0));
@@ -119,6 +125,12 @@ struct DefaultThemeMenu : MenuItem {
 		sanguineMenuItem->module = module;
 		sanguineMenuItem->themeToUse = 4;
 		menu->addChild(sanguineMenuItem);
+		
+		// add Trick or Treat menu item
+		DefaultThemeMenuItem *trickOrTreatMenuItem = createMenuItem<DefaultThemeMenuItem>("Trick or Treat", CHECKMARK(currentDefault == 6));
+		trickOrTreatMenuItem->module = module;
+		trickOrTreatMenuItem->themeToUse = 6;
+		menu->addChild(trickOrTreatMenuItem);			
 		
 		return menu;	
 	}

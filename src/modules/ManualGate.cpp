@@ -128,9 +128,13 @@ struct ManualGate : Module {
 };
 
 struct ManualGateWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ManualGateWidget(ManualGate *module) {	
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ManualGate.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

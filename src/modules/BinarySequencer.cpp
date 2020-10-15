@@ -281,9 +281,13 @@ struct BinarySequencer : Module {
 
 
 struct BinarySequencerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BinarySequencerWidget(BinarySequencer *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BinarySequencer.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

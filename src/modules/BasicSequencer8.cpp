@@ -275,9 +275,11 @@ struct BasicSequencer8 : Module {
 		bool clockEdge = gateClock.leadingEdge();
 		if (clockEdge)
 			pgClock.trigger(1e-4f);
-		else
-			clockEdge = (pgClock.process(args.sampleTime) && gateRun.leadingEdge());
-	
+		else if (pgClock.process(args.sampleTime)) {
+			// if within cooey of the clock edge, run or reset is treated as a clock edge.
+			clockEdge = (gateRun.leadingEdge() || gateReset.leadingEdge());
+		}
+		
 		if (gateRun.low())
 			running = false;
 		
@@ -400,9 +402,13 @@ struct BasicSequencer8 : Module {
 };
 
 struct BasicSequencer8Widget : ModuleWidget {
+
+	std::string panelName;
+	
 	BasicSequencer8Widget(BasicSequencer8 *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BasicSequencer8.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

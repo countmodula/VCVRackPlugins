@@ -404,9 +404,12 @@ struct LightStripWidget : ModuleWidget {
 	};
 //----------------------------------------------------------------
 
+	std::string panelName;
+	
 	LightStripWidget(LightStrip *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LightStrip.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// light strip
 		if (module) {

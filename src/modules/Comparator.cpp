@@ -93,9 +93,13 @@ struct Comparator : Module {
 };
 
 struct ComparatorWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ComparatorWidget(Comparator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Comparator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -170,9 +170,13 @@ struct GateModifier : Module {
 };
 
 struct GateModifierWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	GateModifierWidget(GateModifier *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/GateModifier.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

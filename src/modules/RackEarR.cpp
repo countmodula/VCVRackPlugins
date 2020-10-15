@@ -8,6 +8,9 @@
 #define WIDGET_NAME RackEarRightWidget
 #define MODULE_NAME "RackEarRight"
 #define PANEL_FILE "RackEarRight.svg"
+#define PANEL_FILE1 "RackEarRightNoLogo.svg"
+#define PANEL_FILE2 "RackEarRightBats.svg"
+#define PANEL_FILE3 "RackEarRightSkeleton.svg"
 #define MODEL_NAME	modelRackEarRight
 
 #include "RackEars.hpp"

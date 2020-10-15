@@ -162,9 +162,13 @@ struct MatrixCombiner : Module {
 };
 
 struct MatrixCombinerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	MatrixCombinerWidget(MatrixCombiner *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MatrixCombiner.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -119,9 +119,13 @@ struct SampleAndHold : Module {
 };
 
 struct SampleAndHoldWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	SampleAndHoldWidget(SampleAndHold *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SampleAndHold.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -106,9 +106,13 @@ struct OffsetGenerator : Module {
 };
 
 struct OffsetGeneratorWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	OffsetGeneratorWidget(OffsetGenerator *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/OffsetGenerator.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -186,9 +186,13 @@ struct BooleanXOR : Module {
 };
 
 struct BooleanXORWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	BooleanXORWidget(BooleanXOR *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BooleanXOR.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

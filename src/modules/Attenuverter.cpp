@@ -126,9 +126,13 @@ struct Attenuverter : Module {
 };
 
 struct AttenuverterWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	AttenuverterWidget(Attenuverter *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Attenuverter.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

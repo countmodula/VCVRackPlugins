@@ -20,6 +20,30 @@
 </tr>
 
 <tr valign="top">
+<td align="center">15-Oct-2020</td>
+<td align="center">v1.13.0</td>
+<td align="left">
+
+<ul>
+<b>Module Updates:</b>
+<li>All Modules - New theme: Trick or Treat</li>
+<li>8 x 8 Gate Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>8 x 16 Gate Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>8 Step Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>16 Step Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>Basic 8 Step Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>Dual 8 Step Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>Euclidean Sequencer now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>Super Arpeggiator now compensatates for gates that arrive within 100uS after the clock edge</li>
+<li>Trigger Sequencer (8 Step) now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>Trigger Sequencer (16 Step) now honours a reset if it occurs no more than 100uS after the leading clock edge</li>
+<li>Channel A on the Dual Attenuator now shows the attenuation/attenuversion values as percentages and initialises the knob to the correct zero position based on the selected mode.</li>
+<li>Rack Ears now have a number of panel options</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">28-Aug-2020</td>
 <td align="center">v1.12.0</td>
 <td align="left">

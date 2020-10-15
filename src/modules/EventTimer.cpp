@@ -287,10 +287,13 @@ struct EventTimer : Module {
 };
 
 struct EventTimerWidget : ModuleWidget {
+
+	std::string panelName;
 	
 	EventTimerWidget(EventTimer *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/EventTimer.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

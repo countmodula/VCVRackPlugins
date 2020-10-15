@@ -352,9 +352,13 @@ struct PolyrhythmicGeneratorMkII : Module {
 
 
 struct PolyrhythmicGeneratorMkIIWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	PolyrhythmicGeneratorMkIIWidget(PolyrhythmicGeneratorMkII *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PolyrhythmicGeneratorMkII.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

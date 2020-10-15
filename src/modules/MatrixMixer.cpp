@@ -119,9 +119,13 @@ struct MatrixMixer : Module {
 };
 
 struct MatrixMixerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	MatrixMixerWidget(MatrixMixer *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/MatrixMixer.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

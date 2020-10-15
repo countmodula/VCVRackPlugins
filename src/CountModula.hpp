@@ -15,9 +15,9 @@ extern Plugin *pluginInstance;
 json_t * readSettings();
 void saveSettings(json_t *rootJ);
 
-// theme functions
-int readDefaultTheme();
-void saveDefaultTheme(int theme);
+// settings functions
+int readDefaultIntegerValue(std::string);
+void saveDefaultIntegerValue(std::string setting, int value);
 
 #include "components/CountModulaComponents.hpp"
 #include "components/CountModulaPushButtons.hpp"

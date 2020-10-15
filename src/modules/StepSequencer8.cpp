@@ -403,9 +403,11 @@ struct STRUCT_NAME : Module {
 			bool clockEdge = gateClock[r].leadingEdge();
 			if (clockEdge)
 				pgClock[r].trigger(1e-4f);
-			else 
-				clockEdge = (pgClock[r].process(args.sampleTime) && gateRun[r].leadingEdge());
-		
+			else if (pgClock[r].process(args.sampleTime)) {
+				// if within cooey of the clock edge, run or reset is treated as a clock edge.
+				clockEdge = (gateRun[r].leadingEdge() || gateReset[r].leadingEdge());
+			}
+			
 			if (gateRun[r].low())
 				running[r] = false;
 			
@@ -573,9 +575,13 @@ struct STRUCT_NAME : Module {
 };
 
 struct WIDGET_NAME : ModuleWidget {
+
+	std::string panelName;
+	
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" PANEL_FILE)));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

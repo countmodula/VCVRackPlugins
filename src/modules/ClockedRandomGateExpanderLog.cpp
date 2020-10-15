@@ -251,9 +251,13 @@ struct ClockedRandomGateExpanderLog : Module {
 };
 
 struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	ClockedRandomGateExpanderLogWidget(ClockedRandomGateExpanderLog *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/ClockedRandomGateExpanderLog.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

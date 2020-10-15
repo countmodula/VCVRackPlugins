@@ -399,9 +399,12 @@ struct HyperManiacalLFO : Module {
 
 struct HyperManiacalLFOWidget : ModuleWidget {
 	
+	std::string panelName;
+	
 	HyperManiacalLFOWidget(HyperManiacalLFO *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/HyperManiacalLFO.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	

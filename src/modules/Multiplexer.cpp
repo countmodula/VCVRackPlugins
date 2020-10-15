@@ -244,9 +244,13 @@ struct Multiplexer : Module {
 
 
 struct MultiplexerWidget : ModuleWidget {
+
+	std::string panelName;
+	
 	MultiplexerWidget(Multiplexer *module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Multiplexer.svg")));
+		panelName = PANEL_FILE;
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
 		#include "../components/stdScrews.hpp"	
