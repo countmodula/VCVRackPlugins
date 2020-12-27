@@ -632,9 +632,12 @@ struct Arpeggiator : Module {
 		
 		lights[POLY_LIGHT].setBrightness(boolToLight(polyOutputs));
 		
-		// apply glide
-		float cvOut = slew.process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
-		
+		// apply glide if enabled
+		float cvOut = cv;
+		if (!isNear(glideTime, 0.0f)) {
+			cvOut = slew.process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
+		}
+
 		// output the gate and cv values
 		if (polyOutputs) {
 			maxChannels = std::max(maxChannels, numCVs);
