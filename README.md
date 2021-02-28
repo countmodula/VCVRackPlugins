@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.13.0</h3>
+<h3>Modules - Release 1.14.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -108,7 +108,7 @@ Follow Count Modula on facebook:
 <li>Shepard Generator</li>
 <li>Signal Manifold</li>
 <li>SR Flip Flop (Dual)</li>
-<li>SR Flip Flop (Single) <font color="red">* New in v1.12.0</font></li>
+<li>SR Flip Flop (Single)</li>
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Super Arpeggiator</li>
@@ -127,7 +127,7 @@ Follow Count Modula on facebook:
 <li>16 Step Sequencer Trigger Expander </li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop (Dual)</li>
-<li>T Flip Flop (Single) <font color="red">* New in v1.12.0</font></li>
+<li>T Flip Flop (Single)</li>
 <li>Trigger Sequencer (8 Step)</li>
 <li>Trigger Sequencer (16 Step)</li>
 <li>Trigger Sequencer Gate Expander</li>
@@ -151,7 +151,7 @@ Follow Count Modula on facebook:
 <li>Hyper Maniacal LFO
 <ul>
 <li>LFO Output Expander</li>
-<li>Megaomaniac - CV Expander <font color="red">* New in v1.12.0</font></li>
+<li>Megaomaniac - CV Expander</li>
 </ul>
 </li>
 <li>Slope Detector</li>

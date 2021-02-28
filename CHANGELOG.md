@@ -20,6 +20,18 @@
 </tr>
 
 <tr valign="top">
+<td align="center">28-Feb-2021</td>
+<td align="center">v1.14.0</td>
+<td align="left">
+
+<ul>
+<b>Module Updates:</b>
+<li>Burst Generator - Added controls for probability of output pulse firing</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">15-Oct-2020</td>
 <td align="center">v1.13.0</td>
 <td align="left">

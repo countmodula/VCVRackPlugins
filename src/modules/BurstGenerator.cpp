@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Binary Sequencer Module
 //	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
-//  Copyright (C) 2019  Adam Verspaget
+//  Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -22,6 +22,8 @@ struct BurstGenerator : Module {
 		RETRIGGER_PARAM,
 		PULSESCV_PARAM,
 		MANUAL_PARAM,
+		PROBABILITY_PARAM,
+		PROBABILITYCV_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -29,6 +31,7 @@ struct BurstGenerator : Module {
 		RATECV_INPUT,
 		TRIGGER_INPUT,
 		PULSESCV_INPUT,
+		PROBABILITYCV_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -48,6 +51,8 @@ struct BurstGenerator : Module {
 	bool bursting = false;
 	bool prevBursting = false;
 	bool startBurst = false;
+	bool prob = true;
+	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 	bool seqBurst = false;
 	int seqCount = 0;
@@ -79,6 +84,8 @@ struct BurstGenerator : Module {
 		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of pulses CV amount", " %", 0.0f, 62.5f, 0.0f);
 		configParam(PULSES_PARAM, 1.0f, 16.0f, 1.0f, "Number of pulses");
 		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Manual trigger");
+		configParam(PROBABILITY_PARAM, 0.0f, 10.0f, 10.0f, "Pulse output probability", " %", 0.0f, 10.0f, 0.0f);
+		configParam(PROBABILITYCV_PARAM, -1.0f, 1.0f, 0.0f, "Probability CV amount", " %", 0.0f, 100.0f, 0.0f);
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander
@@ -105,7 +112,7 @@ struct BurstGenerator : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(2));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -175,7 +182,11 @@ struct BurstGenerator : Module {
 				}
 			}
 #endif
-
+			// determine probability of pulse firing
+			float pCV = clamp (inputs[PROBABILITYCV_INPUT].getVoltage() * params[PROBABILITYCV_PARAM].getValue(), -10.0, 10.0);
+			prob = (random::uniform() <= clamp((params[PROBABILITY_PARAM].getValue() + pCV) / 10.0f, 0.0f, 1.0f));
+			
+			// process burst count
 			if (startBurst || bursting) {
 				if (++counter >= pulses) {
 					counter = -1;
@@ -209,8 +220,9 @@ struct BurstGenerator : Module {
 		else
 			endOut = pgEnd.process(args.sampleTime);
 		
+		
 		// finally set the outputs as required
-		outputs[PULSES_OUTPUT].setVoltage(boolToGate(bursting && gpClock.high()));
+		outputs[PULSES_OUTPUT].setVoltage(boolToGate(bursting && prob && gpClock.high()));
 		outputs[DURATION_OUTPUT].setVoltage(boolToGate(bursting));
 		outputs[START_OUTPUT].setVoltage(boolToGate(startOut));
 		outputs[END_OUTPUT].setVoltage(boolToGate(endOut));
@@ -262,30 +274,34 @@ struct BurstGeneratorWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// controls
-		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1]), module, BurstGenerator::RATECV_PARAM));
-		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1]), module, BurstGenerator::RATE_PARAM));
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2]), module, BurstGenerator::RANGE_PARAM));
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, BurstGenerator::RETRIGGER_PARAM));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, BurstGenerator::PULSESCV_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW3]), module, BurstGenerator::PULSES_PARAM));
+		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATECV_PARAM));
+		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATE_PARAM));
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW2]), module, BurstGenerator::RANGE_PARAM));
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW5]), module, BurstGenerator::RETRIGGER_PARAM));
+		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSESCV_PARAM));
+		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSES_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITY_PARAM));
+		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITYCV_PARAM));
+		
 		
 		// manual trigger button
-		addParam(createParamCentered<CountModulaLEDPushButtonBigMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, BurstGenerator::MANUAL_PARAM, BurstGenerator::MANUAL_PARAM_LIGHT));
+		addParam(createParamCentered<CountModulaLEDPushButtonBigMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW7]+5), module, BurstGenerator::MANUAL_PARAM, BurstGenerator::MANUAL_PARAM_LIGHT));
 		
 		// inputs
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, BurstGenerator::RATECV_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, BurstGenerator::CLOCK_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, BurstGenerator::PULSESCV_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, BurstGenerator::TRIGGER_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATECV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW2]), module, BurstGenerator::CLOCK_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSESCV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITYCV_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW5]), module, BurstGenerator::TRIGGER_INPUT));
 		
 		// outputs
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW4]), module, BurstGenerator::PULSES_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, BurstGenerator::START_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, BurstGenerator::DURATION_OUTPUT));
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, BurstGenerator::END_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW5]), module, BurstGenerator::PULSES_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW6]), module, BurstGenerator::START_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW6]), module, BurstGenerator::DURATION_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW6]), module, BurstGenerator::END_OUTPUT));
 		
 		// lights
-		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, BurstGenerator::CLOCK_LIGHT));
+		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW2]), module, BurstGenerator::CLOCK_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
