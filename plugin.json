@@ -989,6 +989,38 @@
 		  "tags": [
 			"Logic"
 		  ]
+		},
+		{
+		  "slug": "Switch2",
+		  "name": "Manual DPDT Switch",
+		  "description": "Manually switch between 2 inputs",
+		  "tags": [
+			"Switch"
+		  ]
+		},
+		{
+		  "slug": "Switch3",
+		  "name": "Manual 3 Input Switch",
+		  "description": "Manually select any one of 3 inputs",
+		  "tags": [
+			"Switch"
+		  ]
+		},
+		{
+		  "slug": "Switch4",
+		  "name": "Manual 4 Input Switch",
+		  "description": "Manually select any one of 4 inputs",
+		  "tags": [
+			"Switch"
+		  ]
+		},
+		{
+		  "slug": "Carousel",
+		  "name": "Carousel Rotating Router",
+		  "description": "Sequentially rotate up to 8 inputs through up to 8 outputs",
+		  "tags": [
+			"Switch"
+		  ]
 		}
 	]
 }

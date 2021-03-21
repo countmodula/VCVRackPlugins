@@ -114,3 +114,7 @@ extern Model *modelPalette;
 extern Model *modelMegalomaniac;
 extern Model *modelSingleSRFlipFlop;
 extern Model *modelSingleTFlipFlop;
+extern Model *modelSwitch2;
+extern Model *modelSwitch3;
+extern Model *modelSwitch4;
+extern Model *modelCarousel;

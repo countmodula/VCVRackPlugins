@@ -25,6 +25,14 @@
 <td align="left">
 
 <ul>
+<b>New Modules:</b>
+<li>Carousel - Rotating router</li>
+<li>Switch 2 - DPDT manual selecter switch</li>
+<li>Switch 3 - 3 input manual selecter switch</li>
+<li>Switch 4 - 4 input manual selecter switch</li>
+</ul>
+
+<ul>
 <b>Module Updates:</b>
 <li>Burst Generator - Added controls for probability of output pulse firing</li>
 </ul>

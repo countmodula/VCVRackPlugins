@@ -51,7 +51,8 @@ Follow Count Modula on facebook:
 </li>
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
-<li>Chances</a></li>
+<li>Carousel - Rotating router <font color="red">* New in V1.14.0</font></li>
+<li>Chances -  Bernoulli gate</li>
 <li>Clock Divider - a standard clock divider </li>
 <li>Clocked Random Gates</li>
 <li>Clocked Random Gate Expander - CV</li>
@@ -73,6 +74,9 @@ Follow Count Modula on facebook:
 <li>Mangler</li>
 <li>Manual CV</li>
 <li>Manual Gate</li>
+<li>Manual Switch 2 - DPDT selecter switch <font color="red">* New in V1.14.0</font></li>
+<li>Manual Switch 3 - 3 input to 1 output selecter switch <font color="red">* New in V1.14.0</font></li>
+<li>Manual Switch 4 - 4 input to 1 output selecter switch <font color="red">* New in V1.14.0</font></li>
 <li>Master Reset Controller</li>
 <li>Matrix Combiner - Gate combiner/switched multiple </li>
 <li>Matrix Mixer</li>
@@ -82,7 +86,7 @@ Follow Count Modula on facebook:
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>
-<li>Offset Generator</font></li>
+<li>Offset Generator</li>
 <li>Palette
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
