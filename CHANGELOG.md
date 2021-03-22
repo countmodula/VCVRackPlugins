@@ -20,7 +20,7 @@
 </tr>
 
 <tr valign="top">
-<td align="center">28-Feb-2021</td>
+<td align="center">22-Mar-2021</td>
 <td align="center">v1.14.0</td>
 <td align="left">
 
@@ -35,6 +35,11 @@
 <ul>
 <b>Module Updates:</b>
 <li>Burst Generator - Added controls for probability of output pulse firing</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #65: Glide being incorrectly applied in Super Arpeggiator</li>
 </ul>
 </td>
 </tr>

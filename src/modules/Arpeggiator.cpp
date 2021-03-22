@@ -1,6 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Hyper Maniacal LFO Module
-//  Oscillator section based on the VCV VCO by Andrew Belt
+//	/^M^\ Count Modula Plugin for VCV Rack - Super Arpeggiator
 //  Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
@@ -136,7 +135,7 @@ struct Arpeggiator : Module {
 	bool accent[ARP_NUM_STEPS] = {};
 	float octaves[NUM_OCTAVES] = {-1.0f, 0.0f, 1.0f};
 	
-	LagProcessor slew;
+	LagProcessor slew[PORT_MAX_CHANNELS];
 
 	const int mapMidOut[16][16] = {	{ 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
 									{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, 
@@ -181,12 +180,12 @@ struct Arpeggiator : Module {
 		gpReset.reset();
 		gpHold.reset();
 		gpAnyGate.reset();
-		slew.reset();
-		
+	
 		for (int i = 0; i < PORT_MAX_CHANNELS; i++) {
 			gpGate[i].reset();
 			cvList[i] = 0.0f;
 			cvListHeld[i] = 0.0f;
+			slew[i].reset();
 		}
 		
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
@@ -216,7 +215,7 @@ struct Arpeggiator : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 		
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(2));
 			
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -247,8 +246,6 @@ struct Arpeggiator : Module {
 		json_object_set_new(root, "accent", acc);
 		json_object_set_new(root, "cvList", cvl);
 		
-		
-			
 		return root;
 	}
 
@@ -600,7 +597,8 @@ struct Arpeggiator : Module {
 		// process the octave and glide functions
 		octaveOut = octaveProcessingEnabled ? octaves[octave[patternCount]] : 0.0f;
 		accentOut = noteProcessingEnabled && accent[patternCount] && gate; //using gate not gateOut so the accent stays high for the duration of the step
-		glideTime = (noteProcessingEnabled && glide[patternCount] && gate) ? params[GLIDE_PARAM].getValue() * 0.5f : 0.0f;
+		bool doGlide = noteProcessingEnabled && glide[patternCount] && gate;
+		glideTime = doGlide ? params[GLIDE_PARAM].getValue() * 0.5f : 0.0f;
 		
 		// finally remap to corrct note if we're in a mapped mode
 		int noteToUse = noteCount;
@@ -633,7 +631,7 @@ struct Arpeggiator : Module {
 		lights[POLY_LIGHT].setBrightness(boolToLight(polyOutputs));
 		
 		// apply glide
-		float cvOut = slew.process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
+		float cvOut = cv;
 		
 		// output the gate and cv values
 		if (polyOutputs) {
@@ -643,9 +641,20 @@ struct Arpeggiator : Module {
 			outputs[CV_OUTPUT].setChannels(maxChannels);
 			outputs[ACCENT_OUTPUT].setChannels(maxChannels);
 			
-			outputs[CV_OUTPUT].setVoltage(cvOut, noteToUse);
-			
 			for (int i = 0; i < maxChannels; i++) {
+				if (i == noteToUse) {
+					// do glide here
+					if (doGlide)
+						cvOut = slew[noteToUse].process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
+			
+					outputs[CV_OUTPUT].setVoltage(cvOut, noteToUse);
+				}
+				else {
+					// do glide here
+					if (doGlide) {
+						outputs[CV_OUTPUT].setVoltage(slew[i].process(outputs[CV_OUTPUT].getVoltage(), 1.0f, glideTime, glideTime, args.sampleTime));
+					}
+				}
 				outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut && i == noteToUse), i);
 				outputs[ACCENT_OUTPUT].setVoltage(boolToGate(accentOut && i == noteToUse), i);
 			}
@@ -654,6 +663,9 @@ struct Arpeggiator : Module {
 			outputs[GATE_OUTPUT].setChannels(1);
 			outputs[CV_OUTPUT].setChannels(1);
 			outputs[ACCENT_OUTPUT].setChannels(1);
+			
+			if (doGlide)
+				cvOut = slew[0].process(cv, 1.0f, glideTime, glideTime, args.sampleTime);
 			
 			outputs[GATE_OUTPUT].setVoltage(boolToGate(!skip && gateOut && clockOut), 0);
 			outputs[CV_OUTPUT].setVoltage(cvOut, 0);
