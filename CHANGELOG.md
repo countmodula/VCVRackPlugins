@@ -20,7 +20,7 @@
 </tr>
 
 <tr valign="top">
-<td align="center">22-Mar-2021</td>
+<td align="center">31-Mar-2021</td>
 <td align="center">v1.14.0</td>
 <td align="left">
 
@@ -35,6 +35,7 @@
 <ul>
 <b>Module Updates:</b>
 <li>Burst Generator - Added controls for probability of output pulse firing</li>
+<li>Cable Palette - Added user selectable hotkeys and made hotkeys optionally global</li>
 </ul>
 
 <ul>
