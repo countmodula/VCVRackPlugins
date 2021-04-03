@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack -Carousel
+//	/^M^\ Count Modula Plugin for VCV Rack - Carousel
 //	A rotating router/switch
 //  Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
@@ -192,9 +192,10 @@ struct CarouselWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"
 
 		for (int i = 0; i < 8; i++) {
-			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 20, STD_ROWS8[i] + 8), module, Carousel::ACTIVE_LIGHT + i));
+			// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 20, STD_ROWS8[i] + 8), module, Carousel::ACTIVE_LIGHT + i));
+			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] - 9, STD_ROWS8[i]), module, Carousel::ACTIVE_LIGHT + i));
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[i]), module, Carousel::CV_INPUT + i));
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 4, STD_ROWS8[i]), module, Carousel::SELECT_LIGHT + i));
+			addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 4, STD_ROWS8[i]), module, Carousel::SELECT_LIGHT + i));
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[i]), module, Carousel::CV_OUTPUT + i));
 		}
 		
@@ -234,7 +235,7 @@ struct CarouselWidget : ModuleWidget {
 				if (i < 1)
 					sprintf(textBuffer, "Determine by connected inputs");
 				else
-					sprintf(textBuffer, "1 - %d", i + 1);
+					sprintf(textBuffer, "%d", i + 1);
 				
 				ActiveInputMenuItem *ailMenuItem = createMenuItem<ActiveInputMenuItem>(textBuffer, CHECKMARK(i == module->nextMaxChan));
 				ailMenuItem->module = module;
@@ -264,12 +265,12 @@ struct CarouselWidget : ModuleWidget {
 		menu->addChild(new MenuSeparator());
 		
 		// active input selection menu
-		ActiveInputMenu *aiMenuItem = createMenuItem<ActiveInputMenu>("Active Inputs", RIGHT_ARROW);
+		ActiveInputMenu *aiMenuItem = createMenuItem<ActiveInputMenu>("Active Routes", RIGHT_ARROW);
 		aiMenuItem->module = module;	
 		menu->addChild(aiMenuItem);		
 		
 		// inactive input passthrough menu item
-		InActivePassThroughMenuItem *iaptlMenuItem = createMenuItem<InActivePassThroughMenuItem>("Inactive inputs passthrough", CHECKMARK(module->inactivePassthrough));
+		InActivePassThroughMenuItem *iaptlMenuItem = createMenuItem<InActivePassThroughMenuItem>("Inactive Routes Passthrough", CHECKMARK(module->inactivePassthrough));
 		iaptlMenuItem->module = module;
 		menu->addChild(iaptlMenuItem);		
 		

@@ -25,6 +25,7 @@ struct Switch3 : Module {
 	};
 	enum LightIds {
 		ENUMS(SELECT_LIGHT, 3),
+		SELECT_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -122,7 +123,7 @@ struct Switch3Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW4]), module, Switch3::CV_OUTPUT));
 		
 		// deliberately still on 6 row grid to put buttons for both switches at same position. 
-		addParam(createParamCentered<CountModulaUnlitPushButtonMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, Switch3::SELECT_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, Switch3::SELECT_PARAM, Switch3::SELECT_PARAM_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

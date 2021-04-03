@@ -25,6 +25,7 @@ struct Switch4 : Module {
 	};
 	enum LightIds {
 		ENUMS(SELECT_LIGHT, 4),
+		SELECT_PARAM_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -123,7 +124,7 @@ struct Switch4Widget : ModuleWidget {
 		
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, Switch4::CV_OUTPUT));
 		
-		addParam(createParamCentered<CountModulaUnlitPushButtonMomentary>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, Switch4::SELECT_PARAM));
+		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, Switch4::SELECT_PARAM, Switch4::SELECT_PARAM_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
