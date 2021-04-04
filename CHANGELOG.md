@@ -20,6 +20,32 @@
 </tr>
 
 <tr valign="top">
+<td align="center">31-Mar-2021</td>
+<td align="center">v1.14.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Carousel - Rotating router</li>
+<li>Switch 2 - DPDT manual selecter switch</li>
+<li>Switch 3 - 3 input manual selecter switch</li>
+<li>Switch 4 - 4 input manual selecter switch</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Burst Generator - Added controls for probability of output pulse firing</li>
+<li>Cable Palette - Added user selectable hotkeys and made hotkeys optionally global</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #65: Glide being incorrectly applied in Super Arpeggiator</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">15-Oct-2020</td>
 <td align="center">v1.13.0</td>
 <td align="left">

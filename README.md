@@ -12,9 +12,9 @@
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
-All source code in this repository is copyright © 2020 Adam Verspaget/Count Modula and licensed under GNU GPLv3
+All source code in this repository is copyright © 2021 Adam Verspaget/Count Modula and licensed under GNU GPLv3
 
-All graphics including the Count Modula logo, panels and components are copyright © 2020 Adam Verspaget/Count Modula and may not be used in derivative works.
+All graphics including the Count Modula logo, panels and components are copyright © 2021 Adam Verspaget/Count Modula and may not be used in derivative works.
 
 <h3>Donate</h3>
 Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.13.0</h3>
+<h3>Modules - Release 1.14.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -51,7 +51,8 @@ Follow Count Modula on facebook:
 </li>
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
-<li>Chances</a></li>
+<li>Carousel - Rotating router <font color="red">* New in V1.14.0</font></li>
+<li>Chances -  Bernoulli gate</li>
 <li>Clock Divider - a standard clock divider </li>
 <li>Clocked Random Gates</li>
 <li>Clocked Random Gate Expander - CV</li>
@@ -73,6 +74,9 @@ Follow Count Modula on facebook:
 <li>Mangler</li>
 <li>Manual CV</li>
 <li>Manual Gate</li>
+<li>Manual Switch 2 - DPDT selecter switch <font color="red">* New in V1.14.0</font></li>
+<li>Manual Switch 3 - 3 input to 1 output selecter switch <font color="red">* New in V1.14.0</font></li>
+<li>Manual Switch 4 - 4 input to 1 output selecter switch <font color="red">* New in V1.14.0</font></li>
 <li>Master Reset Controller</li>
 <li>Matrix Combiner - Gate combiner/switched multiple </li>
 <li>Matrix Mixer</li>
@@ -82,7 +86,7 @@ Follow Count Modula on facebook:
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>
-<li>Offset Generator</font></li>
+<li>Offset Generator</li>
 <li>Palette
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
@@ -108,7 +112,7 @@ Follow Count Modula on facebook:
 <li>Shepard Generator</li>
 <li>Signal Manifold</li>
 <li>SR Flip Flop (Dual)</li>
-<li>SR Flip Flop (Single) <font color="red">* New in v1.12.0</font></li>
+<li>SR Flip Flop (Single)</li>
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Super Arpeggiator</li>
@@ -127,7 +131,7 @@ Follow Count Modula on facebook:
 <li>16 Step Sequencer Trigger Expander </li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop (Dual)</li>
-<li>T Flip Flop (Single) <font color="red">* New in v1.12.0</font></li>
+<li>T Flip Flop (Single)</li>
 <li>Trigger Sequencer (8 Step)</li>
 <li>Trigger Sequencer (16 Step)</li>
 <li>Trigger Sequencer Gate Expander</li>
@@ -151,7 +155,7 @@ Follow Count Modula on facebook:
 <li>Hyper Maniacal LFO
 <ul>
 <li>LFO Output Expander</li>
-<li>Megaomaniac - CV Expander <font color="red">* New in v1.12.0</font></li>
+<li>Megaomaniac - CV Expander</li>
 </ul>
 </li>
 <li>Slope Detector</li>
