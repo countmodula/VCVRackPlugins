@@ -42,6 +42,60 @@ struct CountModulaLightWB : GrayModuleLightWidget {
 	}
 };
 
+template <typename TBase>
+struct CountModulaRectangleLight : TBase {
+	void drawLight(const widget::Widget::DrawArgs& args) override {
+		nvgBeginPath(args.vg);
+		nvgRect(args.vg, 0, 0, this->box.size.x * 2, this->box.size.y);
+
+		// Background
+		if (this->bgColor.a > 0.0) {
+			nvgFillColor(args.vg, this->bgColor);
+			nvgFill(args.vg);
+		}
+
+		// Foreground
+		if (this->color.a > 0.0) {
+			nvgFillColor(args.vg, this->color);
+			nvgFill(args.vg);
+		}
+
+		// Border
+		if (this->borderColor.a > 0.0) {
+			nvgStrokeWidth(args.vg, 0.5);
+			nvgStrokeColor(args.vg, this->borderColor);
+			nvgStroke(args.vg);
+		}
+	}
+};
+
+template <typename TBase>
+struct CountModulaSquareLight : TBase {
+	void drawLight(const widget::Widget::DrawArgs& args) override {
+		nvgBeginPath(args.vg);
+		nvgRect(args.vg, 0, 0, this->box.size.x, this->box.size.y);
+
+		// Background
+		if (this->bgColor.a > 0.0) {
+			nvgFillColor(args.vg, this->bgColor);
+			nvgFill(args.vg);
+		}
+
+		// Foreground
+		if (this->color.a > 0.0) {
+			nvgFillColor(args.vg, this->color);
+			nvgFill(args.vg);
+		}
+
+		// Border
+		if (this->borderColor.a > 0.0) {
+			nvgStrokeWidth(args.vg, 0.5);
+			nvgStrokeColor(args.vg, this->borderColor);
+			nvgStroke(args.vg);
+		}
+	}
+};
+
 //-------------------------------------------------------------------
 // Ports
 //-------------------------------------------------------------------

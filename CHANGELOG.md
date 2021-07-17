@@ -20,6 +20,19 @@
 </tr>
 
 <tr valign="top">
+<td align="center">17-Jul-2021</td>
+<td align="center">v1.15.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Octet Trigger Sequencer</li>
+</ul>
+
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">31-Mar-2021</td>
 <td align="center">v1.14.0</td>
 <td align="left">

@@ -1021,6 +1021,14 @@
 		  "tags": [
 			"Switch"
 		  ]
+		},
+		{
+		  "slug": "OctetTriggerSequencer",
+		  "name": "Octet Trigger Sequencer",
+		  "description": "Binary octet based trigger sequencer",
+		  "tags": [
+			"Sequencer"
+		  ]
 		}
 	]
 }

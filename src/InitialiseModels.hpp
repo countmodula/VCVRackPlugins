@@ -119,3 +119,4 @@ p->addModel(modelSwitch2);
 p->addModel(modelSwitch3);
 p->addModel(modelSwitch4);
 p->addModel(modelCarousel);
+p->addModel(modelOctetTriggerSequencer);
