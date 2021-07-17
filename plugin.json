@@ -1029,6 +1029,15 @@
 		  "tags": [
 			"Sequencer"
 		  ]
+		},
+		{
+		  "slug": "BarGraph",
+		  "name": "Bar Graph",
+		  "description": "Linear Bar Graph Meter",
+		  "tags": [
+			"Utility",
+			"Visual"
+		  ]
 		}
 	]
 }

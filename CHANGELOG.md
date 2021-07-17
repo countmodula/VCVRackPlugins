@@ -27,6 +27,7 @@
 <ul>
 <b>New Modules:</b>
 <li>Octet Trigger Sequencer</li>
+<li>Bar Graph</li>
 </ul>
 
 </td>
