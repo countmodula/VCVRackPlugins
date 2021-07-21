@@ -146,14 +146,14 @@ struct GateDelayWidget : ModuleWidget {
 			
 			// parameters 
 			if (i == 0) {
-				addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::CVLEVEL_PARAM + i));
-				addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::TIME_PARAM + i));
-				addParam(createParamCentered<CountModulaRotarySwitch5PosYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2 + j]), module, GateDelay::RANGE_PARAM + i));
+				addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::CVLEVEL_PARAM + i));
+				addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::TIME_PARAM + i));
+				addParam(createParamCentered<RotarySwitch<OperatingAngle145<YellowKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2 + j]), module, GateDelay::RANGE_PARAM + i));
 			}
 			else {
-				addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::CVLEVEL_PARAM + i));
-				addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::TIME_PARAM + i));
-				addParam(createParamCentered<CountModulaRotarySwitch5PosWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2 + j]), module, GateDelay::RANGE_PARAM + i));
+				addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::CVLEVEL_PARAM + i));
+				addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::TIME_PARAM + i));
+				addParam(createParamCentered<RotarySwitch<OperatingAngle145<WhiteKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2 + j]), module, GateDelay::RANGE_PARAM + i));
 			}
 			// inputs
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1 + j]), module, GateDelay::TIME_INPUT + i));

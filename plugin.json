@@ -1038,6 +1038,15 @@
 			"Utility",
 			"Visual"
 		  ]
+		},
+		{
+		  "slug": "Oscilloscope",
+		  "name": "Quad Trace Oscilloscope",
+		  "description": "Quad trace oscilloscope.",
+		  "tags": [
+			"Utility",
+			"Visual"
+		  ]
 		}
 	]
 }

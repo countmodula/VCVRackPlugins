@@ -125,8 +125,8 @@ struct PolyVCPolarizerWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 	
 		// knobs
-		addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS7[STD_ROW3]), module, PolyVCPolarizer::CVAMOUNT_PARAM));
-		addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS6[STD_ROW4] - 10), module, PolyVCPolarizer::MANUAL_PARAM));
+		addParam(createParamCentered<Potentiometer<YellowKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS7[STD_ROW3]), module, PolyVCPolarizer::CVAMOUNT_PARAM));
+		addParam(createParamCentered<Potentiometer<YellowKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS6[STD_ROW4] - 10), module, PolyVCPolarizer::MANUAL_PARAM));
 		
 		// clock and reset input
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS6[STD_ROW1]), module, PolyVCPolarizer::SIGNAL_INPUT));

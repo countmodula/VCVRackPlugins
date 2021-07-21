@@ -144,28 +144,28 @@ struct MegalomaniacWidget : ModuleWidget {
 			int i = 0, j = 0;
 
 			// LFO 1
-			addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW1]), module, Megalomaniac::RATECV_PARAMS + i++));
-			addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW1]), module, Megalomaniac::MIX_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW1]), module, Megalomaniac::RATECV_PARAMS + i++));
+			addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW1]), module, Megalomaniac::MIX_PARAMS + j++));
 
 			// LFO 2
-			addParam(createParamCentered<CountModulaKnobOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW2]), module, Megalomaniac::RATECV_PARAMS + i++));
-			addParam(createParamCentered<CountModulaKnobOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW2]), module, Megalomaniac::MIX_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<OrangeKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW2]), module, Megalomaniac::RATECV_PARAMS + i++));
+			addParam(createParamCentered<Potentiometer<OrangeKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW2]), module, Megalomaniac::MIX_PARAMS + j++));
 
 			// LFO 3
-			addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW3]), module, Megalomaniac::RATECV_PARAMS + i++));
-			addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW3]), module, Megalomaniac::MIX_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<YellowKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW3]), module, Megalomaniac::RATECV_PARAMS + i++));
+			addParam(createParamCentered<Potentiometer<YellowKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW3]), module, Megalomaniac::MIX_PARAMS + j++));
 
 			// LFO 4
-			addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW4]), module, Megalomaniac::RATECV_PARAMS + i++));
-			addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW4]), module, Megalomaniac::MIX_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW4]), module, Megalomaniac::RATECV_PARAMS + i++));
+			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW4]), module, Megalomaniac::MIX_PARAMS + j++));
 
 			// LFO 5
-			addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW5]), module, Megalomaniac::RATECV_PARAMS + i++));
-			addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW5]), module, Megalomaniac::MIX_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW5]), module, Megalomaniac::RATECV_PARAMS + i++));
+			addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW5]), module, Megalomaniac::MIX_PARAMS + j++));
 
 			// LFO 6
-			addParam(createParamCentered<CountModulaKnobViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW6]), module, Megalomaniac::RATECV_PARAMS + i++));
-			addParam(createParamCentered<CountModulaKnobViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW6]), module, Megalomaniac::MIX_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<VioletKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 15, STD_ROWS6[STD_ROW6]), module, Megalomaniac::RATECV_PARAMS + i++));
+			addParam(createParamCentered<Potentiometer<VioletKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 15, STD_ROWS6[STD_ROW6]), module, Megalomaniac::MIX_PARAMS + j++));
 		}
 		
 		// Other LFO related bits

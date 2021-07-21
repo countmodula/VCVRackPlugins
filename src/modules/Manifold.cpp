@@ -102,8 +102,8 @@ struct ManifoldWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 
 		// knobs
-		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_HALF_ROWS8(STD_ROW3)), module, Manifold::CHANNELS_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_HALF_ROWS8(STD_ROW7)), module, Manifold::CHANNELS_PARAM + 1));
+		addParam(createParamCentered<RotarySwitch<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_HALF_ROWS8(STD_ROW3)), module, Manifold::CHANNELS_PARAM));
+		addParam(createParamCentered<RotarySwitch<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_HALF_ROWS8(STD_ROW7)), module, Manifold::CHANNELS_PARAM + 1));
 
 		int rows[4] = {STD_ROWS8[STD_ROW1], STD_ROWS8[STD_ROW2], STD_ROWS8[STD_ROW5], STD_ROWS8[STD_ROW6]};
 		for (int i=0; i < 4; i ++) {

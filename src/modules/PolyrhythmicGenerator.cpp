@@ -186,8 +186,8 @@ struct PolyrhythmicGeneratorWidget : ModuleWidget {
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + i]), module, PolyrhythmicGenerator::CV_INPUT + i));
 
 			// knobs
-			addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW1 + i]), module, PolyrhythmicGenerator::CV_PARAM + i));
-			addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL11], STD_ROWS8[STD_ROW1 + i]), module, PolyrhythmicGenerator::DIV_PARAM + i));
+			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW1 + i]), module, PolyrhythmicGenerator::CV_PARAM + i));
+			addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL11], STD_ROWS8[STD_ROW1 + i]), module, PolyrhythmicGenerator::DIV_PARAM + i));
 			
 			// buttons
 			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL13]-10, STD_ROWS8[STD_ROW1 + i]), module, PolyrhythmicGenerator::MUTE_PARAM + i, PolyrhythmicGenerator::MUTE_PARAM_LIGHT + i));
@@ -200,7 +200,7 @@ struct PolyrhythmicGeneratorWidget : ModuleWidget {
 		}
 		
 		// global stuff
-		addParam(createParamCentered<CountModulaRotarySwitch5PosRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]-15), module, PolyrhythmicGenerator::OUTPUTMODE_PARAM));
+		addParam(createParamCentered<RotarySwitch<OperatingAngle145<RedKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]-15), module, PolyrhythmicGenerator::OUTPUTMODE_PARAM));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]-15), module, PolyrhythmicGenerator::BEATMODE_INPUT));
 		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]-15), module, PolyrhythmicGenerator::BEATMODE_PARAM, PolyrhythmicGenerator::BEATMODE_PARAM_LIGHT));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, PolyrhythmicGenerator::MUTEALL_INPUT));

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - header.
-//  Copyright (C) 2019  Adam Verspaget
+//  Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "rack.hpp"
 using namespace rack;
@@ -19,6 +19,7 @@ void saveSettings(json_t *rootJ);
 int readDefaultIntegerValue(std::string);
 void saveDefaultIntegerValue(std::string setting, int value);
 
+#include "components/CountModulaKnobs.hpp"
 #include "components/CountModulaComponents.hpp"
 #include "components/CountModulaPushButtons.hpp"
 #include "components/StdComponentPositions.hpp"

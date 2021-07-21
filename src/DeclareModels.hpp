@@ -120,3 +120,4 @@ extern Model *modelSwitch4;
 extern Model *modelCarousel;
 extern Model *modelOctetTriggerSequencer;
 extern Model *modelBarGraph;
+extern Model *modelOscilloscope;

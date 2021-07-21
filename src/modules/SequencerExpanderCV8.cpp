@@ -256,7 +256,7 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 		// row lights and knobs
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderCV8::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaKnobGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderCV8::STEP_CV_PARAMS + s));
+			addParam(createParamCentered<Potentiometer<GreyKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderCV8::STEP_CV_PARAMS + s));
 		}
 
 		// channel light

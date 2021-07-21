@@ -119,7 +119,7 @@ struct StartupDelayWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 
 		// params
-		addParam(createParamCentered<CountModulaKnobViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, StartupDelay::DELAY_PARAM));
+		addParam(createParamCentered<Potentiometer<VioletKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, StartupDelay::DELAY_PARAM));
 
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, StartupDelay::DELAY_OUTPUT));

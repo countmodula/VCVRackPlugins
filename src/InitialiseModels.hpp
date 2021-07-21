@@ -121,3 +121,4 @@ p->addModel(modelSwitch4);
 p->addModel(modelCarousel);
 p->addModel(modelOctetTriggerSequencer);
 p->addModel(modelBarGraph);
+p->addModel(modelOscilloscope);

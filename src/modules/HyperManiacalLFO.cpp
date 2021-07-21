@@ -414,28 +414,28 @@ struct HyperManiacalLFOWidget : ModuleWidget {
 			int i = 0, j = 0;
 
 			// LFO 1
-			addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
-			addParam(createParamCentered<CountModulaRotarySwitch5PosRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
+			addParam(createParamCentered<RotarySwitch<OperatingAngle145<RedKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
 
 			// LFO 2
-			addParam(createParamCentered<CountModulaKnobOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
-			addParam(createParamCentered<CountModulaRotarySwitch5PosOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<OrangeKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
+			addParam(createParamCentered<RotarySwitch<OperatingAngle145<OrangeKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW2]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
 
 			// LFO 3
-			addParam(createParamCentered<CountModulaKnobYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
-			addParam(createParamCentered<CountModulaRotarySwitch5PosYellow>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<YellowKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
+			addParam(createParamCentered<RotarySwitch<OperatingAngle145<YellowKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
 
 			// LFO 4
-			addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
-			addParam(createParamCentered<CountModulaRotarySwitch5PosGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW4]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
+			addParam(createParamCentered<RotarySwitch<OperatingAngle145<GreenKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW4]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
 
 			// LFO 5
-			addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
-			addParam(createParamCentered<CountModulaRotarySwitch5PosBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
+			addParam(createParamCentered<RotarySwitch<OperatingAngle145<BlueKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW5]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
 
 			// LFO 6
-			addParam(createParamCentered<CountModulaKnobViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
-			addParam(createParamCentered<CountModulaRotarySwitch5PosViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW6]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
+			addParam(createParamCentered<Potentiometer<VioletKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW6]), module, HyperManiacalLFO::FREQ_PARAMS + i++));
+			addParam(createParamCentered<RotarySwitch<OperatingAngle145<VioletKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS6[STD_ROW6]), module, HyperManiacalLFO::WAVE_SEL_PARAMS + j++));
 		}
 		
 		// Other LFO related bits
@@ -450,11 +450,11 @@ struct HyperManiacalLFOWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW3]), module, HyperManiacalLFO::MODE_PARAM, HyperManiacalLFO::MODE_PARAM_LIGHT));
 		
 		// glide controls switch
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::GLIDE_PARAM));
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW2]), module, HyperManiacalLFO::GLIDE_SH_PARAM));
+		addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]), module, HyperManiacalLFO::GLIDE_PARAM));
+		addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW2]), module, HyperManiacalLFO::GLIDE_SH_PARAM));
 
 		// level
-		addParam(createParamCentered<CountModulaKnobGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW4]), module, HyperManiacalLFO::LEVEL_PARAM));
+		addParam(createParamCentered<Potentiometer<GreyKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW4]), module, HyperManiacalLFO::LEVEL_PARAM));
 		
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW5]), module, HyperManiacalLFO::LFO_OUTPUT));

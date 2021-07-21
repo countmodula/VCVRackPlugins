@@ -274,14 +274,14 @@ struct BurstGeneratorWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// controls
-		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATECV_PARAM));
-		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATE_PARAM));
+		addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATECV_PARAM));
+		addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW1]), module, BurstGenerator::RATE_PARAM));
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW2]), module, BurstGenerator::RANGE_PARAM));
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW5]), module, BurstGenerator::RETRIGGER_PARAM));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSESCV_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSES_PARAM));
-		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITY_PARAM));
-		addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITYCV_PARAM));
+		addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSESCV_PARAM));
+		addParam(createParamCentered<RotarySwitch<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW3]), module, BurstGenerator::PULSES_PARAM));
+		addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITY_PARAM));
+		addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS7[STD_ROW4]), module, BurstGenerator::PROBABILITYCV_PARAM));
 		
 		
 		// manual trigger button

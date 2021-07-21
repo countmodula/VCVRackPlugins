@@ -414,10 +414,10 @@ struct OctetTriggerSequencerWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, OctetTriggerSequencer::RESET_INPUT));
 
 		// pattern knobs
-		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, OctetTriggerSequencer::PATTERN_A_PARAM));
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, OctetTriggerSequencer::PATTERN_A_CV_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchYellow>(Vec(COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, OctetTriggerSequencer::PATTERN_B_PARAM));
-		addParam(createParamCentered<CountModulaKnobYellow>(Vec(COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, OctetTriggerSequencer::PATTERN_B_CV_PARAM));
+		addParam(createParamCentered<RotarySwitch<GreenKnob>>(Vec(COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2]), module, OctetTriggerSequencer::PATTERN_A_PARAM));
+		addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, OctetTriggerSequencer::PATTERN_A_CV_PARAM));
+		addParam(createParamCentered<RotarySwitch<YellowKnob>>(Vec(COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW2]), module, OctetTriggerSequencer::PATTERN_B_PARAM));
+		addParam(createParamCentered<Potentiometer<YellowKnob>>(Vec(COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, OctetTriggerSequencer::PATTERN_B_CV_PARAM));
 
 		// chain button and input
 		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW3]), module, OctetTriggerSequencer::CHAIN_PARAM, OctetTriggerSequencer::CHAIN_PARAM_LIGHT));

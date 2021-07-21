@@ -142,12 +142,12 @@ struct ManualCV2Widget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// knobs
-		addParam(createParamCentered<CountModulaKnobMegaGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS7(STD_ROW6)), module, ManualCV2::CV_PARAM));
+		addParam(createParamCentered<RotarySwitch<MegaKnob<GreenKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS7(STD_ROW6)), module, ManualCV2::CV_PARAM));
 
-		addParam(createParamCentered<CountModulaRotarySwitchBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW2]), module, ManualCV2::RANGE_PARAM));		
+		addParam(createParamCentered<RotarySwitch<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW2]), module, ManualCV2::RANGE_PARAM));		
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW2]), module, ManualCV2::POLARITY_PARAM));
 		
-		addParam(createParamCentered<CountModulaRotarySwitchOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW5]), module, ManualCV2::CHANNELS_PARAM));
+		addParam(createParamCentered<RotarySwitch<OrangeKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW5]), module, ManualCV2::CHANNELS_PARAM));
 		
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1]), module, ManualCV2::CV1_OUTPUT));	

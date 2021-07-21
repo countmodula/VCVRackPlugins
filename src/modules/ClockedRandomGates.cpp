@@ -289,8 +289,8 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + i]), module, ClockedRandomGates::PROB_CV_INPUT + i));
 
 			// probability knobs
-			addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + i]), module, ClockedRandomGates::PROB_CV_PARAM + i));
-			addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + i]), module, ClockedRandomGates::PROB_PARAM + i));
+			addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + i]), module, ClockedRandomGates::PROB_CV_PARAM + i));
+			addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + i]), module, ClockedRandomGates::PROB_PARAM + i));
 			
 			// gate/trig outputs
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9] + 10, STD_ROWS8[STD_ROW1 + i]), module, ClockedRandomGates::GATE_OUTPUT + i));

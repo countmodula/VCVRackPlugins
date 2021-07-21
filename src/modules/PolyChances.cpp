@@ -188,7 +188,7 @@ struct PolyChancesWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// knobs
-		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS6[STD_ROW2]), module, PolyChances::THRESH_PARAM));
+		addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS6[STD_ROW2]), module, PolyChances::THRESH_PARAM));
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 15, STD_ROWS6[STD_ROW3]), module, PolyChances::MODE_PARAM));
 		
 		// inputs

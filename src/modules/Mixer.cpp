@@ -104,14 +104,14 @@ struct MixerWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		for (int j = 0; j < 4; j++) {
-			addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, Mixer::R1_LEVEL_PARAM + j));
+			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, Mixer::R1_LEVEL_PARAM + j));
 			
 			// inputs
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW1 + j]), module, Mixer::R1_INPUT + j));
 		}
 			
 		// level knobs
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, Mixer::LEVEL_PARAM));
+		addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5]), module, Mixer::LEVEL_PARAM));
 		
 
 		// outputs

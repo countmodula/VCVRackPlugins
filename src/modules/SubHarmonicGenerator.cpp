@@ -130,9 +130,9 @@ struct SubHarmonicGeneratorWidget : ModuleWidget {
 
 		// harmonic level knobs
 		for (int j = 0; j < 5; j++) {
-			addParam(createParamCentered<CountModulaKnobViolet>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, SubHarmonicGenerator::MIX_PARAM + j));
+			addParam(createParamCentered<Potentiometer<VioletKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW1 + j]), module, SubHarmonicGenerator::MIX_PARAM + j));
 			if (j < 4)
-				addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2 +j]), module, SubHarmonicGenerator::DIV_PARAM + j));
+				addParam(createParamCentered<RotarySwitch<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW2 +j]), module, SubHarmonicGenerator::DIV_PARAM + j));
 		}
 		
 		// output
@@ -142,7 +142,7 @@ struct SubHarmonicGeneratorWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW6]), module, SubHarmonicGenerator::OVERLOAD_LIGHT));
 		
 		// output level knob
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, SubHarmonicGenerator::OUTPUTLEVEL_PARAM));
+		addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, SubHarmonicGenerator::OUTPUTLEVEL_PARAM));
 
 	}
 	
