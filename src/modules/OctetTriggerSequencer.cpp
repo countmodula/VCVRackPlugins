@@ -8,12 +8,18 @@
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Utility.hpp"
 
+#include "../inc/OctetTriggerSequencerExpanderMessage.hpp"
+
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME OctetTriggerSequencer
 #define PANEL_FILE "OctetTriggerSequencer.svg"
 
 #define CHANNEL_A 0
 #define CHANNEL_B 1
+
+
+#define DEFAULT_PATTERN_A 170
+#define DEFAULT_PATTERN_B 136
 
 struct OctetTriggerSequencer : Module {
 	enum ParamIds {
@@ -71,9 +77,6 @@ struct OctetTriggerSequencer : Module {
 	dsp::PulseGenerator pulseGenTrigA;
 	dsp::PulseGenerator pulseGenTrigB;
 
-	const int DEFAULT_PATTERN_A = 170;
-	const int DEFAULT_PATTERN_B = 136;
-
 	// count to bit mappping
 	const int stepMap[9] = {0, 128, 64, 32, 16, 8, 4, 2, 1};
 	
@@ -84,6 +87,8 @@ struct OctetTriggerSequencer : Module {
 	int count = 0;
 	int selectedPatternA = DEFAULT_PATTERN_A;
 	int selectedPatternB = DEFAULT_PATTERN_B;
+	int actualPatternA = DEFAULT_PATTERN_A;
+	int actualPatternB = DEFAULT_PATTERN_B;
 	int nextPatternA = DEFAULT_PATTERN_A;
 	int nextPatternB = DEFAULT_PATTERN_B;
 	bool running = false;
@@ -98,8 +103,12 @@ struct OctetTriggerSequencer : Module {
 
 	int cvScale[2] = {0, 0};
 
+	bool gates[2] = {};
+	
 	int outputMode[2] = {OUTPUT_MODE_CLOCK, OUTPUT_MODE_CLOCK};
 	int processCount = 8;
+	
+	OctetTriggerSequencerExpanderMessage rightMessages[2][1]; // messages to right module (expander)
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -115,6 +124,10 @@ struct OctetTriggerSequencer : Module {
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+			
+		// expander
+		rightExpander.producerMessage = rightMessages[0];
+		rightExpander.consumerMessage = rightMessages[1];
 	}
 
 	void onReset() override {
@@ -124,7 +137,7 @@ struct OctetTriggerSequencer : Module {
 		pulseGenClock.reset();
 		pulseGenTrigA.reset();
 		pulseGenTrigB.reset();
-	
+		
 		playingChannelB = false;
 		count = 0;
 	}
@@ -200,26 +213,30 @@ struct OctetTriggerSequencer : Module {
 	}
 	
 	// set output to gate level with smoothed light display
-	void setTriggerOutputs(bool state, int outputID, int lightID, float currentSampleTime) {
+	void setTriggerOutputs(bool state, int outputID, int lightID, int channelID, float currentSampleTime) {
 		if (state) {
 			lights[lightID].setBrightness(1.0f);
 			outputs[outputID].setVoltage(10.0f);
+			gates[channelID] = true;
 		}
 		else {
 			lights[lightID].setSmoothBrightness(0.0f, currentSampleTime);
 			outputs[outputID].setVoltage(0.0f);
+			gates[channelID] = false;
 		}
 	}
 	
 	// sets output to gate level and light has no smoothing
-	void setGateOutputs(bool state, int outputID, int lightID) {
+	void setGateOutputs(bool state, int outputID, int lightID, int channelID) {
 		if (state) {
 			lights[lightID].setBrightness(1.0f);
 			outputs[outputID].setVoltage(10.0f);
+			gates[channelID] = true;
 		}
 		else {
 			lights[lightID].setBrightness(0.0f);
 			outputs[outputID].setVoltage(0.0f);
+			gates[channelID] = false;
 		}
 	}
 	
@@ -329,6 +346,8 @@ struct OctetTriggerSequencer : Module {
 		// sync the next pattern change to the clock
 		if (clockEdge) {
 			if (chained) {
+				actualPatternA = nextPatternA;
+				actualPatternB = nextPatternB;
 				selectedPatternA = playingChannelB ? nextPatternB : nextPatternA;
 
 				switch (chainedPatternMode) {
@@ -344,26 +363,26 @@ struct OctetTriggerSequencer : Module {
 				}
 			}
 			else {
-				selectedPatternA = nextPatternA;
-				selectedPatternB = nextPatternB;
+				actualPatternA = selectedPatternA = nextPatternA;
+				actualPatternB = selectedPatternB = nextPatternB;
 			}
 		}
 
 		// display and update of output A. Occurs every sample due to smoothed LEDs when in trigger mode so they can be seen
 		switch (outputMode[CHANNEL_A]){
 			case OUTPUT_MODE_CLOCK:
-				setGateOutputs(running && clockHigh && (selectedPatternA & stepMap[count]) > 0, TRIG_A_OUTPUT, TRIG_A_LIGHT);
+				setGateOutputs(running && clockHigh && (selectedPatternA & stepMap[count]) > 0, TRIG_A_OUTPUT, TRIG_A_LIGHT, CHANNEL_A);
 				break;
 			case OUTPUT_MODE_GATE:
-				setGateOutputs(running && (selectedPatternA & stepMap[count]) > 0, TRIG_A_OUTPUT, TRIG_A_LIGHT);
+				setGateOutputs(running && (selectedPatternA & stepMap[count]) > 0, TRIG_A_OUTPUT, TRIG_A_LIGHT, CHANNEL_A);
 				break;
 			case OUTPUT_MODE_TRIGGER:
 				if (running && clockEdge && (selectedPatternA & stepMap[count]) > 0) {
 					pulseGenTrigA.trigger(1e-3f);
-					setTriggerOutputs(true, TRIG_A_OUTPUT, TRIG_A_LIGHT, args.sampleTime);
+					setTriggerOutputs(true, TRIG_A_OUTPUT, TRIG_A_LIGHT, CHANNEL_A, args.sampleTime);
 				}
 				else
-					setTriggerOutputs(pulseGenTrigA.process(args.sampleTime), TRIG_A_OUTPUT, TRIG_A_LIGHT, args.sampleTime);
+					setTriggerOutputs(pulseGenTrigA.process(args.sampleTime), TRIG_A_OUTPUT, TRIG_A_LIGHT, CHANNEL_A, args.sampleTime);
 
 				break;
 		}
@@ -371,21 +390,31 @@ struct OctetTriggerSequencer : Module {
 		// display and update of output B. Occurs every sample due to smoothed LEDs when in trigger mode so they can be seen
 		switch (outputMode[CHANNEL_B]){
 			case OUTPUT_MODE_CLOCK:
-				setGateOutputs(running && clockHigh && (selectedPatternB & stepMap[count]) > 0, TRIG_B_OUTPUT, TRIG_B_LIGHT);
+				setGateOutputs(running && clockHigh && (selectedPatternB & stepMap[count]) > 0, TRIG_B_OUTPUT, TRIG_B_LIGHT, CHANNEL_B);
 				break;
 			case OUTPUT_MODE_GATE:
-				setGateOutputs(running && (selectedPatternB & stepMap[count]) > 0, TRIG_B_OUTPUT, TRIG_B_LIGHT);
+				setGateOutputs(running && (selectedPatternB & stepMap[count]) > 0, TRIG_B_OUTPUT, TRIG_B_LIGHT, CHANNEL_B);
 				break;
 			case OUTPUT_MODE_TRIGGER:
 				if (running && clockEdge && (selectedPatternB & stepMap[count]) > 0) {
 					pulseGenTrigB.trigger(1e-3f);
-					setTriggerOutputs(true, TRIG_B_OUTPUT, TRIG_B_LIGHT, args.sampleTime);
+					setTriggerOutputs(true, TRIG_B_OUTPUT, TRIG_B_LIGHT, CHANNEL_B, args.sampleTime);
 				}
 				else
-					setTriggerOutputs(pulseGenTrigB.process(args.sampleTime), TRIG_B_OUTPUT, TRIG_B_LIGHT, args.sampleTime);
+					setTriggerOutputs(pulseGenTrigB.process(args.sampleTime), TRIG_B_OUTPUT, TRIG_B_LIGHT, CHANNEL_B, args.sampleTime);
 
 				break;
 		}
+		
+		// set up details for the expander
+		if (rightExpander.module) {
+			if (isExpanderModule(rightExpander.module)) {
+				OctetTriggerSequencerExpanderMessage *messageToExpander = (OctetTriggerSequencerExpanderMessage*)(rightExpander.module->leftExpander.producerMessage);
+				messageToExpander->set(count, clockEdge, actualPatternA, actualPatternB, 1, true, playingChannelB, chained, chainedPatternMode, processCount, gates[CHANNEL_A], gates[CHANNEL_B]);
+				
+				rightExpander.module->leftExpander.messageFlipRequested = true;
+			}
+		}		
 	}
 };
 

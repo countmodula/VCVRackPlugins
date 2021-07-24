@@ -1031,6 +1031,15 @@
 		  ]
 		},
 		{
+		  "slug": "OctetTriggerSequencerCVExpander",
+		  "name": "Octet Trigger Sequencer Channel Expander",
+		  "description": "Adds a CV channel to the Octet Trigger Sequencer",
+		  "tags": [
+			"Sequencer",
+			"Expander"
+		  ]
+		},
+		{
 		  "slug": "BarGraph",
 		  "name": "Bar Graph",
 		  "description": "Linear Bar Graph Meter",
@@ -1046,6 +1055,14 @@
 		  "tags": [
 			"Utility",
 			"Visual"
+		  ]
+		},
+		{
+		  "slug": "SingleDFlipFlop",
+		  "name": "D Flip Flop",
+		  "description": "A logical D type flip flop with clock enable",
+		  "tags": [
+			"Logic"
 		  ]
 		}
 	]
