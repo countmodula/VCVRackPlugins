@@ -49,7 +49,7 @@ Follow Count Modula on facebook:
 <li>XOR</li>
 </ul>
 </li>
-<li>Bar Graph <font color="red">* New in V1.14.0</font></li>
+<li>Bar Graph <font color="red">* New in v1.15.0</font></li>
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
 <li>Carousel - Rotating router</li>
@@ -59,7 +59,7 @@ Follow Count Modula on facebook:
 <li>Clocked Random Gate Expander - CV</li>
 <li>Clocked Random Gates Expander - Logic</li>
 <li>Comparator</a></li>
-<li>D Flip Flop (Single) <font color="red">* New in V1.14.0</font></li>
+<li>D Flip Flop (Single) <font color="red">* New in v1.15.0</font></li>
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
 <li>Event Arranger</a></li>
@@ -88,10 +88,10 @@ Follow Count Modula on facebook:
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>
-<li>Octet Trigger Sequencer <font color="red">* New in V1.14.0</font></li>
-<li>Octet Trigger Sequencer Expander <font color="red">* New in V1.14.0</font></li>
+<li>Octet Trigger Sequencer <font color="red">* New in v1.15.0</font></li>
+<li>Octet Trigger Sequencer Expander <font color="red">* New in v1.15.0</font></li>
 <li>Offset Generator</li>
-<li>Oscilloscope <font color="red">* New in V1.14.0</font></li>
+<li>Oscilloscope <font color="red">* New in v1.15.0</font></li>
 <li>Palette
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
