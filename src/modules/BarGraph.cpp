@@ -169,13 +169,13 @@ struct BarGraphWidget : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+		
 		//scale  menu
 		ScaleMenu *scaleMenu = createMenuItem<ScaleMenu>("Scale", RIGHT_ARROW);
 		scaleMenu->module = module;
 		menu->addChild(scaleMenu);		
-		
-		// add the theme menu items
-		#include "../themes/themeMenus.hpp"
 	}	
 	
 	void step() override {
