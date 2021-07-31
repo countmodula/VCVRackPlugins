@@ -20,6 +20,22 @@
 </tr>
 
 <tr valign="top">
+<td align="center">31-Jul-2021</td>
+<td align="center">v1.15.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Bar Graph</li>
+<li>D Flip Flop</li>
+<li>Octet Trigger Sequencer + Expander</li>
+<li>Oscilloscope</li>
+</ul>
+
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">31-Mar-2021</td>
 <td align="center">v1.14.0</td>
 <td align="left">

@@ -151,7 +151,7 @@ struct ChancesWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// knobs
-		addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW2]), module, Chances::THRESH_PARAM));
+		addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW2]), module, Chances::THRESH_PARAM));
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS7[STD_ROW4] - 10), module, Chances::MODE_PARAM));
 		
 		// inputs

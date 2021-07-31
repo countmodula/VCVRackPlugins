@@ -300,12 +300,12 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 		// row lights and knobs
 		for (int s = 0; s < CRG_EXP_NUM_CHANNELS; s++) {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, ClockedRandomGateExpanderCV::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + s]), module, ClockedRandomGateExpanderCV::STEP_CV_PARAMS + s));
+			addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + s]), module, ClockedRandomGateExpanderCV::STEP_CV_PARAMS + s));
 		}
 
 		// source controls
-		addParam(createParamCentered<CountModulaRotarySwitch5PosGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1],STD_HALF_ROWS8(STD_ROW1)), module, ClockedRandomGateExpanderCV::SOURCE_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, ClockedRandomGateExpanderCV::CHANNEL_PARAM));
+		addParam(createParamCentered<RotarySwitch<OperatingAngle145<GreenKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1],STD_HALF_ROWS8(STD_ROW1)), module, ClockedRandomGateExpanderCV::SOURCE_PARAM));
+		addParam(createParamCentered<RotarySwitch<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, ClockedRandomGateExpanderCV::CHANNEL_PARAM));
 
 		// range control
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, ClockedRandomGateExpanderCV::RANGE_SW_PARAM));

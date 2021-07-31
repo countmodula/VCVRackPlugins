@@ -262,12 +262,12 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 		// row lights and knobs
 		for (int s = 0; s < EUCLID_EXP_NUM_STEPS; s++) {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, EuclidExpanderCV::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaKnobRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, EuclidExpanderCV::STEP_CV_PARAMS + s));
+			addParam(createParamCentered<Potentiometer<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, EuclidExpanderCV::STEP_CV_PARAMS + s));
 		}
 
 		// source and range controls
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW1)), module, EuclidExpanderCV::CLOCK_SOURCE_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW5)), module, EuclidExpanderCV::RANGE_SW_PARAM));
+		addParam(createParamCentered<RotarySwitch<GreyKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW5)), module, EuclidExpanderCV::RANGE_SW_PARAM));
 		
 		// gate output/light
 		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW3) - 19), module, EuclidExpanderCV::GATE_LIGHT));

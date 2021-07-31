@@ -118,3 +118,8 @@ extern Model *modelSwitch2;
 extern Model *modelSwitch3;
 extern Model *modelSwitch4;
 extern Model *modelCarousel;
+extern Model *modelOctetTriggerSequencer;
+extern Model *modelOctetTriggerSequencerCVExpander;
+extern Model *modelBarGraph;
+extern Model *modelOscilloscope;
+extern Model *modelSingleDFlipFlop;

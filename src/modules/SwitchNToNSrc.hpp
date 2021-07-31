@@ -450,9 +450,9 @@ struct WIDGET_NAME : ModuleWidget {
 #endif
 				
 		// length & direction params
-		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_HALF_ROWS8(STD_ROW3)), module, STRUCT_NAME::LENGTH_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitch5PosBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_ROWS8[STD_ROW5]), module, STRUCT_NAME::DIRECTION_PARAM));
-		addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_HALF_ROWS8(STD_ROW7)), module, STRUCT_NAME::ADDR_PARAM));
+		addParam(createParamCentered<RotarySwitch<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_HALF_ROWS8(STD_ROW3)), module, STRUCT_NAME::LENGTH_PARAM));
+		addParam(createParamCentered<RotarySwitch<OperatingAngle145<BlueKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_ROWS8[STD_ROW5]), module, STRUCT_NAME::DIRECTION_PARAM));
+		addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 15, STD_HALF_ROWS8(STD_ROW7)), module, STRUCT_NAME::ADDR_PARAM));
 
 		// hold mode control
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW3)), module, STRUCT_NAME::HOLD_PARAM));

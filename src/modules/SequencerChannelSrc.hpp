@@ -246,14 +246,14 @@ struct WIDGET_NAME : ModuleWidget {
 		// step switches and pots
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL5 : STD_COL1], STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: STEP_PARAMS + s));
-			addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL7 : STD_COL3], STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: CV_PARAMS + s));
+			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL7 : STD_COL3], STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: CV_PARAMS + s));
 		}
 
 		// determine where the final column of controls goes
 		int lastCol = (SEQ_NUM_STEPS > 8 ? STD_COL9 : STD_COL5);
 		
 		// range control
-		addParam(createParamCentered<CountModulaRotarySwitchGrey>(Vec(STD_COLUMN_POSITIONS[lastCol], STD_HALF_ROWS8(STD_ROW5)), module, STRUCT_NAME::RANGE_SW_PARAM));
+		addParam(createParamCentered<RotarySwitch<GreyKnob>>(Vec(STD_COLUMN_POSITIONS[lastCol], STD_HALF_ROWS8(STD_ROW5)), module, STRUCT_NAME::RANGE_SW_PARAM));
 			
 		// hold mode control
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[lastCol], STD_ROWS8[STD_ROW4]), module, STRUCT_NAME::HOLD_PARAM));

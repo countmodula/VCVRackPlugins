@@ -104,7 +104,7 @@ struct ComparatorWidget : ModuleWidget {
 		// screws
 		#include "../components/stdScrews.hpp"	
 
-		addParam(createParamCentered<CountModulaKnobGreen>(Vec(45, 75), module, Comparator::THRESHOLD_PARAM));
+		addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(45, 75), module, Comparator::THRESHOLD_PARAM));
 
 		addInput(createInputCentered<CountModulaJack>(Vec(45, 130), module, Comparator::THRESHOLD_INPUT));
 		addInput(createInputCentered<CountModulaJack>(Vec(45, 180), module, Comparator::COMPARE_INPUT));

@@ -612,11 +612,11 @@ struct WIDGET_NAME : ModuleWidget {
 			switch (r % SEQ_NUM_SEQS) {
 				case 0:
 					addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 20, STD_ROWS8[STD_ROW2 + (r * 4)]), module, STRUCT_NAME::MODE_PARAMS + r));
-					addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 20, STD_HALF_ROWS8(STD_ROW3 + (r * 4))), module, STRUCT_NAME::LENGTH_PARAMS + r));
+					addParam(createParamCentered<RotarySwitch<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 20, STD_HALF_ROWS8(STD_ROW3 + (r * 4))), module, STRUCT_NAME::LENGTH_PARAMS + r));
 					break;
 				case 1:
 					addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 20, STD_ROWS8[STD_ROW2 + (r * 4)]), module, STRUCT_NAME::MODE_PARAMS + r));
-					addParam(createParamCentered<CountModulaRotarySwitchOrange>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 20, STD_HALF_ROWS8(STD_ROW3 + (r * 4))), module, STRUCT_NAME::LENGTH_PARAMS + r));
+					addParam(createParamCentered<RotarySwitch<OrangeKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 20, STD_HALF_ROWS8(STD_ROW3 + (r * 4))), module, STRUCT_NAME::LENGTH_PARAMS + r));
 					break;
 			}
 			
@@ -636,10 +636,10 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 				switch (r % SEQ_NUM_SEQS) {
 					case 0:
-						addParam(createParamCentered<CountModulaKnobGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4)]), module, STRUCT_NAME::STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++));
+						addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4)]), module, STRUCT_NAME::STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++));
 					break;
 				case 1:
-						addParam(createParamCentered<CountModulaKnobBlue>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4)]), module, STRUCT_NAME::STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++));
+						addParam(createParamCentered<Potentiometer<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4)]), module, STRUCT_NAME::STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++));
 					break;
 				}
 			}
@@ -651,7 +651,7 @@ struct WIDGET_NAME : ModuleWidget {
 						addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW4 + (r * 4)]), module, STRUCT_NAME::STEP_INPUTS + s));
 						break;
 					case 1:
-						addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW4 + (r * 4)]), module, STRUCT_NAME::STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++));
+						addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (s * 2)] + 15, STD_ROWS8[STD_ROW4 + (r * 4)]), module, STRUCT_NAME::STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++));
 						break;
 				}
 			}
@@ -669,7 +669,7 @@ struct WIDGET_NAME : ModuleWidget {
 				// use a single pot on the 1st row of the channel 1 and a switch on channel 2
 				if (r == 0) {
 					if (i == 0)
-						addParam(createParamCentered<CountModulaKnobGrey>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (SEQ_NUM_STEPS * 2)] + 15, STD_HALF_ROWS8(STD_ROW3 + (r * 4) + i)), module, STRUCT_NAME::RANGE_PARAMS + (r * 2) + i));
+						addParam(createParamCentered<Potentiometer<GreyKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (SEQ_NUM_STEPS * 2)] + 15, STD_HALF_ROWS8(STD_ROW3 + (r * 4) + i)), module, STRUCT_NAME::RANGE_PARAMS + (r * 2) + i));
 				}
 				else
 					addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + (SEQ_NUM_STEPS * 2)] + 15, STD_ROWS8[STD_ROW3 + (r * 4) + i]), module, STRUCT_NAME::RANGE_SW_PARAMS + (r * 2) + i));

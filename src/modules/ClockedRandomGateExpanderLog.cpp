@@ -273,8 +273,8 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8] - 20), module, ClockedRandomGateExpanderLog::OR_LIGHT));
 
 		// source controls
-		addParam(createParamCentered<CountModulaRotarySwitch5PosGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1],STD_HALF_ROWS8(STD_ROW1)), module, ClockedRandomGateExpanderLog::SOURCE_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchGreen>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, ClockedRandomGateExpanderLog::CHANNEL_PARAM));
+		addParam(createParamCentered<RotarySwitch<OperatingAngle145<GreenKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1],STD_HALF_ROWS8(STD_ROW1)), module, ClockedRandomGateExpanderLog::SOURCE_PARAM));
+		addParam(createParamCentered<RotarySwitch<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, ClockedRandomGateExpanderLog::CHANNEL_PARAM));
 
 		// cv outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, ClockedRandomGateExpanderLog::AND_OUTPUT));

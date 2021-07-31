@@ -433,14 +433,14 @@ struct BasicSequencer8Widget : ModuleWidget {
 			
 		// length & mode params
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW2]), module, BasicSequencer8::MODE_PARAM));
-		addParam(createParamCentered<CountModulaRotarySwitchRed>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_HALF_ROWS8(STD_ROW3)), module, BasicSequencer8::LENGTH_PARAM));
+		addParam(createParamCentered<RotarySwitch<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_HALF_ROWS8(STD_ROW3)), module, BasicSequencer8::LENGTH_PARAM));
 			
 		// row lights and switches
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] - 15, STD_ROWS8[STD_ROW1 + s] - 19), module, BasicSequencer8::LENGTH_LIGHTS + s));
 			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8:: STEP_SW_PARAMS + s));
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaKnobWhite>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::STEP_CV_PARAMS + s));
+			addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::STEP_CV_PARAMS + s));
 		}
 			
 		// output lights

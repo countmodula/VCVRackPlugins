@@ -5,7 +5,7 @@
 
 // Add all Models defined throughout the plugin
 p->addModel(modelAnalogueShiftRegister);
-p->addModel(modelAttenuator);	
+p->addModel(modelAttenuator);
 p->addModel(modelBinarySequencer);
 p->addModel(modelBurstGenerator);
 p->addModel(modelBooleanAND);
@@ -119,3 +119,8 @@ p->addModel(modelSwitch2);
 p->addModel(modelSwitch3);
 p->addModel(modelSwitch4);
 p->addModel(modelCarousel);
+p->addModel(modelOctetTriggerSequencer);
+p->addModel(modelOctetTriggerSequencerCVExpander);
+p->addModel(modelBarGraph);
+p->addModel(modelOscilloscope);
+p->addModel(modelSingleDFlipFlop);
