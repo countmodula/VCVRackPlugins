@@ -221,10 +221,10 @@ struct STRUCT_NAME : Module {
 			float nextB = 0.0f;
 			int c = count -1;
 
-			if (c > 0) {
+			if (count > 0) {
 				if (chained) {
 					// if playing channel B, then channel A's next value is channel B's control value otherwise it is channel A's control value.
-					nextA = playingChannelB ? params[CVA_PARAMS + c].getValue() : params[CVB_PARAMS + c].getValue();
+					nextA = playingChannelB ? params[CVB_PARAMS + c].getValue() : params[CVA_PARAMS + c].getValue();
 
 					// if channel B's pattern mode is off, channel B's next value is 0 volts
 					// if channel B's pattern mode is follow or inverse, channel B's next value is channel A's next value
