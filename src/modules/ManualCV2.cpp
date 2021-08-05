@@ -142,7 +142,7 @@ struct ManualCV2Widget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// knobs
-		addParam(createParamCentered<RotarySwitch<MegaKnob<GreenKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS7(STD_ROW6)), module, ManualCV2::CV_PARAM));
+		addParam(createParamCentered<Potentiometer<MegaKnob<GreenKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS7(STD_ROW6)), module, ManualCV2::CV_PARAM));
 
 		addParam(createParamCentered<RotarySwitch<BlueKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS5[STD_ROW2]), module, ManualCV2::RANGE_PARAM));		
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS5[STD_ROW2]), module, ManualCV2::POLARITY_PARAM));
