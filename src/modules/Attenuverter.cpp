@@ -138,7 +138,7 @@ struct AttenuverterWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// knobs
-		addParam(createParamCentered<RotarySwitch<MegaKnob<YellowKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS7(STD_ROW6)), module, Attenuverter::ATTENUATE_PARAM));
+		addParam(createParamCentered<Potentiometer<MegaKnob<YellowKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS7(STD_ROW6)), module, Attenuverter::ATTENUATE_PARAM));
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, Attenuverter::MODE_PARAM));
 
 		// lights

@@ -20,6 +20,20 @@
 </tr>
 
 <tr valign="top">
+<td align="center">05-Aug-2021</td>
+<td align="center">v1.15.1</td>
+<td align="left">
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Returned knobs on Attenuverter and Poly Manual CV back to potentiometers after they were accidentally turned into rotary switches</li>
+</ul>
+</ul>
+
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">31-Jul-2021</td>
 <td align="center">v1.15.0</td>
 <td align="left">
