@@ -1073,6 +1073,15 @@
 			"Sequencer",
 			"Expander"
 		  ]
+		},
+		{
+		  "slug": "Mult",
+		  "name": "Multiple",
+		  "description": "Normalled polyphonic multiple",
+		  "tags": [
+			"Multiple",
+			"Polyphonic"
+		  ]
 		}
 	]
 }

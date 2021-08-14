@@ -85,6 +85,7 @@ Follow Count Modula on facebook:
 <li>Minimus Maximus</li>
 <li>Mixer</li>
 <li>Morph Shaper</li>
+<li>Multiple <font color="red">* New in v1.16.0</font></li>
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>

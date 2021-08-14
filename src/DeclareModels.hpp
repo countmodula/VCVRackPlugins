@@ -124,3 +124,4 @@ extern Model *modelBarGraph;
 extern Model *modelOscilloscope;
 extern Model *modelSingleDFlipFlop;
 extern Model *modelOctetTriggerSequencerGateExpander;
+extern Model *modelMult;

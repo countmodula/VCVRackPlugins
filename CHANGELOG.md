@@ -20,12 +20,13 @@
 </tr>
 
 <tr valign="top">
-<td align="center">31-Aug-2021</td>
+<td align="center">14-Aug-2021</td>
 <td align="center">v1.16.0</td>
 <td align="left">
 
 <ul>
 <b>New Modules:</b>
+<li>Normalled Multiple</li>
 <li>Octet Trigger Sequencer Gate Expander</li>
 </ul>
 
