@@ -124,3 +124,4 @@ p->addModel(modelOctetTriggerSequencerCVExpander);
 p->addModel(modelBarGraph);
 p->addModel(modelOscilloscope);
 p->addModel(modelSingleDFlipFlop);
+p->addModel(modelOctetTriggerSequencerGateExpander);

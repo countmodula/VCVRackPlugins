@@ -84,7 +84,7 @@ struct STRUCT_NAME : Module {
 										"Green"};
 
 	// count to bit mappping
-	const int stepMap[9] = {0, 128, 64, 32, 16, 8, 4, 2, 1};
+	STEP_MAP;
 
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);

@@ -20,6 +20,19 @@
 </tr>
 
 <tr valign="top">
+<td align="center">31-Aug-2021</td>
+<td align="center">v1.16.0</td>
+<td align="left">
+
+<ul>
+<b>New Modules:</b>
+<li>Octet Trigger Sequencer Gate Expander</li>
+</ul>
+
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">05-Aug-2021</td>
 <td align="center">v1.15.1</td>
 <td align="left">

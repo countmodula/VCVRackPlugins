@@ -1032,7 +1032,7 @@
 		},
 		{
 		  "slug": "OctetTriggerSequencerCVExpander",
-		  "name": "Octet Trigger Sequencer Channel Expander",
+		  "name": "Octet Trigger Sequencer CV Expander",
 		  "description": "Adds a CV channel to the Octet Trigger Sequencer",
 		  "tags": [
 			"Sequencer",
@@ -1063,6 +1063,15 @@
 		  "description": "A logical D type flip flop with clock enable",
 		  "tags": [
 			"Logic"
+		  ]
+		},
+		{
+		  "slug": "OctetTriggerSequencerGateExpander",
+		  "name": "Octet Trigger Sequencer Gate Expander",
+		  "description": "Adds individual gate outputs to the Octet Trigger Sequencer",
+		  "tags": [
+			"Sequencer",
+			"Expander"
 		  ]
 		}
 	]

@@ -14,13 +14,6 @@
 #define THEME_MODULE_NAME OctetTriggerSequencer
 #define PANEL_FILE "OctetTriggerSequencer.svg"
 
-#define CHANNEL_A 0
-#define CHANNEL_B 1
-
-
-#define DEFAULT_PATTERN_A 170
-#define DEFAULT_PATTERN_B 136
-
 struct OctetTriggerSequencer : Module {
 	enum ParamIds {
 		PATTERN_A_CV_PARAM,
@@ -78,7 +71,7 @@ struct OctetTriggerSequencer : Module {
 	dsp::PulseGenerator pulseGenTrigB;
 
 	// count to bit mappping
-	const int stepMap[9] = {0, 128, 64, 32, 16, 8, 4, 2, 1};
+	STEP_MAP;
 	
 	// integer to scale value mapping
 	const float cvScaleMap[4] = { 25.5f, 12.8f, 6.4f, 3.2f};
