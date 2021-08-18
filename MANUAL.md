@@ -22,7 +22,7 @@ User guides for all modules are now being provided within a single pdf which can
 <th align="center" style="width:120px;">Release</th><th align="center">Link</th>
 </tr>
 <tr valign="top">
-<td align="center">Version 1.15.0</td><td align="center"><a href="https://github.com/countmodula/VCVRackPluginManuals/releases/download/v1.15.0/Count.Modula.Manual.V1.15.0.pdf">Download</a></td>
+<td align="center">Version 1.15.x</td><td align="center"><a href="https://github.com/countmodula/VCVRackPluginManuals/releases/download/v1.15.1/Count.Modula.Manual.V1.15.1.pdf">Download</a></td>
 </tr>
 <tr valign="top">
 <td align="center">Version 1.14.0</td><td align="center"><a href="https://github.com/countmodula/VCVRackPluginManuals/releases/download/v1.14.0/Count.Modula.Manual.V1.14.0.pdf">Download</a></td>
