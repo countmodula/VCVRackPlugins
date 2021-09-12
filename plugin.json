@@ -1082,6 +1082,25 @@
 			"Multiple",
 			"Polyphonic"
 		  ]
+		},
+		{
+		  "slug": "PolyGateModifier",
+		  "name": "Poly Gate Modifier",
+		  "description": "Polyphonic voltage controlled gate length modifier",
+		  "tags": [
+			"Logic",
+			"Utility",
+			"Polyphonic"
+		  ]
+		},
+		{
+		  "slug": "SampleAndHold2",
+		  "name": "Super Sample & Hold",
+		  "description": "Sample and Hold/Track and hold with probability and offset",
+		  "tags": [
+			"Sample and hold",
+			"Polyphonic"
+		  ]
 		}
 	]
 }

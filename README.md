@@ -97,6 +97,7 @@ Follow Count Modula on facebook:
 <li>Palette
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
+<li>Poly Gate Modifier <font color="red">* New in v1.16.0</font></li>
 <li>Poly Gate to Trigger</li>
 <li>Poly Logic</li>
 <li>Polyphonic Manual CV</li>
@@ -123,6 +124,7 @@ Follow Count Modula on facebook:
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Super Arpeggiator</li>
+<li>Super Sample & Hold <font color="red">* New in v1.16.0</font></li>
 <li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router </li>
 <li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router </li>
 <li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector </li>

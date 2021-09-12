@@ -126,3 +126,5 @@ p->addModel(modelOscilloscope);
 p->addModel(modelSingleDFlipFlop);
 p->addModel(modelOctetTriggerSequencerGateExpander);
 p->addModel(modelMult);
+p->addModel(modelPolyGateModifier);
+p->addModel(modelSampleAndHold2);

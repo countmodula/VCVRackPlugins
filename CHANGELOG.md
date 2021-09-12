@@ -20,7 +20,7 @@
 </tr>
 
 <tr valign="top">
-<td align="center">14-Aug-2021</td>
+<td align="center">12-Sep-2021</td>
 <td align="center">v1.16.0</td>
 <td align="left">
 
@@ -28,6 +28,8 @@
 <b>New Modules:</b>
 <li>Normalled Multiple</li>
 <li>Octet Trigger Sequencer Gate Expander</li>
+<li>Poly Gate Modifier</li>
+<li>Super Sample & Hold</li>
 </ul>
 
 </td>
