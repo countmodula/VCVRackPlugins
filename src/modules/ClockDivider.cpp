@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Step Sequencer Module
-//  A classic 8 step CV/Gate sequencer
-//  Copyright (C) 2019  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - Clock Divider
+//  A multimode clock divider
+//  Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -13,12 +13,12 @@
 #define THEME_MODULE_NAME ClockDivider
 #define PANEL_FILE "ClockDivider.svg"
 
-
 struct ClockDivider : Module {
 
 	enum ParamIds {
-		MODE_PARAM,
+		DIR_PARAM,
 		TRIG_PARAM,
+		MODE_PARAM,
 		NUM_PARAMS
 	};
 	
@@ -38,16 +38,49 @@ struct ClockDivider : Module {
 		NUM_LIGHTS
 	};
 	
-	short count = 512;
+	
+	enum CountModes {
+		BINARY_MODE,
+		BINARY2_MODE,
+		DECIMAL_MODE,
+		PRIME_MODE,
+#ifdef THE_FULL_MONTY
+		FIBONACCI_MODE,
+		EVENS_MODE,
+		ODDS_MODE,
+#endif
+		NUM_MODES
+	};
+	
+	
+	const int maxModes = NUM_MODES-1;
+	
+	int count = 512;
+	const int maxCount[7] = {512, 512, 362880, 9699690, 122522400, 10321920, 34459425};
+	const int maxCountMinusOne [7] = {511, 511, 362879, 9699689, 122522399, 10321919, 34459424 };
+
+	const int outputMask[7][8] = {
+		{1, 2, 4, 8, 16, 32, 64, 128},		// B1
+		{2, 4, 8, 16, 32, 64, 128, 256},	// B2
+		{2, 3, 4, 5, 6, 7, 8, 9 },			// Decimal
+		{2, 3, 5, 7, 11, 13, 17, 19},		// Prime
+		// will acutally use the following when I can figure out a nice way to display the divisions
+		{2, 3, 5, 8, 13, 21, 34, 55},		// Fibonacci
+		{2, 4, 6, 8, 10, 12, 14, 16},		// Even
+		{3, 5, 7, 9, 11, 13, 15, 17}		// Odd
+	};
+
 	GateProcessor gpClock;
 	GateProcessor gpReset;
 
 	dsp::PulseGenerator pgDiv[NUM_DIVS];
 	bool countBits[NUM_DIVS] = {};
 	
-	short bitMask;
-	bool countUp = false;;
+	bool countUp = false;
 	bool doTrigs = false;
+	int mode = 0;
+	bool isReset = false;
+	int processCount = 8;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -55,21 +88,32 @@ struct ClockDivider : Module {
 	ClockDivider() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		// mode switch
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Count mode");
+		// direction switch
+		configParam(DIR_PARAM, 0.0f, 1.0f, 0.0f, "Count direction");
 		
-		// trig switch
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode");
+		// gate/trig switch
+		configParam(TRIG_PARAM, 0.0f, 1.0f, 0.0f, "Output mode");
+		
+		// mode switch
+		configParam(MODE_PARAM, 0.0f, (float)maxModes, 0.0f, "Mode");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+		
+		mode = 0;
+		processCount = 8;
+		countUp = false;
+		isReset = false;
 	}
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(2));
 		json_object_set_new(root, "count", json_integer(count));
+		json_object_set_new(root, "mode", json_integer(mode));
+		json_object_set_new(root, "doTrigs", json_boolean(doTrigs));
+		json_object_set_new(root, "countUp", json_boolean(countUp));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -78,31 +122,38 @@ struct ClockDivider : Module {
 	}
 
 	void dataFromJson(json_t* root) override {
-		
+
 		json_t *cnt = json_object_get(root, "count");
-		
+		json_t *m = json_object_get(root, "mode");
+		json_t *trigs = json_object_get(root, "doTrigs");
+		json_t *cu = json_object_get(root, "countUp");
+
 		if (cnt)
 			count = json_integer_value(cnt);
-	
-	
-		short bitMask = 0x01;
-		
-		for (int c = 0; c < NUM_DIVS; c++) {
-			countBits[c] = ((count & bitMask) == bitMask);
-		
-			// prepare for next bit
-			bitMask = bitMask << 1;
-		}
-	
-	
+
+		if (m)
+			mode = json_integer_value(m);
+			
+		if (trigs)
+			doTrigs = json_boolean_value(trigs);
+
+		if (cu)
+			countUp = json_boolean_value(cu);
+			
+		// stop triggers from firing on startup
+		if (doTrigs)
+			isReset = true;
+
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
-	}	
+	}
 	
 	void onReset() override {
 		gpClock.reset();
 		gpReset.reset();
-		count = 512;
+		count = 512; // reset will set the mode back to binary
+		isReset = true;
+		processCount = 8;
 		
 		for (int c = 0; c < NUM_DIVS; c++) {
 			countBits[c] = false;
@@ -112,38 +163,51 @@ struct ClockDivider : Module {
 	
 	void process(const ProcessArgs &args) override {
 
-		countUp = (params[MODE_PARAM].getValue() > 0.5f);
-		doTrigs = (params[TRIG_PARAM].getValue() > 0.5f);
-	
-		// process the reset
-		gpReset.set(inputs[RESET_INPUT].getVoltage());
-		if (gpReset.leadingEdge()) {
-			count = (countUp ? 0 : 512);
-			
-			for (int c = 0; c < NUM_DIVS; c++) 
-				countBits[c] = false;	
+		if (++processCount > 8) {
+			processCount = 0;
+			countUp = (params[DIR_PARAM].getValue() > 0.5f);
+			doTrigs = (params[TRIG_PARAM].getValue() > 0.5f);
+			mode = clamp((int)params[MODE_PARAM].getValue(), 0, maxModes);
 		}
 		
-		// process the clock
-		gpClock.set(inputs[CLOCK_INPUT].getVoltage());
-		if (gpClock.leadingEdge()) {
-			if (countUp) {
-				if (++count > 511)
-					count = 0;
-			}
-			else {
-				if (--count < 1)
-					count = 512;
+		// process the reset
+		gpReset.set(inputs[RESET_INPUT].getVoltage());
+		
+		if (gpReset.leadingEdge()) {
+			isReset = true;
+			if (mode == BINARY_MODE)
+				count = (countUp ? 0 : maxCount[mode]);
+			else
+				count = (countUp ? 0 : 1);
+		}
+		else {
+			// process the clock
+			gpClock.set(inputs[CLOCK_INPUT].getVoltage());
+			if (gpClock.leadingEdge()) {
+				isReset = false;
+				if (countUp) {
+					if (++count > maxCountMinusOne[mode])
+						count = 0;
+				}
+				else {
+					if (--count < 1)
+						count = maxCount[mode];
+				}
 			}
 		}
 		
 		// set lights and outputs
-		bitMask = 0x01;
+		bool divActive, prevActive;
 		for (int c = 0; c < NUM_DIVS; c++) {
-
-			bool divActive = countBits[c];
-			countBits[c] = ((count & bitMask) == bitMask);
-		
+			prevActive = divActive = countBits[c];
+			
+			if (isReset)
+				countBits[c] = false;
+			else if (mode == BINARY_MODE)
+				countBits[c] = ((count & outputMask[mode][c]) > 0);
+			else
+				countBits[c] = ((count % outputMask[mode][c]) == 0);
+	
 			if (doTrigs) {
 				if (countBits[c] && !divActive) {
 					divActive = true;
@@ -160,13 +224,11 @@ struct ClockDivider : Module {
 				lights[DIV_LIGHTS + c].setBrightness(boolToLight(divActive));
 
 				// ensure any residual triggers are processed
-				pgDiv[c].process(args.sampleTime);	
+				pgDiv[c].process(args.sampleTime);
 			}
-		
-			outputs[DIV_OUTPUTS + c].setVoltage(boolToGate(divActive));
 			
-			// prepare for next bit
-			bitMask = bitMask << 1;
+			if (prevActive != divActive)
+				outputs[DIV_OUTPUTS + c].setVoltage(boolToGate(divActive));
 		}
 	}
 };
@@ -181,11 +243,11 @@ struct ClockDividerWidget : ModuleWidget {
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
 		// screws
-		#include "../components/stdScrews.hpp"	
+		#include "../components/stdScrews.hpp"
 
 		// clock and reset inputs
-			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, ClockDivider::CLOCK_INPUT));
-			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3]), module, ClockDivider::RESET_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, ClockDivider::CLOCK_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW2)), module, ClockDivider::RESET_INPUT));
 		
 		
 		// row lights and knobs
@@ -194,11 +256,15 @@ struct ClockDividerWidget : ModuleWidget {
 			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, ClockDivider::DIV_OUTPUTS + s));
 		}
 
-		// count mode control
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, ClockDivider::MODE_PARAM));
+		// count direction control
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, ClockDivider::DIR_PARAM));
 
-		// trig mode control
-		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, ClockDivider::TRIG_PARAM));
+		// output mode control
+		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, ClockDivider::TRIG_PARAM));
+		
+		// mode control
+		addParam(createParamCentered<RotarySwitch<OperatingAngle120<Left90<SmallKnob<BlueKnob>>>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, ClockDivider::MODE_PARAM));
+
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

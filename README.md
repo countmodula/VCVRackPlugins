@@ -28,6 +28,8 @@ Follow Count Modula on facebook:
 
 <h3>Modules - Release 1.16.0</h3>
 <p>
+FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer t the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
+<p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
 <p>

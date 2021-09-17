@@ -20,9 +20,11 @@
 </tr>
 
 <tr valign="top">
-<td align="center">12-Sep-2021</td>
+<td align="center">17-Sep-2021</td>
 <td align="center">v1.16.0</td>
 <td align="left">
+FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer t the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
+<p>
 
 <ul>
 <b>New Modules:</b>
@@ -30,6 +32,11 @@
 <li>Octet Trigger Sequencer Gate Expander</li>
 <li>Poly Gate Modifier</li>
 <li>Super Sample & Hold</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Clock Divider - New division modes</li>
 </ul>
 
 </td>
