@@ -197,9 +197,9 @@ struct ClockDivider : Module {
 		}
 		
 		// set lights and outputs
-		bool divActive, prevActive;
+		bool divActive;
 		for (int c = 0; c < NUM_DIVS; c++) {
-			prevActive = divActive = countBits[c];
+			divActive = countBits[c];
 			
 			if (isReset)
 				countBits[c] = false;
@@ -226,9 +226,8 @@ struct ClockDivider : Module {
 				// ensure any residual triggers are processed
 				pgDiv[c].process(args.sampleTime);
 			}
-			
-			if (prevActive != divActive)
-				outputs[DIV_OUTPUTS + c].setVoltage(boolToGate(divActive));
+
+			outputs[DIV_OUTPUTS + c].setVoltage(boolToGate(divActive));
 		}
 	}
 };
