@@ -68,7 +68,7 @@ struct SampleAndHold2 : Module {
 		configParam(PROB_PARAM, 0.0f, 1.0f, 1.0f, "Probability", " %", 0.0f, 100.0f, 0.0f);
 		configParam(PROB_CV_PARAM, -1.0f, 1.0f, 0.0f, "Probability CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(LEVEL_PARM, 0.0f, 1.0f, 1.0f, "Input level", " %", 0.0f, 100.0f, 0.0f);
-		configParam(OFFSET_PARAM, -10.0f, 10.0f, 0.0f, "Offset amount", " V", 0.0f, 1.0f, 0.0f);
+		configParam(OFFSET_PARAM, -1.0f, 1.0f, 0.0f, "Offset amount", " V", 0.0f, 10.0f, 0.0f);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -188,7 +188,7 @@ struct SampleAndHold2 : Module {
 					if (forceSample || gateTrig[t].anyEdge()) {
 						float r = random::uniform();
 						if(getProb)
-							threshold = clamp(probability + (inputs[PROB_INPUT].getVoltage(c) * probabilityCV / 10.f), 0.f, 1.f);
+							threshold = clamp(probability + (inputs[PROB_INPUT].getPolyVoltage(c) * probabilityCV / 10.f), 0.f, 1.f);
 
 						if (r < threshold) {
 							switch (trackMode) {
@@ -207,9 +207,10 @@ struct SampleAndHold2 : Module {
 
 					if (doSample[c]) {
 						// track, pass  or sample the input
-						// todo: saturate rather than clamp
+						float offsetVoltage = offset * inputs[OFFSET_INPUT].getNormalPolyVoltage(10.0f, c);
 						float v = c >= inputChannels ? random::uniform() * 10.0f - 5.0f : inputs[SAMPLE_INPUT].getVoltage(c);
-						s = clamp (v * level + offset, -12.0f, 12.0f);
+						// todo: saturate rather than clamp
+						s = clamp (v * level + offsetVoltage, -12.0f, 12.0f);
 						
 						if (trackMode == SAMPLE)
 							doSample[c] = false;
