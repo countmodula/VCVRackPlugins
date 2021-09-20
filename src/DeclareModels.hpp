@@ -123,3 +123,7 @@ extern Model *modelOctetTriggerSequencerCVExpander;
 extern Model *modelBarGraph;
 extern Model *modelOscilloscope;
 extern Model *modelSingleDFlipFlop;
+extern Model *modelOctetTriggerSequencerGateExpander;
+extern Model *modelMult;
+extern Model *modelPolyGateModifier;
+extern Model *modelSampleAndHold2;

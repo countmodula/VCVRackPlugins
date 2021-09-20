@@ -26,7 +26,9 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.15.0</h3>
+<h3>Modules - Release 1.16.0</h3>
+<p>
+FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer t the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -49,7 +51,7 @@ Follow Count Modula on facebook:
 <li>XOR</li>
 </ul>
 </li>
-<li>Bar Graph <font color="red">* New in v1.15.0</font></li>
+<li>Bar Graph</li>
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
 <li>Carousel - Rotating router</li>
@@ -59,7 +61,7 @@ Follow Count Modula on facebook:
 <li>Clocked Random Gate Expander - CV</li>
 <li>Clocked Random Gates Expander - Logic</li>
 <li>Comparator</a></li>
-<li>D Flip Flop (Single) <font color="red">* New in v1.15.0</font></li>
+<li>D Flip Flop (Single)</li>
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
 <li>Event Arranger</a></li>
@@ -85,16 +87,19 @@ Follow Count Modula on facebook:
 <li>Minimus Maximus</li>
 <li>Mixer</li>
 <li>Morph Shaper</li>
+<li>Multiple <font color="red">* New in v1.16.0</font></li>
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>
-<li>Octet Trigger Sequencer <font color="red">* New in v1.15.0</font></li>
-<li>Octet Trigger Sequencer Expander <font color="red">* New in v1.15.0</font></li>
+<li>Octet Trigger Sequencer</li>
+<li>Octet Trigger Sequencer CV Expander</li>
+<li>Octet Trigger Sequencer Gate Expander <font color="red">* New in v1.16.0</font></li>
 <li>Offset Generator</li>
-<li>Oscilloscope <font color="red">* New in v1.15.0</font></li>
+<li>Oscilloscope</li>
 <li>Palette
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
+<li>Poly Gate Modifier <font color="red">* New in v1.16.0</font></li>
 <li>Poly Gate to Trigger</li>
 <li>Poly Logic</li>
 <li>Polyphonic Manual CV</li>
@@ -121,6 +126,7 @@ Follow Count Modula on facebook:
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Super Arpeggiator</li>
+<li>Super Sample & Hold <font color="red">* New in v1.16.0</font></li>
 <li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router </li>
 <li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router </li>
 <li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector </li>

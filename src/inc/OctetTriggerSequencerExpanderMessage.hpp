@@ -1,13 +1,22 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Octet Trigger Sequencer expander message
-//	For passing sequence details to and from the Octete trigger sequencer 
-//  and the octet trigger sequencer cv expander module.
+//	For passing sequence details to and from the Octet trigger sequencer 
+//  and the octet sequencer expander modules
 //  Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 
 // utility macros 
-#define isExpanderModule(x) x->model == modelOctetTriggerSequencerCVExpander
-#define isExpandableModule(x) x->model == modelOctetTriggerSequencer || x->model == modelOctetTriggerSequencerCVExpander
+#define isExpanderModule(x) x->model == modelOctetTriggerSequencerCVExpander || x->model == modelOctetTriggerSequencerGateExpander 
+#define isExpandableModule(x) x->model == modelOctetTriggerSequencer || x->model == modelOctetTriggerSequencerCVExpander || x->model == modelOctetTriggerSequencerGateExpander
+
+#define CHANNEL_A 0
+#define CHANNEL_B 1
+
+#define DEFAULT_PATTERN_A 170
+#define DEFAULT_PATTERN_B 136
+
+// count to bit mappping
+#define STEP_MAP const int stepMap[9] = {0, 128, 64, 32, 16, 8, 4, 2, 1}
 
 struct OctetTriggerSequencerExpanderMessage {
 	
