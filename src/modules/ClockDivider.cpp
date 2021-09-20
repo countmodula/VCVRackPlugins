@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Clock Divider
-//  A multimode clock divider
-//  Copyright (C) 2021  Adam Verspaget
+//	A multimode clock divider
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
