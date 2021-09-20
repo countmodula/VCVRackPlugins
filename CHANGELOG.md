@@ -11,10 +11,11 @@
 </table>
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Change Log:</h3>
-&nbsp;
+FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer to the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
+<p>
 <table style="width:1000px;">
 <tr valign="top">
-<th align="center" style="width:140px;">Date</th>
+<th align="center" style="width:140px;" width="140">Date</th>
 <th align="center">Release</th>
 <th align="left">Notes</th>
 </tr>
@@ -23,9 +24,6 @@
 <td align="center">17-Sep-2021</td>
 <td align="center">v1.16.0</td>
 <td align="left">
-FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer to the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
-<p>
-
 <ul>
 <b>New Modules:</b>
 <li>Normalled Multiple</li>
@@ -151,7 +149,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <b>Module Updates:</b>
 <li>Fade Expander now has an inverted envelope out </li>
 <li>Fade now has a "monitor" mode button to allow the output to be monitored without starting the recording</li>
-<li>Palette now has hot keys to select and lock cable colours.
+<li>Palette now has hot keys to select and lock cable colours.</li>
 </ul>
 
 </td>
@@ -375,7 +373,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <b>New Modules:</b>
 <li>Startup Delay</li>
 <li>Rack Ears</li>
-<li>Blank Panels</>
+<li>Blank Panels</li>
 </ul>
 <ul>
 <b>Module Updates:</b>
@@ -519,8 +517,10 @@ Port from Rack v0.6 to v1.0
 <td align="center">04-Jun-2019</td>
 <td align="center">v0.6.1</td>
 <td align="left">
+<ul>
 <b>Issues Resolved:</b><br/>
-Issue #3 svgs incorrectly packaged.<br/>
+<li>Issue #3 svgs incorrectly packaged.</li>
+</ul>
 </td>
 </tr>
 <tr valign="top">
