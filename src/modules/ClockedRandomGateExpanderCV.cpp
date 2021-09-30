@@ -330,7 +330,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->paramQuantity->setValue(0.0f);
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->setValue(0.0f);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -352,7 +352,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->paramQuantity->setValue(binaryWeights[i]);
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->setValue(binaryWeights[i]);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -373,7 +373,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->reset();
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -393,7 +393,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->randomize();
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

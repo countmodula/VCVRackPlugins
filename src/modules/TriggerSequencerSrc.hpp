@@ -410,12 +410,12 @@ struct WIDGET_NAME : ModuleWidget {
 			// we're doing the entire channel so do the common controls here
 			if (allInit) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->reset();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->reset();
 			}
 			
 			// triggers/gates
 			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->reset();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -447,12 +447,12 @@ struct WIDGET_NAME : ModuleWidget {
 			// we're doing the entire channel so do the common controls here
 			if (allRand) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->randomize();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->randomize();
 			}
 			
 			// triggers/gates
 			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->randomize();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings

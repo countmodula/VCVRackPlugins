@@ -422,7 +422,7 @@ struct OscilloscopeDisplay : LightWidget {
 		
 	}
 
-	void drawBackground(const DrawArgs &args) {
+	void drawBackground(const DrawArgs &args) override {
 
 		nvgSave(args.vg);
 		Rect b = Rect(Vec(0, 0), box.size);
@@ -456,6 +456,9 @@ struct OscilloscopeDisplay : LightWidget {
 	void draw (const DrawArgs &args) override {
 		if(module == NULL) 
 			return;
+
+		// Disable tinting when rack brightness is decreased
+		nvgGlobalTint(args.vg, color::WHITE);
 
 		// hide the grid if we've chosen to do so
 		if (module->hideGrid)

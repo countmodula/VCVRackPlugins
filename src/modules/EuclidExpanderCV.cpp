@@ -320,7 +320,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i ++)
-				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->paramQuantity->setValue(0.0f);
+				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->setValue(0.0f);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -340,7 +340,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i ++)
-				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->reset();
+				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -360,7 +360,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i ++)
-				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->randomize();
+				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -415,7 +415,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 				for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i++) {
 					ParamWidget *p = getParam(EuclidExpanderCV::STEP_CV_PARAMS + i);
 					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(p))->dirtyValue = -1;
+					//((CountModulaKnob *)(p))->->dirtyValue = -1;
 				}
 			}			
 		}

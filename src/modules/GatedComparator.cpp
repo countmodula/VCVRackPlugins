@@ -274,7 +274,7 @@ struct GatedComparatorWidget : ModuleWidget {
 		
 			// step controls
 			for (int c = 0; c < 8; c++) {
-				widget->getParam(GatedComparator::MELODY_PARAMS + c)->reset();
+				widget->getParam(GatedComparator::MELODY_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -296,7 +296,7 @@ struct GatedComparatorWidget : ModuleWidget {
 
 			// step controls
 			for (int c = 0; c < 8; c++) {
-				widget->getParam(GatedComparator::MELODY_PARAMS + c)->randomize();
+				widget->getParam(GatedComparator::MELODY_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings

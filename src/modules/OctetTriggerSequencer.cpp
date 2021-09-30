@@ -460,8 +460,8 @@ struct OctetTriggerSequencerWidget : ModuleWidget {
 		float pos = float(COLUMN_POSITIONS[STD_COL1]);
 		int led = 0;
 		for (int col = 0; col < 8; col++) {
-			addChild(createLightCentered<MediumLight<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] - 8), module, OctetTriggerSequencer::PATTERN_A_LIGHTS + led));
-			addChild(createLightCentered<MediumLight<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] + 8), module, OctetTriggerSequencer::PATTERN_B_LIGHTS + led));
+			addChild(createLightCentered<MediumLightSquare<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] - 8), module, OctetTriggerSequencer::PATTERN_A_LIGHTS + led));
+			addChild(createLightCentered<MediumLightSquare<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] + 8), module, OctetTriggerSequencer::PATTERN_B_LIGHTS + led));
 
 			pos += 12.8f;
 			led += 2;

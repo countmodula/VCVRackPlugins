@@ -680,10 +680,26 @@ struct PatternButton : LightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
+
 	int value;
 	int row = 0;
 	
+	void drawBackground(const DrawArgs &args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		nvgFillColor(args.vg, inactiveColor);
+		nvgFill(args.vg);
+
+		// add border
+		nvgStrokeWidth(args.vg, 1.2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}
+	
 	void drawLight(const DrawArgs& args) override {
+		
+		nvgGlobalTint(args.vg, color::WHITE);
+		
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module)
@@ -726,7 +742,22 @@ struct OctaveButton : LightWidget {
 	int value;
 	int row = 0;
 	
+	void drawBackground(const DrawArgs &args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		nvgFillColor(args.vg, inactiveColor);
+		nvgFill(args.vg);
+
+		// add border
+		nvgStrokeWidth(args.vg, 1.2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}	
+	
 	void drawLight(const DrawArgs& args) override {
+		
+		nvgGlobalTint(args.vg, color::WHITE);
+		
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module && module->octaveProcessingEnabled)
@@ -738,7 +769,7 @@ struct OctaveButton : LightWidget {
 		
 		nvgStrokeWidth(args.vg, 1.2);
 		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
+		nvgStroke(args.vg);	
 	}
 
 	void onButton(const event::Button& e) override {
@@ -768,7 +799,22 @@ struct GlideButton : LightWidget {
 	NVGcolor inactiveColor;
 	int row = 0;
 	
+	void drawBackground(const DrawArgs &args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		nvgFillColor(args.vg, inactiveColor);
+		nvgFill(args.vg);
+
+		// add border
+		nvgStrokeWidth(args.vg, 1.2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}	
+	
 	void drawLight(const DrawArgs& args) override {
+		
+		nvgGlobalTint(args.vg, color::WHITE);
+		
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module && module->noteProcessingEnabled)
@@ -780,7 +826,7 @@ struct GlideButton : LightWidget {
 		
 		nvgStrokeWidth(args.vg, 1.2);
 		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
+		nvgStroke(args.vg);		
 	}
 
 	void onButton(const event::Button& e) override {
@@ -806,7 +852,22 @@ struct AccentButton : LightWidget {
 	NVGcolor inactiveColor;
 	int row = 0;
 	
+	void drawBackground(const DrawArgs &args) override {
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		nvgFillColor(args.vg, inactiveColor);
+		nvgFill(args.vg);
+
+		// add border
+		nvgStrokeWidth(args.vg, 1.2);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}
+	
 	void drawLight(const DrawArgs& args) override {
+		
+		nvgGlobalTint(args.vg, color::WHITE);
+		
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
 		if (module && module->noteProcessingEnabled)
@@ -843,19 +904,30 @@ struct HoldButton : LightWidget {
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
 
-	void drawLight(const DrawArgs& args) override {
+	void drawBackground(const DrawArgs &args) override {
 		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
+		nvgRoundedRect(args.vg, -0.5, -0.5, box.size.x+1.0, box.size.y+1.0, 3.0);
+		nvgFillColor(args.vg, inactiveColor);
+		nvgFill(args.vg);
+
+		// add border
+		nvgStrokeWidth(args.vg, 3.0);
+		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		nvgStroke(args.vg);
+	}
+
+	void drawLight(const DrawArgs& args) override {
+		
+		nvgGlobalTint(args.vg, color::WHITE);
+		
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.5, 0.5, box.size.x-1.0, box.size.y-1.0, 3.0);
 		if (module)
 			nvgFillColor(args.vg,module->hold ? activeColor : inactiveColor);
 		else
 			nvgFillColor(args.vg, inactiveColor);
 		
 		nvgFill(args.vg);
-		
-		nvgStrokeWidth(args.vg, 2);
-		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
 	}
 
 	void onButton(const event::Button& e) override {
@@ -874,10 +946,10 @@ struct HoldButton : LightWidget {
 };
 
 struct ArpeggiatorWidget : ModuleWidget {
-
+	const NVGcolor BUTTON_GREEN = nvgRGB(0xae, 0xd1, 0x71);
 	const NVGcolor activePatternColors[5] = {SCHEME_GREEN, SCHEME_RED, SCHEME_YELLOW, SCHEME_BLUE, SCHEME_PURPLE};
 	const NVGcolor activeOctaveColors[3] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
-	const NVGcolor inactiveColor = nvgRGB(0x5a, 0x5a, 0x5a);
+	const NVGcolor inactiveColor = nvgRGB(0x2a, 0x2a, 0x2a);
 
 	std::string panelName;
 	
@@ -976,9 +1048,9 @@ struct ArpeggiatorWidget : ModuleWidget {
 		holdButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL2] - 5, STD_ROWS8[STD_ROW1] - 11);
 		holdButton->box.size = Vec(22, 22);
 		holdButton->module = module;
-		holdButton->activeColor = SCHEME_GREEN;
+		holdButton->activeColor = BUTTON_GREEN;
 		holdButton->inactiveColor = inactiveColor;
-		addChild(holdButton);		
+		addChild(holdButton);
 
 		// cv status lights
 		offset = 10.0f;
@@ -1018,7 +1090,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 		
 		PolyMenuItem *polyMenuItem = createMenuItem<PolyMenuItem>("Polyphonic Outputs", CHECKMARK(module->polyOutputs));
 		polyMenuItem->module = module;
-		menu->addChild(polyMenuItem);		
+		menu->addChild(polyMenuItem);
 	
 	}	
 	

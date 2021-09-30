@@ -504,9 +504,9 @@ struct EuclidWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			// step controls
-			widget->getParam(Euclid::LENGTH_PARAM)->reset();
-			widget->getParam(Euclid::HITS_PARAM)->reset();
-			widget->getParam(Euclid::SHIFT_PARAM)->reset();
+			widget->getParam(Euclid::LENGTH_PARAM)->getParamQuantity()->reset();
+			widget->getParam(Euclid::HITS_PARAM)->getParamQuantity()->reset();
+			widget->getParam(Euclid::SHIFT_PARAM)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -525,9 +525,9 @@ struct EuclidWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 
-			widget->getParam(Euclid::LENGTH_PARAM)->randomize();
-			widget->getParam(Euclid::HITS_PARAM)->randomize();
-			widget->getParam(Euclid::SHIFT_PARAM)->randomize();
+			widget->getParam(Euclid::LENGTH_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(Euclid::HITS_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(Euclid::SHIFT_PARAM)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

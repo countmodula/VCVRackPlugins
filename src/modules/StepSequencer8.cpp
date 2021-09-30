@@ -718,23 +718,23 @@ struct WIDGET_NAME : ModuleWidget {
 			// both trig and cv indicate we're doing the entire channel so do the common controls here
 			if (triggerInit && cvInit) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->reset();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->reset();
 				
 				// direction
-				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->reset();
+				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->getParamQuantity()->reset();
 				
 				// scale/range/mutes
 				for (int i = 0; i < 2; i++) {
 					// use a single pot on the 1st row of the channel 1 and a switch on channel 2
 					if (channel == 0) {
 						if (i == 0)
-							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->reset();
+							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->getParamQuantity()->reset();
 					}
 					else
-						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->reset();
+						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->getParamQuantity()->reset();
 					
 					// mutes
-					widget->getParam(STRUCT_NAME::MUTE_PARAMS + (channel * 2) + i)->reset();
+					widget->getParam(STRUCT_NAME::MUTE_PARAMS + (channel * 2) + i)->getParamQuantity()->reset();
 				}
 			}
 			
@@ -742,17 +742,17 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerInit) {
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->reset();
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->reset();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->getParamQuantity()->reset();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->getParamQuantity()->reset();
 				}
 				
 				if (cvInit) {
 					// cv row 1
-					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->reset();
+					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
 					
 					// cv row 2 (ch 2 only)
 					if (channel > 0) 
-						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->reset();
+						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->getParamQuantity()->reset();
 				}
 			}
 
@@ -789,20 +789,20 @@ struct WIDGET_NAME : ModuleWidget {
 			// both trig and cv indicate we're doing the entire channel so do the common controls here
 			if (triggerRand && cvRand) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->randomize();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->randomize();
 				
 				// direction
-				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->randomize();
+				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->getParamQuantity()->randomize();
 				
 				// scale/range
 				for (int i = 0; i < 2; i++) {
 					// use a single pot on the 1st row of the channel 1 and a switch on channel 2
 					if (channel == 0) {
 						if (i == 0)
-							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->randomize();
+							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->getParamQuantity()->randomize();
 					}
 					else
-						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->randomize();
+						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->getParamQuantity()->randomize();
 				}
 			}
 			
@@ -810,17 +810,17 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerRand) {
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->randomize();
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->getParamQuantity()->randomize();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->getParamQuantity()->randomize();
 				}
 				
 				if (cvRand) {
 					// cv row 1
-					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
 					
 					// cv row 2 (ch 2 only)
 					if (channel > 0) 
-						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->randomize();
+						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->getParamQuantity()->randomize();
 				}
 			}
 

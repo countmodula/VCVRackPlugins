@@ -339,12 +339,12 @@ struct BinarySequencerWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
-			widget->getParam(BinarySequencer::DIV01_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV02_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV04_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV08_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV16_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV32_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV01_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV02_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV04_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV08_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV16_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV32_PARAM)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -364,12 +364,12 @@ struct BinarySequencerWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
-			widget->getParam(BinarySequencer::DIV01_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV02_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV04_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV08_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV16_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV32_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV01_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV02_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV04_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV08_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV16_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV32_PARAM)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

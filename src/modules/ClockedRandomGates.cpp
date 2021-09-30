@@ -320,7 +320,7 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->reset();
+				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -340,7 +340,7 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->randomize();
+				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

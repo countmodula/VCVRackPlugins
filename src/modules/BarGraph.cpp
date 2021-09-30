@@ -113,9 +113,9 @@ struct BarGraphWidget : ModuleWidget {
 		// lights
 		for (int i = 0; i < 21; i++) {
 			if ( i == 10)
-				addChild(createLightCentered<MediumLight<CountModulaRectangleLight<RedLight>>>(Vec(18, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
+				addChild(createLightCentered<MediumLightRectangle<CountModulaRectangleLight<RedLight>>>(Vec(22.5, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
 			else
-				addChild(createLightCentered<MediumLight<CountModulaRectangleLight<GreenLight>>>(Vec(18, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
+				addChild(createLightCentered<MediumLightRectangle<CountModulaRectangleLight<GreenLight>>>(Vec(22.5, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
 		}
 	}
 	

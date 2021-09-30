@@ -168,10 +168,10 @@ struct VoltageScalerWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
-			widget->getParam(VoltageScaler::MIN_PARAM)->paramQuantity->setValue(inMin);
-			widget->getParam(VoltageScaler::MAX_PARAM)->paramQuantity->setValue(inMax);
-			widget->getParam(VoltageScaler::UPPER_PARAM)->paramQuantity->setValue(limitA);
-			widget->getParam(VoltageScaler::LOWER_PARAM)->paramQuantity->setValue(limitB);
+			widget->getParam(VoltageScaler::MIN_PARAM)->getParamQuantity()->setValue(inMin);
+			widget->getParam(VoltageScaler::MAX_PARAM)->getParamQuantity()->setValue(inMax);
+			widget->getParam(VoltageScaler::UPPER_PARAM)->getParamQuantity()->setValue(limitA);
+			widget->getParam(VoltageScaler::LOWER_PARAM)->getParamQuantity()->setValue(limitB);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

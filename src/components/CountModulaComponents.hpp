@@ -41,36 +41,25 @@ struct CountModulaLightWB : GrayModuleLightWidget {
 	}
 };
 
+/** Based on the size of 3mm LEDs */
 template <typename TBase>
-struct CountModulaRectangleLight : TBase {
-	void drawLight(const widget::Widget::DrawArgs& args) override {
-		nvgBeginPath(args.vg);
-		nvgRect(args.vg, 0, 0, this->box.size.x * 2, this->box.size.y);
+struct MediumLightSquare : TBase {
+	 MediumLightSquare() {
+		this->box.size = rack::window::mm2px(math::Vec(3.176, 3.176));
+	}
+};
 
-		// Background
-		if (this->bgColor.a > 0.0) {
-			nvgFillColor(args.vg, this->bgColor);
-			nvgFill(args.vg);
-		}
-
-		// Foreground
-		if (this->color.a > 0.0) {
-			nvgFillColor(args.vg, this->color);
-			nvgFill(args.vg);
-		}
-
-		// Border
-		if (this->borderColor.a > 0.0) {
-			nvgStrokeWidth(args.vg, 0.5);
-			nvgStrokeColor(args.vg, this->borderColor);
-			nvgStroke(args.vg);
-		}
+/** Based on the size of 3mm LEDs */
+template <typename TBase>
+struct MediumLightRectangle : TBase {
+	 MediumLightRectangle() {
+		this->box.size = rack::window::mm2px(math::Vec(6.352, 3.176));
 	}
 };
 
 template <typename TBase>
-struct CountModulaSquareLight : TBase {
-	void drawLight(const widget::Widget::DrawArgs& args) override {
+struct CountModulaRectangleLight : TBase {
+	void drawBackground(const widget::Widget::DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		nvgRect(args.vg, 0, 0, this->box.size.x, this->box.size.y);
 
@@ -79,19 +68,58 @@ struct CountModulaSquareLight : TBase {
 			nvgFillColor(args.vg, this->bgColor);
 			nvgFill(args.vg);
 		}
+		
+		// Border
+		if (this->borderColor.a > 0.0) {
+			nvgStrokeWidth(args.vg, 0.5);
+			nvgStrokeColor(args.vg, this->borderColor);
+			nvgStroke(args.vg);
+		}		
+	}
+	
+	void drawLight(const widget::Widget::DrawArgs& args) override {
 
 		// Foreground
 		if (this->color.a > 0.0) {
+			nvgBeginPath(args.vg);
+			nvgRect(args.vg, 0, 0, this->box.size.x, this->box.size.y);
+			
 			nvgFillColor(args.vg, this->color);
 			nvgFill(args.vg);
 		}
+	}
+};
 
+template <typename TBase>
+struct CountModulaSquareLight : TBase {
+
+	void drawBackground(const widget::Widget::DrawArgs& args) override {
+		nvgBeginPath(args.vg);
+		nvgRect(args.vg, 0, 0, this->box.size.x, this->box.size.y);
+
+		// Background
+		if (this->bgColor.a > 0.0) {
+			nvgFillColor(args.vg, this->bgColor);
+			nvgFill(args.vg);
+		}
+		
 		// Border
 		if (this->borderColor.a > 0.0) {
 			nvgStrokeWidth(args.vg, 0.5);
 			nvgStrokeColor(args.vg, this->borderColor);
 			nvgStroke(args.vg);
 		}
+	}
+
+	void drawLight(const widget::Widget::DrawArgs& args) override {
+		// Foreground
+		if (this->color.a > 0.0) {
+			nvgBeginPath(args.vg);
+			nvgRect(args.vg, 0, 0, this->box.size.x, this->box.size.y);
+			nvgFillColor(args.vg, this->color);
+			nvgFill(args.vg);
+		}
+
 	}
 };
 
@@ -121,15 +149,15 @@ struct RotarySwitch : TBase {
 		
 		SvgKnob::onChange(e);
 		
-		this->paramQuantity->setValue(roundf(this->paramQuantity->getValue()));
+		this->getParamQuantity()->setValue(roundf(this->getParamQuantity()->getValue()));
 	}
 	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgKnob::randomize();
+	// // override the base randomizer as it sets switches to invalid values.
+	// void randomize() override {
+		// SvgKnob::randomize();
 		
-		this->paramQuantity->setValue(roundf(this->paramQuantity->getValue()));
-	}
+		// this->paramQuantity->setValue(roundf(this->paramQuantity->getValue()));
+	// }
 };
 
 // standard rotary potentiometer base
@@ -161,11 +189,11 @@ struct CountModulaToggle2P : SvgSwitch {
 	void onChange(const event::Change &e) override {
 		
 		SvgSwitch::onChange(e);
-		
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
+
+		if (getParamQuantity()->getValue() > 0.5f)
+			getParamQuantity()->setValue(1.0f);
 		else
-			paramQuantity->setValue(0.0f);
+			getParamQuantity()->setValue(0.0f);
 	}
 	
 #ifdef NEW_TOGGLE_CHANGE_METHOD	
@@ -211,15 +239,15 @@ struct CountModulaToggle2P : SvgSwitch {
 	}
 #endif
 	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
+	// // override the base randomizer as it sets switches to invalid values.
+	// void randomize() override {
+		// SvgSwitch::randomize();
 
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}	
+		// if (paramQuantity->getValue() > 0.5f)
+			// paramQuantity->setValue(1.0f);
+		// else
+			// paramQuantity->setValue(0.0f);
+	// }	
 };
 
 //-------------------------------------------------------------------
@@ -244,10 +272,10 @@ struct CountModulaToggle2P90 : SvgSwitch {
 		
 		SvgSwitch::onChange(e);
 		
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
+		if (getParamQuantity()->getValue() > 0.5f)
+			getParamQuantity()->setValue(1.0f);
 		else
-			paramQuantity->setValue(0.0f);
+			getParamQuantity()->setValue(0.0f);
 	}
 
 #ifdef NEW_TOGGLE_CHANGE_METHOD	
@@ -293,15 +321,15 @@ struct CountModulaToggle2P90 : SvgSwitch {
 	}	
 #endif
 	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
+	// // override the base randomizer as it sets switches to invalid values.
+	// void randomize() override {
+		// SvgSwitch::randomize();
 
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}	
+		// if (paramQuantity->getValue() > 0.5f)
+			// paramQuantity->setValue(1.0f);
+		// else
+			// paramQuantity->setValue(0.0f);
+	// }	
 };
 
 //-------------------------------------------------------------------
@@ -326,13 +354,14 @@ struct CountModulaToggle3P : SvgSwitch {
 	void onChange(const event::Change &e) override {
 		
 		SvgSwitch::onChange(e);
+		float v = getParamQuantity()->getValue();
 		
-		if (paramQuantity->getValue() > 1.33f)
-			paramQuantity->setValue(2.0f);
-		else if (paramQuantity->getValue() > 0.67f)
-			paramQuantity->setValue(1.0f);
+		if (v > 1.33f)
+			getParamQuantity()->setValue(2.0f);
+		else if (v > 0.67f)
+			getParamQuantity()->setValue(1.0f);
 		else
-			paramQuantity->setValue(0.0f);
+			getParamQuantity()->setValue(0.0f);
 	}
 
 #ifdef NEW_TOGGLE_CHANGE_METHOD	
@@ -378,17 +407,17 @@ struct CountModulaToggle3P : SvgSwitch {
 	}
 #endif
 	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
+	// // override the base randomizer as it sets switches to invalid values.
+	// void randomize() override {
+		// SvgSwitch::randomize();
 		
-		if (paramQuantity->getValue() > 1.33f)
-			paramQuantity->setValue(2.0f);
-		else if (paramQuantity->getValue() > 0.67f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}
+		// if (paramQuantity->getValue() > 1.33f)
+			// paramQuantity->setValue(2.0f);
+		// else if (paramQuantity->getValue() > 0.67f)
+			// paramQuantity->setValue(1.0f);
+		// else
+			// paramQuantity->setValue(0.0f);
+	// }
 };
 
 //-------------------------------------------------------------------
@@ -414,12 +443,14 @@ struct CountModulaToggle3P90 : SvgSwitch {
 		
 		SvgSwitch::onChange(e);
 		
-		if (paramQuantity->getValue() > 1.33f)
-			paramQuantity->setValue(2.0f);
-		else if (paramQuantity->getValue() > 0.67f)
-			paramQuantity->setValue(1.0f);
+		float v = getParamQuantity()->getValue();
+		
+		if (v > 1.33f)
+			getParamQuantity()->setValue(2.0f);
+		else if (v > 0.67f)
+			getParamQuantity()->setValue(1.0f);
 		else
-			paramQuantity->setValue(0.0f);
+			getParamQuantity()->setValue(0.0f);
 	}
 
 #ifdef NEW_TOGGLE_CHANGE_METHOD	
@@ -465,17 +496,17 @@ struct CountModulaToggle3P90 : SvgSwitch {
 	}	
 #endif
 
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
+	// // override the base randomizer as it sets switches to invalid values.
+	// void randomize() override {
+		// SvgSwitch::randomize();
 		
-		if (paramQuantity->getValue() > 1.33f)
-			paramQuantity->setValue(2.0f);
-		else if (paramQuantity->getValue() > 0.67f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}
+		// if (paramQuantity->getValue() > 1.33f)
+			// paramQuantity->setValue(2.0f);
+		// else if (paramQuantity->getValue() > 0.67f)
+			// paramQuantity->setValue(1.0f);
+		// else
+			// paramQuantity->setValue(0.0f);
+	// }
 };
 
 struct CountModulaToggle3P270 : SvgSwitch {
@@ -498,12 +529,13 @@ struct CountModulaToggle3P270 : SvgSwitch {
 		
 		SvgSwitch::onChange(e);
 		
-		if (paramQuantity->getValue() > 1.33f)
-			paramQuantity->setValue(2.0f);
-		else if (paramQuantity->getValue() > 0.67f)
-			paramQuantity->setValue(1.0f);
+		float v = getParamQuantity()->getValue();
+		if (v > 1.33f)
+			getParamQuantity()->setValue(2.0f);
+		else if (v > 0.67f)
+			getParamQuantity()->setValue(1.0f);
 		else
-			paramQuantity->setValue(0.0f);
+			getParamQuantity()->setValue(0.0f);
 	}
 
 #ifdef NEW_TOGGLE_CHANGE_METHOD	
@@ -549,15 +581,15 @@ struct CountModulaToggle3P270 : SvgSwitch {
 	}	
 #endif
 
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
+	// // override the base randomizer as it sets switches to invalid values.
+	// void randomize() override {
+		// SvgSwitch::randomize();
 		
-		if (paramQuantity->getValue() > 1.33f)
-			paramQuantity->setValue(2.0f);
-		else if (paramQuantity->getValue() > 0.67f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}
+		// if (paramQuantity->getValue() > 1.33f)
+			// paramQuantity->setValue(2.0f);
+		// else if (paramQuantity->getValue() > 0.67f)
+			// paramQuantity->setValue(1.0f);
+		// else
+			// paramQuantity->setValue(0.0f);
+	// }
 };

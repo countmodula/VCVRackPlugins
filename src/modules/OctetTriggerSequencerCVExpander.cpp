@@ -378,10 +378,10 @@ struct WIDGET_NAME : ModuleWidget {
 
 			for (int c = 0; c < 8; c++) {
 				if ((channel& 0x01) == 0x01)
-					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->getParamQuantity()->reset();
 				
 				if ((channel& 0x02) == 0x02)
-					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -444,10 +444,10 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < 8; c++) {
 
 				if ((channel& 0x01) == 0x01)
-					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->getParamQuantity()->randomize();
 					
 				if ((channel& 0x02) == 0x02)
-					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings
@@ -522,11 +522,11 @@ struct WIDGET_NAME : ModuleWidget {
 				for (int i = 0; i < 8; i++) {
 					ParamWidget *pA = getParam(STRUCT_NAME::CVA_PARAMS + i);
 					((CountModulaKnob *)(pA))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(pA))->dirtyValue = -1;
+					//((CountModulaKnob *)(pA))->dirtyValue = -1;
 					
 					ParamWidget *pB = getParam(STRUCT_NAME::CVB_PARAMS + i);
 					((CountModulaKnob *)(pB))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(pB))->dirtyValue = -1;	
+					//((CountModulaKnob *)(pB))->dirtyValue = -1;	
 				}
 			}
 		}

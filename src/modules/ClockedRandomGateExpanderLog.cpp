@@ -293,7 +293,7 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->reset();
+				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -313,7 +313,7 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->randomize();
+				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

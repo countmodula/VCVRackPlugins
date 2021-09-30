@@ -1,7 +1,7 @@
 {
   "slug": "CountModula",
   "name": "Count Modula",
-  "version": "1.16.0",
+  "version": "2.0.0",
   "license": "GPL-3.0-only",
   "brand": "Count Modula",
   "author": "Adam Verspaget",
@@ -226,17 +226,6 @@
 		 ]
 		},
 		{
-		  "slug": "PolyrhythmicGenerator",
-		  "name": "Polyrhythmic Generator  (Deprecated - Do Not Use)",
-		  "description": "This module is no longer supported - use Polyrhythmic Generator MkII instead",
-		  "deprecated": true,
-		  "tags": [
-			"Clock modulator",
-			"Sequencer",
-			"Polyphonic"
-		  ]
-		},
-		{
 		  "slug": "Rectifier",
 		  "name": "Rectifier",
 		  "description": "A full/half wave rectifier with variable rectification axis",
@@ -316,15 +305,6 @@
 		  "description": "A gate delay that offers up to 40 seconds of delay with tapped outputs at equal intervals along the delay line",
 		  "tags": [
 			"Delay"
-		  ]
-		},
-		{
-		  "slug": "VCFrequencyDivider",
-		  "name": "Voltage Controlled Frequency Divider (Deprecated - Do Not Use)",
-		  "description": "This module is no longer supported - use VC Frequency Divider instead",
-		  "deprecated": true,
-		  "tags": [
-			"Clock modulator"
 		  ]
 		},
 		{
@@ -955,14 +935,6 @@
 		  "description": "Illuminated Blanking Panel",
 		  "tags": [
 			"Blank"
-		  ]
-		},
-		{
-		  "slug": "Palette",
-		  "name": "Cable Palette",
-		  "description": "Cable colour picker",
-		  "tags": [
-			"Utility"
 		  ]
 		},
 		{

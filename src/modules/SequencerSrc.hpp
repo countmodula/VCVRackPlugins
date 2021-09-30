@@ -564,11 +564,11 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerInit)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->reset();
 				
 				// cv knobs
 				if (cvInit)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -628,10 +628,10 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerRand)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->randomize();
 				
 				if (cvRand)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings

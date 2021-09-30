@@ -434,7 +434,6 @@ struct Palette : Module {
 		
 		// houskeeping
 		json_decref(rootJ);
-		
 	}
 	
 	void savePaletteSettings() {
@@ -537,7 +536,7 @@ struct KeyContainer : Widget {
 	}
 
 	void onHoverKey(const event::HoverKey& e) override {
-		if (module && !module->bypass && module->running && module->globalHotKeys) {
+		if (module && !module->isBypassed() && module->running && module->globalHotKeys) {
 			if (e.action == GLFW_PRESS) {
 				if (e.key == module->lockHotKey && ((e.mods & RACK_MOD_MASK) == module->lockModifier)) {
 					// colour lock keypress
@@ -761,9 +760,6 @@ struct PaletteWidget : ModuleWidget {
 			// Set active state if this MenuItem
 			Menu *parentMenu = dynamic_cast<Menu*>(parent);
 			if (parentMenu && parentMenu->activeEntry == this)
-				state = BND_ACTIVE;
-
-			if (active)
 				state = BND_ACTIVE;
 
 			// Main text and background

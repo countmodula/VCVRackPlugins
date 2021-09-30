@@ -226,7 +226,7 @@ struct LightStripWidget : ModuleWidget {
 	template <typename TBase>
 	struct CountModulaLightStrip : TBase {
 		CountModulaLightStrip() {
-			this->box.size = app::mm2px(math::Vec(3.176, 115.0));
+			this->box.size = rack::window::mm2px(math::Vec(3.176, 115.0));
 		}
 	};
 
@@ -459,11 +459,11 @@ struct LightStripWidget : ModuleWidget {
 				ModuleLightWidget* lightStripWidget = ((LightStrip*)module)->lightStripWidget;
 				
 				if (((LightStrip*)module)->narrowMode) {
-					lightStripWidget->box.size = app::mm2px(math::Vec(1.5, 115.0));
+					lightStripWidget->box.size = rack::window::mm2px(math::Vec(1.5, 115.0));
 					lightStripWidget->box.pos.x = 5.25;
 				}
 				else {
-					lightStripWidget->box.size = app::mm2px(math::Vec(3.176, 115.0));
+					lightStripWidget->box.size = rack::window::mm2px(math::Vec(3.176, 115.0));
 					lightStripWidget->box.pos.x = ((LightStrip*)module)->widePos; 
 				}
 				

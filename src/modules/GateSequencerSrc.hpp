@@ -505,7 +505,7 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			// gates
 			for (int c = 0; c < GATESEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->reset();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -531,7 +531,7 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			///gates
 			for (int c = 0; c < GATESEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->randomize();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings
@@ -557,7 +557,7 @@ struct WIDGET_NAME : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 			
 			for (int c = 0; c < GATESEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->paramQuantity->setValue(pattern[c] ? 1.0f : 0.0f);
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->getParamQuantity()->setValue(pattern[c] ? 1.0f : 0.0f);
 			}
 
 			// history - new settings

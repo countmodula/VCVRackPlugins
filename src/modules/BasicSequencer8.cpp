@@ -484,11 +484,11 @@ struct BasicSequencer8Widget : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerInit)
-					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->reset();
+					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->getParamQuantity()->reset();
 				
 				// cv knobs
 				if (cvInit)
-					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->reset();
+					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -519,10 +519,10 @@ struct BasicSequencer8Widget : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerRand)
-					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->randomize();
+					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->getParamQuantity()->randomize();
 				
 				if (cvRand)
-					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->randomize();
+					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings
