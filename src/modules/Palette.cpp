@@ -339,6 +339,9 @@ struct Palette : Module {
 
 		configParam(LOCK_PARAM, 0.0f, 1.0f, 0.0f, "Lock current colour");
 
+		getParamQuantity(LOCK_PARAM)->randomizeEnabled = false;
+
+
 		// set the theme from the current default value
 		if (running) {
 			#include "../themes/setDefaultTheme.hpp"
@@ -1154,6 +1157,8 @@ struct PaletteWidget : ModuleWidget {
 			
 			NVGcolor bezelColor = module ? module->bezelColor : SCHEME_BLACK;
 			
+			nvgGlobalTint(args.vg, color::WHITE);
+			
 			if (!enabled)
 				bezelColor.a = 0.25;
 			
@@ -1270,7 +1275,7 @@ struct PaletteWidget : ModuleWidget {
 			if (!settings::cableColors.empty()) {
 				
 				int x = settings::cableColors.empty() ? 0: clamp(settings::cableColors.size(), 0, MAX_COLOURS);
-				
+		
 				bool showAll = false;
 				if (FORCE_MAX_COLOURS || x > NUM_COLOURS) {
 					showAll = true;
@@ -1282,7 +1287,7 @@ struct PaletteWidget : ModuleWidget {
 				bool enabled;
 				
 				int n = (module ? module->numColoursToUse : FORCE_MAX_COLOURS ? MAX_COLOURS : NUM_COLOURS);
-				
+
 				for (int i = 0; i < n; i++) {
 					
 					if (i < x && moduleEnabled) {
@@ -1326,7 +1331,8 @@ struct PaletteWidget : ModuleWidget {
 			}
 			
 			// add the lock button
-			addParam(createParamCentered<CountModulaLEDPushButtonNoRandom<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, Palette::LOCK_PARAM, Palette::LOCK_PARAM_LIGHT));
+			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, Palette::LOCK_PARAM, Palette::LOCK_PARAM_LIGHT));
+			
 		}
 	}	
 	

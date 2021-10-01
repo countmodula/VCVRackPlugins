@@ -129,22 +129,6 @@ struct CountModulaLEDPushButtonMomentary : CountModulaLitPBMomentary {
 	}
 };
 
-// standard push button with mo randomisation function
-template <typename TLightBase = WhiteLight>
-struct CountModulaLEDPushButtonNoRandom :  CountModulaLitPB {
-	CountModulaLEDPushButtonNoRandom() {
-		light = new LEDBezelLight<TLightBase>;
-
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-		
-		getParamQuantity()->randomizeEnabled = false;
-	}
-	
-	// // no randomise
-	// void randomize () override {
-	// }
-};
-
 // mini lit button
 template <typename TLightBase = WhiteLight>
 struct CountModulaLEDPushButtonMini : CountModulaLitPB {

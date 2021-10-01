@@ -1073,6 +1073,14 @@
 			"Sample and hold",
 			"Polyphonic"
 		  ]
+		},
+		{
+		  "slug": "Palette",
+		  "name": "Cable Palette",
+		  "description": "Cable colour picker",
+		  "tags": [
+			"Utility"
+		  ]
 		}
 	]
 }
