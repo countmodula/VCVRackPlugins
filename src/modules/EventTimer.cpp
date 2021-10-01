@@ -134,13 +134,13 @@ struct EventTimer : Module {
 
 		if (run) 
 			running = json_boolean_value(run);
-		
+
 		update = false;
 		sprintf(buffer, "%03d", count);
-		divDisplay->text = buffer;		
-		
+
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
 	}
 	
 	void process(const ProcessArgs &args) override {
@@ -326,11 +326,13 @@ struct EventTimerWidget : ModuleWidget {
 		// LED display
 		CountModulaLEDDisplayLarge3 *display = new CountModulaLEDDisplayLarge3();
 		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
-		display->text =  "   ";
+		display->text =  "000";
 		addChild(display);
 		
-		if (module)
+		if (module) {
+			display->text = module->buffer;
 			module->divDisplay = display;
+		}
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

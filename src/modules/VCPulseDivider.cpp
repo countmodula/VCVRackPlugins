@@ -173,7 +173,7 @@ struct VCPulseDividerWidget : ModuleWidget {
 		// LED display
 		CountModulaLEDDisplayLarge2 *display = new CountModulaLEDDisplayLarge2();
 		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]));
-		display->text =  "  ";
+		display->text =  "01";
 		addChild(display);
 		
 		if (module)

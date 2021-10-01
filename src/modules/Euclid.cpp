@@ -472,14 +472,17 @@ struct EuclidWidget : ModuleWidget {
 		// parameter displays
 		CountModulaLEDDisplayMini2 *lengthDisp = new CountModulaLEDDisplayMini2();
 		lengthDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]));
+		lengthDisp->text = "08";
 		addChild(lengthDisp);
 
 		CountModulaLEDDisplayMini2 *hitsDisp = new CountModulaLEDDisplayMini2();
 		hitsDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL8], STD_ROWS6[STD_ROW1]));
+		hitsDisp->text = "04";
 		addChild(hitsDisp);
 
 		CountModulaLEDDisplayMini2 *shiftDisp = new CountModulaLEDDisplayMini2();
 		shiftDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS6[STD_ROW1]));
+		shiftDisp->text = "00";
 		addChild(shiftDisp);
 		
 		if (module) {
@@ -510,7 +513,7 @@ struct EuclidWidget : ModuleWidget {
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
-			APP->history->push(h);	
+			APP->history->push(h);
 		}
 	};	
 	
