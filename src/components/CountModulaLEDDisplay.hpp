@@ -27,6 +27,8 @@ struct CountModulaLEDDisplay : LightWidget {
 		if (l > numChars)
 			l = numChars;
 		
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		
 		text.copy(buffer, l);
 		buffer[numChars] = '\0';
 		
@@ -60,7 +62,6 @@ struct CountModulaLEDDisplay : LightWidget {
 struct CountModulaLEDDisplayLarge2 : CountModulaLEDDisplay {
 	CountModulaLEDDisplayLarge2() {
 		numChars = 2;
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
 		fontSize = 28;
 		box.size = Vec(50, 40);
 		textPos = Vec(3, 34);
@@ -70,7 +71,6 @@ struct CountModulaLEDDisplayLarge2 : CountModulaLEDDisplay {
 struct CountModulaLEDDisplayLarge3 : CountModulaLEDDisplay {
 	CountModulaLEDDisplayLarge3() {
 		numChars = 3;
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
 		fontSize = 28;
 		box.size = Vec(75, 40);
 		textPos = Vec(3, 34);
@@ -79,8 +79,7 @@ struct CountModulaLEDDisplayLarge3 : CountModulaLEDDisplay {
 
 struct CountModulaLEDDisplayMini2 : CountModulaLEDDisplay {
 	CountModulaLEDDisplayMini2() {
-		numChars = 2;	
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		numChars = 2;
 		fontSize = 14;
 		box.size = Vec(25, 20);
 		textPos = Vec(1, 17);

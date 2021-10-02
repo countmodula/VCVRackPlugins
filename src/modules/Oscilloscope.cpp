@@ -327,7 +327,6 @@ struct OscilloscopeDisplay : LightWidget {
 	Stats stats1, stats2, stats3, stats4;
 
 	OscilloscopeDisplay() {
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Sudo.ttf"));
 	}
 
 	void drawWaveform(const DrawArgs &args, float *valuesX) {
@@ -456,6 +455,8 @@ struct OscilloscopeDisplay : LightWidget {
 	void draw (const DrawArgs &args) override {
 		if(module == NULL) 
 			return;
+
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Sudo.ttf"));
 
 		// Disable tinting when rack brightness is decreased
 		nvgGlobalTint(args.vg, color::WHITE);
