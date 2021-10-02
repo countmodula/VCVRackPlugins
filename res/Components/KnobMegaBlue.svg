@@ -14,7 +14,7 @@
    viewBox="0 0 25 25"
    version="1.1"
    id="svg826"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="KnobMegaBlue.svg">
   <defs
      id="defs820" />
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.3881537"
-     inkscape:cx="24.024365"
-     inkscape:cy="29.188043"
+     inkscape:zoom="3.8100001"
+     inkscape:cx="-30.27612"
+     inkscape:cy="63.983687"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -58,7 +58,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -67,28 +67,24 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-272)">
-    <g
-       id="g822"
-       transform="matrix(2.0833387,0,0,2.0833387,-3.22e-5,-321.75156)">
-      <ellipse
-         ry="5.9259238"
-         rx="5.9259105"
-         cy="291"
-         cx="6"
-         id="path5084"
-         style="opacity:1;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:0.14814794;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke" />
-      <ellipse
-         ry="4.4444427"
-         rx="4.4444332"
-         cy="291"
-         cx="6"
-         id="path5086"
-         style="opacity:1;fill:#333333;fill-opacity:1;stroke:#000000;stroke-width:0.07956095;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path820"
-         d="m 6.000017,286.40733 a 0.14814776,0.14814808 0 0 0 -0.1473734,0.13627 l -0.4049885,4.39898 a 0.55555413,0.55555535 0 0 0 -7.438e-4,0.007 0.55555413,0.55555535 0 0 0 -0.0023,0.0502 0.55555413,0.55555535 0 0 0 0.5554241,0.55542 0.55555413,0.55555535 0 0 0 0.5554243,-0.55542 0.55555413,0.55555535 0 0 0 -0.00267,-0.0509 h 3.931e-4 L 6.1478011,286.5449 a 0.14814776,0.14814808 0 0 0 -3.932e-4,-0.003 0.14814776,0.14814808 0 0 0 -0.1473731,-0.13474 z"
-         style="opacity:1;fill:#0066ff;fill-opacity:1;stroke:#0066ff;stroke-width:0.40000001;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke" />
-    </g>
+    <ellipse
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.30864233;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path5084"
+       cx="12.5"
+       cy="284.5"
+       rx="12.345678"
+       ry="12.345706" />
+    <ellipse
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path5086"
+       cx="12.5"
+       cy="284.5"
+       rx="9.2592602"
+       ry="9.2592793" />
+    <path
+       style="opacity:1;fill:#0066ff;fill-opacity:1;stroke:#0066ff;stroke-width:0.83333552;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       d="m 12.500035,274.93191 a 0.30864196,0.30864263 0 0 0 -0.307028,0.2839 l -0.843729,9.16457 a 1.1574074,1.15741 0 0 0 -0.0015,0.0146 1.1574074,1.15741 0 0 0 -0.0048,0.10458 1.1574074,1.15741 0 0 0 1.157137,1.15713 1.1574074,1.15741 0 0 0 1.157137,-1.15713 1.1574074,1.15741 0 0 0 -0.0056,-0.10604 h 8.19e-4 l -0.844547,-9.17498 a 0.30864196,0.30864263 0 0 0 -8.19e-4,-0.006 0.30864196,0.30864263 0 0 0 -0.307028,-0.28071 z"
+       id="path820"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

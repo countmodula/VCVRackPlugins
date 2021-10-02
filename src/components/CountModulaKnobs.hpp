@@ -10,7 +10,9 @@ using namespace rack;
 // knob definitions
 //--------------------------------------------------------------------------------------------------
 // base knob
-struct CountModulaKnob : SvgKnob {
+struct CountModulaKnob : app::SvgKnob {
+	widget::SvgWidget* bg;
+	widget::SvgWidget* fg;
 	std::string svgFile = "";
 	float orientation = 0.0;
 	
@@ -19,6 +21,14 @@ struct CountModulaKnob : SvgKnob {
 		orientation = 0.0;
 		minAngle = -0.83*M_PI;
 		maxAngle = 0.83*M_PI;
+
+		bg = new widget::SvgWidget;
+		bg->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob-bg.svg")));
+		fb->addChildBelow(bg, tw);
+		
+		fg = new widget::SvgWidget;
+		fg->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob-fg.svg")));		
+		fb->addChildBelow(fg, tw);
 	}
 };
 
@@ -26,8 +36,8 @@ struct CountModulaKnob : SvgKnob {
 template <typename TBase = CountModulaKnob>
 struct TRedKnob : TBase {
 	TRedKnob() {
-		this->svgFile = "Red.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Red";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TRedKnob<> RedKnob;
@@ -36,8 +46,8 @@ typedef TRedKnob<> RedKnob;
 template <typename TBase = CountModulaKnob>
 struct TOrangeKnob : TBase {
 	TOrangeKnob() {
-		this->svgFile = "Orange.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Orange";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TOrangeKnob<> OrangeKnob;
@@ -46,8 +56,8 @@ typedef TOrangeKnob<> OrangeKnob;
 template <typename TBase = CountModulaKnob>
 struct TYellowKnob : TBase {
 	TYellowKnob() {
-		this->svgFile = "Yellow.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Yellow";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TYellowKnob<> YellowKnob;
@@ -56,8 +66,8 @@ typedef TYellowKnob<> YellowKnob;
 template <typename TBase = CountModulaKnob>
 struct TGreenKnob : TBase {
 	TGreenKnob() {
-		this->svgFile = "Green.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Green";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TGreenKnob<> GreenKnob;
@@ -66,8 +76,8 @@ typedef TGreenKnob<> GreenKnob;
 template <typename TBase = CountModulaKnob>
 struct TBlueKnob : TBase {
 	TBlueKnob() {
-		this->svgFile = "Blue.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Blue";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TBlueKnob<> BlueKnob;
@@ -76,8 +86,8 @@ typedef TBlueKnob<> BlueKnob;
 template <typename TBase = CountModulaKnob>
 struct TVioletKnob : TBase {
 	TVioletKnob() {
-		this->svgFile = "Violet.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Violet";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TVioletKnob<> VioletKnob;
@@ -86,8 +96,9 @@ typedef TVioletKnob<> VioletKnob;
 template <typename TBase = CountModulaKnob>
 struct TGreyKnob : TBase {
 	TGreyKnob() {
-		this->svgFile = "Grey.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "Grey";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
+
 	}
 };
 typedef TGreyKnob<> GreyKnob;
@@ -97,8 +108,8 @@ template <typename TBase = CountModulaKnob>
 struct TWhiteKnob : TBase {
 	
 	TWhiteKnob() {
-		this->svgFile = "White.svg";
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile)));
+		this->svgFile = "White";
+		this->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/Knob" + this->svgFile + ".svg")));
 	}
 };
 typedef TWhiteKnob<> WhiteKnob;
@@ -110,7 +121,9 @@ typedef TWhiteKnob<> WhiteKnob;
 template <typename TBase>
 struct SmallKnob : TBase {
 	SmallKnob() {
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobSmall" + this->svgFile)));
+		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobSmall" + this->svgFile + ".svg")));
+		this->bg->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/KnobSmall-bg.svg")));
+		this->fg->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/KnobSmall-fg.svg")));
 	}
 };
 
@@ -118,7 +131,9 @@ struct SmallKnob : TBase {
 template <typename TBase>
 struct MegaKnob : TBase {
 	MegaKnob() {
-		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMega" + this->svgFile)));
+		this->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/KnobMega" + this->svgFile + ".svg")));
+		this->bg->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/KnobMega-bg.svg")));
+		this->fg->setSvg(Svg::load(asset::plugin(pluginInstance, "res/Components/KnobMega-fg.svg")));
 	}
 };
 

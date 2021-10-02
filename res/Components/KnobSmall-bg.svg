@@ -7,17 +7,40 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="9mm"
-   height="9.00002mm"
-   viewBox="0 0 9 9.00002"
+   height="9mm"
+   viewBox="0 0 9 9"
    version="1.1"
    id="svg826"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="KnobSmallOrange.svg">
+   sodipodi:docname="KnobSmall-bg.svg">
   <defs
-     id="defs820" />
+     id="defs820">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient833">
+      <stop
+         style="stop-color:#1a1a1a;stop-opacity:1;"
+         offset="0"
+         id="stop829" />
+      <stop
+         style="stop-color:#1a1a1a;stop-opacity:0;"
+         offset="1"
+         id="stop831" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient833"
+       id="linearGradient835"
+       x1="4.5999999"
+       y1="289.80002"
+       x2="4.5999999"
+       y2="282.80002"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,9 +48,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="16"
-     inkscape:cx="8.513663"
-     inkscape:cy="16.643657"
+     inkscape:zoom="11.313708"
+     inkscape:cx="-6.0226683"
+     inkscape:cy="25.755915"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -54,7 +77,7 @@
        spacingy="0.19999999"
        snapvisiblegridlinesonly="false"
        originx="-1.5556813e-05"
-       originy="-3.4740332e-06" />
+       originy="-3.4740331e-06" />
   </sodipodi:namedview>
   <metadata
      id="metadata823">
@@ -72,25 +95,20 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-1.5556812e-5,-287.99998)">
+     transform="translate(-1.5556812e-5,-288)">
     <ellipse
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.11111125;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       ry="4.50001"
+       rx="4.5"
+       cy="292.5"
+       cx="4.5000157"
+       id="ellipse818"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.11250015;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke" />
+    <ellipse
+       style="opacity:1;fill:url(#linearGradient835);fill-opacity:1;stroke:none;stroke-width:0.11250015;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="path5084"
        cx="4.5000157"
        cy="292.5"
-       rx="4.4444442"
-       ry="4.4444542" />
-    <ellipse
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.08;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
-       id="path5086"
-       cx="4.5000157"
-       cy="292.5"
-       rx="3.3333335"
-       ry="3.3333406" />
-    <path
-       style="opacity:1;fill:#ff7f2a;fill-opacity:1;stroke:#ff7f2a;stroke-width:0.30000079;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
-       d="m 4.5000283,289.05548 a 0.11111111,0.11111135 0 0 0 -0.1105304,0.1022 l -0.3037421,3.29924 a 0.41666668,0.41666759 0 0 0 -5.579e-4,0.005 0.41666668,0.41666759 0 0 0 -0.00172,0.0376 0.41666668,0.41666759 0 0 0 0.4165692,0.41657 0.41666668,0.41666759 0 0 0 0.4165693,-0.41657 0.41666668,0.41666759 0 0 0 -0.002,-0.0382 h 2.948e-4 l -0.3040371,-3.303 a 0.11111111,0.11111135 0 0 0 -2.949e-4,-0.002 0.11111111,0.11111135 0 0 0 -0.1105301,-0.10105 z"
-       id="path820"
-       inkscape:connector-curvature="0" />
+       rx="4.5"
+       ry="4.50001" />
   </g>
 </svg>

@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="9mm"
@@ -27,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4"
-     inkscape:cx="28.766595"
+     inkscape:cx="-62.733405"
      inkscape:cy="26.32986"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -65,7 +64,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -74,38 +73,24 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-1.5556812e-5,-288)">
-    <g
-       id="g828"
-       transform="matrix(0.75000194,0,0,0.75000194,3.8891728e-6,74.249422)">
-      <g
-         id="g822">
-        <ellipse
-           style="opacity:1;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:0.14814794;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
-           id="path5084"
-           cx="6"
-           cy="291"
-           rx="5.9259105"
-           ry="5.9259238" />
-        <ellipse
-           style="opacity:1;fill:#333333;fill-opacity:1;stroke:#000000;stroke-width:0.07956095;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
-           id="path5086"
-           cx="6"
-           cy="291"
-           rx="4.4444332"
-           ry="4.4444427" />
-        <path
-           style="opacity:1;fill:#0066ff;fill-opacity:1;stroke:#0066ff;stroke-width:0.40000001;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
-           d="m 6.000017,286.40733 a 0.14814776,0.14814808 0 0 0 -0.1473734,0.13627 l -0.4049885,4.39898 a 0.55555413,0.55555535 0 0 0 -7.438e-4,0.007 0.55555413,0.55555535 0 0 0 -0.0023,0.0502 0.55555413,0.55555535 0 0 0 0.5554241,0.55542 0.55555413,0.55555535 0 0 0 0.5554243,-0.55542 0.55555413,0.55555535 0 0 0 -0.00267,-0.0509 h 3.931e-4 L 6.1478011,286.5449 a 0.14814776,0.14814808 0 0 0 -3.932e-4,-0.003 0.14814776,0.14814808 0 0 0 -0.1473731,-0.13474 z"
-           id="path820"
-           inkscape:connector-curvature="0" />
-      </g>
-    </g>
-    <use
-       x="0"
-       y="0"
-       xlink:href="#g828"
-       id="use830"
-       width="100%"
-       height="100%" />
+    <ellipse
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.11111125;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path5084"
+       cx="4.5000157"
+       cy="292.5"
+       rx="4.4444442"
+       ry="4.4444542" />
+    <ellipse
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.08;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path5086"
+       cx="4.5000157"
+       cy="292.5"
+       rx="3.3333335"
+       ry="3.3333406" />
+    <path
+       style="opacity:1;fill:#0066ff;fill-opacity:1;stroke:#0066ff;stroke-width:0.30000079;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       d="m 4.5000281,289.05548 a 0.11111111,0.11111135 0 0 0 -0.1105304,0.1022 l -0.3037421,3.29924 a 0.41666668,0.41666759 0 0 0 -5.579e-4,0.005 0.41666668,0.41666759 0 0 0 -0.00172,0.0376 0.41666668,0.41666759 0 0 0 0.4165692,0.41657 0.41666668,0.41666759 0 0 0 0.4165693,-0.41657 0.41666668,0.41666759 0 0 0 -0.002,-0.0382 h 2.948e-4 l -0.3040371,-3.303 a 0.11111111,0.11111135 0 0 0 -2.949e-4,-0.002 0.11111111,0.11111135 0 0 0 -0.1105301,-0.10105 z"
+       id="path820"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

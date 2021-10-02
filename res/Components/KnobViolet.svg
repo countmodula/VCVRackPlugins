@@ -14,8 +14,8 @@
    viewBox="0 0 12 12"
    version="1.1"
    id="svg826"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="KnobBlueVoilet.svg">
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="KnobViolet.svg">
   <defs
      id="defs820" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="-0.10410759"
-     inkscape:cy="70.983971"
+     inkscape:zoom="7.9999999"
+     inkscape:cx="-50.798848"
+     inkscape:cy="53.211369"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -68,14 +68,14 @@
      id="layer1"
      transform="translate(0,-285)">
     <ellipse
-       style="opacity:1;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:0.14814794;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.14814794;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="path5084"
        cx="6"
        cy="291"
        rx="5.9259105"
        ry="5.9259238" />
     <ellipse
-       style="opacity:1;fill:#333333;fill-opacity:1;stroke:#000000;stroke-width:0.07956095;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="path5086"
        cx="6"
        cy="291"
