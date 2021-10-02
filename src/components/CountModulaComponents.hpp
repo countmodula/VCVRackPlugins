@@ -195,59 +195,6 @@ struct CountModulaToggle2P : SvgSwitch {
 		else
 			getParamQuantity()->setValue(0.0f);
 	}
-	
-#ifdef NEW_TOGGLE_CHANGE_METHOD	
-	void onDoubleClick(const event::DoubleClick& e) override {
-		reset();
-	}		
-	
-	void onDragStart(const event::DragStart& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-		
-		pos = 0;
-		neg=0;
-	}
-	
-	void onDragEnd(const event::DragEnd& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-	}
-	
-	void onDragMove(const event::DragMove& e) override {
-		
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-
-		if (e.mouseDelta.y < 0.0f) {
-			neg = 0;
-			pos++;
-		}
-		else if (e.mouseDelta.y > 0.0f) {
-			pos = 0;
-			neg++;
-		}
-		
-		if (neg > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
-			neg = 0;
-		}
-		else if (pos > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
-			pos = 0;
-		}
-	}
-#endif
-	
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-
-		// if (paramQuantity->getValue() > 0.5f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }	
 };
 
 //-------------------------------------------------------------------
@@ -277,59 +224,6 @@ struct CountModulaToggle2P90 : SvgSwitch {
 		else
 			getParamQuantity()->setValue(0.0f);
 	}
-
-#ifdef NEW_TOGGLE_CHANGE_METHOD	
-	void onDoubleClick(const event::DoubleClick& e) override {
-		reset();
-	}	
-	
-	void onDragStart(const event::DragStart& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-		
-		pos = 0;
-		neg=0;
-	}
-	
-	void onDragEnd(const event::DragEnd& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-	}
-	
-	void onDragMove(const event::DragMove& e) override {
-		
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-
-		if (e.mouseDelta.x < 0.0f) {
-			neg = 0;
-			pos++;
-		}
-		else if (e.mouseDelta.x > 0.0f) {
-			pos = 0;
-			neg++;
-		}
-		
-		if (neg > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
-			neg = 0;
-		}
-		else if (pos > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
-			pos = 0;
-		}
-	}	
-#endif
-	
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-
-		// if (paramQuantity->getValue() > 0.5f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }	
 };
 
 //-------------------------------------------------------------------
@@ -363,61 +257,6 @@ struct CountModulaToggle3P : SvgSwitch {
 		else
 			getParamQuantity()->setValue(0.0f);
 	}
-
-#ifdef NEW_TOGGLE_CHANGE_METHOD	
-	void onDoubleClick(const event::DoubleClick& e) override {
-		reset();
-	}	
-	
-	void onDragStart(const event::DragStart& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-		
-		pos = 0;
-		neg=0;
-	}
-	
-	void onDragEnd(const event::DragEnd& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-	}
-	
-	void onDragMove(const event::DragMove& e) override {
-		
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-
-		if (e.mouseDelta.y < 0.0f) {
-			neg = 0;
-			pos++;
-		}
-		else if (e.mouseDelta.y > 0.0f) {
-			pos = 0;
-			neg++;
-		}
-		
-		if (neg > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
-			neg = 0;
-		}
-		else if (pos > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
-			pos = 0;
-		}
-	}
-#endif
-	
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-		
-		// if (paramQuantity->getValue() > 1.33f)
-			// paramQuantity->setValue(2.0f);
-		// else if (paramQuantity->getValue() > 0.67f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }
 };
 
 //-------------------------------------------------------------------
@@ -452,61 +291,6 @@ struct CountModulaToggle3P90 : SvgSwitch {
 		else
 			getParamQuantity()->setValue(0.0f);
 	}
-
-#ifdef NEW_TOGGLE_CHANGE_METHOD	
-	void onDragStart(const event::DragStart& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-		
-		pos = 0;
-		neg=0;
-	}
-	
-	void onDoubleClick(const event::DoubleClick& e) override {
-		reset();
-	}	
-	
-	void onDragEnd(const event::DragEnd& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-	}
-	
-	void onDragMove(const event::DragMove& e) override {
-		
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-
-		if (e.mouseDelta.x < 0.0f) {
-			neg = 0;
-			pos++;
-		}
-		else if (e.mouseDelta.x > 0.0f) {
-			pos = 0;
-			neg++;
-		}
-		
-		if (neg > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
-			neg = 0;
-		}
-		else if (pos > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
-			pos = 0;
-		}
-	}	
-#endif
-
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-		
-		// if (paramQuantity->getValue() > 1.33f)
-			// paramQuantity->setValue(2.0f);
-		// else if (paramQuantity->getValue() > 0.67f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }
 };
 
 struct CountModulaToggle3P270 : SvgSwitch {
@@ -537,59 +321,4 @@ struct CountModulaToggle3P270 : SvgSwitch {
 		else
 			getParamQuantity()->setValue(0.0f);
 	}
-
-#ifdef NEW_TOGGLE_CHANGE_METHOD	
-	void onDragStart(const event::DragStart& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-		
-		pos = 0;
-		neg=0;
-	}
-	
-	void onDoubleClick(const event::DoubleClick& e) override {
-		reset();
-	}	
-	
-	void onDragEnd(const event::DragEnd& e) override {
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-	}
-	
-	void onDragMove(const event::DragMove& e) override {
-		
-		if (e.button != GLFW_MOUSE_BUTTON_LEFT)
-			return;
-
-		if (e.mouseDelta.x < 0.0f) {
-			neg = 0;
-			pos++;
-		}
-		else if (e.mouseDelta.x > 0.0f) {
-			pos = 0;
-			neg++;
-		}
-		
-		if (neg > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() - 1.0f);
-			neg = 0;
-		}
-		else if (pos > 5) {
-			paramQuantity->setValue(paramQuantity->getValue() + 1.0f);
-			pos = 0;
-		}
-	}	
-#endif
-
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-		
-		// if (paramQuantity->getValue() > 1.33f)
-			// paramQuantity->setValue(2.0f);
-		// else if (paramQuantity->getValue() > 0.67f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }
 };
