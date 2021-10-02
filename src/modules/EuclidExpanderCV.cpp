@@ -413,9 +413,11 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 				sprintf(buffer, "res/Components/Knob%s.svg", ((EuclidExpanderCV*)module)->knobColours[cid]);
 				
 				for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(EuclidExpanderCV::STEP_CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					//((CountModulaKnob *)(p))->->dirtyValue = -1;
+					CountModulaKnob *p = (CountModulaKnob *)getParam(EuclidExpanderCV::STEP_CV_PARAMS + i);
+					p->svgFile = ((EuclidExpanderCV*)module)->knobColours[cid];
+					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					p->fb->dirty = true;
+					
 				}
 			}			
 		}

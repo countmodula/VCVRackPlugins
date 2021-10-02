@@ -151,13 +151,6 @@ struct RotarySwitch : TBase {
 		
 		this->getParamQuantity()->setValue(roundf(this->getParamQuantity()->getValue()));
 	}
-	
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgKnob::randomize();
-		
-		// this->paramQuantity->setValue(roundf(this->paramQuantity->getValue()));
-	// }
 };
 
 // standard rotary potentiometer base

@@ -467,9 +467,10 @@ struct WIDGET_NAME : ModuleWidget {
 				sprintf(buffer, "res/Components/Knob%s.svg", ((STRUCT_NAME*)module)->knobColours[cid]);
 				
 				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(STRUCT_NAME::CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					//((CountModulaKnob *)(p))->dirtyValue = -1;
+					CountModulaKnob *p = (CountModulaKnob *)getParam(STRUCT_NAME::CV_PARAMS + i);
+					p->svgFile = ((STRUCT_NAME*)module)->knobColours[cid];
+					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					p->fb->dirty = true;
 				}
 			}
 		}

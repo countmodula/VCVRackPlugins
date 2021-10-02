@@ -52,16 +52,6 @@ struct CountModulaLitPB : SvgSwitch {
 		shadow->opacity = 0.0f;
 	}
 	
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-		
-		// if (paramQuantity->getValue() > 0.5f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }	
-
 	void setFirstLightId(int firstLightId, engine::Module* module) {
 
 		light->module = module;
@@ -217,16 +207,6 @@ struct CountModulaPB :  SvgSwitch {
 		// no shadow for switches or buttons
 		shadow->opacity = 0.0f;
 	}
-
-	// // override the base randomizer as it sets switches to invalid values.
-	// void randomize() override {
-		// SvgSwitch::randomize();
-		
-		// if (paramQuantity->getValue() > 0.5f)
-			// paramQuantity->setValue(1.0f);
-		// else
-			// paramQuantity->setValue(0.0f);
-	// }
 };
 
 // srtandard push button

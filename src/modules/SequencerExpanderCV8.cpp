@@ -270,11 +270,11 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderCV8::CVI_OUTPUT));
 	}
 	
-	char knobColours[5][50] = {	"res/Components/KnobRed.svg", 
-								"res/Components/KnobGreen.svg", 
-								"res/Components/KnobYellow.svg",  
-								"res/Components/KnobBlue.svg", 
-								"res/Components/KnobGrey.svg"};   	
+	char knobColours[5][50] = {	"Red", 
+								"Green", 
+								"Yellow",  
+								"Blue", 
+								"Grey"};
 							
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -314,10 +314,14 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 						break;
 				}
 	
+				char buffer[50];
+				sprintf(buffer, "res/Components/Knob%s.svg", knobColours[m]);
+				
 				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(SequencerExpanderCV8::STEP_CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, knobColours[m]))); 
-					//((CountModulaKnob *)(p))->dirtyValue = -1;
+					CountModulaKnob *p = (CountModulaKnob *)getParam(SequencerExpanderCV8::STEP_CV_PARAMS + i);
+					p->svgFile = knobColours[m];
+					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					p->fb->dirty = true;					
 				}
 				
 				((SequencerExpanderCV8*)module)->prevChannelID = cid;
