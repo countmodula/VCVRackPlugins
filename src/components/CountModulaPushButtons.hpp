@@ -16,7 +16,7 @@ struct CountModulaPBLight : TBase {
 	void drawLight(const widget::Widget::DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		
-		// set rounded radius at 12% of overal size - closely matches the rounding on grey area of hte underlying button svg
+		// set rounded radius at 12% of overal size - closely matches the rounding on grey area of the underlying button svg
 		float r = std::min( this->box.size.x, this->box.size.y) * 0.12;
 		nvgRoundedRect(args.vg, 0.0, 0.0, this->box.size.x, this->box.size.y, r);
 
@@ -67,9 +67,10 @@ struct CountModulaLitPB : SvgSwitch {
 	}
 	
 	void onChange(const event::Change& e) override {
+		engine::ParamQuantity* pq = getParamQuantity();
 
-		if (!frames.empty() /*&& paramQuantity */) {
-			int index = (int) std::round(getParamQuantity()->getValue() - getParamQuantity()->getMinValue());
+		if (!frames.empty() && pq) {
+			int index = (int) std::round(getParamQuantity()->getValue() - pq->getMinValue());
 			index = math::clamp(index, 0, (int) frames.size() - 1);
 			sw->setSvg(frames[index]);
 

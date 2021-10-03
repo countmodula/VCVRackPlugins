@@ -41,8 +41,14 @@ struct Attenuverter : Module {
 	Attenuverter() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(ATTENUATE_PARAM, -1.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+		configParam(ATTENUATE_PARAM, -1.0f, 1.0f, 0.0f, "Level", " %", 0.0f, 100.0f, 0.0f);
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Attenuvert", "Attenuate"});
+		configInput(SIGNAL_INPUT, "Channel A");
+		configInput(SIGNAL_INPUT + 1, "Channel B");
+		configOutput(SIGNAL_OUTPUT, "Channel A");
+		configOutput(SIGNAL_OUTPUT + 1, "Channel B");
+		configOutput(INVERTED_OUTPUT, "Channel A inverted");
+		configOutput(INVERTED_OUTPUT + 1, "Channel B inverted");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

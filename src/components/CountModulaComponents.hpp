@@ -165,17 +165,12 @@ struct Potentiometer : TBase {
 // on-off toggle switch
 //-------------------------------------------------------------------
 struct CountModulaToggle2P : SvgSwitch {
-	int pos;
-	int neg;
-
 	CountModulaToggle2P() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_2.svg")));
 
 		// no shadow for switches
 		shadow->opacity = 0.0f;
-
-		neg = pos = 0;
 	}
 	
 	// handle the manually entered values
@@ -194,17 +189,12 @@ struct CountModulaToggle2P : SvgSwitch {
 // on-off toggle switch - sideways
 //-------------------------------------------------------------------
 struct CountModulaToggle2P90 : SvgSwitch {
-	int pos;
-	int neg;
-	
 	CountModulaToggle2P90() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_2.svg")));
 
 		// no shadow for switches
 		shadow->opacity = 0.0f;
-
-		neg = pos = 0;
 	}
 	
 	// handle the manually entered values
@@ -223,9 +213,6 @@ struct CountModulaToggle2P90 : SvgSwitch {
 // on-off-on toggle switch
 //-------------------------------------------------------------------
 struct CountModulaToggle3P : SvgSwitch {
-	int pos;
-	int neg;
-	
 	CountModulaToggle3P() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_Toggle_1.svg")));
@@ -233,8 +220,6 @@ struct CountModulaToggle3P : SvgSwitch {
 		
 		// no shadow for switches
 		shadow->opacity = 0.0f;
-		
-		neg = pos = 0;
 	}
 
 	// handle the manually entered values
@@ -256,9 +241,6 @@ struct CountModulaToggle3P : SvgSwitch {
 // on-off-on toggle switch - sideways
 //-------------------------------------------------------------------
 struct CountModulaToggle3P90 : SvgSwitch {
-	int pos;
-	int neg;
-	
 	CountModulaToggle3P90() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_1.svg")));
@@ -266,8 +248,6 @@ struct CountModulaToggle3P90 : SvgSwitch {
 		
 		// no shadow for switches
 		shadow->opacity = 0.0f;
-		
-		neg = pos = 0;
 	}
 
 	// handle the manually entered values
@@ -287,9 +267,6 @@ struct CountModulaToggle3P90 : SvgSwitch {
 };
 
 struct CountModulaToggle3P270 : SvgSwitch {
-	int pos;
-	int neg;
-	
 	CountModulaToggle3P270() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_2.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/SW_ToggleS_1.svg")));
@@ -297,8 +274,6 @@ struct CountModulaToggle3P270 : SvgSwitch {
 		
 		// no shadow for switches
 		shadow->opacity = 0.0f;
-		
-		neg = pos = 0;
 	}
 
 	// handle the manually entered values

@@ -35,7 +35,8 @@ struct BarGraph : Module {
 	
 	BarGraph() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	
+		configInput(CV_INPUT, "Signal");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"		
 	}

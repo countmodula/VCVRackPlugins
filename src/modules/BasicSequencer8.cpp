@@ -83,20 +83,37 @@ struct BasicSequencer8 : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// length param
-		configParam(LENGTH_PARAM, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), "Length");
+		configSwitch(LENGTH_PARAM, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), "Sequence length", {"1 step", "2 steps", "3 steps", "4 steps", "5 steps", "6 steps", "7 steps", "8 steps"});
 		
 		//  mode param
-		configParam(MODE_PARAM, 0.0f, 2.0, 0.0f, "Direction");
+		configSwitch(MODE_PARAM, 0.0f, 2.0, 0.0f, "Direction", {"Down", "Bi", "Up"});
 		
 		// step params (knobs and switches)
+		std::ostringstream  buffer;
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configParam(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate");
-
+			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Step", {"Gate", "Off", "Trigger"});
 			configParam(STEP_CV_PARAMS + s, 0.0f, 8.0f, 0.0f, "Step value");
+			buffer.str("");
+			buffer << "Length = " << s + 1;
+			configLight(LENGTH_LIGHTS + s, buffer.str());
+			buffer.str("");
+			buffer << "Step " << s +1 << " active";
+			configLight(STEP_LIGHTS + s, buffer.str());
 		}
 		
 		// range switch
-		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+		configSwitch(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"8V", "4V", "2V"});
+		
+		configInput(RUN_INPUT, "Run");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(LENCV_INPUT, "Length CV");
+		configInput(DIRCV_INPUT, "Direction CV");
+		
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander

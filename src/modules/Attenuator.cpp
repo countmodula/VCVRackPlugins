@@ -44,7 +44,13 @@ struct Attenuator : Module {
 		
 		configParam(CH1_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation/Attenuversion", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
-		configParam(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Attenuvert");
+		configSwitch(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode",{"Attenuate", "Attenuvert"});
+
+		configInput(CH1_SIGNAL_INPUT, "A");
+		configInput(CH2_SIGNAL_INPUT, "B");
+
+		configOutput(CH1_SIGNAL_OUTPUT, "A");
+		configOutput(CH2_SIGNAL_OUTPUT, "B");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

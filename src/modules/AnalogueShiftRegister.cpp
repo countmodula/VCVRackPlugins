@@ -91,6 +91,20 @@ struct AnalogueShiftRegister : Module {
 	AnalogueShiftRegister() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(CH1_SIGNAL_INPUT, "Signal 1");
+		configInput(CH1_CLOCK_INPUT, "Shift 1");
+		configInput(CH2_SIGNAL_INPUT, "Signal 2");
+		configInput(CH2_CLOCK_INPUT, "Shift 2");
+		
+		configOutput(CH1_A_OUTPUT, "Stage A");
+		configOutput(CH1_B_OUTPUT, "Stage B");
+		configOutput(CH1_C_OUTPUT, "Stage C");
+		configOutput(CH1_D_OUTPUT, "Stage D");
+		configOutput(CH2_A_OUTPUT, "Stage E");
+		configOutput(CH2_B_OUTPUT, "Stage F");
+		configOutput(CH2_C_OUTPUT, "Stage G");
+		configOutput(CH2_D_OUTPUT, "Stage H");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
