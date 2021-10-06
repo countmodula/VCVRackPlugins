@@ -84,7 +84,17 @@ struct BinarySequencer : Module {
 		configParam(LAGSHAPE_PARAM, 0.0f, 1.0f, 0.0f, "Lag Shape");
 	
 		// scale switch
-		configParam(SCALE_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+		configSwitch(SCALE_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"10 Volts", "5 Volts", "2 Volts"});
+	
+		configInput(CLOCK_INPUT, "External clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(RUN_INPUT, "Run");
+		configInput(SH_INPUT, "Sample & hold");
+		
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(INV_OUTPUT, "Inverted CV");
+		configOutput(CLOCK_OUTPUT, "Clock");
+		configOutput(TRIGGER_OUTPUT, "Trigger");
 	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander
