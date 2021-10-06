@@ -44,10 +44,10 @@ struct CountModulaPBLight : TBase {
 // Base for lit buttons
 struct CountModulaLitPB : SvgSwitch {
 	ModuleLightWidget* light;
-	
+
 	CountModulaLitPB() {
 		momentary = false;
- 		
+
 		// no shadow for buttons
 		shadow->opacity = 0.0f;
 	}
@@ -66,27 +66,26 @@ struct CountModulaLitPB : SvgSwitch {
 		addChild(light);
 	}
 	
-	void onChange(const event::Change& e) override {
-		engine::ParamQuantity* pq = getParamQuantity();
-
+	void onChange(const ChangeEvent& e) override {
+		ParamQuantity* pq = getParamQuantity();
+	
 		if (!frames.empty() && pq) {
-			int index = (int) std::round(getParamQuantity()->getValue() - pq->getMinValue());
+			int index = (int) std::round(pq->getValue() - pq->getMinValue());
 			index = math::clamp(index, 0, (int) frames.size() - 1);
 			sw->setSvg(frames[index]);
 
 			light->module->lights[light->firstLightId].setBrightness(index > 0 ? 1.0 : 0.0);
 			fb->dirty = true;
 		}
-		
+
 		ParamWidget::onChange(e);
 	}
-	
-	void step() override{
 
-		if (light->module) {
-			light->module->lights[light->firstLightId].setBrightness(getParamQuantity()->getValue() > 0.5 ? 1.0 : 0.0);
-		}
-		
+	void step() override{
+		ParamQuantity* pq = getParamQuantity();
+		if (light->module && pq)
+			light->module->lights[light->firstLightId].setBrightness(pq->getValue() > 0.5 ? 1.0 : 0.0);
+
 		SvgSwitch::step();
 	}	
 };
