@@ -79,14 +79,26 @@ struct BurstGenerator : Module {
 		
 		configParam(RATECV_PARAM, -1.0f, 1.0f, 0.0f, "Rate CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(RATE_PARAM, 0.0f, 5.0f, 0.0f, "Burst rate");
-		configParam(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Rate range");
-		configParam(RETRIGGER_PARAM, 0.0f, 1.0f, 0.0f, "Retrigger On/Off");
+		configSwitch(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Rate range", {"Slow", "Fast"});
+		configSwitch(RETRIGGER_PARAM, 0.0f, 1.0f, 0.0f, "Retrigger", {"Off", "On"});
 		configParam(PULSESCV_PARAM, -1.6f, 1.6f, 0.0f, "Number of pulses CV amount", " %", 0.0f, 62.5f, 0.0f);
 		configParam(PULSES_PARAM, 1.0f, 16.0f, 1.0f, "Number of pulses");
-		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Manual trigger");
+		configButton(MANUAL_PARAM, "Manual trigger");
 		configParam(PROBABILITY_PARAM, 0.0f, 10.0f, 10.0f, "Pulse output probability", " %", 0.0f, 10.0f, 0.0f);
 		configParam(PROBABILITYCV_PARAM, -1.0f, 1.0f, 0.0f, "Probability CV amount", " %", 0.0f, 100.0f, 0.0f);
 		
+		configInput(CLOCK_INPUT, "External clock");
+		inputInfos[CLOCK_INPUT]->description = "Disconnects the internal clock";
+		configInput(RATECV_INPUT, "Internal rate CV");
+		configInput(TRIGGER_INPUT, "Trigger");
+		configInput(PULSESCV_INPUT, "Number of pulses CV");
+		configInput(PROBABILITYCV_INPUT, "Pulse probability");
+		
+		configOutput(PULSES_OUTPUT, "Pulse");
+		configOutput(START_OUTPUT, "Start of burst");
+		configOutput(DURATION_OUTPUT, "Burst duration");
+		configOutput(END_OUTPUT, "End of burst");
+
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander
 		rightExpander.producerMessage = rightMessages[0];

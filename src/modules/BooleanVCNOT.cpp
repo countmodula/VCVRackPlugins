@@ -14,7 +14,6 @@
 
 struct BooleanVCNOT : Module {
 	enum ParamIds {
-		ENUMS(ENABLE_PARAM, 2),
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -38,6 +37,16 @@ struct BooleanVCNOT : Module {
 	BooleanVCNOT() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(LOGIC_INPUT, "A");
+		configInput(ENABLE_INPUT, "A Invert");
+		configOutput(INV_OUTPUT, "Inverted/not inverted A");
+		inputInfos[ENABLE_INPUT]->description = "Apply a high gate voltage to invert or a low gate voltage to not invert";
+
+		configInput(LOGIC_INPUT + 1, "B");
+		configInput(ENABLE_INPUT + 1, "B Invert");
+		configOutput(INV_OUTPUT + 1, "Inverted/not inverted B");
+		inputInfos[ENABLE_INPUT + 1]->description = "Apply a high gate voltage to invert or a low gate voltage to not invert";
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

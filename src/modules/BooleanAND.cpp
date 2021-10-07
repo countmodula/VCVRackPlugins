@@ -77,6 +77,21 @@ struct BooleanAND : Module {
 	BooleanAND() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(A_INPUT, "A");
+		configInput(B_INPUT, "B");
+		configInput(C_INPUT, "C");
+		configInput(D_INPUT, "D");
+		configInput(I_INPUT, "Inverter");
+		
+		inputInfos[A_INPUT]->description = "Must be connected first";
+		inputInfos[B_INPUT]->description = "Normalled to A Input";
+		inputInfos[C_INPUT]->description = "Normalled to B Input";
+		inputInfos[D_INPUT]->description = "Normalled to C Input";
+		inputInfos[I_INPUT]->description = "Normalled to AND output";
+		
+		configOutput(AND_OUTPUT, "Logical AND");
+		configOutput(INV_OUTPUT, "Inverter");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

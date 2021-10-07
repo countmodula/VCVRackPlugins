@@ -37,6 +37,7 @@ struct BusRoute : Module {
 
 	
 	GateProcessor gates[7];
+	const std::string inputLabels[7] = {"Channel 1", "Channel 2", "Channel 3", "Channel 4", "Channel 5", "Channel 6", "Channel 7"};
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -46,9 +47,13 @@ struct BusRoute : Module {
 	
 		// step params
 		for (int s = 0; s < 7; s++) {
-			configParam(BUS_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Bus Select");
+			configSwitch(BUS_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Bus", {"B", "Disconnected", "A"});
+			configInput(GATE_INPUTS + s, inputLabels[s]);
 		}
 
+		configOutput(A_OUTPUT, "Bus A");
+		configOutput(B_OUTPUT, "Bus B");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -59,7 +64,7 @@ struct BusRoute : Module {
 		json_object_set_new(root, "moduleVersion", json_integer(1));
 		
 			// add the theme details
-		#include "../themes/dataToJson.hpp"		
+		#include "../themes/dataToJson.hpp"
 		
 		return root;
 	}

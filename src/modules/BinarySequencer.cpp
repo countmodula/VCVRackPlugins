@@ -91,11 +91,17 @@ struct BinarySequencer : Module {
 		configInput(RUN_INPUT, "Run");
 		configInput(SH_INPUT, "Sample & hold");
 		
+		inputInfos[CLOCK_INPUT]->description = "Disconnects the internal clock";
+		inputInfos[RUN_INPUT]->description = "A continuous high gate signal allows the sequencer to run, a low gate signal stops the sequencer.";
+		
 		configOutput(CV_OUTPUT, "CV");
 		configOutput(INV_OUTPUT, "Inverted CV");
 		configOutput(CLOCK_OUTPUT, "Clock");
 		configOutput(TRIGGER_OUTPUT, "Trigger");
-	
+		
+		outputInfos[CLOCK_OUTPUT]->description = "Outputs the internal clock or follows the external clock if connected";
+		outputInfos[TRIGGER_OUTPUT]->description = "Outputs a trigger for every clock pulse";
+
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
