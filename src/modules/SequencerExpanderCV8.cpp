@@ -269,16 +269,16 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, SequencerExpanderCV8::CV_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderCV8::CVI_OUTPUT));
 	}
-	
-	char knobColours[5][50] = {	"Red", 
-								"Green", 
-								"Yellow",  
-								"Blue", 
-								"Grey"};
+	// custom knob colour list for this module
+	const char knobColours[5][50] = {	"Red", 
+										"Green", 
+										"Yellow",  
+										"Blue", 
+										"Grey"};
 							
 	
 	// include the theme menu item struct we'll when we add the theme menu items
-	#include "../themes/ThemeMenuItem.hpp"							
+	#include "../themes/ThemeMenuItem.hpp"
 		
 	void appendContextMenu(Menu *menu) override {
 		SequencerExpanderCV8 *module = dynamic_cast<SequencerExpanderCV8*>(this->module);

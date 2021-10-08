@@ -90,6 +90,13 @@ struct SingleDFlipFlop : Module {
 	SingleDFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(D_INPUT, "D");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(ENABLE_INPUT, "Enable");
+
+		configOutput(Q_OUTPUT, "Q");
+		configOutput(NQ_OUTPUT, "Not Q");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

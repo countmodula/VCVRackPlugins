@@ -6,6 +6,16 @@
 
 using namespace rack;
 
+// used by modules that change knob colours based on certain settings
+const char CountModulaknobColours[8][50] = {"Grey", 
+											"Red", 
+											"Orange",  
+											"Yellow", 
+											"Blue", 
+											"Violet",
+											"White",
+											"Green"};
+
 //--------------------------------------------------------------------------------------------------
 // knob definitions
 //--------------------------------------------------------------------------------------------------

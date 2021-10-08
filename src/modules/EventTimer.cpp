@@ -75,13 +75,23 @@ struct EventTimer : Module {
 		int l = 100;
 		for(int i = 0; i < 3; i++) {
 			sprintf(buttonText, "Increment %d's", l);
-			configParam(UP_PARAMS + i, 0.0f, 1.0f, 0.0f, buttonText);
+			configButton(UP_PARAMS + i, buttonText);
 			sprintf(buttonText, "Decrement %d's", l);
-			configParam(DN_PARAMS + i, 0.0f, 1.0f, 0.0f, buttonText);
+			configButton(DN_PARAMS + i, buttonText);
 			
 			l = l / 10;
 		}
 		
+		configButton(TRIGGER_PARAM, "Manual trigger");
+		configButton(RESET_PARAM, "Manual reset");
+
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(TRIGGER_INPUT, "Trigger");
+
+		configOutput(END_OUTPUT, "End gate");
+		configOutput(ENDT_OUTPUT, "End trigger");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -310,7 +320,7 @@ struct EventTimerWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, EventTimer::RESET_INPUT));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, EventTimer::CLOCK_INPUT));
 	
-		// clock and reset buttons
+		// trigger and reset buttons
 		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, EventTimer::TRIGGER_PARAM, EventTimer::TRIGGER_PARAM_LIGHT));
 		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, EventTimer::RESET_PARAM, EventTimer::RESET_PARAM_LIGHT));
 	

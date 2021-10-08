@@ -83,14 +83,24 @@ struct Fade : Module {
 	
 	Fade() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		
+
 		configParam(IN_PARAM, 0.1f, 10.0f, 3.0f, "Fade-in time", " S");
 		configParam(OUT_PARAM, 0.1f, 10.0f, 3.0f, "Fade-out time", " S");
-		configParam(FADE_PARAM, 0.0f, 1.0f, 0.0f, "Start/stop");
-		configParam(MON_PARAM, 0.0f, 1.0f, 0.0f, "Monitor");
+		configSwitch(FADE_PARAM, 0.0f, 1.0f, 0.0f, "Start/stop", {"Stopped", "Running"});
+		configSwitch(MON_PARAM, 0.0f, 1.0f, 0.0f, "Monitor", {"Off", "Monitoring"});
 #ifdef TIMES_TEN_ENABLED
-		configParam(XTEN_PARAM, 0.0f, 1.0f, 0.0f, "Times x 10");
+		configSwitch(XTEN_PARAM, 0.0f, 1.0f, 0.0f, "Times 10" {"Time X 1", "Time X 10"});
 #endif
+
+		configInput(L_INPUT, "Left/mono");
+		configInput(R_INPUT, "Right");
+
+		configOutput(L_OUTPUT, "Left");
+		configOutput(R_OUTPUT, "Right");
+		configOutput(GATE_OUTPUT, "Running gate");
+		configOutput(TRIG_OUTPUT, "Running start/end trigger");
+		outputInfos[GATE_OUTPUT]->description = "Outputs a high gate for the duration of the run time";
+		outputInfos[TRIG_OUTPUT]->description = "Outputs trigger pulses at the start of fade-in and end of fade-out";
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

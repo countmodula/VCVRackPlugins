@@ -49,15 +49,6 @@ struct STRUCT_NAME : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 		
-	char knobColours[8][50] = {	"Grey", 
-								"Red", 
-								"Orange",  
-								"Yellow", 
-								"Blue", 
-								"Violet",
-								"White",
-								"Green"};		
-		
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -289,7 +280,7 @@ struct WIDGET_NAME : ModuleWidget {
 		
 			char buffer[20];
 			for (int i = 1; i < 8; i++) {
-				sprintf(buffer, "Channel %d (%s)", i, module->knobColours[i]);
+				sprintf(buffer, "Channel %d (%s)", i, CountModulaknobColours[i]);
 				ChannelMenuItem *channelMenuItem = createMenuItem<ChannelMenuItem>(buffer, CHECKMARK(module->userChannel == i));
 				channelMenuItem->module = module;
 				channelMenuItem->channelToUse = i;
@@ -464,11 +455,11 @@ struct WIDGET_NAME : ModuleWidget {
 				int cid = ((STRUCT_NAME*)module)->currentChannel;
 				
 				char buffer[50];
-				sprintf(buffer, "res/Components/Knob%s.svg", ((STRUCT_NAME*)module)->knobColours[cid]);
+				sprintf(buffer, "res/Components/Knob%s.svg", CountModulaknobColours[cid]);
 				
 				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
 					CountModulaKnob *p = (CountModulaKnob *)getParam(STRUCT_NAME::CV_PARAMS + i);
-					p->svgFile = ((STRUCT_NAME*)module)->knobColours[cid];
+					p->svgFile = CountModulaknobColours[cid];
 					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
 					p->fb->dirty = true;
 				}

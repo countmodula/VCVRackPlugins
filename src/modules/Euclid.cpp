@@ -116,10 +116,25 @@ struct Euclid : Module {
 		configParam(HITS_CV_PARAM,  -1.0f, 1.0f, 0.0f, "Number of hits CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(SHIFT_CV_PARAM,  -1.0, 1.0, 0.0f, "Shift CV amount", " %", 0.0f, 100.0f, 0.0f);
 		
-		configParam(SHIFT_R_PARAM,  0.0, 1.0, 0.0f, "Shift left");
-		configParam(SHIFT_L_PARAM,  0.0, 1.0, 0.0f, "Shift right");
+		configButton(SHIFT_R_PARAM, "Step left");
+		configButton(SHIFT_L_PARAM, "Step right");
 		
-		configParam(SHIFT_MODE_PARAM, 0.0f, 3.0f, 0.0f, "Shift source");
+		configSwitch(SHIFT_MODE_PARAM, 0.0f, 3.0f, 0.0f, "Shift source", {"CV", "Step buttons", "Left at end of cylce", "Right at end of Cycle"});
+		
+		configInput(RUN_INPUT, "Run");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(LENGTH_INPUT, "Length CV");
+		configInput(HITS_INPUT, "Number of hits CV");
+		configInput(SHIFT_INPUT, "Shift CV");
+		configInput(SHIFT_R_INPUT, "Step left trigger");
+		configInput(SHIFT_L_INPUT, "Step right trigger");
+		
+		configOutput(HTRIG_OUTPUT, "Hit trigger");
+		configOutput(HGATE_OUTPUT, "Hit gate");
+		configOutput(RTRIG_OUTPUT, "Rest trigger");
+		configOutput(RGATE_OUTPUT, "Rest gate");
+		configOutput(END_OUTPUT, "End of cycle");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
