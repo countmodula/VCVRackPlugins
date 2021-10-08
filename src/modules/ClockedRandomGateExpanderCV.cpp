@@ -92,13 +92,19 @@ struct ClockedRandomGateExpanderCV : Module {
 		}
 		
 		// trigger source switch
-		configParam(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "Trigger Source");
-			
-		// range switch
-		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
-
+		configSwitch(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "S&H trigger", {"Off", "Gate", "Trigger", "Gated clock", "Clock"});
+		
 		// trigger channel switch
-		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Trigger Channel");
+		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Trigger channel");
+		
+		// range switch
+		configSwitch(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"8V", "4V", "2V"});
+
+		configOutput(PULSE_OUTPUT, "Trigger");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT,"Inverted CV");
+
+		outputInfos[PULSE_OUTPUT]->description = "Outputs the selected S&H trigger";
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

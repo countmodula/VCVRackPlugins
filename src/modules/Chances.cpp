@@ -46,8 +46,14 @@ struct Chances : Module {
 	Chances() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
-		configParam(THRESH_PARAM, 0.0f, 1.0f, 0.5f, "Chance");
-		configParam(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mode");
+		configParam(THRESH_PARAM, 0.0f, 1.0f, 0.5f, "Chance", "%", 0.0f, 100.0f, 0.0f);
+		configSwitch(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mode", {"Toggle", "Normal", "Latch"});
+
+		configInput(GATE_INPUT, "Gate");
+		configInput(PROB_INPUT, "Probability CV");
+		
+		configOutput(A_OUTPUT, "A");
+		configOutput(B_OUTPUT, "B");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

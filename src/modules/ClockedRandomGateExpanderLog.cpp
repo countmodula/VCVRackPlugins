@@ -88,15 +88,20 @@ struct ClockedRandomGateExpanderLog : Module {
 		rightExpander.consumerMessage = rightMessages[1];	
 		
 		// step params
-		for (int s = 0; s < CRG_EXP_NUM_CHANNELS; s++) {
-			configParam(STEP_LOGIC_PARAMS + s, 0.0f, 1.0f, 0.0f, "Logic value");
+		std::string s;
+		for (int c = 0; c < CRG_EXP_NUM_CHANNELS; c++) {
+			s = "Channel " + std::to_string(c + 1) + " logic";
+			configSwitch(STEP_LOGIC_PARAMS + c, 0.0f, 1.0f, 0.0f, s, {"Ignore", "Compare"});
 		}
 		
 		// trigger source switch
-		configParam(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "Sync Source");
-			
+		configSwitch(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "Sync", {"Off", "Gate", "Trigger", "Gated clock", "Clock"});
+		
 		// trigger channel switch
-		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Sync Channel");
+		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Source channel");
+		
+		configOutput(OR_OUTPUT, "OR");
+		configOutput(AND_OUTPUT,"AND");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

@@ -88,15 +88,16 @@ struct ClockDivider : Module {
 	ClockDivider() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		// direction switch
-		configParam(DIR_PARAM, 0.0f, 1.0f, 0.0f, "Count direction");
-		
-		// gate/trig switch
-		configParam(TRIG_PARAM, 0.0f, 1.0f, 0.0f, "Output mode");
-		
-		// mode switch
-		configParam(MODE_PARAM, 0.0f, (float)maxModes, 0.0f, "Mode");
+		// switches
+		configSwitch(DIR_PARAM, 0.0f, 1.0f, 0.0f, "Count direction", {"Down (more musical)", "Up (not so musical)"});
+		configSwitch(TRIG_PARAM, 0.0f, 1.0f, 0.0f, "Output mode", {"Gates", "Triggers"});
+		configSwitch(MODE_PARAM, 0.0f, (float)maxModes, 0.0f, "Mode", {"Binary 1 (ripple counter)", "Binary 2", "Decimal", "Prime numbers"});
 
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+
+		setOutputLabels();
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 		
@@ -105,6 +106,33 @@ struct ClockDivider : Module {
 		countUp = false;
 		isReset = false;
 	}
+
+	void setOutputLabels() {
+		// need to wrangle the mode a little where we are in B1 as the output mask works differently
+		int m = 1;
+		switch (mode) {
+			case DECIMAL_MODE:
+			case PRIME_MODE:
+	#ifdef THE_FULL_MONTY
+			case FIBONACCI_MODE:
+			case EVENS_MODE:
+			case ODDS_MODE:
+	#endif
+				m = mode;
+				break;
+			default:
+				m = 1;
+				break;
+		}
+
+		std::ostringstream  buffer;
+		for (int i = 0; i < NUM_DIVS; i++) {
+			buffer.str("");
+			buffer << "Divide by " << outputMask[m][i];
+			configOutput(DIV_OUTPUTS + i, buffer.str());
+		}
+	}
+
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
@@ -117,7 +145,6 @@ struct ClockDivider : Module {
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
-			
 		return root;
 	}
 
@@ -131,9 +158,11 @@ struct ClockDivider : Module {
 		if (cnt)
 			count = json_integer_value(cnt);
 
-		if (m)
+		if (m) {
 			mode = json_integer_value(m);
-			
+			setOutputLabels();
+		}
+
 		if (trigs)
 			doTrigs = json_boolean_value(trigs);
 
@@ -167,7 +196,11 @@ struct ClockDivider : Module {
 			processCount = 0;
 			countUp = (params[DIR_PARAM].getValue() > 0.5f);
 			doTrigs = (params[TRIG_PARAM].getValue() > 0.5f);
+			int prevMode = mode;
 			mode = clamp((int)params[MODE_PARAM].getValue(), 0, maxModes);
+			
+			if (mode != prevMode)
+				setOutputLabels();
 		}
 		
 		// process the reset

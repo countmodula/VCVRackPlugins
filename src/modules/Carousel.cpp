@@ -62,9 +62,25 @@ struct Carousel : Module {
 	Carousel() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(ROTATE_UP_PARAM, 0.0, 1.0, 0.0, "Rotate up");
-		configParam(ROTATE_DN_PARAM, 0.0, 1.0, 0.0, "Rotate down");
-		configParam(RESET_PARAM, 0.0, 1.0, 0.0, "Reset");
+		configButton(ROTATE_UP_PARAM, "Rotate up");
+		configButton(ROTATE_DN_PARAM, "Rotate down");
+		configButton(RESET_PARAM, "Reset");
+		
+		configInput(ROTATE_UP_INPUT, "Rotate up");
+		configInput(ROTATE_DN_INPUT, "Rotate down");
+		configInput(RESET_INPUT, "Reset");
+		
+		inputInfos[ROTATE_UP_INPUT]->description =  "Logically ORed with the rotate up button";
+		inputInfos[ROTATE_DN_INPUT]->description =  "Logically ORed with the rotate down button";
+		inputInfos[RESET_INPUT]->description =  "Logically ORed with reset button";
+		
+		std::string s;
+		for (int i = 0; i < 8; i++) {
+			//todo: add the signal input number
+			s = std::to_string(i + 1);
+			configInput(CV_INPUT + i, "Source " + s);
+			configOutput(CV_OUTPUT + i, "Destination " + s);
+		}
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"	
@@ -181,7 +197,7 @@ struct Carousel : Module {
 
 struct CarouselWidget : ModuleWidget {
 	std::string panelName;
-
+	int prevOffset = -2;
 	CarouselWidget(Carousel *module) {
 		setModule(module);
 
@@ -192,7 +208,6 @@ struct CarouselWidget : ModuleWidget {
 		#include "../components/stdScrews.hpp"
 
 		for (int i = 0; i < 8; i++) {
-			// addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 20, STD_ROWS8[i] + 8), module, Carousel::ACTIVE_LIGHT + i));
 			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] - 9, STD_ROWS8[i]), module, Carousel::ACTIVE_LIGHT + i));
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[i]), module, Carousel::CV_INPUT + i));
 			addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 4, STD_ROWS8[i]), module, Carousel::SELECT_LIGHT + i));

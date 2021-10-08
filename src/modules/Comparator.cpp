@@ -40,6 +40,12 @@ struct Comparator : Module {
 		
 		configParam(THRESHOLD_PARAM, -10.0, 10.0, 0.0, "Threshold", " V");
 		
+		configInput(THRESHOLD_INPUT, "Threshold CV");
+		configInput(COMPARE_INPUT, "Comparison CV");
+
+		configOutput(COMPARE_OUTPUT, "Over");
+		configOutput(INV_OUTPUT, "Under");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"	
 	}
