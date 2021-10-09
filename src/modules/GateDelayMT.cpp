@@ -55,17 +55,26 @@ struct GateDelayMT : Module {
 		// parameters 
 		configParam(CVLEVEL_PARAM, -5.0f, 5.0f, 0.0f, "Delay time CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(TIME_PARAM, 0.0f, 10.0f, 5.0f, "Delay time");
-		configParam(RANGE_PARAM, 0.0f, 2.0f, 2.0f, "Delay range");
+		configSwitch(RANGE_PARAM, 0.0f, 2.0f, 2.0f,  "Time range", {"40", "20", "10"});
 		
 		// direct output
-		configParam(MIXDIR_PARAM, 0.0f, 1.0f, 1.0f, "Mute from mix Output");
-			
+		configSwitch(MIXDIR_PARAM, 0.0f, 1.0f, 1.0f, "Direct Mix", {"Excluded","Included"});
+
+		configInput(TIME_INPUT, "Time CV");
+		configInput(GATE_INPUT, "Gate");
+
+		configOutput(DIRECT_OUTPUT, "Direct");
+		configOutput(MIX_OUTPUT, "Mixed");
+
 		// tapped outputs
 		int k = 0;
+		std::string tapName;
 		for (int i = 0; i < 5; i += 4) {
 			for (int j = 0; j < 4; j++) {
-				configParam(MIXDEL_PARAMS + k, 0.0f, 1.0f, 1.0f, "Mute from mix output");
-			
+				tapName = "Tap " + std::to_string(k + 1);
+				configSwitch(MIXDEL_PARAMS + k, 0.0f, 1.0f, 1.0f, "Tap " + std::to_string(k + 1) + " mix", {"Excluded","Included"});
+				configOutput(DELAYED_OUTPUTS + k, tapName),
+
 				k++;
 			}
 		}

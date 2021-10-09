@@ -67,11 +67,24 @@ struct GatedComparator : Module {
 		configParam(THRESHOLD_PARAM, -5.0f, 5.0f, 0.0f, "Comparator threshold", " V");
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Comparator CV amount", " %", 0.0f, 100.0f, 0.0f);
 		
-		configParam(LOOP_EN_PARAM, 0.0f, 1.0, 0.0f, "Loop enable");
+		configSwitch(LOOP_EN_PARAM, 0.0f, 1.0, 0.0f, "Loop", {"Disabled", "Enabled"});
 		
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(COMP_INPUT, "Comparator");
+		configInput(CV_INPUT, "Comparator threshold CV");
+		configInput(LOOP_INPUT, "Loop");
+		configInput(LOOP_EN_INPUT, "Loop enable");
+
+		configOutput(COMP_OUTPUT, "Comparator");
+		configOutput(RM_OUTPUT, "Random melody");
+		configOutput(RMI_OUTPUT, "Inverted random melody");
+
 		// step params (knobs and switches)
+		std::string bitName;
 		for (int s = 0; s < 8; s++) {
-			configParam(MELODY_PARAMS + s, 0.0f, 1.0f, 0.0f, "Random melody");
+			bitName = std::to_string(s +1);
+			configSwitch(MELODY_PARAMS + s, 0.0f, 1.0f, 0.0f, "Random melody Bit " + bitName, {"Off", "On"});
+			configOutput(Q_OUTPUTS + s, "Bit " + bitName);
 		}
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
