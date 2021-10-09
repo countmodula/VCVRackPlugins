@@ -45,9 +45,16 @@ struct Megalomaniac : Module {
 	Megalomaniac() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
+		std::string oscName;
 		for (int i = 0; i < 6; i++) {
-			configParam(RATECV_PARAMS + i, -1.0f, 1.0f, 0.0f, "LFO rate CV Amount");
-			configParam(MIX_PARAMS + i, 0.0f, 1.0f, 1.0f, "LFO Mix");
+			oscName = "Oscillator " + std::to_string(i + 1);
+			configParam(RATECV_PARAMS + i, -1.0f, 1.0f, 0.0f, oscName + " rate CV Amount");
+			configParam(MIX_PARAMS + i, 0.0f, 1.0f, 1.0f, oscName + " mix");
+			
+			configInput(RATECV_INPUTS + i, oscName + " rate CV");
+			configInput(RANGECV_INPUTS + i, oscName + " range CV");
+			configInput(WAVECV_INPUTS + i, oscName + " wave select CV");
+			configInput(MIXCV_INPUTS + i, oscName + " mix CV");
 		}
 
 		updateCounter = 512;

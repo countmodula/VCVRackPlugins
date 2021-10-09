@@ -42,9 +42,18 @@ struct HyperManiacalLFOExpander : Module {
 	HyperManiacalLFOExpander() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
+		std::string oscName;
+		for (int i=0; i < 6; i++) {
+			oscName = "Oscillator " + std::to_string(i + 1);
+			configOutput(SIN_OUTPUTS + i, oscName + " sine");
+			configOutput(SAW_OUTPUTS + i, oscName + " saw");
+			configOutput(TRI_OUTPUTS + i, oscName + " triangle");
+			configOutput(SQR_OUTPUTS + i, oscName + " square");
+		}
+		
 		// from left module (master)
 		leftExpander.producerMessage = leftMessages[0];
-		leftExpander.consumerMessage = leftMessages[1];				
+		leftExpander.consumerMessage = leftMessages[1];
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

@@ -228,6 +228,31 @@ struct LightStripWidget : ModuleWidget {
 		CountModulaLightStrip() {
 			this->box.size = rack::window::mm2px(math::Vec(3.176, 115.0));
 		}
+				
+		void drawHalo(const DrawArgs& args) override {
+			// Don't draw halo if rendering in a framebuffer, e.g. screenshots or Module Browser
+			if (args.fb)
+				return;
+
+			const float halo = settings::haloBrightness;
+			if (halo == 0.f)
+				return;
+
+			// If light is off, rendering the halo gives no effect.
+			if (this->color.r == 0.f && this->color.g == 0.f && this->color.b == 0.f)
+				return;
+
+			float br = 30.0; // Blur radius
+			float cr = 5.0; // Corner radius
+			
+			nvgBeginPath(args.vg);
+			nvgRect(args.vg, -br, -br, this->box.size.x + 2 * br, this->box.size.y + 2 * br);
+			NVGcolor icol = color::mult(TBase::color, halo);
+			NVGcolor ocol = nvgRGBA(0, 0, 0, 0);
+			nvgFillPaint(args.vg, nvgBoxGradient(args.vg, 0, 0, this->box.size.x, this->box.size.y, cr, br, icol, ocol));
+			nvgFill(args.vg);
+		}
+		
 	};
 
 	//----------------------------------------------------------------
