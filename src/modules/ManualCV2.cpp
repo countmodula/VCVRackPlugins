@@ -44,8 +44,11 @@ struct ManualCV2 : Module {
 		
 		configParam(CV_PARAM, 0.0f, 10.0f, 0.0f, "Output value", " V");
 		configParam(RANGE_PARAM, 1.0f, 10.0f, 10.0f, "Output range", " V");
-		configParam(POLARITY_PARAM, 0.0f, 1.0f, 0.0f, "Output polarity");
+		configSwitch(POLARITY_PARAM, 0.0f, 1.0f, 0.0f, "Output polarity", {"Unipolar", "Bipolar"});
 		configParam(CHANNELS_PARAM, 1.0f, 16.0f, 1.0f, "Number of channels");
+		
+		configOutput(CV1_OUTPUT, "CV");
+		configOutput(CV2_OUTPUT, "Inverted CV");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

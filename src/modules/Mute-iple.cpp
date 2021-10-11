@@ -40,13 +40,19 @@ struct MuteIple : Module {
 	MuteIple() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
+		std::string s;
 		for (int i = 0; i < 8 ; i++) {
-			configParam(MUTE_PARAMS + i, 0.0f, 1.0f, 0.0f, "Mute");
+			s = std::to_string(i + 1);
+			configButton(MUTE_PARAMS + i, "Mute #" + s);
 		}
 
-		configParam(MODEA_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
-		configParam(MODEB_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
+		configSwitch(MODEA_PARAM, 0.0f, 1.0f, 0.0f, "Mute type (#1-4)", {"Hard", "Soft"});
+		configSwitch(MODEB_PARAM, 0.0f, 1.0f, 0.0f, "Mute type (#5-8)", {"Hard", "Soft"});
 
+		configInput(SIGNAL_INPUTS, "A");
+		configInput(SIGNAL_INPUTS + 1, "B");
+		inputInfos[SIGNAL_INPUTS + 1]->description = "Normalled to A input";
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

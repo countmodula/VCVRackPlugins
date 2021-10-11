@@ -35,6 +35,18 @@ struct Mult : Module {
 	Mult() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		char c ='A';
+		std::string s, prevS = "";
+		for (int i = 0; i < NUM_MULTS; i++) {
+			s = c++;
+			configInput(MULT_INPUT + i, s);
+			configOutput(MULT_OUTPUT + i, s);
+			if (i > 0)
+				inputInfos[MULT_INPUT + i]->description = "Normalled to " + prevS + " input";
+
+			prevS = s;
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

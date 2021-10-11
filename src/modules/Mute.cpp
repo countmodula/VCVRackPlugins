@@ -46,9 +46,15 @@ struct Mute : Module {
 	Mute() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
-		configParam(MUTE_PARAM, 0.0f, 1.0f, 0.0f, "Mute");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mute type", {"Hard", "Soft"});
+		configButton(MUTE_PARAM, "Mute");
 
+		configInput(L_INPUT, "Signal 1");
+		configInput(R_INPUT, "Signal 2");
+		configInput(MUTE_INPUT, "Mute");
+
+		configInput(L_OUTPUT, "Signal 1");
+		configInput(R_OUTPUT, "Signal 2");
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

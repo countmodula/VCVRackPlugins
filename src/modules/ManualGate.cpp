@@ -52,7 +52,15 @@ struct ManualGate : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Output gate length");
-		configParam(GATE_PARAM, 0.0f, 1.0f, 0.0f, "Gate on");
+		configButton(GATE_PARAM, "Gate");
+
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(IGATE_OUTPUT, "Inverted gate");
+		configOutput(EXTENDED_OUTPUT, "Extended gate");
+		configOutput(IEXT_OUTPUT, "Inverted extended gate");
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(LATCH_OUTPUT, "Latch");
+		configOutput(ILATCH_OUTPUT, "Inverted latch");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

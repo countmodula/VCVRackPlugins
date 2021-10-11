@@ -44,8 +44,18 @@ struct MasterReset : Module {
 	MasterReset() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(RESET_PARAM, 0.0f, 1.0f, 0.0f, "Reset");
+		configButton(RESET_PARAM, "Reset");
 
+		configInput(RESET_INPUT, "External reset");
+		configOutput(RESET_OUTPUT, "Reset");
+		configBypass(RESET_INPUT, RESET_INPUT);
+		
+		for (int i = 0; i < 4; i++) {
+			configInput(CLOCK_INPUTS + i, string::f("Clock %d", i + 1)),
+			configOutput(CLOCK_OUTPUTS + i, string::f("Clock %d", i + 1));
+			configBypass(CLOCK_INPUTS + i, CLOCK_OUTPUTS + i);
+		}
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

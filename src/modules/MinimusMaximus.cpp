@@ -53,10 +53,28 @@ struct MinimusMaximus : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		// controls
-		configParam(BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f, "Bias on/off");
-		configParam(BIAS_PARAM, -5.0f, 5.0f, 0.0f, "Bias Amount");
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output Mode (Uni/Bipolar)");
+		configSwitch(BIAS_ON_PARAM, 0.0f, 1.0f, 0.0f, "Channel D bias", {"Off", "On"});
+		configParam(BIAS_PARAM, -5.0f, 5.0f, 0.0f, "Bias amount");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Gate output mode", {"Unipolar", "Bipolar"});
 
+		char c = 'A';
+		for (int i = 0; i < 4; i++) {
+			configInput(A_INPUT + i, string::f("%c", c));
+			configOutput(A_MAX_OUTPUT + i, string::f("%c is maximum", c));
+			outputInfos[A_MAX_OUTPUT + i]->description = "Gate signal indicating this channel has the highest input value";
+			configOutput(A_MIN_OUTPUT + i, string::f("%c is minumum", c));
+			outputInfos[A_MAX_OUTPUT + i]->description = "Gate signal indicating this channel has the lowest input value";
+			c++;
+		}
+
+		configOutput(MIN_OUTPUT, "Minumum");
+		configOutput(MAX_OUTPUT, "Maximum");
+		configOutput(AVG_OUTPUT, "Mean");
+		
+		outputInfos[MIN_OUTPUT]->description = "The minimum value of the connected inputs";
+		outputInfos[MAX_OUTPUT]->description = "The maximum value of the connected inputs";
+		outputInfos[AVG_OUTPUT]->description = "The average value of the connected inputs";
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

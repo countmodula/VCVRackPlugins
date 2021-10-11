@@ -81,6 +81,16 @@ struct MorphShaper : Module {
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Morph CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(MANUAL_PARAM, 0.0f, 10.0f, 0.0f, "Manual morph");
 
+		configInput(CV_INPUT, "Morph CV");
+		
+		char c ='A';
+		std::string s;
+		for (int i = 0; i < 4; i++) {
+			s = c++;
+			configOutput(MORPH_OUTPUT + i, "Morph " + s);
+			configLight(MORPH_LIGHT + i, "Morph " + s);
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
