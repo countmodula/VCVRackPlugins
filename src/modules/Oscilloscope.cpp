@@ -85,6 +85,8 @@ struct Oscilloscope : Module {
 	bool showStats = false;
 	int processCount = 16;
 	
+	std::vector<std::string>  scaleLabels = {"5 V", "2 V", "1 V", "500 mV", "200 mV", "100mV", "50 mV", "20 mV", "10 mV", "5 mV", "2 mV", "1 mV"};
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"	
 
@@ -96,27 +98,33 @@ struct Oscilloscope : Module {
 		configParam(CH3_POS_PARAM, -10.0, 10.0, 0.0, "Ch 3 pos");
 		configParam(CH4_POS_PARAM, -10.0, 10.0, 0.0, "Ch 4 pos");
 		
-		configParam(CH1_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 1 scale");
-		configParam(CH2_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 2 scale");
-		configParam(CH3_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 3 scale");
-		configParam(CH4_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 4 scale");
+		configSwitch(CH1_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 1 scale", scaleLabels);
+		configSwitch(CH2_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 2 scale", scaleLabels);
+		configSwitch(CH3_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 3 scale", scaleLabels);
+		configSwitch(CH4_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 4 scale", scaleLabels);
 
-		configParam(CH1_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 1 zero");
-		configParam(CH2_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 2 zero");
-		configParam(CH3_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 3 zero");
-		configParam(CH4_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 4 zero");
+		configButton(CH1_ZERO_PARAM, "Ch 1 zero");
+		configButton(CH2_ZERO_PARAM, "Ch 2 zero");
+		configButton(CH3_ZERO_PARAM, "Ch 3 zero");
+		configButton(CH4_ZERO_PARAM, "Ch 4 zero");
 
-		configParam(TRIG_PARAM, 0.0f, 4.0f, 1.0f, "Trigger source");
+		configSwitch(TRIG_PARAM, 0.0f, 4.0f, 1.0f, "Trigger source", {"External", "Channel 1", "Channel 2", "Channel 3", "Channel 4"});
 		configParam(TRIGLEVEL_PARAM, -10.0f, 10.0f, 0.0f, "Trigger level");
 		configParam(HOLDOFF_PARAM, 0.0, 1000.0, 0.0, "Hold-off", "", 0, 0.01f);
 
 		configParam(TIME_PARAM, -4.0, -18.0, -14.0, "Time");
 		
-		configParam(FREEZE_PARAM, 0.0f, 1.0f, 0.0f, "Trace freeze");
-		configParam(DISPLAY_GRID_PARAM, 0.0f, 1.0f, 1.0f, "Show grid");
-		configParam(DISPLAY_GRIDBASELINE_PARAM, 0.0f, 1.0f, 1.0f, "Show grid baseline");
-		configParam(DISPLAY_TRACEBASELINE_PARAM, 0.0f, 1.0f, 0.0f, "show trace baselines");
-		configParam(DISPLAY_STATISTICS_PARAM, 0.0f, 1.0f, 0.0f, "Show statistics");
+		configButton(FREEZE_PARAM,"Trace freeze");
+		configButton(DISPLAY_GRID_PARAM, "Show grid");
+		configButton(DISPLAY_GRIDBASELINE_PARAM, "Show grid baseline");
+		configButton(DISPLAY_TRACEBASELINE_PARAM, "show trace baselines");
+		configButton(DISPLAY_STATISTICS_PARAM, "Show statistics");
+
+		configInput(CH1_INPUT, "Channel 1");
+		configInput(CH2_INPUT, "Channel 2");
+		configInput(CH3_INPUT, "Channel 3");
+		configInput(CH4_INPUT, "Channel 4");
+		configInput(TRIG_INPUT, "External trigger");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -670,16 +678,68 @@ struct OscilloscopeWidget : ModuleWidget {
 	// include the theme menu item struct we'll use when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
+	struct TraceLocationMenuItem : MenuItem {
+		Oscilloscope *module;
+		bool centreTraces;
+		
+		void onAction(const event::Action &e) override {
+
+			int numChannels = 0;
+			bool connected[4] = {};
+			for (int c = 0; c < 4; c++) {
+				if (module->inputs[Oscilloscope::CH1_INPUT + c].isConnected()) {
+					connected[c] = true;
+					numChannels++;
+				}
+			}
+
+			float v = 0.0f, d = 0.0f;
+			if (!centreTraces) {
+				switch (numChannels) {
+					case 4:
+						v = 6.0f;
+						d = 4.0f;
+						break;
+					case 3:
+						v = d = 6.0f;
+						break;
+					case 2:
+						v = 5;
+						d = 10;
+						break;
+					default:
+						v = d = 0.0f;
+						break;
+				}
+			}
+			for (int c = 0; c < 4; c++) {
+				if (connected[c]) {
+					module->getParam(Oscilloscope::CH1_POS_PARAM + c).setValue(v);
+					v -= d;
+				}
+			}
+		}
+	};	
+
 	void appendContextMenu(Menu *menu) override {
 		Oscilloscope *module = dynamic_cast<Oscilloscope*>(this->module);
 		assert(module);
 
 		// blank separator
 		menu->addChild(new MenuSeparator());
-		
+			
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 
+		TraceLocationMenuItem *centreMenuItem = createMenuItem<TraceLocationMenuItem>("Centre all traces");
+		centreMenuItem->centreTraces = true;
+		centreMenuItem->module = module;
+		menu->addChild(centreMenuItem);
+			
+		TraceLocationMenuItem *spreadMenuItem = createMenuItem<TraceLocationMenuItem>("Organise traces");
+		spreadMenuItem->centreTraces = false;
+		spreadMenuItem->module = module;
+		menu->addChild(spreadMenuItem);
 	}
 	
 	void step() override{

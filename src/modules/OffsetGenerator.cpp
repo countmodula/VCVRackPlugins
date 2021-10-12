@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Offset Generator
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
@@ -34,13 +34,22 @@ struct OffsetGenerator : Module {
 		
 	GateProcessor gateTrig;
 	float cv[PORT_MAX_CHANNELS] = {};
-	
+
 	OffsetGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		configParam(COARSE_PARAM, -8.0f, 8.0f, 0.0f, "Coarse", " V");
 		configParam(FINE_PARAM, -1.0f, 1.0f, 0.0f, "Fine", " V");
 
+		configInput(CV_INPUT, "CV");
+		configInput(COARSE_INPUT, "Coarse voltage");
+		configInput(TRIG_INPUT, "Sample & hold trigger");
+
+		inputInfos[COARSE_INPUT]->description = "Summed with the input CV and fine control value. Disconnects the coarse control";
+		inputInfos[TRIG_INPUT]->description = "Apply a trigger signal here to activate the S&H function";
+
+		configOutput(MIX_OUTPUT, "CV");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

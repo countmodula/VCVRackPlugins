@@ -92,7 +92,12 @@ struct STRUCT_NAME : Module {
 		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Output scale");
 		
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 1.0f, 0.0f, "Sample and hold mode");
+		configSwitch(HOLD_PARAM, 0.0f, 1.0f, 0.0f, "Sample and hold", {"Off", "On"});
+		
+		configOutput(CVA_OUTPUT, "CV A");
+		configOutput(CVAI_OUTPUT, "Inverted CV A");
+		configOutput(CVB_OUTPUT, "CV B");
+		configOutput(CVBI_OUTPUT, "Inverted CV B");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
