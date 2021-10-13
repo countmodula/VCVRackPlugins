@@ -41,8 +41,14 @@ struct PolyVCPolarizer : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
-		configParam(MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
-
+		configParam(MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Polarity");
+		
+		configInput(CV_INPUT, "Polarity CV");
+		inputInfos[CV_INPUT]->description = "Summed with the manual polarity amount";
+		configInput(SIGNAL_INPUT, "Signal");
+		
+		configOutput(SIGNAL_OUTPUT, "Signal");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

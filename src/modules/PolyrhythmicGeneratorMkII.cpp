@@ -83,18 +83,42 @@ struct PolyrhythmicGeneratorMkII : Module {
 		// division channels
 		for (int i = 0; i < 8; i++) {
 			// knobs
-			configParam(CV_PARAM + i, -1.0f, 1.0f, 0.0f, "Division  CV amount", " %", 0.0f, 100.0f, 0.0f);
-			configParam(DIV_PARAM + i, 1.0f, 16.0f, 1.0f, "Division");
+			configParam(CV_PARAM + i, -1.0f, 1.0f, 0.0f, string::f("Channel %d division CV amount", i + 1), " %", 0.0f, 100.0f, 0.0f);
+			configParam(DIV_PARAM + i, 1.0f, 16.0f, 1.0f, string::f("Channel %d division", i + 1));
 			
 			// buttons
-			configParam(MUTE_PARAM + i, 0.0f, 1.0f, 0.0f, "Mute channel");
+			configButton(MUTE_PARAM + i, string::f("Channel %d mute", i + 1));
+			
+			// inputs
+			configInput(CLOCK_INPUT + i, string::f("Channel %d clock", i + 1));
+			configInput(RESET_INPUT + i, string::f("Channel %d reset", i + 1));
+			configInput(CV_INPUT + i, string::f("Channel %d division CV", i + 1));
+			
+			if (i > 0) {
+				inputInfos[CLOCK_INPUT + i]->description = string::f("Normalled to input %d", i);
+				inputInfos[RESET_INPUT + i]->description = string::f("Normalled to input %d", i);
+				inputInfos[CV_INPUT + i]->description = string::f("Normalled to input %d", i);
+			}
+			
+			// outputs
+			configOutput(TRIG_OUTPUT + i, string::f("Channel %d", i + 1));
 		}
 		
 		// global stuff
-		configParam(OUTPUTMODE_PARAM, 0.0f, 3.0f, 0.0f, "Output mode");
-		configParam(BEATMODE_PARAM, 0.0f, 1.0f, 1.0f, "Beat mode");
-		configParam(MUTEALL_PARAM, 0.0f, 1.0f, 0.0f, "Global mute");
+		configSwitch(OUTPUTMODE_PARAM, 0.0f, 3.0f, 0.0f, "Output mode", {"Trigger", "Gate", "Gated clock", "Clock"});
+		configSwitch(BEATMODE_PARAM, 0.0f, 1.0f, 1.0f, "Beat mode", {"Chaos", "On the one"});
+		configButton(MUTEALL_PARAM, "Global mute");
 		
+		configInput(MUTEALL_INPUT, "Mute all");
+		configInput(BEATMODE_INPUT, "Beat mode");
+		
+		inputInfos[MUTEALL_INPUT]->description = "Apply a high gate signal to mute all channels";
+		inputInfos[BEATMODE_INPUT]->description = "Apply a high gate signal for \"On The 1\" operation";
+		
+		configOutput(POLY_OUTPUT, "Polyphonic");
+		outputInfos[POLY_OUTPUT]->description = "Combines channels 1-8 into a polyphonic signal";
+		
+
 	// set the theme from the current default value
 	#include "../themes/setDefaultTheme.hpp"
 	}

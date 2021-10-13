@@ -41,6 +41,20 @@ struct PolyMinMax : Module {
 	PolyMinMax() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(SIGNAL_INPUT, "Poly signal");
+		
+		configOutput(MIN_OUTPUT, "Minimum");
+		configOutput(MEAN_OUTPUT, "Mean");
+		configOutput(MAX_OUTPUT, "Maximum");
+		configOutput(ASC_OUTPUT, "Ascending");
+		configOutput(DESC_OUTPUT, "Descending");
+
+		outputInfos[MIN_OUTPUT]->description = "Monophonic signal representing the lowest of the voltages across all input channels";
+		outputInfos[MEAN_OUTPUT]->description = "Monophonic signal representing the average of the voltages across all input channels";
+		outputInfos[MAX_OUTPUT]->description = "Monophonic signal representing the highest of the voltages across all input channels";
+		outputInfos[ASC_OUTPUT]->description = "Polyphonic signal with the input channels sorted from lowest voltage to highest";
+		outputInfos[DESC_OUTPUT]->description = "Polyphonic signal with the input channels sorted from highest voltage to lowest";
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

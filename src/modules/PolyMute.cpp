@@ -49,16 +49,19 @@ struct PolyMute : Module {
 	
 	PolyMute() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	
-	
-		char buffer[100];
+
 		for (int i = 0; i < NUM_CHANS ; i++) {
-			sprintf(buffer, "Mute channel %d", i + 1);	
-			configParam(MUTE_PARAMS + i, 0.0f, 1.0f, 0.0f, buffer);
+			configButton(MUTE_PARAMS + i, string::f("Mute channel %d", i + 1));
 		}
 
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
-		configParam(MASTER_PARAM, 0.0f, 1.0f, 0.0f, "Master Mute");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mute style", {"Hard", "Soft"} );
+		configButton(MASTER_PARAM, "Master Mute");
+
+		configInput(POLY_INPUT, "Poly");
+		configInput(MUTE_INPUT, "Mute");
+		configInput(MASTER_INPUT, "Master mute");
+		
+		configOutput(POLY_OUTPUT, "Poly");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

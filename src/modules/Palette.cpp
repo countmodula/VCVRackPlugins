@@ -258,6 +258,7 @@ struct Palette : Module {
 	enum LightIds {
 		ENUMS(SELECT_LIGHTS, MAX_COLOURS),
 		LOCK_PARAM_LIGHT,
+		ENUMS(BUTTON_LIGHTS, MAX_COLOURS),
 		NUM_LIGHTS
 	};
 
@@ -337,11 +338,14 @@ struct Palette : Module {
 		
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		configParam(LOCK_PARAM, 0.0f, 1.0f, 0.0f, "Lock current colour");
+		configButton(LOCK_PARAM, "Lock current colour");
 
 		getParamQuantity(LOCK_PARAM)->randomizeEnabled = false;
 
-
+		for (int i = 0; i < MAX_COLOURS; i++) {
+			configLight(BUTTON_LIGHTS + i, string::f("Select colour %d", i+1));
+		}
+		
 		// set the theme from the current default value
 		if (running) {
 			#include "../themes/setDefaultTheme.hpp"
@@ -1057,17 +1061,48 @@ struct PaletteWidget : ModuleWidget {
 		}			
 	};	
 
+
+	// custom tool tip for the colour buttons
+	struct ColourButtonTooltip : ui::Tooltip {
+		ModuleLightWidget* lightWidget;
+
+		// hack to make the mose-overs look like button tooltips.
+		void step() override {
+			if (lightWidget->module) {
+				engine::LightInfo* lightInfo = lightWidget->getLightInfo();
+				if (!lightInfo)
+					return;
+				// Label
+				text = lightInfo->getName();
+				
+				// Description
+				std::string description = lightInfo->getDescription();
+				if (description != "") {
+					text += description;
+				}
+
+			}
+			Tooltip::step();
+			// Position at bottom-right of parameter
+			box.pos = lightWidget->getAbsoluteOffset(lightWidget->box.size).round();
+			// Fit inside parent (copied from Tooltip.cpp)
+			assert(parent);
+			box = box.nudge(parent->box.zeroPos());
+		}
+	};
+
+
 	//---------------------------------------------------------------------
 	// Custom colour buttons
 	//---------------------------------------------------------------------
-	struct ColourButton : LightWidget {
-		Palette *module;
+	struct ColourButton : ModuleLightWidget {
 		NVGcolor color;
 		int colorID;
 		bool enabled = true;
 		bool overrideRevert;
 		
 		void createContextMenu() {
+			Palette *module = dynamic_cast<Palette*>(this->module);
 			ui::Menu *menu = createMenu();
 			
 			int x = (int)(settings::cableColors.size());
@@ -1155,7 +1190,7 @@ struct PaletteWidget : ModuleWidget {
 		
 		void draw(const DrawArgs& args) override {
 			
-			NVGcolor bezelColor = module ? module->bezelColor : SCHEME_BLACK;
+			NVGcolor bezelColor = module ? ((Palette *)(module))->bezelColor : SCHEME_BLACK;
 			
 			nvgGlobalTint(args.vg, color::WHITE);
 			
@@ -1170,12 +1205,38 @@ struct PaletteWidget : ModuleWidget {
 			nvgStrokeWidth(args.vg, 1.2);
 			nvgStrokeColor(args.vg, bezelColor);
 			nvgStroke(args.vg);
+			
+			ModuleLightWidget::draw(args);
+		}
+
+		void drawHalo(const DrawArgs& args) override {
+			// Don't draw halo if rendering in a framebuffer, e.g. screenshots or Module Browser
+			if (args.fb)
+				return;
+
+			const float halo = settings::haloBrightness;
+			if (halo == 0.f)
+				return;
+
+			// If light is off, rendering the halo gives no effect.
+			if (this->color.r == 0.f && this->color.g == 0.f && this->color.b == 0.f)
+				return;
+
+			float br = 30.0; // Blur radius
+			float cr = 5.0; // Corner radius
+			
+			nvgBeginPath(args.vg);
+			nvgRect(args.vg, -br, -br, this->box.size.x + 2 * br, this->box.size.y + 2 * br);
+			NVGcolor icol = color::mult(color, halo);
+			NVGcolor ocol = nvgRGBA(0, 0, 0, 0);
+			nvgFillPaint(args.vg, nvgBoxGradient(args.vg, 0, 0, this->box.size.x, this->box.size.y, cr, br, icol, ocol));
+			nvgFill(args.vg);
 		}
 
 		void onButton(const event::Button& e) override {
+			Palette *module = dynamic_cast<Palette*>(this->module);
 			Widget::onButton(e);
 			e.stopPropagating();
-			
 			if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
 				if (enabled) {
 					APP->scene->rack->nextCableColorId = colorID;
@@ -1190,7 +1251,28 @@ struct PaletteWidget : ModuleWidget {
 					createContextMenu();
 
 				e.consume(this);
-			}		
+			}	
+
+		}
+		
+		// hack to customise the tool tips
+		void createTooltip() {
+			if (!settings::tooltips)
+				return;
+			if (this->tooltip)
+				return;
+			// If the LightInfo is null, don't show a tooltip
+			if (!getLightInfo())
+				return;
+			ColourButtonTooltip* tooltip = new ColourButtonTooltip;
+			tooltip->lightWidget = this;
+			APP->scene->addChild(tooltip);
+			this->tooltip = tooltip;
+		}
+		
+		// hack to customise the tooltips
+		void onEnter(const EnterEvent& e) override {
+			this->createTooltip();
 		}
 	};
 
@@ -1287,7 +1369,8 @@ struct PaletteWidget : ModuleWidget {
 				bool enabled;
 				
 				int n = (module ? module->numColoursToUse : FORCE_MAX_COLOURS ? MAX_COLOURS : NUM_COLOURS);
-
+				
+				int lightId = Palette::BUTTON_LIGHTS;
 				for (int i = 0; i < n; i++) {
 					
 					if (i < x && moduleEnabled) {
@@ -1313,7 +1396,8 @@ struct PaletteWidget : ModuleWidget {
 					colourButton->color = color;
 					colourButton->colorID = i;
 					colourButton->enabled = enabled;
-					
+					colourButton->firstLightId = lightId++;
+
 					if (module)
 						module->buttons.push_back(colourButton);
 					

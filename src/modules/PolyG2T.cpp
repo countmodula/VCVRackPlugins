@@ -49,6 +49,15 @@ struct PolyG2T : Module {
 	PolyG2T() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(GATE_INPUT, "Gate");
+		inputInfos[GATE_INPUT]->description = "Schmitt trigger input with 2.0 volt high and 0.1 volt low thresholds";
+		
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(INV_OUTPUT, "Inverted gate");
+		configOutput(START_OUTPUT, "Gate start trigger");
+		configOutput(END_OUTPUT, "Gate end trigger");
+		configOutput(EDGE_OUTPUT, "Gate start/end trigger");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
