@@ -52,6 +52,14 @@ struct VCPolarizer : Module {
 		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
 
+		configInput(CH1_CV_INPUT, "CV");
+		configInput(CH1_SIGNAL_INPUT, "Signal");
+		configOutput(CH1_SIGNAL_OUTPUT, "Signal");
+		
+		configInput(CH2_CV_INPUT, "CV");
+		configInput(CH2_SIGNAL_INPUT, "Signal");
+		configOutput(CH2_SIGNAL_OUTPUT, "Signal");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

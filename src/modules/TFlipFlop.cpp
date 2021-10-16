@@ -96,6 +96,15 @@ struct TFlipFlop : Module {
 	TFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		for (int i = 0; i < 2; i++) {
+			configInput(T_INPUT + i, string::f("Flip flop %d T", i + 1));
+			configInput(RESET_INPUT + i, string::f("Flip flop %d Reset", i + 1));
+			configInput(ENABLE_INPUT + i, string::f("Flip flop %d Enable", i + 1));
+			
+			configOutput(Q_OUTPUT + i, string::f("Flip flop %d Q", i + 1));
+			configOutput(NQ_OUTPUT + i, string::f("Flip flop %d Not Q", i + 1));
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -260,6 +269,13 @@ struct SingleTFlipFlop : Module {
 		
 	SingleTFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		configInput(T_INPUT, "T");
+		configInput(RESET_INPUT, "Reset");
+		configInput(ENABLE_INPUT, "Enable");
+
+		configOutput(Q_OUTPUT, "Q");
+		configOutput(NQ_OUTPUT, "Not Q");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

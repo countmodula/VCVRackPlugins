@@ -63,7 +63,17 @@ struct VCPulseDivider : Module {
 		// scale 10V CV up to 32
 		configParam(CV_PARAM, -3.2f, 3.2f, 0.0f, "CV Amount", " %", 0.0f, 31.25f, 0.0f);
 		configParam(MANUAL_PARAM, 1.0f, 32.0f, 0.0f, "Divide by");
+		
+		configInput(DIV_INPUT, "Pulse");
+		configInput(RESET_INPUT, "Reset");
+		configInput(CV_INPUT, "Division CV");
+		
+		configOutput(DIV1_OUTPUT, "On the 1");
+		configOutput(DIVN_OUTPUT, "On the N");
 
+		outputInfos[DIV1_OUTPUT]->description = "Output pulse occurs on the first clock of the division cycle";
+		outputInfos[DIVN_OUTPUT]->description = "Output pulse occurs on the last clock of the division cycle";
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

@@ -49,6 +49,15 @@ struct VoltageScaler : Module {
 		configParam(UPPER_PARAM, -1.0f, 1.0f, 0.0f, "Output limit A", " V", 0.0f, 10.0f, 0.0f);
 		configParam(LOWER_PARAM, -1.0f, 1.0f, 0.0f, "Output limit B", " V", 0.0f, 10.0f, 0.0f);
 
+		configInput(CV_INPUT, "CV");
+		configInput(UPPER_INPUT, "Limit A CV");
+		configInput(LOWER_INPUT, "Limit B CV");
+
+		inputInfos[UPPER_INPUT]->description = "When connected, the Limit A knob acts as an attenuator";
+		inputInfos[LOWER_INPUT]->description = "When connected, the Limit B knob acts as an attenuator";
+
+		configOutput(CV_OUTPUT, "Scaled CV");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

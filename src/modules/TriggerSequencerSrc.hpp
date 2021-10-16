@@ -51,31 +51,41 @@ struct STRUCT_NAME : Module {
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
-		
+
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		char rowText[20];
-		
+		std::vector<std::string> channelLabels[TRIGSEQ_NUM_ROWS] = {{"A", "B"}, {"C", "D"}, {"E", "F"}, {"G", "H"}};
+		std::vector<std::string> outputSelectLabels[TRIGSEQ_NUM_ROWS] = {{"B", "Off", "A"}, {"D", "Off", "C"}, {"F", "Off", "E"}, {"H", "Off", "G"}};
+
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			
 			// length & CV parms
-			sprintf(rowText, "Channel %d length", r + 1);
-			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), rowText);
+			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), string::f( "Channel %d length", r + 1));
 			
 			// row lights and switches
 			int i = 0;
-			char stepText[20];
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
-				sprintf(stepText, "Step %d select", s + 1);
-				configParam(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, stepText);
+				configSwitch(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, string::f("Step %d select", s + 1), outputSelectLabels[r]);
 			}
 			
 			// output lights, mute buttons and jacks
 			for (int i = 0; i < 2; i++) {
-				configParam(MUTE_PARAMS + + (r * 2) + i, 0.0f, 1.0f, 0.0f, "Mute this output");
+				configButton(MUTE_PARAMS + (r * 2) + i, string::f("Mute output %s", channelLabels[r][i].c_str()));
+				configOutput(TRIG_OUTPUTS + (r * 2) + i, string::f("Trigger %s", channelLabels[r][i].c_str()));
+			}
+			
+			configInput(RUN_INPUTS + r, string::f("Channel %d run", r + 1));
+			configInput(CLOCK_INPUTS + r, string::f("Channel %d clock", r + 1));
+			configInput(RESET_INPUTS + r, string::f("Channel %d reset", r + 1));
+			configInput(CV_INPUTS + r, string::f("Channel %d length CV", r + 1));
+			if (r > 0) {
+				inputInfos[RUN_INPUTS + r]->description = string::f("Normalled to channel %d run input", r);
+				inputInfos[CLOCK_INPUTS + r]->description = string::f("Normalled to channel %d clock input", r);
+				inputInfos[RESET_INPUTS + r]->description = string::f("Normalled to channel %d reset input", r);
 			}
 		}
+		
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander

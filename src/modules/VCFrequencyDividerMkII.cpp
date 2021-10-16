@@ -67,6 +67,15 @@ struct VCFrequencyDividerMkII : Module {
 		configParam(CV_PARAM, -2.0f, 2.0f, 0.0f, "CV Amount", " %", 0.0f, 50.0f, 0.0f);
 		configParam(MANUAL_PARAM, 1.0f, 21.0f, 0.0f, "Divide by");
 
+		configInput(CV_INPUT, "Division CV");
+		configInput(DIV_INPUT, "Signal");
+		
+		configOutput(DIVB_OUTPUT, "Bipolar");
+		configOutput(DIVU_OUTPUT, "Unipolar");
+		
+		outputInfos[DIVB_OUTPUT]->description = "+/-5 Volts";
+		outputInfos[DIVU_OUTPUT]->description = "0-10 Volts";
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

@@ -42,6 +42,17 @@ struct VoltageControlledSwitch : Module {
 	VoltageControlledSwitch() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(CV_INPUT, "Select CV");
+		inputInfos[CV_INPUT]->description = "Schmitt trigger input with thresholds at 3.6 and 3.2 volts.";
+		
+		configInput(A_INPUT, "Switch 1");
+		configOutput(A1_OUTPUT, "Switch 1 A");
+		configOutput(A2_OUTPUT, "Switch 1 B");
+		
+		configInput(B1_INPUT, "Switch 2 A");
+		configInput(B2_INPUT, "Switch 2 B");
+		configOutput(B_OUTPUT, "Switch 2");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

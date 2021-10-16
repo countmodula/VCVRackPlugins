@@ -39,6 +39,16 @@ struct VoltageInverter : Module {
 	VoltageInverter() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(A_INPUT, "A");
+		configInput(B_INPUT, "B");
+		configInput(C_INPUT, "C");
+		configInput(D_INPUT, "D");
+
+		configOutput(A_OUTPUT, "A inverted");
+		configOutput(B_OUTPUT, "B inverted");
+		configOutput(C_OUTPUT, "C inverted");
+		configOutput(D_OUTPUT, "D inverted");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
