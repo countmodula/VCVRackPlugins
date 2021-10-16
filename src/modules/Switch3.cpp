@@ -39,8 +39,13 @@ struct Switch3 : Module {
 	Switch3() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(SELECT_PARAM, 0.0, 1.0, 0.0, "Input select");
-	
+		configButton(SELECT_PARAM, "Source select");
+		configInput(CV_INPUT, "Source 1");
+		configInput(CV_INPUT + 1, "Source 2");
+		configInput(CV_INPUT + 2, "Source 3");
+		
+		configOutput(CV_OUTPUT, "Signal");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"	
 	}

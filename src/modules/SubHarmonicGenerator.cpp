@@ -42,14 +42,16 @@ struct SubHarmonicGenerator : Module {
 	SubHarmonicGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		char knobText[20];
+		char cm = 'A';
+		char cd = 'A';
 		for (int i = 0; i < 5; i++) {
-			sprintf (knobText, "Level %d", i + 1);
-			configParam(MIX_PARAM + i, 0.0f, 1.0f, 0.0f, knobText, " %", 0.0f, 100.0f, 0.0f);
+			if (i == 0)
+				configParam(MIX_PARAM + i, 0.0f, 1.0f, 0.0f, "Divide by 1 mix level", " %", 0.0f, 100.0f, 0.0f);
+			else
+				configParam(MIX_PARAM + i, 0.0f, 1.0f, 0.0f, string::f("Divide by %c mix level", cm++), " %", 0.0f, 100.0f, 0.0f);
 
 			if ( i < 4) {
-				sprintf (knobText, "Division %d", i + 1);
-				configParam(DIV_PARAM + i, 2.0f, 16.0f, (float)(divisions[i + 1]), knobText);
+				configParam(DIV_PARAM + i, 2.0f, 16.0f, (float)(divisions[i + 1]), string::f("Division %c", cd++));
 			}
 
 			// dividers
@@ -59,6 +61,9 @@ struct SubHarmonicGenerator : Module {
 		// output level knobs
 		configParam(OUTPUTLEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
 
+		configInput(OSC_INPUT, "Oscillator");
+		configOutput(MIX_OUTPUT, "Sub-harmonic mix");
+			
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

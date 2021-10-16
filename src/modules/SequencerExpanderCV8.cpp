@@ -76,7 +76,10 @@ struct SequencerExpanderCV8 : Module {
 		}
 		
 		// range switch
-		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+		configSwitch(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"8 Volts", "4 Volts", "2 Volts"});
+
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

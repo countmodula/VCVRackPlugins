@@ -66,20 +66,23 @@ struct SequencerExpanderRM8 : Module {
 		
 		// from left module (master)
 		leftExpander.producerMessage = leftMessages[0];
-		leftExpander.consumerMessage = leftMessages[1];		
+		leftExpander.consumerMessage = leftMessages[1];
 		
 		// to right module (expander)
 		rightExpander.producerMessage = rightMessages[0];
-		rightExpander.consumerMessage = rightMessages[1];	
+		rightExpander.consumerMessage = rightMessages[1];
 		
 		// step params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configParam(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate");
+			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, string::f("Bit %d", s + 1), {"Subtract", "Off", "Add"});
 		}
 		
 		// range switch
-		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+		configSwitch(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"8 Volts", "4 Volts", "2 Volts"});
 
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

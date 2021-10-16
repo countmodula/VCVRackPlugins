@@ -46,6 +46,19 @@ struct Rectifier : Module {
 		configParam(MANUAL_PARAM, -10.0f, 10.0f, 0.0f, "Rectification axis", " V");
 		configParam(CV_PARAM, 0.0f, 1.0f, 0.0f, "CV amount", " %", 0.0f, 100.0f, 0.0f);
 
+	
+		configInput(SIGNAL_INPUT, "Signal");
+		configInput(CV_INPUT, "Rectification axis CV");
+
+		configOutput(FWR_OUTPUT, "Full wave rectified");
+		configOutput(PHR_OUTPUT, "Positive half wave rectified");
+		configOutput(NHR_OUTPUT, "Negative half wave rectified");
+		
+		configOutput(FWRI_OUTPUT, "Inverted full wave rectified");
+		configOutput(PHRI_OUTPUT, "Inverted positive half wave rectified");
+		configOutput(NHRI_OUTPUT, "Inverted negative half wave rectified");		
+
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

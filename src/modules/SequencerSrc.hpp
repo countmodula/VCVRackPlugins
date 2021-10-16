@@ -85,25 +85,37 @@ struct STRUCT_NAME : Module {
 		
 		// length, direction and address params
 		configParam(LENGTH_PARAM, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), "Length");
-		configParam(DIRECTION_PARAM, 0.0f, 8.0f, 0.0f, "Direction");
+		configSwitch(DIRECTION_PARAM, 0.0f, 8.0f, 0.0f, "Direction", {"Forward", "Pendulum", "Reverse", "Random", "Forward 1-Shot", "Pendulum 1-Shot", "Reverse 1-Shot", "Random 1-Shot", "Voltage addressed"});
 		configParam(ADDR_PARAM, 0.0f, 10.0f, 0.0f, "Address");
 		
 		// cv/gate params
-		char stepText[20];
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			sprintf(stepText, "Step %d select", s + 1);
-			configParam(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, stepText);
-			
-			sprintf(stepText, "Step %d value", s + 1);
-			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, stepText, " V", 0.0f, 8.0f, 0.0f);
+			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
+			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
 		}
 		
 		// range switch
-		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale");
+		configSwitch(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale", {"1 Volt", "2 Volts", "3 Volts", "4 Volts", "5 Volts", "6 Volts", "7 Volts", "8 Volts"} );
 		
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode");
+		configSwitch(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode", {"Trigger", "Off", "Gate"});
 		
+		configInput(RUN_INPUT, "Run");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(LENGTH_INPUT, "Length CV");
+		configInput(DIRECTION_INPUT, "Direction CV");
+		
+		configInput(ADDRESS_INPUT, "Voltage addressed CV");
+		inputInfos[ADDRESS_INPUT]->description = "When connected, this input is attenuated by the Address knob";		
+		
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
+		
+		configOutput(END_OUTPUT, "1-Shot end");
+		outputInfos[END_OUTPUT]->description = "Gate output, goes high at the end of the 1-Shot cycle";
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

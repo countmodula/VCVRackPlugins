@@ -100,6 +100,15 @@ struct SRFlipFlop : Module {
 	SRFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		for (int i = 0; i < 2; i++) {
+			configInput(S_INPUT +i, string::f("Flip flop %d set", i +1));
+			configInput(R_INPUT +i, string::f("Flip flop %d reset", i +1));
+			configInput(ENABLE_INPUT +i, string::f("Flip flop %d enable", i +1));
+
+			configOutput(Q_OUTPUT +i, string::f("Flip flop %d Q", i +1));
+			configOutput(NQ_OUTPUT +i, string::f("Flip flop %d not Q", i +1));
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -265,6 +274,13 @@ struct SingleSRFlipFlop : Module {
 	
 	SingleSRFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		configInput(S_INPUT, "Set");
+		configInput(R_INPUT, "Reset");
+		configInput(ENABLE_INPUT, "Enable");
+
+		configOutput(Q_OUTPUT, "Q");
+		configOutput(NQ_OUTPUT, "Not Q");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

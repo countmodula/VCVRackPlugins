@@ -114,9 +114,9 @@ struct Oscilloscope : Module {
 
 		configParam(TIME_PARAM, -4.0, -18.0, -14.0, "Time");
 		
+		configSwitch(DISPLAY_GRIDBASELINE_PARAM, 0.0, 1.0, 1.0, "Show grid baseline");
+		configSwitch(DISPLAY_GRID_PARAM, 0.0, 1.0, 1.0, "Show grid");
 		configButton(FREEZE_PARAM,"Trace freeze");
-		configButton(DISPLAY_GRID_PARAM, "Show grid");
-		configButton(DISPLAY_GRIDBASELINE_PARAM, "Show grid baseline");
 		configButton(DISPLAY_TRACEBASELINE_PARAM, "show trace baselines");
 		configButton(DISPLAY_STATISTICS_PARAM, "Show statistics");
 

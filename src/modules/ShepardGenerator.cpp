@@ -26,7 +26,7 @@ struct ShepardOscillator {
 	void setReset(float reset) {
 		if (resetTrigger.process(reset / 0.01f)) {
 			for (int i = 0; i < 8; i++)
-				phase[i] = basePhases[i];		
+				phase[i] = basePhases[i];
 		}
 	}
 	
@@ -83,7 +83,7 @@ struct ShepardGenerator : Module {
 
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
-		
+
 	ShepardGenerator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -91,6 +91,20 @@ struct ShepardGenerator : Module {
 		configParam(FREQ_PARAM, -8.0f, 10.0f, -4.5f, "Frequency");
 		configParam(SAWLEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Saw output level", " %", 0.0f, 100.0f, 0.0f);
 		configParam(TRILEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Triangle output level", " %", 0.0f, 100.0f, 0.0f);
+
+		configInput(CV_INPUT, "Rate CV");
+		
+		for (int i = 0; i < 8; i++) {
+			configOutput(SAW_OUTPUT + i, string::f("Saw phase %d", i + 1));
+			configOutput(TRI_OUTPUT + i, string::f("Triangle phase %d", i + 1));
+			outputInfos[SAW_OUTPUT + i]->description = "Use for pitch";
+			outputInfos[TRI_OUTPUT + i]->description = "Use for amplitude";
+		}
+		
+		configOutput(PSAW_OUTPUT, "Polyphonic saw");
+		configOutput(PTRI_OUTPUT, "Polyphonic triangle");
+			outputInfos[PSAW_OUTPUT]->description = "Use for pitch";
+			outputInfos[PTRI_OUTPUT]->description = "Use for amplitude";
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

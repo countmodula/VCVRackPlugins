@@ -46,6 +46,14 @@ struct StartupDelay : Module {
 		
 		configParam(DELAY_PARAM, 1.0f, 30.0f, 1.0f, "Delay", " Seconds");		
 
+		configOutput(DELAY_OUTPUT, "Delay gate");
+		configOutput(GATE_OUTPUT, "End of delay gate");
+		configOutput(TRIG_OUTPUT, "End of delay trigger");
+
+		outputInfos[DELAY_OUTPUT]->description = "A gate signal that stays high during the delay phase";
+		outputInfos[GATE_OUTPUT]->description = "A gate signal that goes high at the end of the delay phase";
+		outputInfos[TRIG_OUTPUT]->description = "A trigger signal that fires at the end of the delay phase";
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

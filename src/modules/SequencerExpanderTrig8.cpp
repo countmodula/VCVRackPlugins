@@ -65,16 +65,19 @@ struct SequencerExpanderTrig8 : Module {
 		
 		// from left module (master)
 		leftExpander.producerMessage = leftMessages[0];
-		leftExpander.consumerMessage = leftMessages[1];		
+		leftExpander.consumerMessage = leftMessages[1];
 		
 		// to right module (expander)
 		rightExpander.producerMessage = rightMessages[0];
-		rightExpander.consumerMessage = rightMessages[1];	
+		rightExpander.consumerMessage = rightMessages[1];
 		
 		// step params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configParam(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate");
+			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate", {"Gate", "Off", "Trigger"});
 		}
+
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(GATE_OUTPUT, "Gate");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

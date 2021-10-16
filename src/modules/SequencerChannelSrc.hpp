@@ -53,21 +53,22 @@ struct STRUCT_NAME : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// cv/gate params
-		char stepText[20];
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			sprintf(stepText, "Step %d select", s + 1);
-			configParam(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, stepText);
-			
-			sprintf(stepText, "Step %d value", s + 1);
-			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, stepText, " V", 0.0f, 8.0f, 0.0f);
+			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
+			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
 		}
-		
+
 		// range switch
-		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale");
-		
+		configSwitch(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale", {"1 Volt", "2 Volts", "3 Volts", "4 Volts", "5 Volts", "6 Volts", "7 Volts", "8 Volts"} );
+
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode");
-		
+		configSwitch(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode", {"Trigger", "Off", "Gate"});
+
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 		

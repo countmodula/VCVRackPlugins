@@ -50,8 +50,15 @@ struct SampleAndHold : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		// tracking mode switch
-		configParam(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Sample, Track or Pass Mode");
+		configSwitch(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Hold mode",{"Sample & Hold", "Through", "Track & Hold"});
 
+		configInput(SAMPLE_INPUT, "Signal");
+		configInput(TRIG_INPUT, "Trigger");
+		configInput(MODE_INPUT, "Hold mode CV");
+
+		configOutput(SAMPLE_OUTPUT, "Sampled signal");
+		configOutput(INV_OUTPUT, "Inverted sampled signal");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
