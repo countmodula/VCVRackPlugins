@@ -9,7 +9,7 @@ using namespace rack;
 //-------------------------------------------------------------------
 // LED Display Base
 //-------------------------------------------------------------------
-struct CountModulaLEDDisplay : LightWidget {
+struct CountModulaLEDDisplay : ModuleLightWidget {
 	std::shared_ptr<Font> font;
 	std::string text;
 	float fontSize;
@@ -26,6 +26,8 @@ struct CountModulaLEDDisplay : LightWidget {
 		int l = text.size();
 		if (l > numChars)
 			l = numChars;
+			
+		nvgGlobalTint(args.vg, color::WHITE);
 		
 		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
 		
@@ -48,7 +50,7 @@ struct CountModulaLEDDisplay : LightWidget {
 		nvgTextLetterSpacing(args.vg, 1);
 
 		NVGcolor textColor = nvgRGB(0xff, 0x10, 0x10);
-
+		
 		// render the "off" segments 	
 		nvgFillColor(args.vg, nvgTransRGBA(textColor, 18));
 		nvgText(args.vg, textPos.x, textPos.y, "~~", NULL);
