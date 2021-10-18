@@ -21,15 +21,26 @@ struct CountModulaLEDDisplay : ModuleLightWidget {
 		box.pos.y = pos.y - box.size.y/2;
 	}
 	
-	void draw(const DrawArgs &args) override {
+	void drawBackground(const DrawArgs &args) override {
+		// Background
+		NVGcolor backgroundColor = nvgRGB(0x24, 0x14, 0x14);
+		NVGcolor borderColor = nvgRGB(0x10, 0x10, 0x10);
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 2.0);
+		nvgFillColor(args.vg, backgroundColor);
+		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 1.0);
+		nvgStrokeColor(args.vg, borderColor);
+		nvgStroke(args.vg);
+	}
+	
+	void drawLight(const DrawArgs &args) override {
 		char buffer[numChars+1];
 		int l = text.size();
 		if (l > numChars)
 			l = numChars;
 			
 		nvgGlobalTint(args.vg, color::WHITE);
-		
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
 		
 		text.copy(buffer, l);
 		buffer[numChars] = '\0';
@@ -45,19 +56,22 @@ struct CountModulaLEDDisplay : ModuleLightWidget {
 		nvgStrokeColor(args.vg, borderColor);
 		nvgStroke(args.vg);
 
-		nvgFontSize(args.vg, fontSize);
-		nvgFontFaceId(args.vg, font->handle);
-		nvgTextLetterSpacing(args.vg, 1);
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Segment14.ttf"));
+		if (font  && font->handle >= 0) {
+			nvgFontSize(args.vg, fontSize);
+			nvgFontFaceId(args.vg, font->handle);
+			nvgTextLetterSpacing(args.vg, 1);
 
-		NVGcolor textColor = nvgRGB(0xff, 0x10, 0x10);
-		
-		// render the "off" segments 	
-		nvgFillColor(args.vg, nvgTransRGBA(textColor, 18));
-		nvgText(args.vg, textPos.x, textPos.y, "~~", NULL);
-		
-		// render the "on segments"
-		nvgFillColor(args.vg, textColor);
-		nvgText(args.vg, textPos.x, textPos.y, buffer, NULL);
+			NVGcolor textColor = nvgRGB(0xff, 0x10, 0x10);
+			
+			// render the "off" segments 	
+			nvgFillColor(args.vg, nvgTransRGBA(textColor, 18));
+			nvgText(args.vg, textPos.x, textPos.y, "~~", NULL);
+			
+			// render the "on segments"
+			nvgFillColor(args.vg, textColor);
+			nvgText(args.vg, textPos.x, textPos.y, buffer, NULL);
+		}
 	}
 };
 

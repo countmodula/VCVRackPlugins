@@ -66,7 +66,7 @@ struct Euclid : Module {
 		CV_SHIFT_MODE,
 		MANUAL_SHIFT_MODE,
 		AUTO_R_SHIFT_MODE,
-		AUTO_L_SHIFT_MODE		
+		AUTO_L_SHIFT_MODE
 	};
 	
 	GateProcessor gateClock;
@@ -82,10 +82,7 @@ struct Euclid : Module {
 	EuclideanAlgorithm euclid;
 	
 	short stepnum = 0;
-	char buffer[10];
-	CountModulaLEDDisplayMini2 *lengthDisplay;
-	CountModulaLEDDisplayMini2 *hitsDisplay;
-	CountModulaLEDDisplayMini2 *shiftDisplay;
+
 	
 	int startUpCounter = 0;
 	int count = -1;
@@ -141,7 +138,7 @@ struct Euclid : Module {
 		
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
-		rightExpander.consumerMessage = rightMessages[1];		
+		rightExpander.consumerMessage = rightMessages[1];
 	}
 
 	json_t *dataToJson() override {
@@ -179,7 +176,7 @@ struct Euclid : Module {
 			gateRun.preset(json_boolean_value(run));
 		
 		running = gateRun.high();
-		
+
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 		
@@ -212,7 +209,7 @@ struct Euclid : Module {
 
 	void process(const ProcessArgs &args) override {
 
-		bool processControls = (stepnum == 0);	
+		bool processControls = (stepnum == 0);
 	
 		// reset input
 		float f = inputs[RESET_INPUT].getVoltage();
@@ -275,15 +272,6 @@ struct Euclid : Module {
 					
 				break;
 			}
-			
-			sprintf(buffer, "%02d", length);
-			lengthDisplay->text = buffer;
-
-			sprintf(buffer, "%02d", hits);
-			hitsDisplay->text = buffer;
-
-			sprintf(buffer, "%02d", shift);
-			shiftDisplay->text = buffer;
 		}
 		
 		if (gateReset.leadingEdge()) {
@@ -418,6 +406,9 @@ struct Euclid : Module {
 struct EuclidWidget : ModuleWidget {
 
 	std::string panelName;
+	CountModulaLEDDisplayMini2 *lengthDisplay;
+	CountModulaLEDDisplayMini2 *hitsDisplay;
+	CountModulaLEDDisplayMini2 *shiftDisplay;
 	
 	EuclidWidget(Euclid *module) {
 		setModule(module);
@@ -485,26 +476,20 @@ struct EuclidWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<BlueLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL8] + 15, STD_ROWS6[STD_ROW4] - 19), module, Euclid::END_LIGHT));
 		
 		// parameter displays
-		CountModulaLEDDisplayMini2 *lengthDisp = new CountModulaLEDDisplayMini2();
-		lengthDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]));
-		lengthDisp->text = "08";
-		addChild(lengthDisp);
+		lengthDisplay = new CountModulaLEDDisplayMini2();
+		lengthDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS6[STD_ROW1]));
+		lengthDisplay->text = "08";
+		addChild(lengthDisplay);
 
-		CountModulaLEDDisplayMini2 *hitsDisp = new CountModulaLEDDisplayMini2();
-		hitsDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL8], STD_ROWS6[STD_ROW1]));
-		hitsDisp->text = "04";
-		addChild(hitsDisp);
+		hitsDisplay = new CountModulaLEDDisplayMini2();
+		hitsDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL8], STD_ROWS6[STD_ROW1]));
+		hitsDisplay->text = "04";
+		addChild(hitsDisplay);
 
-		CountModulaLEDDisplayMini2 *shiftDisp = new CountModulaLEDDisplayMini2();
-		shiftDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS6[STD_ROW1]));
-		shiftDisp->text = "00";
-		addChild(shiftDisp);
-		
-		if (module) {
-			module->lengthDisplay = lengthDisp;
-			module->hitsDisplay = hitsDisp;
-			module->shiftDisplay = shiftDisp;
-		}
+		shiftDisplay = new CountModulaLEDDisplayMini2();
+		shiftDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS6[STD_ROW1]));
+		shiftDisplay->text = "00";
+		addChild(shiftDisplay);
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -576,6 +561,12 @@ struct EuclidWidget : ModuleWidget {
 	
 	void step() override {
 		if (module) {
+			Euclid *m = (Euclid *)module;
+
+			lengthDisplay->text = string::f( "%02d", m->length);
+			hitsDisplay->text =  string::f( "%02d", m->hits);
+			shiftDisplay->text =  string::f( "%02d", m->shift);
+			
 			// process any change of theme
 			#include "../themes/step.hpp"
 		}

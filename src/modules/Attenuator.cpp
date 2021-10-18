@@ -94,13 +94,11 @@ struct Attenuator : Module {
 			paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = (bipolar ? -1.0f : 0.0f);
 
 			// on change of mode, adjust the control value so it stays in the same position
-			switch (bipolar) {
-				case true:
-					params[CH1_ATTENUATION_PARAM].setValue((att1/1.0f * 2.0f) - 1.0f);
-					break;
-				case false:
-					params[CH1_ATTENUATION_PARAM].setValue((att1 + 1.0f) / 2.0f);
-					break;
+			if (bipolar) {
+				params[CH1_ATTENUATION_PARAM].setValue((att1/1.0f * 2.0f) - 1.0f);
+			}
+			else {
+				params[CH1_ATTENUATION_PARAM].setValue((att1 + 1.0f) / 2.0f);
 			}
 		}
 

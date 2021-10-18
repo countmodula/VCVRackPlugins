@@ -37,9 +37,6 @@ struct VCPulseDivider : Module {
 		NUM_LIGHTS
 	};
 
-	
-	CountModulaLEDDisplayLarge2 *divDisplay;
-		
 	char lengthString[4];
 	GateProcessor gateClock;
 	GateProcessor gateReset;
@@ -48,10 +45,8 @@ struct VCPulseDivider : Module {
 	int length = 1;
 
 	float reset, clock, div, divCV;
-	
-	char buffer[10];
-	
-	short stepnum = 0;
+
+	short processCount = 8;
 	bool out1 = false;
 	bool outN = false;
 	
@@ -73,6 +68,8 @@ struct VCPulseDivider : Module {
 
 		outputInfos[DIV1_OUTPUT]->description = "Output pulse occurs on the first clock of the division cycle";
 		outputInfos[DIVN_OUTPUT]->description = "Output pulse occurs on the last clock of the division cycle";
+		
+		processCount = 8;
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -131,19 +128,15 @@ struct VCPulseDivider : Module {
 		outN = (gateClock.high() && count >= length);
 		
 		// are we on the first pulse?
-		out1 = (gateClock.high() && count == 1);		
+		out1 = (gateClock.high() && count == 1);
 		
-		if (stepnum == 0) {
-			sprintf(buffer, "%02d", length);
-			divDisplay->text = buffer;
-			
+		if (++processCount > 8) {
+			processCount = 0;
+
 			lights[IN_LIGHT].setBrightness(boolToLight(gateClock.high()));
 			lights[DIV1_LIGHT].setBrightness(boolToLight(out1));
 			lights[DIVN_LIGHT].setBrightness(boolToLight(outN));
 		}
-		
-		if(++stepnum > 8)
-			stepnum = 0;
 		
 		outputs[DIV1_OUTPUT].setVoltage(boolToGate(out1));
 		outputs[DIVN_OUTPUT].setVoltage(boolToGate(outN));
@@ -151,8 +144,8 @@ struct VCPulseDivider : Module {
 };
 
 struct VCPulseDividerWidget : ModuleWidget {
-
 	std::string panelName;
+	CountModulaLEDDisplayLarge2 *divDisplay;
 	
 	VCPulseDividerWidget(VCPulseDivider *module) {
 		setModule(module);
@@ -181,13 +174,11 @@ struct VCPulseDividerWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, VCPulseDivider::DIVN_LIGHT));
 	
 		// LED display
-		CountModulaLEDDisplayLarge2 *display = new CountModulaLEDDisplayLarge2();
-		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]));
-		display->text =  "01";
-		addChild(display);
+		divDisplay = new CountModulaLEDDisplayLarge2();
+		divDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]));
+		divDisplay->text =  "01";
+		addChild(divDisplay);
 		
-		if (module)
-			module->divDisplay = display;
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -206,6 +197,10 @@ struct VCPulseDividerWidget : ModuleWidget {
 	
 	void step() override {
 		if (module) {
+			VCPulseDivider *m = (VCPulseDivider *)module;
+				
+			divDisplay->text = string::f("%02d", m->length);
+			
 			// process any change of theme
 			#include "../themes/step.hpp"
 		}

@@ -56,10 +56,10 @@ struct EventTimer : Module {
 	bool dnButtonStatus[3] = {};
 	
 	int count = 0; 
+	int displayCount = 0; 
 	int length = 0;
 
-	char buffer[10];
-	bool update = true;;
+	bool update = true;
 	bool running = false;
 	bool end = false;
 	
@@ -92,6 +92,8 @@ struct EventTimer : Module {
 		configOutput(END_OUTPUT, "End gate");
 		configOutput(ENDT_OUTPUT, "End trigger");
 
+		displayCount = count;
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -103,7 +105,7 @@ struct EventTimer : Module {
 		
 		pgEnd.reset();
 		
-		count = 0;
+		displayCount = count = 0;
 		length = 0;
 		running = false;
 		update = true;
@@ -146,7 +148,7 @@ struct EventTimer : Module {
 			running = json_boolean_value(run);
 
 		update = false;
-		sprintf(buffer, "%03d", count);
+		displayCount = count;
 
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -254,8 +256,7 @@ struct EventTimer : Module {
 		
 		// update the display
 		if (update) {
-			sprintf(buffer, "%03d", count);
-			divDisplay->text = buffer;
+			displayCount = count;
 			
 			// reset update flag so we don't update the display until actually need to
 			update = false;
@@ -299,6 +300,7 @@ struct EventTimer : Module {
 struct EventTimerWidget : ModuleWidget {
 
 	std::string panelName;
+	CountModulaLEDDisplayLarge3 *divDisplay;
 	
 	EventTimerWidget(EventTimer *module) {
 		setModule(module);
@@ -334,15 +336,11 @@ struct EventTimerWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 13, STD_ROWS6[STD_ROW6] - 19), module, EventTimer::ENDT_LIGHT));
 	
 		// LED display
-		CountModulaLEDDisplayLarge3 *display = new CountModulaLEDDisplayLarge3();
-		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
-		display->text =  "000";
-		addChild(display);
+		divDisplay = new CountModulaLEDDisplayLarge3();
+		divDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
+		divDisplay->text =  "000";
+		addChild(divDisplay);
 		
-		if (module) {
-			display->text = module->buffer;
-			module->divDisplay = display;
-		}
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -361,6 +359,10 @@ struct EventTimerWidget : ModuleWidget {
 	
 	void step() override {
 		if (module) {
+			// process any change in count
+			if (module)
+				divDisplay->text = string::f("%03d", ((EventTimer *)(module))->displayCount);
+			
 			// process any change of theme
 			#include "../themes/step.hpp"
 		}

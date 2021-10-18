@@ -71,15 +71,12 @@ struct Fade : Module {
 	float recordTime = 0.0f;
 	bool timesTen = false;
 	int hours = 0, minutes = 0, seconds = 0;
+	int sDisplay = 0, mDisplay = 0, hDisplay = 0;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
 	FadeExpanderMessage rightMessages[2][1]; // messages to right module (expander)
-	
-	CountModulaLEDDisplayMini2 *hDisplay;
-	CountModulaLEDDisplayMini2 *mDisplay;
-	CountModulaLEDDisplayMini2 *sDisplay;	
 	
 	Fade() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -116,9 +113,7 @@ struct Fade : Module {
 		monitorSlew.reset();
 		
 		hours = minutes = seconds = 0;
-		sDisplay->text = string::f("%02d", seconds);
-		mDisplay->text = string::f("%02d", minutes);
-		hDisplay->text = string::f("%02d", hours);		
+		sDisplay = mDisplay = hDisplay = 0;
 	}	
 	
 	json_t* dataToJson() override {
@@ -189,10 +184,8 @@ struct Fade : Module {
 				recordTime = 0.0f;
 				hours = minutes = seconds = 0;
 				
-				// update the display
-				sDisplay->text = string::f("%02d", seconds);
-				mDisplay->text = string::f("%02d", minutes);
-				hDisplay->text = string::f("%02d", hours);
+				// update the display values
+				sDisplay = mDisplay = hDisplay = 0;
 			}
 			else	
 				recordTime = recordTime + args.sampleTime;
@@ -207,16 +200,16 @@ struct Fade : Module {
 						seconds = 0;
 						
 						if(++minutes > 59) {
-							minutes = 0;						
+							minutes = 0;
 							hours++;
 						}
 					}
 				}
 
-				// and update the display
-				sDisplay->text = string::f("%02d", seconds);
-				mDisplay->text = string::f("%02d", minutes);
-				hDisplay->text = string::f("%02d", hours);
+				// and update the display values
+				sDisplay = seconds;
+				mDisplay = minutes;
+				hDisplay = hours;
 			}
 			
 			// switch to next stage if required
@@ -268,7 +261,7 @@ struct Fade : Module {
 					break;
 				case OFF_STAGE:
 					mute = 0.0f;
-					break;			
+					break;
 			}			
 		}
 		else {
@@ -334,6 +327,9 @@ struct Fade : Module {
 struct FadeWidget : ModuleWidget {
 
 	std::string panelName;
+	CountModulaLEDDisplayMini2 *hDisplay;
+	CountModulaLEDDisplayMini2 *mDisplay;
+	CountModulaLEDDisplayMini2 *sDisplay;
 	
 	FadeWidget(Fade *module) {
 		setModule(module);
@@ -377,26 +373,21 @@ struct FadeWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW3] - 4), module, Fade::MON_PARAM, Fade::MON_PARAM_LIGHT));
 #endif	
 		// hour/minute/second displays
-		CountModulaLEDDisplayMini2 *hDisp = new CountModulaLEDDisplayMini2();
-		hDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5] - 10));
-		hDisp->text = "00";
-		addChild(hDisp);
+		hDisplay = new CountModulaLEDDisplayMini2();
+		hDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5] - 10));
+		hDisplay->text = "00";
+		addChild(hDisplay);
 
-		CountModulaLEDDisplayMini2 *mDisp = new CountModulaLEDDisplayMini2();
-		mDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW5] - 10));
-		mDisp->text = "00";
-		addChild(mDisp);
+		mDisplay = new CountModulaLEDDisplayMini2();
+		mDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW5] - 10));
+		mDisplay->text = "00";
+		addChild(mDisplay);
 
-		CountModulaLEDDisplayMini2 *sDisp = new CountModulaLEDDisplayMini2();
-		sDisp->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5] - 10));
-		sDisp->text = "00";
-		addChild(sDisp);
+		sDisplay = new CountModulaLEDDisplayMini2();
+		sDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW5] - 10));
+		sDisplay->text = "00";
+		addChild(sDisplay);
 		
-		if (module) {
-			module->hDisplay = hDisp;
-			module->mDisplay = mDisp;
-			module->sDisplay = sDisp;
-		}		
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -415,6 +406,11 @@ struct FadeWidget : ModuleWidget {
 	
 	void step() override {
 		if (module) {
+			Fade *m = (Fade *)module;
+			hDisplay->text = string::f("%02d", m->hDisplay);
+			mDisplay->text = string::f("%02d", m->mDisplay);
+			sDisplay->text = string::f("%02d", m->sDisplay);
+			
 			// process any change of theme
 			#include "../themes/step.hpp"
 		}
