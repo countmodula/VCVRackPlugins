@@ -715,7 +715,7 @@ struct Arpeggiator : Module {
 struct ArpeggiatorTouchTooltip : ui::Tooltip {
 	ModuleLightWidget* lightWidget;
 
-	// hack to make the mose-overs look like button tooltips.
+	// hack to make the mouse-overs look like button tooltips.
 	void step() override {
 		if (lightWidget->module) {
 			engine::LightInfo* lightInfo = lightWidget->getLightInfo();
@@ -969,13 +969,30 @@ struct ArpeggiatorTouchSeparator : ModuleLightWidget {
 
 	int value;
 	int row = 0;
-	bool isLit = true;
+	int col = 0;
 	
 	void drawLight(const DrawArgs& args) override {
 		
 		nvgGlobalTint(args.vg, color::WHITE);
 		
-		color = (module && module->mode == Arpeggiator::PROGRAMME_MODE && row < module->patternLength) ? activeColor : inactiveColor;
+		if (module) {
+			switch (col) {
+				case 1:
+					color = (module->mode == Arpeggiator::PROGRAMME_MODE && row < module->patternLength) ? activeColor : inactiveColor;
+					break;
+				case 2:
+					color = (module->octaveProcessingEnabled && row < module->patternLength) ? activeColor : inactiveColor;
+					break;
+				case 3:
+					color = (module->noteProcessingEnabled && row < module->patternLength) ? activeColor : inactiveColor;
+					break;
+				default:
+					color = inactiveColor;
+					break;
+			}
+		}
+		else
+			color = activeColor; // so it shows in the browser
 
 		nvgBeginPath(args.vg);
 		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 0.5);
@@ -984,7 +1001,27 @@ struct ArpeggiatorTouchSeparator : ModuleLightWidget {
 	}
 	
 	void drawHalo(const DrawArgs& args) override {
-		// no halo on the separators, it looks silly
+		// Don't draw halo if rendering in a framebuffer, e.g. screenshots or Module Browser
+		if (args.fb)
+			return;
+
+		const float halo = settings::haloBrightness;
+		if (halo == 0.f)
+			return;
+
+		// If light is off, rendering the halo gives no effect.
+		if (this->color.r == 0.f && this->color.g == 0.f && this->color.b == 0.f)
+			return;
+
+		float br = 30.0; // Blur radius
+		float cr = 5.0; // Corner radius
+		
+		nvgBeginPath(args.vg);
+		nvgRect(args.vg, -br, -br, this->box.size.x + 2 * br, this->box.size.y + 2 * br);
+		NVGcolor icol = color::mult(color, halo);
+		NVGcolor ocol = nvgRGBA(0, 0, 0, 0);
+		nvgFillPaint(args.vg, nvgBoxGradient(args.vg, 0, 0, this->box.size.x, this->box.size.y, cr, br, icol, ocol));
+		nvgFill(args.vg);
 	}
 };
 
@@ -1086,6 +1123,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 				patSep->box.size = Vec(90, 1);
 				patSep->module = module;
 				patSep->row = i;
+				patSep->col = 1;
 				patSep->activeColor = SCHEME_WHITE;
 				patSep->inactiveColor = inactiveColor;
 				addChild(patSep);
@@ -1096,6 +1134,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 				octSep->box.size = Vec(50, 1);
 				octSep->module = module;
 				octSep->row = i;
+				octSep->col = 2;
 				octSep->activeColor = SCHEME_WHITE;
 				octSep->inactiveColor = inactiveColor;
 				addChild(octSep);
@@ -1106,6 +1145,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 				modSep->box.size = Vec(40, 1);
 				modSep->module = module;
 				modSep->row = i;
+				modSep->col = 3;
 				modSep->activeColor = SCHEME_WHITE;
 				modSep->inactiveColor = inactiveColor;
 				addChild(modSep);
