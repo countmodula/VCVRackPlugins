@@ -256,7 +256,6 @@ struct Palette : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
-		ENUMS(SELECT_LIGHTS, MAX_COLOURS),
 		LOCK_PARAM_LIGHT,
 		ENUMS(BUTTON_LIGHTS, MAX_COLOURS),
 		NUM_LIGHTS
@@ -343,7 +342,7 @@ struct Palette : Module {
 		getParamQuantity(LOCK_PARAM)->randomizeEnabled = false;
 
 		for (int i = 0; i < MAX_COLOURS; i++) {
-			configLight(BUTTON_LIGHTS + i, string::f("Select colour %d", i+1));
+			configLight(BUTTON_LIGHTS + i, string::f("%d", i + 1));
 		}
 		
 		// set the theme from the current default value
@@ -496,10 +495,6 @@ struct Palette : Module {
 			// update the LEDs if there's been a change
 			if (count == 0 || doChange) {
 				if (nextColorID != colorID) {
-					for (int i = 0; i < numColoursToUse; i++) {
-						lights[SELECT_LIGHTS + i].setBrightness(boolToLight(i == colorID));
-					}
-					
 					// sync the next colour id
 					nextColorID = colorID;
 				}
@@ -1065,15 +1060,19 @@ struct PaletteWidget : ModuleWidget {
 	// custom tool tip for the colour buttons
 	struct ColourButtonTooltip : ui::Tooltip {
 		ModuleLightWidget* lightWidget;
-
-		// hack to make the mose-overs look like button tooltips.
+		bool enabled = true;
+		
+		// hack to make the mouse-overs look like button tooltips.
 		void step() override {
 			if (lightWidget->module) {
 				engine::LightInfo* lightInfo = lightWidget->getLightInfo();
 				if (!lightInfo)
 					return;
 				// Label
-				text = lightInfo->getName();
+				if (enabled)
+					text = "Select colour " + lightInfo->getName();
+				else
+					text = "Colour " + lightInfo->getName();
 				
 				// Description
 				std::string description = lightInfo->getDescription();
@@ -1090,7 +1089,6 @@ struct PaletteWidget : ModuleWidget {
 			box = box.nudge(parent->box.zeroPos());
 		}
 	};
-
 
 	//---------------------------------------------------------------------
 	// Custom colour buttons
@@ -1188,25 +1186,42 @@ struct PaletteWidget : ModuleWidget {
 			menu->addChild(hksMenuItem);
 		}
 		
-		void draw(const DrawArgs& args) override {
-			
+		void drawBackground(const DrawArgs &args) override {
 			NVGcolor bezelColor = module ? ((Palette *)(module))->bezelColor : SCHEME_BLACK;
-			
-			nvgGlobalTint(args.vg, color::WHITE);
-			
-			if (!enabled)
-				bezelColor.a = 0.25;
 			
 			nvgBeginPath(args.vg);
 			nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 1.0);
-			nvgFillColor(args.vg, color);
-			nvgFill(args.vg);
+			
+			if (!enabled)
+				bezelColor.a = 0.25;
+			else {
+				nvgFillColor(args.vg, SCHEME_BLACK);
+				nvgFill(args.vg);
+			}
 			
 			nvgStrokeWidth(args.vg, 1.2);
 			nvgStrokeColor(args.vg, bezelColor);
 			nvgStroke(args.vg);
+		}
+		
+		void drawLight(const DrawArgs& args) override {
+			int nextColorID = module ? ((Palette *)(module))->nextColorID : colorID;
 			
-			ModuleLightWidget::draw(args);
+			nvgGlobalTint(args.vg, color::WHITE);
+			
+			if (colorID == nextColorID) {
+				nvgBeginPath(args.vg);
+				nvgRect(args.vg, 0.4, 0.4, box.size.x-0.8, box.size.y-0.8);
+				nvgFillColor(args.vg, color);
+				nvgFill(args.vg);
+			}
+			else {
+				nvgBeginPath(args.vg);
+				nvgRect(args.vg, 2.0, 2.0, box.size.x-4.0, box.size.y-4.0);
+				nvgStrokeWidth(args.vg, 3.0);
+				nvgStrokeColor(args.vg, color);
+				nvgStroke(args.vg);
+			}
 		}
 
 		void drawHalo(const DrawArgs& args) override {
@@ -1266,6 +1281,7 @@ struct PaletteWidget : ModuleWidget {
 				return;
 			ColourButtonTooltip* tooltip = new ColourButtonTooltip;
 			tooltip->lightWidget = this;
+			tooltip->enabled = enabled;
 			APP->scene->addChild(tooltip);
 			this->tooltip = tooltip;
 		}
@@ -1273,22 +1289,6 @@ struct PaletteWidget : ModuleWidget {
 		// hack to customise the tooltips
 		void onEnter(const EnterEvent& e) override {
 			this->createTooltip();
-		}
-	};
-
-	struct CountModulaBezel : TransparentWidget {
-
-		CountModulaBezel() {
-			box.size = Vec(0, 0);	
-		}
-		
-		void draw(const DrawArgs &args) override {
-			
-			// Background
-			nvgBeginPath(args.vg);
-			nvgCircle(args.vg, box.size.x, box.size.y, 5.0); // 5mm for  3mm LED
-			nvgFillColor(args.vg, nvgRGBA(0x00, 0x00, 0x00, 0xA0));
-			nvgFill(args.vg);
 		}
 	};
 
@@ -1402,15 +1402,6 @@ struct PaletteWidget : ModuleWidget {
 						module->buttons.push_back(colourButton);
 					
 					addChild(colourButton);
-				
-					if (showAll) {
-						addChild(createWidgetCentered<CountModulaBezel>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1]+ (i * 19.0) - 7.5)));
-						addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1] + (i * 19.0) - 7.5), module, Palette::SELECT_LIGHTS + i));
-					}
-					else {
-						addChild(createWidgetCentered<CountModulaBezel>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1 + i])));
-						addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 15, STD_ROWS8[STD_ROW1 + i]), module, Palette::SELECT_LIGHTS + i));
-					}
 				}
 			}
 			
