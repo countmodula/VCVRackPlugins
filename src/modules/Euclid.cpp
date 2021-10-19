@@ -563,9 +563,9 @@ struct EuclidWidget : ModuleWidget {
 		if (module) {
 			Euclid *m = (Euclid *)module;
 
-			lengthDisplay->text = string::f( "%02d", m->length);
-			hitsDisplay->text =  string::f( "%02d", m->hits);
-			shiftDisplay->text =  string::f( "%02d", m->shift);
+			lengthDisplay->text = rack::string::f( "%02d", m->length);
+			hitsDisplay->text =  rack::string::f( "%02d", m->hits);
+			shiftDisplay->text =  rack::string::f( "%02d", m->shift);
 			
 			// process any change of theme
 			#include "../themes/step.hpp"
