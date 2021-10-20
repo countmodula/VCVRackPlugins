@@ -51,8 +51,8 @@ struct MasterReset : Module {
 		configBypass(RESET_INPUT, RESET_INPUT);
 		
 		for (int i = 0; i < 4; i++) {
-			configInput(CLOCK_INPUTS + i, string::f("Clock %d", i + 1)),
-			configOutput(CLOCK_OUTPUTS + i, string::f("Clock %d", i + 1));
+			configInput(CLOCK_INPUTS + i, rack::string::f("Clock %d", i + 1)),
+			configOutput(CLOCK_OUTPUTS + i, rack::string::f("Clock %d", i + 1));
 			configBypass(CLOCK_INPUTS + i, CLOCK_OUTPUTS + i);
 		}
 		

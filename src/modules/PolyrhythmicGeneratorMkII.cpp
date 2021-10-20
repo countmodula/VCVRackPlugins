@@ -83,25 +83,25 @@ struct PolyrhythmicGeneratorMkII : Module {
 		// division channels
 		for (int i = 0; i < 8; i++) {
 			// knobs
-			configParam(CV_PARAM + i, -1.0f, 1.0f, 0.0f, string::f("Channel %d division CV amount", i + 1), " %", 0.0f, 100.0f, 0.0f);
-			configParam(DIV_PARAM + i, 1.0f, 16.0f, 1.0f, string::f("Channel %d division", i + 1));
+			configParam(CV_PARAM + i, -1.0f, 1.0f, 0.0f, rack::string::f("Channel %d division CV amount", i + 1), " %", 0.0f, 100.0f, 0.0f);
+			configParam(DIV_PARAM + i, 1.0f, 16.0f, 1.0f, rack::string::f("Channel %d division", i + 1));
 			
 			// buttons
-			configButton(MUTE_PARAM + i, string::f("Channel %d mute", i + 1));
+			configButton(MUTE_PARAM + i, rack::string::f("Channel %d mute", i + 1));
 			
 			// inputs
-			configInput(CLOCK_INPUT + i, string::f("Channel %d clock", i + 1));
-			configInput(RESET_INPUT + i, string::f("Channel %d reset", i + 1));
-			configInput(CV_INPUT + i, string::f("Channel %d division CV", i + 1));
+			configInput(CLOCK_INPUT + i, rack::string::f("Channel %d clock", i + 1));
+			configInput(RESET_INPUT + i, rack::string::f("Channel %d reset", i + 1));
+			configInput(CV_INPUT + i, rack::string::f("Channel %d division CV", i + 1));
 			
 			if (i > 0) {
-				inputInfos[CLOCK_INPUT + i]->description = string::f("Normalled to input %d", i);
-				inputInfos[RESET_INPUT + i]->description = string::f("Normalled to input %d", i);
-				inputInfos[CV_INPUT + i]->description = string::f("Normalled to input %d", i);
+				inputInfos[CLOCK_INPUT + i]->description = rack::string::f("Normalled to input %d", i);
+				inputInfos[RESET_INPUT + i]->description = rack::string::f("Normalled to input %d", i);
+				inputInfos[CV_INPUT + i]->description = rack::string::f("Normalled to input %d", i);
 			}
 			
 			// outputs
-			configOutput(TRIG_OUTPUT + i, string::f("Channel %d", i + 1));
+			configOutput(TRIG_OUTPUT + i, rack::string::f("Channel %d", i + 1));
 		}
 		
 		// global stuff

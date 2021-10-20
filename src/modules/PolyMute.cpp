@@ -51,7 +51,7 @@ struct PolyMute : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		for (int i = 0; i < NUM_CHANS ; i++) {
-			configButton(MUTE_PARAMS + i, string::f("Mute channel %d", i + 1));
+			configButton(MUTE_PARAMS + i, rack::string::f("Mute channel %d", i + 1));
 		}
 
 		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mute style", {"Hard", "Soft"} );

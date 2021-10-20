@@ -101,12 +101,12 @@ struct SRFlipFlop : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		for (int i = 0; i < 2; i++) {
-			configInput(S_INPUT +i, string::f("Flip flop %d set", i +1));
-			configInput(R_INPUT +i, string::f("Flip flop %d reset", i +1));
-			configInput(ENABLE_INPUT +i, string::f("Flip flop %d enable", i +1));
+			configInput(S_INPUT +i, rack::string::f("Flip flop %d set", i +1));
+			configInput(R_INPUT +i, rack::string::f("Flip flop %d reset", i +1));
+			configInput(ENABLE_INPUT +i, rack::string::f("Flip flop %d enable", i +1));
 
-			configOutput(Q_OUTPUT +i, string::f("Flip flop %d Q", i +1));
-			configOutput(NQ_OUTPUT +i, string::f("Flip flop %d not Q", i +1));
+			configOutput(Q_OUTPUT +i, rack::string::f("Flip flop %d Q", i +1));
+			configOutput(NQ_OUTPUT +i, rack::string::f("Flip flop %d not Q", i +1));
 		}
 
 		// set the theme from the current default value

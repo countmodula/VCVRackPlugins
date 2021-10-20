@@ -407,9 +407,9 @@ struct FadeWidget : ModuleWidget {
 	void step() override {
 		if (module) {
 			Fade *m = (Fade *)module;
-			hDisplay->text = string::f("%02d", m->hDisplay);
-			mDisplay->text = string::f("%02d", m->mDisplay);
-			sDisplay->text = string::f("%02d", m->sDisplay);
+			hDisplay->text = rack::string::f("%02d", m->hDisplay);
+			mDisplay->text = rack::string::f("%02d", m->mDisplay);
+			sDisplay->text = rack::string::f("%02d", m->sDisplay);
 			
 			// process any change of theme
 			#include "../themes/step.hpp"

@@ -107,10 +107,10 @@ struct STRUCT_NAME : Module {
 
 	for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 #ifdef ONE_TO_N		
-			configOutput(SIGNAL_OUTPUTS + s, string::f("%d", s+1));
+			configOutput(SIGNAL_OUTPUTS + s, rack::string::f("%d", s+1));
 #endif
 #ifdef N_TO_ONE
-			configInput(SIGNAL_INPUTS + s,string::f("%d", s+1));
+			configInput(SIGNAL_INPUTS + s,rack::string::f("%d", s+1));
 #endif
 		}
 		

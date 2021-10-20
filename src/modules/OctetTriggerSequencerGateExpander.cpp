@@ -66,8 +66,8 @@ struct STRUCT_NAME : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		for (int i = 0; i < 8; i ++) {
-			configOutput(GATEA_OUTPUTS + i, string::f("Channel A Step %d gate", i + 1));
-			configOutput(GATEB_OUTPUTS + i, string::f("Channel B Step %d gate", i + 1));
+			configOutput(GATEA_OUTPUTS + i, rack::string::f("Channel A Step %d gate", i + 1));
+			configOutput(GATEB_OUTPUTS + i, rack::string::f("Channel B Step %d gate", i + 1));
 		}
 
 		// set the theme from the current default value

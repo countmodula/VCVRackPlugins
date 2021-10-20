@@ -61,28 +61,28 @@ struct STRUCT_NAME : Module {
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			
 			// length & CV parms
-			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), string::f( "Channel %d length", r + 1));
+			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), rack::string::f( "Channel %d length", r + 1));
 			
 			// row lights and switches
 			int i = 0;
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
-				configSwitch(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, string::f("Step %d select", s + 1), outputSelectLabels[r]);
+				configSwitch(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), outputSelectLabels[r]);
 			}
 			
 			// output lights, mute buttons and jacks
 			for (int i = 0; i < 2; i++) {
-				configButton(MUTE_PARAMS + (r * 2) + i, string::f("Mute output %s", channelLabels[r][i].c_str()));
-				configOutput(TRIG_OUTPUTS + (r * 2) + i, string::f("Trigger %s", channelLabels[r][i].c_str()));
+				configButton(MUTE_PARAMS + (r * 2) + i, rack::string::f("Mute output %s", channelLabels[r][i].c_str()));
+				configOutput(TRIG_OUTPUTS + (r * 2) + i, rack::string::f("Trigger %s", channelLabels[r][i].c_str()));
 			}
 			
-			configInput(RUN_INPUTS + r, string::f("Channel %d run", r + 1));
-			configInput(CLOCK_INPUTS + r, string::f("Channel %d clock", r + 1));
-			configInput(RESET_INPUTS + r, string::f("Channel %d reset", r + 1));
-			configInput(CV_INPUTS + r, string::f("Channel %d length CV", r + 1));
+			configInput(RUN_INPUTS + r, rack::string::f("Channel %d run", r + 1));
+			configInput(CLOCK_INPUTS + r, rack::string::f("Channel %d clock", r + 1));
+			configInput(RESET_INPUTS + r, rack::string::f("Channel %d reset", r + 1));
+			configInput(CV_INPUTS + r, rack::string::f("Channel %d length CV", r + 1));
 			if (r > 0) {
-				inputInfos[RUN_INPUTS + r]->description = string::f("Normalled to channel %d run input", r);
-				inputInfos[CLOCK_INPUTS + r]->description = string::f("Normalled to channel %d clock input", r);
-				inputInfos[RESET_INPUTS + r]->description = string::f("Normalled to channel %d reset input", r);
+				inputInfos[RUN_INPUTS + r]->description = rack::string::f("Normalled to channel %d run input", r);
+				inputInfos[CLOCK_INPUTS + r]->description = rack::string::f("Normalled to channel %d clock input", r);
+				inputInfos[RESET_INPUTS + r]->description = rack::string::f("Normalled to channel %d reset input", r);
 			}
 		}
 		

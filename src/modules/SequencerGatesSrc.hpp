@@ -37,9 +37,9 @@ struct STRUCT_NAME : Module {
 		
 		for (int i = 0; i < SEQ_NUM_STEPS; i++) {
 #if defined TRIGGER_OUTPUTS
-			configOutput(GATE_OUTPUTS + i, string::f("Step %d trigger", i + 1));
+			configOutput(GATE_OUTPUTS + i, rack::string::f("Step %d trigger", i + 1));
 #else
-			configOutput(GATE_OUTPUTS + i, string::f("Step %d gate", i + 1));
+			configOutput(GATE_OUTPUTS + i, rack::string::f("Step %d gate", i + 1));
 #endif
 		}
 		

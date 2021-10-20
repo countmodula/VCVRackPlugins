@@ -83,8 +83,8 @@ struct Multiplexer : Module {
 		configSwitch(NORMAL_PARAM, 1.0f, 4.0f, 1.0f, "Selector normalling mode", {"Router input", "0 Volts", "Associated router output", "Selected router output"});
 
 		for (int i = 0; i < 8; i++) {
-			configInput(SELECTOR_INPUTS + i, string::f("Selector recieve %d", i + 1));
-			configOutput(ROUTER_OUTPUTS + i, string::f("Router send %d", i + 1));
+			configInput(SELECTOR_INPUTS + i, rack::string::f("Selector recieve %d", i + 1));
+			configOutput(ROUTER_OUTPUTS + i, rack::string::f("Router send %d", i + 1));
 		}
 		
 		configInput(ROUTER_CLOCK_INPUT, "Selector clock");

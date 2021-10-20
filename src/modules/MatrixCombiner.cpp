@@ -71,19 +71,19 @@ struct MatrixCombiner : Module {
 	
 		// step params
 		for (int s = 0; s < 7; s++) {
-			configSwitch(BUS_A_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Source %d", s +1), {"N/C", "Combined with A"});
-			configSwitch(BUS_B_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Source %d", s +1), {"N/C", "Combined with B"});
-			configSwitch(BUS_C_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Source %d", s +1), {"N/C", "Combined with C"});
-			configSwitch(BUS_D_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Source %d", s +1), {"N/C", "Combined with D"});
-			configSwitch(BUS_E_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Source %d", s +1), {"N/C", "Combined with E"});
-			configSwitch(BUS_F_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Source %d", s +1), {"N/C", "Combined with F"});
+			configSwitch(BUS_A_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with A"});
+			configSwitch(BUS_B_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with B"});
+			configSwitch(BUS_C_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with C"});
+			configSwitch(BUS_D_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with D"});
+			configSwitch(BUS_E_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with E"});
+			configSwitch(BUS_F_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with F"});
 
-			configInput(GATE_INPUTS + s, string::f("Source %d", s +1));
+			configInput(GATE_INPUTS + s, rack::string::f("Source %d", s +1));
 		}
 		
 		char c = 'A';
 		for (int i = 0; i < NUM_OUTPUTS; i++) {
-			configOutput(A_OUTPUT + i, string::f("Destination %c", c++));
+			configOutput(A_OUTPUT + i, rack::string::f("Destination %c", c++));
 		}
 		
 		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode", {"Gates", "Triggers"});

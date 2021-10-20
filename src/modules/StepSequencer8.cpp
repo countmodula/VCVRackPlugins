@@ -112,25 +112,25 @@ struct STRUCT_NAME : Module {
 		for (int r = 0; r < SEQ_NUM_SEQS; r++) {
 			
 			// length params
-			configParam(LENGTH_PARAMS + r, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), string::f( "Channel %d length", r + 1));
+			configParam(LENGTH_PARAMS + r, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), rack::string::f( "Channel %d length", r + 1));
 			
 			//  mode params
-			configSwitch (MODE_PARAMS + r, 0.0f, 2.0, 0.0f, string::f("Channel %d direction", r + 1), {"Forward", "Pendulum", "Reverse"});
+			configSwitch (MODE_PARAMS + r, 0.0f, 2.0, 0.0f, rack::string::f("Channel %d direction", r + 1), {"Forward", "Pendulum", "Reverse"});
 			
 			// row lights and switches
 			int sw = 0;
 			int k = 0;
 			
 			for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-				configSwitch(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, string::f(trigSwitchLabels[r].c_str(), s + 1), trigLabels[r]);
-				configSwitch(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, string::f(gateSwitchLabels[r].c_str(), s + 1), gateLabels[r]);
-				configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, string::f(cvKnobLabels[r].c_str(), s + 1));
+				configSwitch(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, rack::string::f(trigSwitchLabels[r].c_str(), s + 1), trigLabels[r]);
+				configSwitch(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, rack::string::f(gateSwitchLabels[r].c_str(), s + 1), gateLabels[r]);
+				configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, rack::string::f(cvKnobLabels[r].c_str(), s + 1));
 			}
 
 			// step CV iputs
 			if (r == 0) {
 				for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-					configInput(STEP_INPUTS + s, string::f("Step %d CV", s + 1));
+					configInput(STEP_INPUTS + s, rack::string::f("Step %d CV", s + 1));
 				}
 				
 				inputInfos[STEP_INPUTS]->description = "Apply a polyphonic signal to distrbute each channel across the other step CV inputs";
@@ -139,7 +139,7 @@ struct STRUCT_NAME : Module {
 			// add second row of knobs to channel 2
 			if (r >  0) {
 				for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-					configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, string::f("Step %d CV4 value", s + 1));
+					configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, rack::string::f("Step %d CV4 value", s + 1));
 				}
 			}
 			
@@ -166,11 +166,11 @@ struct STRUCT_NAME : Module {
 					configSwitch(RANGE_SW_PARAMS + (r * 2) + i, 0.0f, 2.0f, 0.0f, scaleSwitchLabels[i], {"8 Volts", "4 Volts", "2 Volts"});
 			}
 			
-			configInput(RUN_INPUTS + r,   string::f("Channel %d Run", r +1));
-			configInput(CLOCK_INPUTS + r, string::f("Channel %d Clock", r +1));
-			configInput(RESET_INPUTS + r, string::f("Channel %d Reset", r +1));
-			configInput(LENCV_INPUTS + r, string::f("Channel %d Length CV", r +1));
-			configInput(DIRCV_INPUTS + r, string::f("Channel %d Direction CV", r +1));
+			configInput(RUN_INPUTS + r,   rack::string::f("Channel %d Run", r +1));
+			configInput(CLOCK_INPUTS + r, rack::string::f("Channel %d Clock", r +1));
+			configInput(RESET_INPUTS + r, rack::string::f("Channel %d Reset", r +1));
+			configInput(LENCV_INPUTS + r, rack::string::f("Channel %d Length CV", r +1));
+			configInput(DIRCV_INPUTS + r, rack::string::f("Channel %d Direction CV", r +1));
 			
 			if (r > 0) {
 				inputInfos[CLOCK_INPUTS + r]->description = "Normalled to channel 1 clock input";

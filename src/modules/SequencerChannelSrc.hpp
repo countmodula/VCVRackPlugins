@@ -54,8 +54,8 @@ struct STRUCT_NAME : Module {
 		
 		// cv/gate params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
-			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
+			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
+			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
 		}
 
 		// range switch

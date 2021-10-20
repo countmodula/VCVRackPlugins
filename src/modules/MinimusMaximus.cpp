@@ -59,10 +59,10 @@ struct MinimusMaximus : Module {
 
 		char c = 'A';
 		for (int i = 0; i < 4; i++) {
-			configInput(A_INPUT + i, string::f("%c", c));
-			configOutput(A_MAX_OUTPUT + i, string::f("%c is maximum", c));
+			configInput(A_INPUT + i, rack::string::f("%c", c));
+			configOutput(A_MAX_OUTPUT + i, rack::string::f("%c is maximum", c));
 			outputInfos[A_MAX_OUTPUT + i]->description = "Gate signal indicating this channel has the highest input value";
-			configOutput(A_MIN_OUTPUT + i, string::f("%c is minumum", c));
+			configOutput(A_MIN_OUTPUT + i, rack::string::f("%c is minumum", c));
 			outputInfos[A_MAX_OUTPUT + i]->description = "Gate signal indicating this channel has the lowest input value";
 			c++;
 		}

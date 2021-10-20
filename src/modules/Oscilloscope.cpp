@@ -416,13 +416,13 @@ struct OscilloscopeDisplay : LightWidget {
 
 		std::string text;
 		text = "PP:";
-		text += isNear(stats->vpp, 0.f, 100.f) ? string::f("% 6.2f", stats->vpp) : "  ---";
+		text += isNear(stats->vpp, 0.f, 100.f) ? rack::string::f("% 6.2f", stats->vpp) : "  ---";
 		nvgText(args.vg, pos.x, pos.y, text.c_str(), NULL);
 		text = "Max:";
-		text += isNear(stats->vmax, 0.f, 100.f) ? string::f("% 6.2f", stats->vmax) : "  ---";
+		text += isNear(stats->vmax, 0.f, 100.f) ? rack::string::f("% 6.2f", stats->vmax) : "  ---";
 		nvgText(args.vg, pos.x + 70, pos.y, text.c_str(), NULL);
 		text = "Min:";
-		text += isNear(stats->vmin, 0.f, 100.f) ? string::f("% 6.2f", stats->vmin) : "  ---";
+		text += isNear(stats->vmin, 0.f, 100.f) ? rack::string::f("% 6.2f", stats->vmin) : "  ---";
 		nvgText(args.vg, pos.x + 145, pos.y, text.c_str(), NULL);
 		
 		nvgText(args.vg, pos.x + 220, pos.y, scale, NULL);

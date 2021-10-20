@@ -73,7 +73,7 @@ struct SequencerExpanderOut8 : Module {
 		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Gate", "Trigger"});
 
 		for (int i = 0; i < SEQ_NUM_STEPS; i++) {
-			configOutput(STEP_GATE_OUTPUTS + i, string::f("Step %d gate/trigger", i + 1));
+			configOutput(STEP_GATE_OUTPUTS + i, rack::string::f("Step %d gate/trigger", i + 1));
 
 		}
 

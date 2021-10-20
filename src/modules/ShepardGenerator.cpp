@@ -95,8 +95,8 @@ struct ShepardGenerator : Module {
 		configInput(CV_INPUT, "Rate CV");
 		
 		for (int i = 0; i < 8; i++) {
-			configOutput(SAW_OUTPUT + i, string::f("Saw phase %d", i + 1));
-			configOutput(TRI_OUTPUT + i, string::f("Triangle phase %d", i + 1));
+			configOutput(SAW_OUTPUT + i, rack::string::f("Saw phase %d", i + 1));
+			configOutput(TRI_OUTPUT + i, rack::string::f("Triangle phase %d", i + 1));
 			outputInfos[SAW_OUTPUT + i]->description = "Use for pitch";
 			outputInfos[TRI_OUTPUT + i]->description = "Use for amplitude";
 		}

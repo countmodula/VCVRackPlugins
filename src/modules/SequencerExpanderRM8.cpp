@@ -74,7 +74,7 @@ struct SequencerExpanderRM8 : Module {
 		
 		// step params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, string::f("Bit %d", s + 1), {"Subtract", "Off", "Add"});
+			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, rack::string::f("Bit %d", s + 1), {"Subtract", "Off", "Add"});
 		}
 		
 		// range switch

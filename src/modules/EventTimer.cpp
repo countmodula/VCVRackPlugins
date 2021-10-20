@@ -361,7 +361,7 @@ struct EventTimerWidget : ModuleWidget {
 		if (module) {
 			// process any change in count
 			if (module)
-				divDisplay->text = string::f("%03d", ((EventTimer *)(module))->displayCount);
+				divDisplay->text = rack::string::f("%03d", ((EventTimer *)(module))->displayCount);
 			
 			// process any change of theme
 			#include "../themes/step.hpp"

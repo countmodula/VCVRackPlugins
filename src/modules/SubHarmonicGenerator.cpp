@@ -48,10 +48,10 @@ struct SubHarmonicGenerator : Module {
 			if (i == 0)
 				configParam(MIX_PARAM + i, 0.0f, 1.0f, 0.0f, "Divide by 1 mix level", " %", 0.0f, 100.0f, 0.0f);
 			else
-				configParam(MIX_PARAM + i, 0.0f, 1.0f, 0.0f, string::f("Divide by %c mix level", cm++), " %", 0.0f, 100.0f, 0.0f);
+				configParam(MIX_PARAM + i, 0.0f, 1.0f, 0.0f, rack::string::f("Divide by %c mix level", cm++), " %", 0.0f, 100.0f, 0.0f);
 
 			if ( i < 4) {
-				configParam(DIV_PARAM + i, 2.0f, 16.0f, (float)(divisions[i + 1]), string::f("Division %c", cd++));
+				configParam(DIV_PARAM + i, 2.0f, 16.0f, (float)(divisions[i + 1]), rack::string::f("Division %c", cd++));
 			}
 
 			// dividers

@@ -85,17 +85,17 @@ struct MatrixMixer : Module {
 			
 			// mix knobs
 			for (int j = 0; j < 4; j++)
-				configParam(C1R1_LEVEL_PARAM + (j * 6) + i, 0.0f, 1.0f, 0.5f, string::f("Input %c mix %d level", c, j + 1), " %", 0.0f, 100.0f, 0.0f);
+				configParam(C1R1_LEVEL_PARAM + (j * 6) + i, 0.0f, 1.0f, 0.5f, rack::string::f("Input %c mix %d level", c, j + 1), " %", 0.0f, 100.0f, 0.0f);
 			
 			// output level knobs
-			configParam(C1_LEVEL_PARAM + (i * 6), 0.0f, 1.0f, 0.0f, string::f("Mix %d output level", i + 1), " %", 0.0f, 100.0f, 0.0f);
+			configParam(C1_LEVEL_PARAM + (i * 6), 0.0f, 1.0f, 0.0f, rack::string::f("Mix %d output level", i + 1), " %", 0.0f, 100.0f, 0.0f);
 			
 			// mode switches
-			configSwitch(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, string::f("Mix %d mode", i + 1), {"Unipolar", "Bipolar"});
+			configSwitch(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, rack::string::f("Mix %d mode", i + 1), {"Unipolar", "Bipolar"});
 			
 			// ins and outs
-			configOutput(C1_OUTPUT + i,  string::f("Mix %d", i + 1));
-			configInput(R1_INPUT +i, string::f("%c", c++));
+			configOutput(C1_OUTPUT + i,  rack::string::f("Mix %d", i + 1));
+			configInput(R1_INPUT +i, rack::string::f("%c", c++));
 		}
 
 		// set the theme from the current default value

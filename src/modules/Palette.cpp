@@ -342,7 +342,7 @@ struct Palette : Module {
 		getParamQuantity(LOCK_PARAM)->randomizeEnabled = false;
 
 		for (int i = 0; i < MAX_COLOURS; i++) {
-			configLight(BUTTON_LIGHTS + i, string::f("%d", i + 1));
+			configLight(BUTTON_LIGHTS + i, rack::string::f("%d", i + 1));
 		}
 		
 		// set the theme from the current default value
@@ -1106,7 +1106,7 @@ struct PaletteWidget : ModuleWidget {
 			int x = (int)(settings::cableColors.size());
 
 			MenuLabel *paramLabel = new MenuLabel;
-			paramLabel->text = string::f("Cable Colour %d", colorID + 1);
+			paramLabel->text = rack::string::f("Cable Colour %d", colorID + 1);
 			menu->addChild(paramLabel);
 			
 			overrideRevert = false;

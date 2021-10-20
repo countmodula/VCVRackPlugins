@@ -48,7 +48,7 @@ struct SequencerExpanderTSG : Module {
 		
 		char c = 'A';
 		for (int i = 0; i < SEQUENCER_EXP_NUM_TRIGGER_OUTS; i++) {
-			configOutput(GATE_OUTPUTS + i, string::f("Gate %c", c++));
+			configOutput(GATE_OUTPUTS + i, rack::string::f("Gate %c", c++));
 		}
 		
 		// from left module (master)

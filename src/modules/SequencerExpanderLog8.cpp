@@ -75,7 +75,7 @@ struct SequencerExpanderLog8 : Module {
 		
 		// bit params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configButton(BIT_PARAMS + s, string::f("Bit %d", s + 1));
+			configButton(BIT_PARAMS + s, rack::string::f("Bit %d", s + 1));
 		}
 		
 		// mode switch

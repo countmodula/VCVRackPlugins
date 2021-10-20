@@ -199,7 +199,7 @@ struct VCPulseDividerWidget : ModuleWidget {
 		if (module) {
 			VCPulseDivider *m = (VCPulseDivider *)module;
 				
-			divDisplay->text = string::f("%02d", m->length);
+			divDisplay->text = rack::string::f("%02d", m->length);
 			
 			// process any change of theme
 			#include "../themes/step.hpp"
