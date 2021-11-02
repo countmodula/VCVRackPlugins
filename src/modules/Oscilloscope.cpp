@@ -284,7 +284,7 @@ struct Oscilloscope : Module {
 	}
 };
 
-struct OscilloscopeDisplay : LightWidget {
+struct OscilloscopeDisplay : ModuleLightWidget {
 	Oscilloscope *module;
 	int frame = 0;
 	std::shared_ptr<Font> font;
@@ -460,7 +460,7 @@ struct OscilloscopeDisplay : LightWidget {
 		nvgResetScissor(args.vg);
 	}
 
-	void draw (const DrawArgs &args) override {
+	void drawLight (const DrawArgs &args) override {
 		if(module == NULL) 
 			return;
 
