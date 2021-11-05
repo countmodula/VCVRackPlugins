@@ -125,3 +125,4 @@ extern Model *modelOctetTriggerSequencerGateExpander;
 extern Model *modelMult;
 extern Model *modelPolyGateModifier;
 extern Model *modelSampleAndHold2;
+extern Model *modelSequenceEncoder;

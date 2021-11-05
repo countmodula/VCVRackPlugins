@@ -1081,6 +1081,14 @@
 		  "tags": [
 			"Utility"
 		  ]
+		},
+		{
+		  "slug": "SequenceEncoder",
+		  "name": "4Bit Sequence Encoder",
+		  "description": "Binary addressed encoder for sequencer expanders",
+		  "tags": [
+			"Sequencer"
+		  ]
 		}
 	]
 }

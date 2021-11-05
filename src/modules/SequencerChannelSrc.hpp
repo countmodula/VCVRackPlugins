@@ -125,6 +125,10 @@ struct STRUCT_NAME : Module {
 				running = messagesFromMaster->runningState;
 				clock = messagesFromMaster->clockState;
 				
+				// for the binary addressed sequencer, we need to chop off the 4th bit if we're running an 8 step channel
+				if (count > SEQ_NUM_STEPS)
+					count -= SEQ_NUM_STEPS;
+
 				if (userChannel == 0)
 					userChannel = messagesFromMaster->channel;
 				

@@ -126,3 +126,4 @@ p->addModel(modelOctetTriggerSequencerGateExpander);
 p->addModel(modelMult);
 p->addModel(modelPolyGateModifier);
 p->addModel(modelSampleAndHold2);
+p->addModel(modelSequenceEncoder);
