@@ -67,13 +67,13 @@ struct STRUCT_NAME : Module {
 	int directionMode = FORWARD;
 	bool oneShot = false;
 	bool oneShotEnded = false;
-	float moduleVersion = 0.0f;
+	float moduleVersion = 1.1f;
 	
 	float cv = 0.0f;
 	bool prevGate = false;
 	bool running = false;
 		
-	float lengthCVScale = (float)(SEQ_NUM_STEPS);
+	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 	
 	SequencerChannelMessage rightMessages[2][1]; // messages to right module (expander)
 	
@@ -128,7 +128,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
@@ -142,11 +142,15 @@ struct STRUCT_NAME : Module {
 	
 	void dataFromJson(json_t* root) override {
 		
+		json_t *version = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *dir = json_object_get(root, "direction");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
-		
+
+		if (version)
+			moduleVersion = json_number_value(version);			
+
 		if (currentStep)
 			count = json_integer_value(currentStep);
 		

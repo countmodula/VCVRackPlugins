@@ -69,8 +69,8 @@ struct BasicSequencer8 : Module {
 	int directionMode = 0;
 	bool running = false;
 	
-	float lengthCVScale = (float)(SEQ_NUM_STEPS);
-	float moduleVersion = 1.3f;
+	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
+	float moduleVersion = 1.4f;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -159,10 +159,6 @@ struct BasicSequencer8 : Module {
 			gateRun.preset(json_boolean_value(run));
 		
 		running = gateRun.high();
-		
-		// older module version, use the old length CV scale
-		if (moduleVersion < 1.3f)
-			lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"

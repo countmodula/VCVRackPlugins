@@ -30,7 +30,7 @@ struct STRUCT_NAME : Module {
 		NUM_LIGHTS
 	};
 	
-	float moduleVersion = 1.1f;
+	float moduleVersion = 1.2f;
 	
 	GateProcessor gateClock[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateReset[TRIGSEQ_NUM_ROWS];
@@ -41,7 +41,7 @@ struct STRUCT_NAME : Module {
 	int length[TRIGSEQ_NUM_ROWS] = {};
 	bool running[TRIGSEQ_NUM_ROWS] = {};
 	
-	float lengthCVScale = (float)(TRIGSEQ_NUM_STEPS);
+	float lengthCVScale = (float)(TRIGSEQ_NUM_STEPS - 1);
 	
 	int startUpCounter = 0;
 	
@@ -153,12 +153,6 @@ struct STRUCT_NAME : Module {
 				running[i] = gateRun[i].high();
 			}
 		}
-		
-		// older module version, use the old length CV scale
-		if (moduleVersion < 1.1f) {
-			lengthCVScale = (float)(TRIGSEQ_NUM_STEPS - 1);		
-		}
-		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
