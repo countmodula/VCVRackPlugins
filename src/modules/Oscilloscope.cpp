@@ -430,18 +430,20 @@ struct OscilloscopeDisplay : ModuleLightWidget {
 	}
 
 	void drawBackground(const DrawArgs &args) override {
+		
+		if (module->hideGrid) {
+			nvgSave(args.vg);
+			Rect b = Rect(Vec(0, 0), box.size);
+			nvgScissor(args.vg, b.pos.x+1, b.pos.y+1, b.size.x-2, b.size.y-2);
+			nvgBeginPath(args.vg);
+			nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 0.5);
 
-		nvgSave(args.vg);
-		Rect b = Rect(Vec(0, 0), box.size);
-		nvgScissor(args.vg, b.pos.x+1, b.pos.y+1, b.size.x-2, b.size.y-2);
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 0.5);
+			nvgFillColor(args.vg, nvgRGB(0x00, 0x00, 0x00));
+			nvgFill(args.vg);
 
-		nvgFillColor(args.vg, nvgRGB(0x00, 0x00, 0x00));
-		nvgFill(args.vg);
-
-		nvgResetScissor(args.vg);
-		nvgRestore(args.vg);
+			nvgResetScissor(args.vg);
+			nvgRestore(args.vg);
+		}
 	}
 
 	void drawBaseLine(const DrawArgs& args, float value) {
@@ -470,8 +472,8 @@ struct OscilloscopeDisplay : ModuleLightWidget {
 		nvgGlobalTint(args.vg, color::WHITE);
 
 		// hide the grid if we've chosen to do so
-		if (module->hideGrid)
-			drawBackground(args);
+		// if (module->hideGrid)
+			// drawBackground(args);
 		
 		// show the gid baseline if we've chosen to do so
 		if (module->showGridBaseline) {
