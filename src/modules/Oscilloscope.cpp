@@ -431,7 +431,7 @@ struct OscilloscopeDisplay : ModuleLightWidget {
 
 	void drawBackground(const DrawArgs &args) override {
 		
-		if (module->hideGrid) {
+		if (module && module->hideGrid) {
 			nvgSave(args.vg);
 			Rect b = Rect(Vec(0, 0), box.size);
 			nvgScissor(args.vg, b.pos.x+1, b.pos.y+1, b.size.x-2, b.size.y-2);
