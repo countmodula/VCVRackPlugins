@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Attenuator Module
 //	A basic dual attenuator module with one switchable attenuverter and one 
-//  simple attenuator
-//  Copyright (C) 2019  Adam Verspaget
+//	simple attenuator
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"
@@ -51,6 +51,9 @@ struct Attenuator : Module {
 
 		configOutput(CH1_SIGNAL_OUTPUT, "A");
 		configOutput(CH2_SIGNAL_OUTPUT, "B");
+
+		configBypass(CH1_SIGNAL_INPUT, CH1_SIGNAL_OUTPUT);
+		configBypass(CH2_SIGNAL_INPUT, CH2_SIGNAL_OUTPUT);
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -115,8 +118,7 @@ struct Attenuator : Module {
 		}
 		else {
 			// nothing connected, we're acting as a CV source
-			if (bipolar)
-				outputs[CH1_SIGNAL_OUTPUT].setVoltage(10.0f * att1);
+			outputs[CH1_SIGNAL_OUTPUT].setVoltage(10.0f * att1);
 		}
 		
 		// channel 2
