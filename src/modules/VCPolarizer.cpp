@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Polarizer Module
 //	AA 2 channel voltage controlled signal polarizer
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"
@@ -59,6 +59,9 @@ struct VCPolarizer : Module {
 		configInput(CH2_CV_INPUT, "CV");
 		configInput(CH2_SIGNAL_INPUT, "Signal");
 		configOutput(CH2_SIGNAL_OUTPUT, "Signal");
+		
+		configBypass(CH1_SIGNAL_INPUT, CH1_SIGNAL_OUTPUT);
+		configBypass(CH2_SIGNAL_INPUT, CH2_SIGNAL_OUTPUT);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

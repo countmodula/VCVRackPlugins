@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Clock/Gate Module
 //	A voltage controlled clock/gate divider (divide by 1 - approx 20)
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"
@@ -77,7 +77,7 @@ struct ClockedRandomGates : Module {
 			configOutput(TRIG_OUTPUT + c, s + " trigger");
 			configOutput(CLOCK_OUTPUT + c, s + " gated clock");
 		}
-		
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

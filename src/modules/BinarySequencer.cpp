@@ -2,7 +2,7 @@
 //	/^M^\ Count Modula Plugin for VCV Rack - Binary Sequencer Module
 //	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
 //	RIP John. Frac rules!
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

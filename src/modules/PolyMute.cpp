@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Polyphonic Mute
 //	A polyphonic mute.
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/SlewLimiter.hpp"
@@ -63,6 +63,8 @@ struct PolyMute : Module {
 		
 		configOutput(POLY_OUTPUT, "Poly");
 
+		configBypass(POLY_INPUT, POLY_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

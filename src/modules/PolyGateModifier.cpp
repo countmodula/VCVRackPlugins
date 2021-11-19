@@ -81,6 +81,8 @@ struct PolyGateModifier : Module {
 		configOutput(PULSE_OUTPUT, "Modified gate");
 		configOutput(END_OUTPUT, "Gate end");
 
+		configBypass(TRIGGER_INPUT, PULSE_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Euclid Module
-//  An Euclidean Trigger sequencer
-//  Copyright (C) 2020  Adam Verspaget
+//	An Euclidean Trigger sequencer
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../components/CountModulaLEDDisplay.hpp"

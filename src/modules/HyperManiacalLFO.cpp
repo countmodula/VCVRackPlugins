@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Hyper Maniacal LFO Module
-//  Oscillator section based on the VCV VCO by Andrew Belt
-//  Copyright (C) 2020  Adam Verspaget
+//	Oscillator section based on the VCV VCO by Andrew Belt
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/SlewLimiter.hpp"

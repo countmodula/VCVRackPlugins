@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Standard Sequencer Engine
-//  Copyright (C) 2020  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - Standard switch Engine
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 
 struct STRUCT_NAME : Module {

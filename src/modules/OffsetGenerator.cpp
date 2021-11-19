@@ -1,6 +1,6 @@
-	//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Offset Generator
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -49,6 +49,8 @@ struct OffsetGenerator : Module {
 		inputInfos[TRIG_INPUT]->description = "Apply a trigger signal here to activate the S&H function";
 
 		configOutput(MIX_OUTPUT, "CV");
+		
+		configBypass(CV_INPUT, MIX_OUTPUT);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

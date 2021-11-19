@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - PolyChances (Bernoulli Gate)
-//  Copyright (C) 2020  Adam Verspaget
-//  Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
+//	Copyright (C) 2020  Adam Verspaget
+//	Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -56,6 +56,8 @@ struct PolyChances : Module {
 		
 		configOutput(A_OUTPUT, "A");
 		configOutput(B_OUTPUT, "B");
+		
+		configBypass(GATE_INPUT, A_OUTPUT);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

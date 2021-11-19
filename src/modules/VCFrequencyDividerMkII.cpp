@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Divider Module MkII
 //	A voltage controlled frequency divider (divide by 1 - approx 20)
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"
@@ -75,7 +75,7 @@ struct VCFrequencyDividerMkII : Module {
 		
 		outputInfos[DIVB_OUTPUT]->description = "+/-5 Volts";
 		outputInfos[DIVU_OUTPUT]->description = "0-10 Volts";
-		
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -124,7 +124,7 @@ struct VCFrequencyDividerMkII : Module {
 			
 			legacyDivider.setN(div + divCV);
 			legacyDivider.process(inputs[DIV_INPUT].getNormalVoltage(0.0f));
-			phase = legacyDivider.phase;			
+			phase = legacyDivider.phase;
 		}
 		else {
 			divider.setMaxN(21);

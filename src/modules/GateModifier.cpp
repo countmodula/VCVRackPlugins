@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Pulse Extender Module
 //	A voltage controlled pulse extender
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -71,6 +71,8 @@ struct GateModifier : Module {
 
 		configOutput(PULSE_OUTPUT, "Modified gate");
 		configOutput(END_OUTPUT, "Gate end");
+		
+		configBypass(TRIGGER_INPUT, PULSE_OUTPUT);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

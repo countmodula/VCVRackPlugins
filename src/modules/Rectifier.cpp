@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Rectifier Module
 //	A full and half wave rectifier
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Inverter.hpp"
@@ -57,7 +57,6 @@ struct Rectifier : Module {
 		configOutput(FWRI_OUTPUT, "Inverted full wave rectified");
 		configOutput(PHRI_OUTPUT, "Inverted positive half wave rectified");
 		configOutput(NHRI_OUTPUT, "Inverted negative half wave rectified");		
-
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - PolyLogic (Bernoulli Gate)
-//  Copyright (C) 2020  Adam Verspaget
-//  Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
+//	Copyright (C) 2020  Adam Verspaget
+//	Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"

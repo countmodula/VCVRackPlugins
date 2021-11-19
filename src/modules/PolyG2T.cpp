@@ -58,6 +58,8 @@ struct PolyG2T : Module {
 		configOutput(END_OUTPUT, "Gate end trigger");
 		configOutput(EDGE_OUTPUT, "Gate start/end trigger");
 		
+		configBypass(GATE_INPUT, GATE_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

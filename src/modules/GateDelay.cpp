@@ -1,8 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Gate Delay Module
-//	A shift register style gate delay offering up to 20 seconds of
-//  delay
-//  Copyright (C) 2019  Adam Verspaget
+//	A shift register style gate delay offering up to 20 seconds of delay
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include <queue>
 #include <deque>
@@ -69,7 +68,8 @@ struct GateDelay : Module {
 			configOutput(MIX_OUTPUT + i, "Mix");
 		}
 
-
+		configBypass(GATE_INPUT, MIX_OUTPUT);
+		configBypass(GATE_INPUT + 1, MIX_OUTPUT + 1);
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

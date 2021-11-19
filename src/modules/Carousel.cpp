@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Carousel
 //	A rotating router/switch
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -80,6 +80,7 @@ struct Carousel : Module {
 			s = std::to_string(i + 1);
 			configInput(CV_INPUT + i, "Source " + s);
 			configOutput(CV_OUTPUT + i, "Destination " + s);
+			configBypass(CV_INPUT + i, CV_OUTPUT + i);
 		}
 		
 		// set the theme from the current default value

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Euclidean Sequencer CV Expander
-//  Adds CV functionality to the Euclidean Sequencer module
-//  Copyright (C) 2020  Adam Verspaget
+//	Adds CV functionality to the Euclidean Sequencer module
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Light strip
-// LED Light strip blank module
-//  Copyright (C) 2020  Adam Verspaget
+//	LED Light strip blank module
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

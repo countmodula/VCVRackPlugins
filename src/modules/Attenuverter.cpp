@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Attenuverter Module
 //	A dual manual CV generator
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -49,6 +49,9 @@ struct Attenuverter : Module {
 		configOutput(SIGNAL_OUTPUT + 1, "Channel B");
 		configOutput(INVERTED_OUTPUT, "Channel A inverted");
 		configOutput(INVERTED_OUTPUT + 1, "Channel B inverted");
+		
+		configBypass(SIGNAL_INPUT, SIGNAL_OUTPUT);
+		configBypass(SIGNAL_INPUT + 1, SIGNAL_OUTPUT + 1);
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

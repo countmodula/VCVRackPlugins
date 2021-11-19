@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Scaler
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -32,7 +32,6 @@ struct VoltageScaler : Module {
 		OVER_LIGHT,
 		NUM_LIGHTS
 	};
-
 	
 	float inMin, inMax, inDiff;
 	float limitA, limitB, diff, cvOut, cvIn;
@@ -57,6 +56,8 @@ struct VoltageScaler : Module {
 		inputInfos[LOWER_INPUT]->description = "When connected, the Limit B knob acts as an attenuator";
 
 		configOutput(CV_OUTPUT, "Scaled CV");
+		
+		configBypass(CV_INPUT, CV_OUTPUT);
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"

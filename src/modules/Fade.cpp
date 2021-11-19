@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Recording Fade Module
 //	A fade-in/fade-out and trigger controller for the VCV Rack Rec module.
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../components/CountModulaLEDDisplay.hpp"
@@ -99,6 +99,9 @@ struct Fade : Module {
 		outputInfos[GATE_OUTPUT]->description = "Outputs a high gate for the duration of the run time";
 		outputInfos[TRIG_OUTPUT]->description = "Outputs trigger pulses at the start of fade-in and end of fade-out";
 
+		configBypass(L_INPUT, L_OUTPUT);
+		configBypass(R_INPUT, R_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

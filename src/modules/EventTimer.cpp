@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Event timer
-// A count down timer to generate events at a specific moment
-//  Copyright (C) 2020  Adam Verspaget
+//	A count down timer to generate events at a specific moment
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../components/CountModulaLEDDisplay.hpp"

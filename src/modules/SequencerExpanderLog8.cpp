@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Gated Comparator logic expander
-//  Adds logically mixed outputs to the Gated Comparator
-//  Copyright (C) 2019  Adam Verspaget
+//	Adds logically mixed outputs to the Gated Comparator
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

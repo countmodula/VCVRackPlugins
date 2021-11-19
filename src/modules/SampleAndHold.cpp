@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Sample & Hold Module
 //	Sample/Track/Pass and Hold
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -58,7 +58,7 @@ struct SampleAndHold : Module {
 
 		configOutput(SAMPLE_OUTPUT, "Sampled signal");
 		configOutput(INV_OUTPUT, "Inverted sampled signal");
-		
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

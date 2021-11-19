@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - SR Flip Flop (Latch) Logic Gate Module
-//	A dual set/reset latch with gate enable
-//  Copyright (C) 2020  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - T Flip Flop (Latch) Logic Gate Module
+//	A dual toggle latch with gate enable
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

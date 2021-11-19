@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Manual CV Module
-//	A dual manual CV generator
-//  Copyright (C) 2019  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - Poly Manual CV Module
+//	A polyphonic manual CV generator
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 

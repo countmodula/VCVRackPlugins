@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Sub Harmonic Generator
 //	A sub harmonic generator  
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"
@@ -64,6 +64,8 @@ struct SubHarmonicGenerator : Module {
 		configInput(OSC_INPUT, "Oscillator");
 		configOutput(MIX_OUTPUT, "Sub-harmonic mix");
 			
+		configBypass(OSC_INPUT, MIX_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Clocked Random Gate CV Expander
-//  Adds CV functionality to the Clocked Random Gates module
-//  Copyright (C) 2019  Adam Verspaget
+//	Adds CV functionality to the Clocked Random Gates module
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"

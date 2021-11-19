@@ -2,7 +2,7 @@
 //	/^M^\ Count Modula Plugin for VCV Rack - Manual Gate Module
 //	A simple manual gate generator with a nice big button offering gate, latch
 //	extended gate and trigger outputs 
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -55,6 +55,10 @@ struct Mute : Module {
 
 		configInput(L_OUTPUT, "Signal 1");
 		configInput(R_OUTPUT, "Signal 2");
+		
+		configBypass(L_INPUT, L_OUTPUT);
+		configBypass(R_INPUT, R_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}

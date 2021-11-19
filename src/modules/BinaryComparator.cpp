@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Binary Comparator Module
-//  Copyright (C) 202  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -68,7 +68,6 @@ struct BinaryComparator : Module {
 		configOutput(GTE_OUTPUT,"A >= B");
 		configOutput(GT_OUTPUT,"A > B");
 		configOutput(NE_OUTPUT,"A <> B");
-
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
