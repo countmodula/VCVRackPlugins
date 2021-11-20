@@ -163,7 +163,7 @@ struct Arpeggiator : Module {
 	
 	std::string stepLabels[ARP_NUM_STEPS] = {"Step 1 ", "Step 2 ", "Step 3 ", "Step 4 ", "Step 5 ", "Step 6 ", "Step 7 ", "Step 8 "};
 	std::string programmeLabels[5] = {"Next note", "Previous note", "Repeat note", "Rest", "Skip note"};
-	std::string octaveLabels[3] = {"octave shift down", "no octave shift", "octave shift up"};
+	std::string octaveLabels[3] = {"octave shift down", "note octave shift", "octave shift up"};
 	std::string modifyLabels[2] = {"glide", "accent"};
 
 	Arpeggiator() {
