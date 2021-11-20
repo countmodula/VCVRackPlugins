@@ -332,9 +332,8 @@ struct Palette : Module {
 		
 		if (paletteSingleton == NULL) {
 			paletteSingleton = this;
-		//	running = true;
+			running = true;
 		}
-		running = false; // todo: remove once the new API is released
 		
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
@@ -475,38 +474,40 @@ struct Palette : Module {
 	
 	void process(const ProcessArgs &args) override {
 
-		// if (running) {
-			// // continue with the colour we had chosen at the time the patch was saved 
-			// if (startColorID >= 0) {
-				// APP->scene->rack->internal->nextCableColorId = startColorID;
-				// nextColorID = startColorID = -1;
-				// doChange = true;
-			// }
+		if (running) {
+			// continue with the colour we had chosen at the time the patch was saved 
+			if (startColorID >= 0) {
+				APP->scene->rack->setNextCableColorId(startColorID);
+				nextColorID = startColorID = -1;
+				doChange = true;
+			}
 			
-			// int colorID = APP->scene->rack->nextCableColorId;
+			int colorID = APP->scene->rack->getNextCableColorId();
 			
-			// // if we're locked, keep the next colour as the current colour
-			// if (!doChange) {
-				// if (colorID != nextColorID && params[LOCK_PARAM].getValue() > 0.5f) {
-					// if (nextColorID >= 0)
-						// colorID = APP->scene->rack->nextCableColorId = nextColorID;
-				// }
-			// }
+			// if we're locked, keep the next colour as the current colour
+			if (!doChange) {
+				if (colorID != nextColorID && params[LOCK_PARAM].getValue() > 0.5f) {
+					if (nextColorID >= 0) {
+						colorID = nextColorID;
+						APP->scene->rack->setNextCableColorId(nextColorID);
+					}
+				}
+			}
 			
-			// // update the LEDs if there's been a change
-			// if (count == 0 || doChange) {
-				// if (nextColorID != colorID) {
-					// // sync the next colour id
-					// nextColorID = colorID;
-				// }
-			// }
+			// update the LEDs if there's been a change
+			if (count == 0 || doChange) {
+				if (nextColorID != colorID) {
+					// sync the next colour id
+					nextColorID = colorID;
+				}
+			}
 			
-			// // update the display every 8th cycle
-			// if (++count > 8)
-				// count = 0;
+			// update the display every 8th cycle
+			if (++count > 8)
+				count = 0;
 			
-			// doChange = false;
-		// }
+			doChange = false;
+		}
 	}
 };
 
@@ -515,51 +516,51 @@ struct KeyContainer : Widget {
 	Palette* module = NULL;
 
 	void step() override {
-		// if (module && module->keyPressAction > Palette::NO_HOTKEY_ACTION) {
-			// if (module->keyPressAction == Palette::LOCK_HOTKEY_ACTION) {
-				// // colour lock hotkey
-				// if (module->params[Palette::LOCK_PARAM].getValue() > 0.5)
-					// module->params[Palette::LOCK_PARAM].setValue(0.0);
-				// else
-					// module->params[Palette::LOCK_PARAM].setValue(1.0);
-			// }
-			// else if (module->keyPressAction >= Palette::COLOUR_HOTKEY_ACTION) {
-				// // colour selection hotkeys
-				// size_t i = module->keyPressAction - Palette::COLOUR_HOTKEY_ACTION;
-				// if (!settings::cableColors.empty() && i < settings::cableColors.size()) {
+		if (module && module->keyPressAction > Palette::NO_HOTKEY_ACTION) {
+			if (module->keyPressAction == Palette::LOCK_HOTKEY_ACTION) {
+				// colour lock hotkey
+				if (module->params[Palette::LOCK_PARAM].getValue() > 0.5)
+					module->params[Palette::LOCK_PARAM].setValue(0.0);
+				else
+					module->params[Palette::LOCK_PARAM].setValue(1.0);
+			}
+			else if (module->keyPressAction >= Palette::COLOUR_HOTKEY_ACTION) {
+				// colour selection hotkeys
+				size_t i = module->keyPressAction - Palette::COLOUR_HOTKEY_ACTION;
+				if (!settings::cableColors.empty() && i < settings::cableColors.size()) {
 					
-					// APP->scene->rack->nextCableColorId = i;
-					// module->doChange = true;
-				// }
-			// }
+					APP->scene->rack->setNextCableColorId(i);
+					module->doChange = true;
+				}
+			}
 
-			// module->keyPressAction = Palette::NO_HOTKEY_ACTION;
-		// }
+			module->keyPressAction = Palette::NO_HOTKEY_ACTION;
+		}
 		Widget::step();
 	}
 
 	void onHoverKey(const event::HoverKey& e) override {
-		// if (module && !module->isBypassed() && module->running && module->globalHotKeys) {
-			// if (e.action == GLFW_PRESS) {
-				// if (e.key == module->lockHotKey && ((e.mods & RACK_MOD_MASK) == module->lockModifier)) {
-					// // colour lock keypress
-					// module->keyPressAction = Palette::LOCK_HOTKEY_ACTION;
-					// e.consume(this);
-				// }
-				// else {
-					// // possible colour selection keypress
-					// for (size_t i = 0; i < NUM_COLOURS; i ++) {
-						// int k = module->hotKeyMap[i];
+		if (module && !module->isBypassed() && module->running && module->globalHotKeys) {
+			if (e.action == GLFW_PRESS) {
+				if (e.key == module->lockHotKey && ((e.mods & RACK_MOD_MASK) == module->lockModifier)) {
+					// colour lock keypress
+					module->keyPressAction = Palette::LOCK_HOTKEY_ACTION;
+					e.consume(this);
+				}
+				else {
+					// possible colour selection keypress
+					for (size_t i = 0; i < NUM_COLOURS; i ++) {
+						int k = module->hotKeyMap[i];
 						
-						// if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == module->modifierMap[i])) {		
-							// module->keyPressAction = Palette::COLOUR_HOTKEY_ACTION + i;
-							// e.consume(this);
-							// break;
-						// }
-					// }					
-				// }
-			// }
-		// }
+						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == module->modifierMap[i])) {		
+							module->keyPressAction = Palette::COLOUR_HOTKEY_ACTION + i;
+							e.consume(this);
+							break;
+						}
+					}					
+				}
+			}
+		}
 		Widget::onHoverKey(e);
 	}
 };
@@ -1099,7 +1100,12 @@ struct PaletteWidget : ModuleWidget {
 		int colorID;
 		bool enabled = true;
 		bool overrideRevert;
+		ui::Tooltip* tooltip = NULL;
 		
+		~ColourButton() {
+			destroyTooltip();
+		}		
+			
 		void createContextMenu() {
 			Palette *module = dynamic_cast<Palette*>(this->module);
 			ui::Menu *menu = createMenu();
@@ -1255,7 +1261,7 @@ struct PaletteWidget : ModuleWidget {
 			e.stopPropagating();
 			if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
 				if (enabled) {
-//					APP->scene->rack->nextCableColorId = colorID;
+					APP->scene->rack->setNextCableColorId(colorID);
 					module->doChange = true;
 				}
 			}
@@ -1286,11 +1292,23 @@ struct PaletteWidget : ModuleWidget {
 			APP->scene->addChild(tooltip);
 			this->tooltip = tooltip;
 		}
-		
+
+		void destroyTooltip() {
+			if (!this->tooltip)
+				return;
+			APP->scene->removeChild(this->tooltip);
+			delete this->tooltip;
+			this->tooltip = NULL;
+		}	
+
 		// hack to customise the tooltips
 		void onEnter(const EnterEvent& e) override {
 			this->createTooltip();
 		}
+		
+		void onLeave(const LeaveEvent& e) override {
+			this->destroyTooltip();
+		}			
 	};
 
 	// hotkey  menu
@@ -1452,7 +1470,7 @@ struct PaletteWidget : ModuleWidget {
 						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == ((Palette*)(module))->modifierMap[i])) {		
 							if (!settings::cableColors.empty() && i < settings::cableColors.size()) {
 								
-//								APP->scene->rack->nextCableColorId = i;
+								APP->scene->rack->setNextCableColorId(i);
 								((Palette*)(module))->doChange = true;
 							}
 							

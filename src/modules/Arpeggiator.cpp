@@ -180,7 +180,7 @@ struct Arpeggiator : Module {
 		
 		configSwitch(OCTAVE_PARAM, 0.0f, 1.0f, 1.0f, "Octave processing", {"Off", "On"});
 		configSwitch(NOTE_PARAM, 0.0f, 1.0f, 1.0f, "Modifier processing", {"Off", "On"});
-		configSwitch(HOLD_PARAM,  0.0f, 1.0f, 1.0f, "Hold", {"Off", "On"});
+		configSwitch(HOLD_PARAM,  0.0f, 1.0f, 0.0f, "Hold", {"Off", "On"});
 
 		configInput(GATE_INPUT, "Gate");
 		configInput(CV_INPUT, "CV");
@@ -744,11 +744,16 @@ struct ArpeggiatorTouchTooltip : ui::Tooltip {
 struct ArpeggiatorTouchButton : ModuleLightWidget {
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
-
+	ui::Tooltip* tooltip = NULL;
 	int value;
 	int row = 0;
 	bool isLit = false;
 	bool isActive = true;
+	
+	
+	~ArpeggiatorTouchButton() {
+		destroyTooltip();
+	}
 	
 	void drawBackground(const DrawArgs &args) override {
 		nvgBeginPath(args.vg);
@@ -808,10 +813,22 @@ struct ArpeggiatorTouchButton : ModuleLightWidget {
 		this->tooltip = tooltip;
 	}
 	
+	void destroyTooltip() {
+		if (!this->tooltip)
+			return;
+		APP->scene->removeChild(this->tooltip);
+		delete this->tooltip;
+		this->tooltip = NULL;
+	}	
+	
 	// hack to customise the tooltips
 	void onEnter(const EnterEvent& e) override {
 		this->createTooltip();
 	}
+	
+	void onLeave(const LeaveEvent& e) override {
+		this->destroyTooltip();
+	}	
 	
 	void step() override{
 		if (module) {
