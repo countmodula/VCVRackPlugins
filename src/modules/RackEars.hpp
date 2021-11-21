@@ -69,7 +69,28 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(RackEar *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		switch (readDefaultIntegerValue("DefaulRackEarPanelType")) {
+			case 1: // minimalist (no logo)
+				panelName = PANEL_FILE1;
+				break;
+				
+			case 2: // release the bats
+				panelName = PANEL_FILE2;
+				break;
+
+			case 3: // rockin' bones
+				panelName = PANEL_FILE3;
+				break;
+				
+			default: // anything else = Count Modula Logo
+				panelName = PANEL_FILE;
+				break;
+		}
+		
+		
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 	}
 
 	// include the theme menu item struct we'll when we add the theme menu items

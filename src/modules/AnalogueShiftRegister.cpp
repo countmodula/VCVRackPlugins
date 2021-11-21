@@ -154,16 +154,17 @@ struct AnalogueShiftRegister : Module {
 };
 
 struct AnalogueShiftRegisterWidget : ModuleWidget {
-
 	std::string panelName;
 	
 	AnalogueShiftRegisterWidget(AnalogueShiftRegister *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
-		#include "../components/stdScrews.hpp"	
+		#include "../components/stdScrews.hpp"
 
 		for (int i = 0; i < 2; i++) {
 			// clock and cv inputs
@@ -188,7 +189,7 @@ struct AnalogueShiftRegisterWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
-	}	
+	}
 	
 	void step() override {
 		if (module) {

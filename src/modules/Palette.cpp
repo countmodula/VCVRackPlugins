@@ -1358,7 +1358,9 @@ struct PaletteWidget : ModuleWidget {
 		setModule(module);
 		bool moduleEnabled = (module ? module->running : true);
 		panelName = moduleEnabled ? "Palette.svg" : "PaletteDisabled.svg";
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+		
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		if (module && moduleEnabled) {
 			module->readPaletteSettings();

@@ -856,7 +856,7 @@
     </g>
     <path
        transform="translate(0,196.45832)"
-       style="display:inline;fill:none;stroke:#333333;stroke-width:0.3ffffff1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;fill:none;stroke:#333333;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 31.749984,94.72083 v -88.9"
        id="path1413"
        inkscape:connector-curvature="0" />

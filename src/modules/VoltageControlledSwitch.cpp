@@ -137,7 +137,9 @@ struct VoltageControlledSwitchWidget : ModuleWidget {
 	VoltageControlledSwitchWidget(VoltageControlledSwitch *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	

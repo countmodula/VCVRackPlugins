@@ -615,7 +615,9 @@ struct OscilloscopeWidget : ModuleWidget {
 	OscilloscopeWidget(Oscilloscope *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 		
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));

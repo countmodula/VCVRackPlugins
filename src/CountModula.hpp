@@ -19,6 +19,10 @@ void saveSettings(json_t *rootJ);
 int readDefaultIntegerValue(std::string);
 void saveDefaultIntegerValue(std::string setting, int value);
 
+// default theme stuff
+void setDefaultTheme(int themeToUse, bool previous);
+int getDefaultTheme(bool previous);
+
 #include "components/CountModulaKnobs.hpp"
 #include "components/CountModulaComponents.hpp"
 #include "components/CountModulaPushButtons.hpp"

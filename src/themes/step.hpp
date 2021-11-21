@@ -4,7 +4,7 @@
 
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
- 
+
 int cTheme = ((THEME_MODULE_NAME*)module)->currentTheme;
 int pTheme = ((THEME_MODULE_NAME*)module)->prevTheme;
 
