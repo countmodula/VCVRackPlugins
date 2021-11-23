@@ -5,7 +5,8 @@
 //  Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
-int cTheme = getDefaultTheme(false);
+int cTheme = module? module->currentTheme : getDefaultTheme(false);
+
 switch (cTheme) {
 	case 1:	// Moonlight
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Moonlight/" + panelName)));
