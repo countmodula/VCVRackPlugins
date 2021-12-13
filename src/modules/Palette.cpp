@@ -1081,9 +1081,10 @@ struct PaletteWidget : ModuleWidget {
 				if (description != "") {
 					text += description;
 				}
-
 			}
+			
 			Tooltip::step();
+			
 			// Position at bottom-right of parameter
 			box.pos = lightWidget->getAbsoluteOffset(lightWidget->box.size).round();
 			// Fit inside parent (copied from Tooltip.cpp)
@@ -1101,6 +1102,7 @@ struct PaletteWidget : ModuleWidget {
 		bool enabled = true;
 		bool overrideRevert;
 		ui::Tooltip* tooltip = NULL;
+		bool mouseOver = false;
 		
 		~ColourButton() {
 			destroyTooltip();
@@ -1216,11 +1218,19 @@ struct PaletteWidget : ModuleWidget {
 			
 			nvgGlobalTint(args.vg, color::WHITE);
 			
-			if (colorID == nextColorID) {
+			if (colorID == nextColorID || mouseOver) {
 				nvgBeginPath(args.vg);
 				nvgRect(args.vg, 0.4, 0.4, box.size.x-0.8, box.size.y-0.8);
 				nvgFillColor(args.vg, color);
 				nvgFill(args.vg);
+				
+				if (mouseOver) {
+					nvgBeginPath(args.vg);
+					nvgRect(args.vg, 2.0, 2.0, box.size.x-4.0, box.size.y-4.0);
+					nvgStrokeWidth(args.vg, 3.0);
+					nvgStrokeColor(args.vg, SCHEME_WHITE);
+					nvgStroke(args.vg);
+				}
 			}
 			else {
 				nvgBeginPath(args.vg);
@@ -1304,10 +1314,12 @@ struct PaletteWidget : ModuleWidget {
 		// hack to customise the tooltips
 		void onEnter(const EnterEvent& e) override {
 			this->createTooltip();
+			this->mouseOver = true;
 		}
 		
 		void onLeave(const LeaveEvent& e) override {
 			this->destroyTooltip();
+			this->mouseOver = false;
 		}			
 	};
 
@@ -1358,7 +1370,7 @@ struct PaletteWidget : ModuleWidget {
 		setModule(module);
 		bool moduleEnabled = (module ? module->running : true);
 		panelName = moduleEnabled ? "Palette.svg" : "PaletteDisabled.svg";
-		
+
 		// set panel based on current default
 		#include "../themes/setPanel.hpp"
 

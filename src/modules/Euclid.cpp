@@ -82,16 +82,27 @@ struct Euclid : Module {
 	EuclideanAlgorithm euclid;
 	
 	short stepnum = 0;
-
+	bool quantizeChanges = true;
+	
+	int displayLength = 8;
+	int displayShift = 0;
+	int displayHits = 4;
 	
 	int startUpCounter = 0;
 	int count = -1;
 	int length = 8;
 	int shift = 0;
 	int hits = 4;
+	
+	float lengthCV = 0.0f;
+	float shiftCV = 0.0f;
+	float hitsCV = 0.0f;
+	
 	int shiftSource = 1;
 	float fMaxSeqLen = (float)(EUCLID_SEQ_MAX_LEN)/10.0f;
 	bool running = false;	
+	
+	int moduleVersion;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -136,6 +147,10 @@ struct Euclid : Module {
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 		
+		//running = true;
+		quantizeChanges = true;
+		moduleVersion = 2;
+		
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
@@ -144,12 +159,16 @@ struct Euclid : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "shiftPosition", json_integer(shift));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
 		json_object_set_new(root, "runState", json_boolean(gateRun.high()));
+		json_object_set_new(root, "quantizeChanges", json_boolean(quantizeChanges));
+		json_object_set_new(root, "lengthCV", json_real(lengthCV));
+		json_object_set_new(root, "shiftCV", json_real(shiftCV));
+		json_object_set_new(root, "hitsCV", json_real(hitsCV));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"
@@ -158,10 +177,19 @@ struct Euclid : Module {
 	}
 
 	void dataFromJson(json_t *root) override {
+		json_t *ver = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *shiftPosition = json_object_get(root, "shiftPosition");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
+		json_t *qc = json_object_get(root, "quantizeChanges");
+		
+		json_t *lcv = json_object_get(root, "lengthCV");
+		json_t *scv = json_object_get(root, "shiftCV");
+		json_t *hcv = json_object_get(root, "hitsCV");
+		
+		if (ver)
+			moduleVersion = json_integer_value(ver);
 		
 		if (currentStep)
 			count = json_integer_value(currentStep);
@@ -176,6 +204,27 @@ struct Euclid : Module {
 			gateRun.preset(json_boolean_value(run));
 		
 		running = gateRun.high();
+		
+		// upgrade to module version 2
+		if (moduleVersion< 2) {
+			quantizeChanges = false;
+			moduleVersion = 2;
+		}
+
+		if (qc)
+			quantizeChanges = json_boolean_value(qc);
+
+		lengthCV = 0.0f;
+		if(lcv)
+			lengthCV = json_number_value(lcv);
+		
+		shiftCV = 0.0f;
+		if(scv)
+			shiftCV = json_number_value(scv);
+		
+		hitsCV = 0.0f;
+		if(hcv)
+			hitsCV = json_number_value(hcv); 
 
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -185,10 +234,10 @@ struct Euclid : Module {
 
 	void onReset() override {
 		count = -1;
-		length = 8;
-		shift = 0;
-		hits = 4;
-		shiftSource = 1;	
+		displayLength = length = 8;
+		displayShift = shift = 0;
+		displayHits = hits = 4;
+		shiftSource = 1;
 		stepnum = 0;
 		
 		gateClock.reset();
@@ -205,6 +254,10 @@ struct Euclid : Module {
 		pgTrig.reset();
 		pgEOC.reset();
 		euclid.reset();
+		
+		lengthCV = 0.0f;
+		shiftCV = 0.0f;
+		hitsCV = 0.0f;
 	}
 
 	void process(const ProcessArgs &args) override {
@@ -225,19 +278,38 @@ struct Euclid : Module {
 			gateRun.set(f);
 
 			// clock
-			f =inputs[CLOCK_INPUT].getVoltage(); 
+			f = inputs[CLOCK_INPUT].getVoltage(); 
 			gateClock.set(f);
 		}
 
+		// process the clock trigger - we'll use this to allow the run input edge to act like the clock if it arrives shortly after the clock edge
+		bool clockEdge = gateClock.leadingEdge();
+		if (clockEdge)
+			pgClock.trigger(1e-4f);
+		else if (pgClock.process(args.sampleTime)) {
+			// if within cooey of the clock edge, run or reset is treated as a clock edge.
+			clockEdge = (gateRun.leadingEdge() || gateReset.leadingEdge());
+		}
 
-		if (processControls) {		
+		if (clockEdge && quantizeChanges) {
+			lengthCV = fMaxSeqLen * params[LENGTH_CV_PARAM].getValue() * inputs[LENGTH_INPUT].getVoltage();
+			hitsCV = params[HITS_CV_PARAM].getValue() * inputs[HITS_INPUT].getVoltage() * 0.1f; 
+			shiftCV = params[SHIFT_CV_PARAM].getValue() * inputs[SHIFT_INPUT].getVoltage() * 0.1f;		
+		}
+
+		if (processControls) {
+			
+			if (!quantizeChanges) {
+				lengthCV = fMaxSeqLen * params[LENGTH_CV_PARAM].getValue() * inputs[LENGTH_INPUT].getVoltage();
+				hitsCV = params[HITS_CV_PARAM].getValue() * inputs[HITS_INPUT].getVoltage() * 0.1f;
+				shiftCV = params[SHIFT_CV_PARAM].getValue() * inputs[SHIFT_INPUT].getVoltage() * 0.1f;
+			}
+
 			// length
-			f = fMaxSeqLen * params[LENGTH_CV_PARAM].getValue() * inputs[LENGTH_INPUT].getVoltage();
-			length = clamp((int)(params[LENGTH_PARAM].getValue() + f), 1, EUCLID_SEQ_MAX_LEN);
+			length = clamp((int)(params[LENGTH_PARAM].getValue() + lengthCV), 1, EUCLID_SEQ_MAX_LEN);
 			
 			// hits
-			f = params[HITS_CV_PARAM].getValue() * inputs[HITS_INPUT].getVoltage() * 0.1f; 
-			f = (float)length * (params[HITS_PARAM].getValue() + f);
+			f = (float)length * (params[HITS_PARAM].getValue() + hitsCV);
 			hits = clamp((int)f, 0, length);
 		
 			//shift source
@@ -246,8 +318,7 @@ struct Euclid : Module {
 			// handle the CV and manual step shift modes
 			switch (shiftSource) {
 				case CV_SHIFT_MODE:
-					f = params[SHIFT_CV_PARAM].getValue() * inputs[SHIFT_INPUT].getVoltage() * 0.1f; 
-					f = (float)length * (params[SHIFT_PARAM].getValue() + f);
+					f = (float)length * (params[SHIFT_PARAM].getValue() + shiftCV);
 					shift = clamp((int)f, 0, length);
 					
 					break;
@@ -272,6 +343,10 @@ struct Euclid : Module {
 					
 				break;
 			}
+			
+			displayLength = length;
+			displayShift = shift;
+			displayHits = hits;					
 		}
 		
 		if (gateReset.leadingEdge()) {
@@ -289,22 +364,13 @@ struct Euclid : Module {
 		bool current = false;
 		bool last = false;
 	
-		// process the clock trigger - we'll use this to allow the run input edge to act like the clock if it arrives shortly after the clock edge
-		bool clockEdge = gateClock.leadingEdge();
-		if (clockEdge)
-			pgClock.trigger(1e-4f);
-		else if (pgClock.process(args.sampleTime)) {
-			// if within cooey of the clock edge, run or reset is treated as a clock edge.
-			clockEdge = (gateRun.leadingEdge() || gateReset.leadingEdge());
-		}
-	
 		if (gateRun.low())
 			running = false;
 		
 		// advance count on positive clock edge or the run edge if it is close to the clock edge
 		bool trig = false;
 		if (clockEdge && gateRun.high()) {
-			
+
 			// flag that we are now actually running
 			running = true;
 			
@@ -351,7 +417,7 @@ struct Euclid : Module {
 				}
 			}
 		}
-		
+
 		lights[HGATE_LIGHT].setBrightness(boolToLight(gate));
 		outputs[HGATE_OUTPUT].setVoltage(boolToGate(gate));
 		lights[RGATE_LIGHT].setBrightness(boolToLight(igate));
@@ -538,6 +604,14 @@ struct EuclidWidget : ModuleWidget {
 			h->newModuleJ = widget->toJson();
 			APP->history->push(h);	
 		}
+	};
+	
+	struct QuantizeMenuItem : MenuItem {
+		Euclid* module;
+
+		void onAction(const event::Action &e) override {
+			module->quantizeChanges ^= true;
+		}
 	};		
 	
 	void appendContextMenu(Menu *menu) override {
@@ -550,6 +624,11 @@ struct EuclidWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"	
 		
+		// quantize option
+		QuantizeMenuItem *quantizeMenuItem = createMenuItem<QuantizeMenuItem>("Quantize", CHECKMARK(module->quantizeChanges));
+		quantizeMenuItem->module = module;
+		menu->addChild(quantizeMenuItem);
+		
 		// pattern only init
 		InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>("Initialize Pattern");
 		initMenuItem->widget = this;
@@ -558,16 +637,16 @@ struct EuclidWidget : ModuleWidget {
 		// pattern only random
 		RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>("Randomize Pattern");
 		randMenuItem->widget = this;
-		menu->addChild(randMenuItem);		
+		menu->addChild(randMenuItem);
 	}
 	
 	void step() override {
 		if (module) {
 			Euclid *m = (Euclid *)module;
 
-			lengthDisplay->text = rack::string::f( "%02d", m->length);
-			hitsDisplay->text =  rack::string::f( "%02d", m->hits);
-			shiftDisplay->text =  rack::string::f( "%02d", m->shift);
+			lengthDisplay->text = rack::string::f( "%02d", m->displayLength);
+			hitsDisplay->text =  rack::string::f( "%02d", m->displayHits);
+			shiftDisplay->text =  rack::string::f( "%02d", m->displayShift);
 			
 			// process any change of theme
 			#include "../themes/step.hpp"
