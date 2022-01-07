@@ -180,7 +180,7 @@ struct Arpeggiator : Module {
 		
 		configSwitch(OCTAVE_PARAM, 0.0f, 1.0f, 1.0f, "Octave processing", {"Off", "On"});
 		configSwitch(NOTE_PARAM, 0.0f, 1.0f, 1.0f, "Modifier processing", {"Off", "On"});
-		configSwitch(HOLD_PARAM,  0.0f, 1.0f, 0.0f, "Hold", {"Off", "On"});
+		configSwitch(HOLD_PARAM, 0.0f, 1.0f, 0.0f, "Hold", {"Off", "On"});
 
 		configInput(GATE_INPUT, "Gate");
 		configInput(CV_INPUT, "CV");
@@ -395,15 +395,14 @@ struct Arpeggiator : Module {
 		}
 		
 		// handle the hold input - this overrides the button
-		ParamQuantity* p = getParamQuantity(HOLD_PARAM);
 		if (inputs[HOLD_INPUT].isConnected()) {
 			hold = gpHold.set(inputs[HOLD_INPUT].getVoltage());
-			p->setValue(hold ? 1.0f : 0.0f);
+			params[HOLD_PARAM].setValue(hold ? 1.0f : 0.0f);
 		}
 		else {
-			hold = gpHold.set(p->getValue());
+			hold = gpHold.set(params[HOLD_PARAM].getValue() > 0.5f ? 10.0f : 0.0f);
 		}
-		
+
 		// are we in hold?
 		if (hold || !clockEdge) {
 			// yes - use the gate and cv data we already have
@@ -415,7 +414,6 @@ struct Arpeggiator : Module {
 			}
 		}
 		else {
-			
 			// no - process the gate and cv inputs
 			gate = false;
 			numGates = inputs[GATE_INPUT].getChannels();
@@ -449,7 +447,6 @@ struct Arpeggiator : Module {
 				// leave as input order
 				break;
 		}
-
 
 		// process the reset input
 		gpReset.set(inputs[RESET_INPUT].getVoltage());
