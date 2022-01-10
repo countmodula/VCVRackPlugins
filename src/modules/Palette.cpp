@@ -21,6 +21,33 @@
 // for the custom color picker menu entry
 #define BND_LABEL_FONT_SIZE 13
 
+struct PaletteSettings {
+	bool globalHotKeys;
+	int lockModifier;
+	int lockHotKey;
+	int hotKeyMap[MAX_COLOURS] = {
+			GLFW_KEY_1,
+			GLFW_KEY_2,
+			GLFW_KEY_3,
+			GLFW_KEY_4,
+			GLFW_KEY_5,
+			GLFW_KEY_6,
+			GLFW_KEY_7,
+			GLFW_KEY_8,
+			GLFW_KEY_9,
+			GLFW_KEY_UNKNOWN,
+			GLFW_KEY_UNKNOWN,
+			GLFW_KEY_UNKNOWN,
+			GLFW_KEY_UNKNOWN,
+			GLFW_KEY_UNKNOWN,
+			GLFW_KEY_UNKNOWN
+		};
+		
+		int modifierMap[MAX_COLOURS] = {};
+};
+
+PaletteSettings paletteSettings;
+
 // Keynames (borrowed from Stoermelder Stroke).
 static std::string keyName(int key) {
 
@@ -100,8 +127,6 @@ static std::string keyName(int key) {
 }
 
 struct Palette;
-
-static Palette* paletteSingleton = NULL;
 
 std::vector<NVGcolor> cableColors = {
 	nvgRGB(0x20, 0x20, 0x20),	// black (ish)
@@ -272,7 +297,7 @@ struct Palette : Module {
 	int startColorID = -1;
 	int nextColorID = -1;
 	int count = 0;
-	
+
 	int numColoursToUse = FORCE_MAX_COLOURS ? MAX_COLOURS : NUM_COLOURS;
 	int colourRemoveID = -1;
 	
@@ -281,8 +306,6 @@ struct Palette : Module {
 	// hotKeys
 	int keyPressAction = NO_HOTKEY_ACTION;
 
-	bool globalHotKeys =false;
-	
 	int hotKeyMapDefaults[MAX_COLOURS] = {
 			GLFW_KEY_1,
 			GLFW_KEY_2,
@@ -301,40 +324,16 @@ struct Palette : Module {
 			GLFW_KEY_UNKNOWN
 		};
 	
-	int hotKeyMap[MAX_COLOURS] = {
-			GLFW_KEY_1,
-			GLFW_KEY_2,
-			GLFW_KEY_3,
-			GLFW_KEY_4,
-			GLFW_KEY_5,
-			GLFW_KEY_6,
-			GLFW_KEY_7,
-			GLFW_KEY_8,
-			GLFW_KEY_9,
-			GLFW_KEY_UNKNOWN,
-			GLFW_KEY_UNKNOWN,
-			GLFW_KEY_UNKNOWN,
-			GLFW_KEY_UNKNOWN,
-			GLFW_KEY_UNKNOWN,
-			GLFW_KEY_UNKNOWN
-		};
-		
-	int modifierMap[MAX_COLOURS] = {};
-	int lockHotKey = GLFW_KEY_L;
-	int lockModifier = 0;
-	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
 	bool running = false;
 	
 	Palette() {
-		
-		if (paletteSingleton == NULL) {
-			paletteSingleton = this;
-			running = true;
-		}
-		
+
+		// assume we're running unless the widget says otherwise
+		running = true;
+
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		configButton(LOCK_PARAM, "Lock current colour");
@@ -349,12 +348,6 @@ struct Palette : Module {
 		if (running) {
 			#include "../themes/setDefaultTheme.hpp"
 		}
-	}
-	
-	~Palette() {
-		if (paletteSingleton == this) {
-			paletteSingleton = NULL;
-		}		
 	}
 	
 	void onRandomize() override {
@@ -396,12 +389,12 @@ struct Palette : Module {
 	
 	void readPaletteSettings() {
 		// set the default values
-		globalHotKeys = false;
-		lockHotKey = GLFW_KEY_L;
-		lockModifier = 0;
+		paletteSettings.globalHotKeys = false;
+		paletteSettings.lockHotKey = GLFW_KEY_L;
+		paletteSettings.lockModifier = 0;
 		for(int i = 0; i < MAX_COLOURS; i ++) {
-			hotKeyMap[i] = hotKeyMapDefaults [i];
-			modifierMap[i] = 0;
+			paletteSettings.hotKeyMap[i] = hotKeyMapDefaults [i];
+			paletteSettings.modifierMap[i] = 0;
 		}
 		
 		// read the settings file
@@ -416,25 +409,25 @@ struct Palette : Module {
 		
 		// now apply them if present.
 		if (ghk)
-			globalHotKeys = json_boolean_value(ghk);
+			paletteSettings.globalHotKeys = json_boolean_value(ghk);
 			
 		if (lhk)
-			lockHotKey = json_integer_value(lhk);
+			paletteSettings.lockHotKey = json_integer_value(lhk);
 		
 		if (lm)
-			lockModifier = json_integer_value(lm);
+			paletteSettings.lockModifier = json_integer_value(lm);
 
 		for (int i = 0; i < MAX_COLOURS; i++) {
 			if (hkm) {
 				json_t *v = json_array_get(hkm, i);
 				if (v)
-					hotKeyMap[i] = json_integer_value(v);
+					paletteSettings.hotKeyMap[i] = json_integer_value(v);
 			}
 			
 			if (mm) {
 				json_t *v = json_array_get(mm, i);
 				if (v)
-					modifierMap[i] = json_integer_value(v);
+					paletteSettings.modifierMap[i] = json_integer_value(v);
 			}
 		}
 		
@@ -447,19 +440,19 @@ struct Palette : Module {
 		json_t *rootJ = readSettings();
 		
 		// add global hot key setting
-		json_object_set_new(rootJ, "paletteGlobalHotKeys", json_boolean(globalHotKeys));
+		json_object_set_new(rootJ, "paletteGlobalHotKeys", json_boolean(paletteSettings.globalHotKeys));
 
 		// add lock key settings
-		json_object_set_new(rootJ, "paletteLockHotKey", json_integer(lockHotKey));	
-		json_object_set_new(rootJ, "paletteLockModifier", json_integer(lockModifier));	
+		json_object_set_new(rootJ, "paletteLockHotKey", json_integer(paletteSettings.lockHotKey));	
+		json_object_set_new(rootJ, "paletteLockModifier", json_integer(paletteSettings.lockModifier));	
 		
 		// no add the hot key and modifier maps or the colour buttons
 		json_t *km = json_array();
 		json_t *mm = json_array();
 	
 		for (int i = 0; i < MAX_COLOURS; i++) {
-			json_array_insert_new(km, i, json_integer(hotKeyMap[i]));
-			json_array_insert_new(mm, i, json_integer(modifierMap[i]));
+			json_array_insert_new(km, i, json_integer(paletteSettings.hotKeyMap[i]));
+			json_array_insert_new(mm, i, json_integer(paletteSettings.modifierMap[i]));
 		}		
 		
 		json_object_set_new(rootJ, "paletteHotKeyMap", km);
@@ -540,9 +533,9 @@ struct KeyContainer : Widget {
 	}
 
 	void onHoverKey(const event::HoverKey& e) override {
-		if (module && !module->isBypassed() && module->running && module->globalHotKeys) {
+		if (module && !module->isBypassed() && module->running && paletteSettings.globalHotKeys) {
 			if (e.action == GLFW_PRESS) {
-				if (e.key == module->lockHotKey && ((e.mods & RACK_MOD_MASK) == module->lockModifier)) {
+				if (e.key == paletteSettings.lockHotKey && ((e.mods & RACK_MOD_MASK) == paletteSettings.lockModifier)) {
 					// colour lock keypress
 					module->keyPressAction = Palette::LOCK_HOTKEY_ACTION;
 					e.consume(this);
@@ -550,9 +543,9 @@ struct KeyContainer : Widget {
 				else {
 					// possible colour selection keypress
 					for (size_t i = 0; i < NUM_COLOURS; i ++) {
-						int k = module->hotKeyMap[i];
+						int k = paletteSettings.hotKeyMap[i];
 						
-						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == module->modifierMap[i])) {		
+						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == paletteSettings.modifierMap[i])) {		
 							module->keyPressAction = Palette::COLOUR_HOTKEY_ACTION + i;
 							e.consume(this);
 							break;
@@ -672,7 +665,7 @@ struct PaletteWidget : ModuleWidget {
 		}
 		
 		~ColorSliderMenu() {
-			// if we're removing the color after adjusting it, we donlt want to do this otherwise we replace the next color
+			// if we're removing the color after adjusting it, we don't want to do this otherwise we replace the next color
 			if (!*overrideRevert) {
 				*color = originalColor;
 				settings::cableColors[colorID] = *color;
@@ -832,7 +825,7 @@ struct PaletteWidget : ModuleWidget {
 		Palette *module;
 	
 		void onAction(const event::Action& e) override {
-			module->globalHotKeys ^= true;
+			paletteSettings.globalHotKeys ^= true;
 			module->savePaletteSettings();
 		}		
 	};
@@ -849,9 +842,9 @@ struct PaletteWidget : ModuleWidget {
 		
 		void onAction(const event::Action& e) override {
 			if (colorID < 0)
-				module->lockHotKey = key;
+				paletteSettings.lockHotKey = key;
 			else
-				module->hotKeyMap[colorID] = key;
+				paletteSettings.hotKeyMap[colorID] = key;
 				
 			module->savePaletteSettings();
 		}		
@@ -865,11 +858,11 @@ struct PaletteWidget : ModuleWidget {
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 
-			int keyToUse = module->lockHotKey;
+			int keyToUse = paletteSettings.lockHotKey;
 			if (colorID >= 0)
-				keyToUse = module->hotKeyMap[colorID];
+				keyToUse = paletteSettings.hotKeyMap[colorID];
 				
-			for (int i = 0; i <  NUM_NUMERIC_KEYS; i ++) {			
+			for (int i = 0; i <  NUM_NUMERIC_KEYS; i ++) {
 				std::string s = keyName(NumericKeys[i]);
 				if (s > "") {
 					HotKeySelectionMenuItem *selectItem = createMenuItem<HotKeySelectionMenuItem>(s, CHECKMARK(NumericKeys[i] == keyToUse));
@@ -892,9 +885,9 @@ struct PaletteWidget : ModuleWidget {
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 			
-			int keyToUse = module->lockHotKey;
+			int keyToUse = paletteSettings.lockHotKey;
 			if (colorID >= 0)
-				keyToUse = module->hotKeyMap[colorID];
+				keyToUse = paletteSettings.hotKeyMap[colorID];
 				
 			for (int i = 0; i < NUM_ALPHA_KEYS; i ++) {			
 				std::string s = keyName(AlphaKeys[i]);
@@ -919,9 +912,9 @@ struct PaletteWidget : ModuleWidget {
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 			
-			int keyToUse = module->lockHotKey;
+			int keyToUse = paletteSettings.lockHotKey;
 			if (colorID >= 0)
-				keyToUse = module->hotKeyMap[colorID];			
+				keyToUse = paletteSettings.hotKeyMap[colorID];			
 			
 			for (int i = 0; i < NUM_SPECIAL_KEYS; i ++) {			
 				std::string s = keyName(SpecialKeys[i]);
@@ -946,9 +939,9 @@ struct PaletteWidget : ModuleWidget {
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 			
-			int keyToUse = module->lockHotKey;
+			int keyToUse = paletteSettings.lockHotKey;
 			if (colorID >= 0)
-				keyToUse = module->hotKeyMap[colorID];
+				keyToUse = paletteSettings.hotKeyMap[colorID];
 			
 			for (int i = 0; i < NUM_FUNCTION_KEYS; i ++) {			
 				std::string s = keyName(FunctionKeys[i]);
@@ -974,16 +967,16 @@ struct PaletteWidget : ModuleWidget {
 			
 			if (colorID < 0) {
 				// we're doing the lock modifier
-				if ((module->lockModifier & modifier) == modifier)
-					module->lockModifier &= ~modifier;
+				if ((paletteSettings.lockModifier & modifier) == modifier)
+					paletteSettings.lockModifier &= ~modifier;
 				else
-					module->lockModifier |= modifier;
+					paletteSettings.lockModifier |= modifier;
 			}
 			else {
-				if ((module->modifierMap[colorID] & modifier) == modifier)
-					module->modifierMap[colorID] &= ~modifier;
+				if ((paletteSettings.modifierMap[colorID] & modifier) == modifier)
+					paletteSettings.modifierMap[colorID] &= ~modifier;
 				else
-					module->modifierMap[colorID] |= modifier;
+					paletteSettings.modifierMap[colorID] |= modifier;
 			}
 			
 			module->savePaletteSettings();
@@ -1001,11 +994,11 @@ struct PaletteWidget : ModuleWidget {
 			menu->addChild(createMenuLabel("Key:"));
 			
 			// lock or colour hot key?
-			int keyToUse = module->lockHotKey;
-			int modifierToUse = module->lockModifier;
+			int keyToUse = paletteSettings.lockHotKey;
+			int modifierToUse = paletteSettings.lockModifier;
 			if (colorID >= 0) {
-				keyToUse = module->hotKeyMap[colorID];
-				modifierToUse = module->modifierMap[colorID];
+				keyToUse = paletteSettings.hotKeyMap[colorID];
+				modifierToUse = paletteSettings.modifierMap[colorID];
 			}
 			
 			int *ak = std::find(AlphaKeys, AlphaKeys + NUM_ALPHA_KEYS, keyToUse);
@@ -1055,8 +1048,8 @@ struct PaletteWidget : ModuleWidget {
 			menu->addChild(altItem);		
 		
 			return menu;
-		}			
-	};	
+		}
+	};
 
 
 	// custom tool tip for the colour buttons
@@ -1172,16 +1165,16 @@ struct PaletteWidget : ModuleWidget {
 			menu->addChild(ms);
 			
 			// display current hot key so users can see it without drilling down
-			std::string s = keyName(module->hotKeyMap[colorID]);
+			std::string s = keyName(paletteSettings.hotKeyMap[colorID]);
 			std::string pl = " + ";
 			if (s > "") {
-				if ((module->modifierMap[colorID] & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
+				if ((paletteSettings.modifierMap[colorID] & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
 					s = RACK_MOD_SHIFT_NAME + pl + s;
 				
-				if ((module->modifierMap[colorID] & GLFW_MOD_ALT) == GLFW_MOD_ALT)
+				if ((paletteSettings.modifierMap[colorID] & GLFW_MOD_ALT) == GLFW_MOD_ALT)
 					s = RACK_MOD_ALT_NAME + pl + s;
 				
-				if ((module->modifierMap[colorID] & RACK_MOD_CTRL) == RACK_MOD_CTRL)
+				if ((paletteSettings.modifierMap[colorID] & RACK_MOD_CTRL) == RACK_MOD_CTRL)
 					s = RACK_MOD_CTRL_NAME + pl + s;
 					
 				s = "Hotkey:  " + s;
@@ -1331,21 +1324,21 @@ struct PaletteWidget : ModuleWidget {
 			Menu *menu = new Menu;
 
 			// global hotkey menu item
-			GlobalHotKeyMenuItem *ghkMenuItem = createMenuItem<GlobalHotKeyMenuItem>("Global", CHECKMARK(module->globalHotKeys));
+			GlobalHotKeyMenuItem *ghkMenuItem = createMenuItem<GlobalHotKeyMenuItem>("Global", CHECKMARK(paletteSettings.globalHotKeys));
 			ghkMenuItem->module = module;
 			menu->addChild(ghkMenuItem);
 	
 			// display current hot key so users can see it without drilling down
-			std::string s = keyName(module->lockHotKey);
+			std::string s = keyName(paletteSettings.lockHotKey);
 			std::string pl = " + ";
 			if (s > "") {
-				if ((module->lockModifier & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
+				if ((paletteSettings.lockModifier & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
 					s = RACK_MOD_SHIFT_NAME + pl + s;
 				
-				if ((module->lockModifier & GLFW_MOD_ALT) == GLFW_MOD_ALT)
+				if ((paletteSettings.lockModifier & GLFW_MOD_ALT) == GLFW_MOD_ALT)
 					s = RACK_MOD_ALT_NAME + pl + s;
 				
-				if ((module->lockModifier & RACK_MOD_CTRL) == RACK_MOD_CTRL)
+				if ((paletteSettings.lockModifier & RACK_MOD_CTRL) == RACK_MOD_CTRL)
 					s = RACK_MOD_CTRL_NAME + pl + s;
 					
 				s = "Lock Hotkey:  " + s;
@@ -1357,17 +1350,36 @@ struct PaletteWidget : ModuleWidget {
 			HotKeySelectionMenu *hksMenuItem = createMenuItem<HotKeySelectionMenu>(s, RIGHT_ARROW);
 			hksMenuItem->module = module;
 			hksMenuItem->colorID = -1; // -1 indicates lock hot key
-			menu->addChild(hksMenuItem);		
+			menu->addChild(hksMenuItem);
 		
 			return menu;
 		}			
 	};	
+
+	bool isFirstOne() {
+		std::vector<ModuleWidget*> mwList = APP->scene->rack->getModules();
+	
+		int i = 0;
+		if (module) {
+			for (ModuleWidget* mw : mwList) {
+
+				if(mw->getModel()->getFullName() == "Count Modula Cable Palette")
+					i++;
+			}
+		}
+		return i < 1 ;
+	}
 
 	//---------------------------------------------------------------------
 	// palette widget
 	//---------------------------------------------------------------------
 	PaletteWidget(Palette *module) {
 		setModule(module);
+
+		if (module && !isFirstOne()) {
+			module->running = false;
+		}
+
 		bool moduleEnabled = (module ? module->running : true);
 		panelName = moduleEnabled ? "Palette.svg" : "PaletteDisabled.svg";
 
@@ -1465,9 +1477,9 @@ struct PaletteWidget : ModuleWidget {
 	}
 	
 	void onHoverKey(const event::HoverKey &e) override {
-		if (!((Palette*)(module))->globalHotKeys) {
+		if (!paletteSettings.globalHotKeys) {
 			if (e.action == GLFW_PRESS ) {
-				if (e.key == ((Palette*)(module))->lockHotKey && ((e.mods & RACK_MOD_MASK) == ((Palette*)(module))->lockModifier)) {
+				if (e.key == paletteSettings.lockHotKey && ((e.mods & RACK_MOD_MASK) == paletteSettings.lockModifier)) {
 					// lock key press
 					if (module->params[Palette::LOCK_PARAM].getValue() > 0.5)
 						module->params[Palette::LOCK_PARAM].setValue(0.0);
@@ -1479,9 +1491,9 @@ struct PaletteWidget : ModuleWidget {
 				else {
 					// possible colour selection key press
 					for (size_t i = 0; i < NUM_COLOURS; i ++) {
-						int k = ((Palette*)(module))->hotKeyMap[i];
+						int k = paletteSettings.hotKeyMap[i];
 						
-						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == ((Palette*)(module))->modifierMap[i])) {		
+						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == paletteSettings.modifierMap[i])) {		
 							if (!settings::cableColors.empty() && i < settings::cableColors.size()) {
 								
 								APP->scene->rack->setNextCableColorId(i);
