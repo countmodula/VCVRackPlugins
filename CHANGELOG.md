@@ -20,6 +20,23 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <th align="left">Notes</th>
 </tr>
 
+
+<tr valign="top">
+<td align="center">15-Jan-2022</td>
+<td align="center">v2.0.3</td>
+<td align="left">
+<ul>
+
+<ul>
+<b>Issues Resolved:</b>
+Issue #85: Arpeggiator hold button not working 
+Issue #87: Move restriction on number of Cable Palettes from global singleton to patch level to accommodate use in multiple instances with DAWs.
+</ul>
+
+</td>
+</tr>
+
+
 <tr valign="top">
 <td align="center">13-Sep-2021</td>
 <td align="center">v2.0.0 - v2.0.2</td>
@@ -39,7 +56,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 
 <ul>
 <b>Issues Resolved:</b>
-<li>Issue #78 - Attenuator Channel A stuck on last voltage if input is removed.</li>
+<li>Issue #78: Attenuator Channel A stuck on last voltage if input is removed.</li>
 <li>Issue #80: USe default theme in module browser</li>
 <li>Fix issue with some corrupted theme panels that were causing the module browser to crash</li>
 <li>Fix issue with sequencers overrunning number of steps when length CV >= 10 Volts</li>
