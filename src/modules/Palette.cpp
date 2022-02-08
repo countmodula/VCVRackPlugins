@@ -542,7 +542,7 @@ struct KeyContainer : Widget {
 				}
 				else {
 					// possible colour selection keypress
-					for (size_t i = 0; i < NUM_COLOURS; i ++) {
+					for (size_t i = 0; i < (size_t)(module->numColoursToUse); i ++) {
 						int k = paletteSettings.hotKeyMap[i];
 						
 						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == paletteSettings.modifierMap[i])) {		
@@ -1489,15 +1489,16 @@ struct PaletteWidget : ModuleWidget {
 					e.consume(this);
 				}
 				else {
+					Palette *m = (Palette*)module;
 					// possible colour selection key press
-					for (size_t i = 0; i < NUM_COLOURS; i ++) {
+					for (size_t i = 0; i < (size_t)(m->numColoursToUse); i ++) {
 						int k = paletteSettings.hotKeyMap[i];
 						
 						if (k > -1 && e.key == k && ((e.mods & RACK_MOD_MASK) == paletteSettings.modifierMap[i])) {		
 							if (!settings::cableColors.empty() && i < settings::cableColors.size()) {
 								
 								APP->scene->rack->setNextCableColorId(i);
-								((Palette*)(module))->doChange = true;
+								m->doChange = true;
 							}
 							
 							e.consume(this);
