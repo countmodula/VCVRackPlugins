@@ -67,6 +67,7 @@ p->addModel(modelMult);
 p->addModel(modelMultiplexer);	
 p->addModel(modelMute);	
 p->addModel(modelMuteIple);	
+p->addModel(modelNibbleTriggerSequencer);	
 p->addModel(modelOctetTriggerSequencer);	
 p->addModel(modelOctetTriggerSequencerCVExpander);	
 p->addModel(modelOctetTriggerSequencerGateExpander);	

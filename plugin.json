@@ -1112,6 +1112,14 @@
 		  "tags": [
 			"Sequencer"
 		  ]
+		},
+		{
+		  "slug": "NibbleTriggerSequencer",
+		  "name": "Nibble Trigger Sequencer",
+		  "description": "Binary nibble based trigger sequencer",
+		  "tags": [
+			"Sequencer"
+		  ]
 		}
 	]
 }

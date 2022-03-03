@@ -66,6 +66,7 @@ extern Model *modelMult;
 extern Model *modelMultiplexer;
 extern Model *modelMute;
 extern Model *modelMuteIple;
+extern Model *modelNibbleTriggerSequencer;
 extern Model *modelOctetTriggerSequencer;
 extern Model *modelOctetTriggerSequencerCVExpander;
 extern Model *modelOctetTriggerSequencerGateExpander;
