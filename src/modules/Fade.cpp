@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../components/CountModulaLEDDisplay.hpp"
+#include "../inc/GateProcessor.hpp"
 #include "../inc/SlewLimiter.hpp"
 #include "../inc/Utility.hpp"
 
@@ -12,6 +13,7 @@
 
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME Fade
+#define OLD_PANEL_FILE "FadeV1.svg"
 #define PANEL_FILE "Fade.svg"
 
 struct Fade : Module {
@@ -20,14 +22,12 @@ struct Fade : Module {
 		IN_PARAM,
 		OUT_PARAM,
 		MON_PARAM,
-#ifdef TIMES_TEN_ENABLED
-		XTEN_PARAM,
-#endif
 		NUM_PARAMS
 	};
 	enum InputIds {
 		L_INPUT,
 		R_INPUT,
+		CTRL_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -46,9 +46,8 @@ struct Fade : Module {
 		FADEOUT_LIGHT,
 		FADE_PARAM_LIGHT,
 		MON_PARAM_LIGHT,
-#ifdef TIMES_TEN_ENABLED
-		XTEN_PARAM_LIGHT,
-#endif
+		MODE_G_LIGHT,
+		MODE_T_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -59,19 +58,33 @@ struct Fade : Module {
 		OFF_STAGE
 	};
 	
+	enum ControlModes {
+		GATE_MODE,
+		STARTSTOP_MODE,
+		NUM_CONTROL_MODES
+	};
+	
 	float mute = 0.0f;
 	float lastMute = 0.0f;
 	float time = 0.0f;
 	int stage = OFF_STAGE;
 	bool prevRunning = false;
 	bool running = false;
+	bool gate = false;
 	dsp::PulseGenerator  pgTrig;
 	LagProcessor monitorSlew;
-		
+	GateProcessor gpControl;
+	
 	float recordTime = 0.0f;
-	bool timesTen = false;
 	int hours = 0, minutes = 0, seconds = 0;
 	int sDisplay = 0, mDisplay = 0, hDisplay = 0;
+	int controlMode = 0;
+	int processCount = 9;
+	
+	float fadeIn = 3.0f;
+	float fadeOut = 3.0f;	
+	float fadeButton = 0.0f;	
+	bool monitor = false;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -85,13 +98,12 @@ struct Fade : Module {
 		configParam(OUT_PARAM, 0.1f, 10.0f, 3.0f, "Fade-out time", " S");
 		configSwitch(FADE_PARAM, 0.0f, 1.0f, 0.0f, "Start/stop", {"Stopped", "Running"});
 		configSwitch(MON_PARAM, 0.0f, 1.0f, 0.0f, "Monitor", {"Off", "Monitoring"});
-#ifdef TIMES_TEN_ENABLED
-		configSwitch(XTEN_PARAM, 0.0f, 1.0f, 0.0f, "Times 10" {"Time X 1", "Time X 10"});
-#endif
 
 		configInput(L_INPUT, "Left/mono");
 		configInput(R_INPUT, "Right");
-
+		configInput(CTRL_INPUT, "Control");
+		inputInfos[CTRL_INPUT]->description = "Accepts a gate or start/stop triggers to start and stop the fading action";
+		
 		configOutput(L_OUTPUT, "Left");
 		configOutput(R_OUTPUT, "Right");
 		configOutput(GATE_OUTPUT, "Running gate");
@@ -101,6 +113,8 @@ struct Fade : Module {
 
 		configBypass(L_INPUT, L_OUTPUT);
 		configBypass(R_INPUT, R_OUTPUT);
+		
+		processCount = 9;
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -114,16 +128,16 @@ struct Fade : Module {
 		running = false;
 		pgTrig.reset();
 		monitorSlew.reset();
-		
+		gpControl.reset();
+		gate = false;
 		hours = minutes = seconds = 0;
 		sDisplay = mDisplay = hDisplay = 0;
 	}	
-	
+
 	json_t* dataToJson() override {
 		json_t* root = json_object();
-		json_object_set_new(root, "moduleVersion", json_integer(1));
-		
-		json_object_set_new(root, "timesTen", json_boolean(timesTen));
+		json_object_set_new(root, "moduleVersion", json_integer(2));
+		json_object_set_new(root, "controlMode", json_integer(controlMode));
 
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -133,10 +147,10 @@ struct Fade : Module {
 
 	void dataFromJson(json_t* root) override {
 		
-		json_t *ten = json_object_get(root, "timesTen");
-		
-		if (ten) 
-			timesTen = json_boolean_value(ten);
+		controlMode = 0;
+		json_t *cm = json_object_get(root, "controlMode");
+		if (cm)
+			controlMode = json_integer_value(cm);
 
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -144,37 +158,56 @@ struct Fade : Module {
 		
 	void process(const ProcessArgs &args) override {
 
+		if (++processCount > 8) {
+			processCount = 0;
+			fadeIn = params[IN_PARAM].getValue();
+			fadeOut = params[OUT_PARAM].getValue();
+			monitor = (params[MON_PARAM].getValue() > 0.5f);
+			fadeButton = params[FADE_PARAM].getValue();
+		}
+
 		// process monitor pass through button
-		bool monitor = (params[MON_PARAM].getValue() > 0.5f);
 		if (running) {
 			// disable monitor function if already running
 			monitor =  false;
 			params[MON_PARAM].setValue(0.0f);
 		}
+		
+		
+		if (inputs[CTRL_INPUT].isConnected()) {
+			// process the control input
+			gpControl.set(inputs[CTRL_INPUT].getVoltage());
 
-		// process fade start/stop button
-		bool gate = (params[FADE_PARAM].getValue() > 0.5f);
-		if (monitor) {
+			if (controlMode == STARTSTOP_MODE) {
+				if (gpControl.leadingEdge())
+					gate ^= true;
+			}
+			else {
+				if (gpControl.leadingEdge())
+					gate = true;
+				else if (gpControl.trailingEdge())
+					gate = false;
+			}
+			
 			// disable fade if monitoring
-			gate = running = false;
-			params[FADE_PARAM].setValue(0.0f);
+			if (monitor) {
+				gate = running = false;
+				params[FADE_PARAM].setValue(0.0f);			}
+			else {
+				params[FADE_PARAM].setValue(boolToLight(gate));
+			}
+		}
+		else {
+			// process fade start/stop button
+			gate = (fadeButton > 0.5f);
+			
+			// disable fade if monitoring
+			if (monitor) {
+				gate = running = false;
+				params[FADE_PARAM].setValue(0.0f);
+			}
 		}
 		
-#ifdef TIMES_TEN_ENABLED
-		// determine time factor - disallow switching during attack or decay as it causes volume jumps
-		if (stage != ATTACK_STAGE && stage != DECAY_STAGE)
-			timesTen = params[XTEN_PARAM].getValue() > 0.5;
-		else
-			params[XTEN_PARAM].setValue(timesTen ? 1.0f : 0.0f);
-		
-		// grab the fade time settings and apply the current factor
-		float factor = timesTen ? 10.0f : 1.0f;
-		float fadeIn = params[IN_PARAM].getValue() * factor;
-		float fadeOut = params[OUT_PARAM].getValue() * factor;
-#else
-		float fadeIn = params[IN_PARAM].getValue();
-		float fadeOut = params[OUT_PARAM].getValue();
-#endif
 		
 		// only process if we're gated or already running
 		if (gate || running) {
@@ -274,15 +307,27 @@ struct Fade : Module {
 		}
 		
 		// process the signals
-		int numChannelsL = inputs[L_INPUT].getChannels();
-		outputs[L_OUTPUT].setChannels(numChannelsL);
-		for (int c = 0; c < numChannelsL; c++)
-			outputs[L_OUTPUT].setVoltage(inputs[L_INPUT].getVoltage(c) * mute, c);
+		if (inputs[L_INPUT].isConnected()) {
+			int numChannelsL = inputs[L_INPUT].getChannels();
+			outputs[L_OUTPUT].setChannels(numChannelsL);
+			for (int c = 0; c < numChannelsL; c++)
+				outputs[L_OUTPUT].setVoltage(inputs[L_INPUT].getVoltage(c) * mute, c);
+		}
+		else {
+			outputs[L_OUTPUT].setChannels(1);
+			outputs[L_OUTPUT].setVoltage(0.0f);
+		}
 		
-		int numChannelsR = inputs[R_INPUT].getChannels();
-		outputs[R_OUTPUT].setChannels(numChannelsR);
-		for (int c = 0; c < numChannelsR; c++)
-			outputs[R_OUTPUT].setVoltage(inputs[R_INPUT].getVoltage(c) * mute, c);
+		if (inputs[R_INPUT].isConnected()) {
+			int numChannelsR = inputs[R_INPUT].getChannels();
+			outputs[R_OUTPUT].setChannels(numChannelsR);
+			for (int c = 0; c < numChannelsR; c++)
+				outputs[R_OUTPUT].setVoltage(inputs[R_INPUT].getVoltage(c) * mute, c);
+		}
+		else {
+			outputs[R_OUTPUT].setChannels(1);
+			outputs[R_OUTPUT].setVoltage(0.0f);
+		}
 			
 		// kick off the trigger if we need to (on both start and end of the gate)
 		bool trig = false;
@@ -297,14 +342,26 @@ struct Fade : Module {
 		outputs[GATE_OUTPUT].setVoltage(boolToGate(running));
 		outputs[TRIG_OUTPUT].setVoltage(boolToGate(trig));
 		
-		lights[L_LIGHT].setBrightness(inputs[L_INPUT].isConnected() ? mute : 0.0f);
-		lights[R_LIGHT].setBrightness(inputs[R_INPUT].isConnected() ? mute : 0.0f);
-		lights[GATE_LIGHT].setBrightness(boolToLight(running));
-		lights[TRIG_LIGHT].setSmoothBrightness(boolToLight(trig), args.sampleTime);
+		if (processCount == 0) {
+			if (controlMode > 0) {
+				lights[MODE_G_LIGHT].setBrightness(0.0f);
+				lights[MODE_T_LIGHT].setBrightness(1.0f);
+			}
+			else {
+				lights[MODE_G_LIGHT].setBrightness(1.0f);
+				lights[MODE_T_LIGHT].setBrightness(0.0f);
+			}
+
+			lights[L_LIGHT].setBrightness(inputs[L_INPUT].isConnected() ? mute : 0.0f);
+			lights[R_LIGHT].setBrightness(inputs[R_INPUT].isConnected() ? mute : 0.0f);
+			lights[GATE_LIGHT].setBrightness(boolToLight(running));
+			
+			// nice feedback for the fading stages
+			lights[FADEIN_LIGHT].setBrightness(boolToLight(stage == ATTACK_STAGE));
+			lights[FADEOUT_LIGHT].setBrightness(boolToLight(stage == DECAY_STAGE));
+		}
 		
-		// nice feedback for the fading stages
-		lights[FADEIN_LIGHT].setBrightness(boolToLight(stage == ATTACK_STAGE));
-		lights[FADEOUT_LIGHT].setBrightness(boolToLight(stage == DECAY_STAGE));
+		lights[TRIG_LIGHT].setSmoothBrightness(boolToLight(trig), args.sampleTime);
 		
 		// save for next time
 		prevRunning = running;
@@ -336,6 +393,7 @@ struct FadeWidget : ModuleWidget {
 	
 	FadeWidget(Fade *module) {
 		setModule(module);
+		
 		panelName = PANEL_FILE;
 
 		// set panel based on current default
@@ -347,21 +405,23 @@ struct FadeWidget : ModuleWidget {
 		// lights
 		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW1] - 19), module, Fade::L_LIGHT));
 		addChild(createLightCentered<SmallLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW2] - 19), module, Fade::R_LIGHT));
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 20, STD_ROWS6[STD_ROW3] - 19), module, Fade::GATE_LIGHT));
-		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS6[STD_ROW3] - 19), module, Fade::TRIG_LIGHT));
-
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW3] - 19), module, Fade::GATE_LIGHT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 20, STD_ROWS8[STD_ROW4] - 19), module, Fade::TRIG_LIGHT));
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] - 16, STD_ROWS6[STD_ROW4] - 25), module, Fade::FADEIN_LIGHT));
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 16, STD_ROWS6[STD_ROW4] - 25), module, Fade::FADEOUT_LIGHT));
+		addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 18, STD_ROWS8[STD_ROW4] - 26.5f), module, Fade::MODE_G_LIGHT));
+		addChild(createLightCentered<SmallLight<YellowLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL1] + 18, STD_ROWS8[STD_ROW4] - 12.5f), module, Fade::MODE_T_LIGHT));
 	
 		// inputs	
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, Fade::L_INPUT));	
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW2]), module, Fade::R_INPUT));	
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, Fade::CTRL_INPUT));	
 
 		// outputs
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1]), module, Fade::L_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW2]), module, Fade::R_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW3]), module, Fade::GATE_OUTPUT));	
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, Fade::TRIG_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW2]), module, Fade::R_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW3]), module, Fade::GATE_OUTPUT));	
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW4]), module, Fade::TRIG_OUTPUT));	
 
 		// controls
 		addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, Fade::IN_PARAM));
@@ -370,13 +430,9 @@ struct FadeWidget : ModuleWidget {
 		// Mega button - non-standard position
 		addParam(createParamCentered<CountModulaLEDPushButtonMega<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS7[STD_ROW7] - 5), module, Fade::FADE_PARAM, Fade::FADE_PARAM_LIGHT));
 		
-		// monitor and times 10 buttons
-#ifdef TIMES_TEN_ENABLED
+		//monitor button
 		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW3] - 4), module, Fade::MON_PARAM, Fade::MON_PARAM_LIGHT));
-		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<YellowLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW3] - 4), module, Fade::XTEN_PARAM, Fade::XTEN_PARAM_LIGHT));
-#else
-		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW3] - 4), module, Fade::MON_PARAM, Fade::MON_PARAM_LIGHT));
-#endif	
+		
 		// hour/minute/second displays
 		hDisplay = new CountModulaLEDDisplayMini2();
 		hDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5] - 10));
@@ -395,6 +451,39 @@ struct FadeWidget : ModuleWidget {
 		
 	}
 	
+	//---------------------------------------------------------------------------------------------
+	// Control input mode menu
+	//---------------------------------------------------------------------------------------------
+	// control input mode menu item
+	struct ControlModeMenuItem : MenuItem {
+		Fade *module;
+		int mode;
+
+		void onAction(const event::Action &e) override {
+			module->controlMode = mode;
+		}
+	};
+	
+	// control input mode menu
+	struct ControlModeMenu : MenuItem {
+		Fade *module;
+
+		const char *menuLabels[Fade::NUM_CONTROL_MODES] = {"Gate", "Start/Stop triggers" };
+
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			for (int i = 0; i < Fade::NUM_CONTROL_MODES; i++) {
+				ControlModeMenuItem *modeMenuItem = createMenuItem<ControlModeMenuItem>(menuLabels[i], CHECKMARK(module->controlMode == i));
+				modeMenuItem->module = module;
+				modeMenuItem->mode = i;
+				menu->addChild(modeMenuItem);
+			}
+
+			return menu;
+		}
+	};
+
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
@@ -407,6 +496,12 @@ struct FadeWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+		
+		// add the output mode menu
+		ControlModeMenu *modeMenu = createMenuItem<ControlModeMenu>("Control Input Mode", RIGHT_ARROW);
+		modeMenu->module = module;
+		menu->addChild(modeMenu);
+		
 	}	
 	
 	void step() override {

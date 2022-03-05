@@ -560,7 +560,8 @@
 		  "name": "Fade-in/Fade-out and Record Controller",
 		  "description": "Automated fade in/out with integrated start/stop control for the VCV Record module",
 		  "tags": [
-			"Controller"
+			"Controller",
+			"Polyphonic"
 		  ]
 		},
 		{
