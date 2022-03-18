@@ -4,7 +4,7 @@
 <center>
 <img src="./img/CountModulaLogo.png" alt="Count Modula">
 <h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
-<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v2 by Adam Verspaget (Count Modula)</h2>
 </center>
 </td>
 </tr>
@@ -20,22 +20,40 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <th align="left">Notes</th>
 </tr>
 
+<tr valign="top">
+<td align="center">19-Mar-2022</td>
+<td align="center">v2.1.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Nibble Trigger Sequencer</li>
+<li>Random Access Switch 1-8</li>
+<li>Random Access Switch 8-1</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Fade - Add external control for start/stop</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+General: Make Cable Palette hotkeys function beyond 7 cables 
+</ul>
+</td>
+</tr>
 
 <tr valign="top">
 <td align="center">15-Jan-2022</td>
 <td align="center">v2.0.3</td>
 <td align="left">
 <ul>
-
-<ul>
 <b>Issues Resolved:</b>
 Issue #85: Arpeggiator hold button not working 
 Issue #87: Move restriction on number of Cable Palettes from global singleton to patch level to accommodate use in multiple instances with DAWs.
 </ul>
-
 </td>
 </tr>
-
 
 <tr valign="top">
 <td align="center">13-Sep-2021</td>

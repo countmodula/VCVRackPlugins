@@ -86,6 +86,8 @@ p->addModel(modelPolyVCPolarizer);
 p->addModel(modelPolyVCSwitch);	
 p->addModel(modelRackEarLeft);	
 p->addModel(modelRackEarRight);	
+p->addModel(modelRandomAccessSwitch18);
+p->addModel(modelRandomAccessSwitch81);
 p->addModel(modelRectifier);	
 p->addModel(modelSampleAndHold);	
 p->addModel(modelSampleAndHold2);	

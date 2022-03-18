@@ -85,6 +85,8 @@ extern Model *modelPolyVCPolarizer;
 extern Model *modelPolyVCSwitch;
 extern Model *modelRackEarLeft;
 extern Model *modelRackEarRight;
+extern Model *modelRandomAccessSwitch18;
+extern Model *modelRandomAccessSwitch81;
 extern Model *modelRectifier;
 extern Model *modelSampleAndHold;
 extern Model *modelSampleAndHold2;

@@ -1121,6 +1121,22 @@
 		  "tags": [
 			"Sequencer"
 		  ]
+		},
+		{
+		  "slug": "RandomAccessSwitch18",
+		  "name": "Random Access Switch 1-8",
+		  "description": "Random access switch 1 input to 8 output",
+		  "tags": [
+			"Switch"
+		  ]
+		},
+		{
+		  "slug": "RandomAccessSwitch81",
+		  "name": "Random Access Switch 8-1",
+		  "description": "Random access switch 8 inputs to 1 output",
+		  "tags": [
+			"Switch"
+		  ]
 		}
 	]
 }
