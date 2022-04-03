@@ -4,7 +4,7 @@
 <center>
 <img src="./img/CountModulaLogo.png" alt="Count Modula">
 <h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
-<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v2 by Adam Verspaget (Count Modula)</h2>
 </center>
 </td>
 </tr>
@@ -20,6 +20,9 @@ User guides for all modules are now being provided within a single pdf which can
 <table>
 <tr valign="top">
 <th align="center" style="width:120px;">Release</th><th align="center">Link</th>
+</tr>
+<tr valign="top">
+<td align="center">Version 2.1.0</td><td align="center"><a href="https://github.com/countmodula/VCVRackPluginManuals/releases/download/v2.1.0/Count.Modula.Manual.V2.1.0.pdf">Download</a></td>
 </tr>
 <tr valign="top">
 <td align="center">Version 2.0.2</td><td align="center"><a href="https://github.com/countmodula/VCVRackPluginManuals/releases/download/v2.0.2/Count.Modula.Manual.V2.0.2.pdf">Download</a></td>

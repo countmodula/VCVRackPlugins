@@ -4,7 +4,7 @@
 <center>
 <img src="./img/CountModulaLogo.png" alt="Count Modula">
 <h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
-<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v2 by Adam Verspaget (Count Modula)</h2>
 </center>
 </td>
 </tr>

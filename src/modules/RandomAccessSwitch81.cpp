@@ -22,14 +22,17 @@ struct RandomAccessSwitch81 : Module {
 	};
 	enum OutputIds {
 		CV_OUTPUT,
+		TRIG_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
 		ENUMS(SELECT_LIGHT, 8),
+		TRIG_LIGHT,
 		NUM_LIGHTS
 	};
 
 	GateProcessor gpSelect[8];
+	dsp::PulseGenerator pgChange;
 	int selection = 0, prevSelection = 0;
 	int processCount = 0;
 	
@@ -40,6 +43,7 @@ struct RandomAccessSwitch81 : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configOutput(CV_OUTPUT, "Destination");
+		configOutput(TRIG_OUTPUT, "Change trigger");
 
 		for (int i = 0, c = 1; i < 8; i++, c++) {
 			configButton(SELECT_PARAM + i, rack::string::f("Select %d", c));
@@ -57,12 +61,10 @@ struct RandomAccessSwitch81 : Module {
 		json_object_set_new(root, "moduleVersion", json_integer(1));
 		json_object_set_new(root, "selection", json_integer(selection));
 		
-		// TODO: save the current output voltages
-		
 		// add the theme details
-		#include "../themes/dataToJson.hpp"				
+		#include "../themes/dataToJson.hpp"
 		
-		return root;	
+		return root;
 	}
 
 	void dataFromJson(json_t* root) override {
@@ -72,13 +74,13 @@ struct RandomAccessSwitch81 : Module {
 		if (sel)
 			selection = json_integer_value(sel);	
 		
-		// TODO: read the saved output voltages
-		
+	
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 	}
 	
 	void onReset() override {
+		pgChange.reset();
 		prevSelection = selection;
 		selection = 0;
 	}	
@@ -89,19 +91,34 @@ struct RandomAccessSwitch81 : Module {
 			for (int i = 0; i < 8; i++) {
 				gpSelect[i].set(params[SELECT_PARAM + i].getValue() > 0.5f ? 10.0f : inputs[SELECT_INPUT + i].getVoltage());
 				if (gpSelect[i].leadingEdge()) {
-					prevSelection = selection;
 					selection = i;
 				}
 			}
-			
+
 			processCount = 0;
 		}
-		
+
 		outputs[CV_OUTPUT].setVoltage(inputs[CV_INPUT + selection].getVoltage());
 		lights[SELECT_LIGHT + selection].setBrightness(1.0f);
-		
-		if (prevSelection != selection)
+
+		if (prevSelection != selection) {
+			pgChange.trigger(1e-3f);
 			lights[SELECT_LIGHT + prevSelection].setBrightness(0.0f);
+			
+			prevSelection = selection;
+		}
+	
+		if (pgChange.remaining > 0.0f) {
+			outputs[TRIG_OUTPUT].setVoltage(10.0f);
+			lights[TRIG_LIGHT].setBrightness(1.0);
+		}
+		else {
+			outputs[TRIG_OUTPUT].setVoltage(0.0f);
+			lights[TRIG_LIGHT].setSmoothBrightness(0.0f, args.sampleTime);
+		}
+		
+		pgChange.process(args.sampleTime);
+		
 	}
 };
 
@@ -136,7 +153,9 @@ struct RandomAccessSwitch81Widget : ModuleWidget {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(COLUMN_POSITIONS[STD_COL2], STD_ROWS8[i]), module, RandomAccessSwitch81::SELECT_LIGHT + i));
 		}
 		
-		addOutput(createOutputCentered<CountModulaJack>(Vec(COLUMN_POSITIONS[STD_COL7], STD_HALF_ROWS8(STD_ROW4)), module, RandomAccessSwitch81::CV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(COLUMN_POSITIONS[STD_COL7], STD_HALF_ROWS8(STD_ROW2)), module, RandomAccessSwitch81::CV_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(COLUMN_POSITIONS[STD_COL7], STD_HALF_ROWS8(STD_ROW6)), module, RandomAccessSwitch81::TRIG_OUTPUT));
+		addChild(createLightCentered<SmallLight<RedLight>>(Vec(COLUMN_POSITIONS[STD_COL7] + 15, STD_HALF_ROWS8(STD_ROW6) - 19), module, RandomAccessSwitch81::TRIG_LIGHT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

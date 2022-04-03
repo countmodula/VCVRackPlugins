@@ -21,7 +21,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
-<td align="center">19-Mar-2022</td>
+<td align="center">03-Apr-2022</td>
 <td align="center">v2.1.0</td>
 <td align="left">
 <ul>
@@ -38,7 +38,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 
 <ul>
 <b>Issues Resolved:</b>
-General: Make Cable Palette hotkeys function beyond 7 cables 
+General: Make Cable Palette hotkeys function beyond 7 cables
 </ul>
 </td>
 </tr>
