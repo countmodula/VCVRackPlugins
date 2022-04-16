@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Octet Trigger Sequencer CV expander
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 
 #include "../CountModula.hpp"
@@ -73,15 +73,6 @@ struct STRUCT_NAME : Module {
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
-		
-	const char knobColours[8][50] = {	"Grey", 
-										"Red", 
-										"Orange",  
-										"Yellow", 
-										"Blue", 
-										"Violet",
-										"White",
-										"Green"};
 
 	// count to bit mappping
 	STEP_MAP;
@@ -101,7 +92,12 @@ struct STRUCT_NAME : Module {
 		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Output scale");
 		
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 1.0f, 0.0f, "Sample and hold mode");
+		configSwitch(HOLD_PARAM, 0.0f, 1.0f, 0.0f, "Sample and hold", {"Off", "On"});
+		
+		configOutput(CVA_OUTPUT, "CV A");
+		configOutput(CVAI_OUTPUT, "Inverted CV A");
+		configOutput(CVB_OUTPUT, "CV B");
+		configOutput(CVBI_OUTPUT, "Inverted CV B");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -291,7 +287,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -341,7 +339,7 @@ struct WIDGET_NAME : ModuleWidget {
 		
 			char buffer[20];
 			for (int i = 1; i < 8; i++) {
-				sprintf(buffer, "Channel %d (%s)", i, module->knobColours[i]);
+				sprintf(buffer, "Channel %d (%s)", i, CountModulaknobColours[i]);
 				ChannelMenuItem *channelMenuItem = createMenuItem<ChannelMenuItem>(buffer, CHECKMARK(module->userChannel == i));
 				channelMenuItem->module = module;
 				channelMenuItem->channelToUse = i;
@@ -378,10 +376,10 @@ struct WIDGET_NAME : ModuleWidget {
 
 			for (int c = 0; c < 8; c++) {
 				if ((channel& 0x01) == 0x01)
-					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->getParamQuantity()->reset();
 				
 				if ((channel& 0x02) == 0x02)
-					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -444,10 +442,10 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < 8; c++) {
 
 				if ((channel& 0x01) == 0x01)
-					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CVA_PARAMS + c)->getParamQuantity()->randomize();
 					
 				if ((channel& 0x02) == 0x02)
-					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CVB_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings
@@ -517,16 +515,18 @@ struct WIDGET_NAME : ModuleWidget {
 				int cid = ((STRUCT_NAME*)module)->currentChannel;
 				
 				char buffer[50];
-				sprintf(buffer, "res/Components/Knob%s.svg", ((STRUCT_NAME*)module)->knobColours[cid]);
+				sprintf(buffer, "res/Components/Knob%s.svg", CountModulaknobColours[cid]);
 				
 				for (int i = 0; i < 8; i++) {
-					ParamWidget *pA = getParam(STRUCT_NAME::CVA_PARAMS + i);
-					((CountModulaKnob *)(pA))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(pA))->dirtyValue = -1;
+					CountModulaKnob *pA = (CountModulaKnob *)getParam(STRUCT_NAME::CVA_PARAMS + i);
+					pA->svgFile = CountModulaknobColours[cid];
+					pA->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					pA->fb->dirty = true;
 					
-					ParamWidget *pB = getParam(STRUCT_NAME::CVB_PARAMS + i);
-					((CountModulaKnob *)(pB))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(pB))->dirtyValue = -1;	
+					CountModulaKnob *pB = (CountModulaKnob *)getParam(STRUCT_NAME::CVB_PARAMS + i);
+					pB->svgFile = CountModulaknobColours[cid];
+					pB->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					pB->fb->dirty = true;
 				}
 			}
 		}

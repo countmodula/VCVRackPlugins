@@ -2,7 +2,7 @@
 //	/^M^\ Count Modula Plugin for VCV Rack - Binary Sequencer Module
 //	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
 //	RIP John. Frac rules!
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -84,8 +84,24 @@ struct BinarySequencer : Module {
 		configParam(LAGSHAPE_PARAM, 0.0f, 1.0f, 0.0f, "Lag Shape");
 	
 		// scale switch
-		configParam(SCALE_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+		configSwitch(SCALE_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"10 Volts", "5 Volts", "2 Volts"});
 	
+		configInput(CLOCK_INPUT, "External clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(RUN_INPUT, "Run");
+		configInput(SH_INPUT, "Sample & hold");
+		
+		inputInfos[CLOCK_INPUT]->description = "Disconnects the internal clock";
+		inputInfos[RUN_INPUT]->description = "A continuous high gate signal allows the sequencer to run, a low gate signal stops the sequencer.";
+		
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(INV_OUTPUT, "Inverted CV");
+		configOutput(CLOCK_OUTPUT, "Clock");
+		configOutput(TRIGGER_OUTPUT, "Trigger");
+		
+		outputInfos[CLOCK_OUTPUT]->description = "Outputs the internal clock or follows the external clock if connected";
+		outputInfos[TRIGGER_OUTPUT]->description = "Outputs a trigger for every clock pulse";
+
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
@@ -287,7 +303,9 @@ struct BinarySequencerWidget : ModuleWidget {
 	BinarySequencerWidget(BinarySequencer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+		
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -339,12 +357,12 @@ struct BinarySequencerWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
-			widget->getParam(BinarySequencer::DIV01_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV02_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV04_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV08_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV16_PARAM)->reset();
-			widget->getParam(BinarySequencer::DIV32_PARAM)->reset();
+			widget->getParam(BinarySequencer::DIV01_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV02_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV04_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV08_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV16_PARAM)->getParamQuantity()->reset();
+			widget->getParam(BinarySequencer::DIV32_PARAM)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -364,12 +382,12 @@ struct BinarySequencerWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
-			widget->getParam(BinarySequencer::DIV01_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV02_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV04_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV08_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV16_PARAM)->randomize();
-			widget->getParam(BinarySequencer::DIV32_PARAM)->randomize();
+			widget->getParam(BinarySequencer::DIV01_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV02_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV04_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV08_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV16_PARAM)->getParamQuantity()->randomize();
+			widget->getParam(BinarySequencer::DIV32_PARAM)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

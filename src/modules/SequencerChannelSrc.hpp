@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Standard Sequencer Channel Engine
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 struct STRUCT_NAME : Module {
 
@@ -49,34 +49,26 @@ struct STRUCT_NAME : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 		
-	char knobColours[8][50] = {	"Grey", 
-								"Red", 
-								"Orange",  
-								"Yellow", 
-								"Blue", 
-								"Violet",
-								"White",
-								"Green"};		
-		
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		// cv/gate params
-		char stepText[20];
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			sprintf(stepText, "Step %d select", s + 1);
-			configParam(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, stepText);
-			
-			sprintf(stepText, "Step %d value", s + 1);
-			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, stepText, " V", 0.0f, 8.0f, 0.0f);
+			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
+			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
 		}
-		
+
 		// range switch
-		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale");
-		
+		configSwitch(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale", {"1 Volt", "2 Volts", "3 Volts", "4 Volts", "5 Volts", "6 Volts", "7 Volts", "8 Volts"} );
+
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode");
-		
+		configSwitch(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode", {"Trigger", "Off", "Gate"});
+
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 		
@@ -133,6 +125,10 @@ struct STRUCT_NAME : Module {
 				running = messagesFromMaster->runningState;
 				clock = messagesFromMaster->clockState;
 				
+				// for the binary addressed sequencer, we need to chop off the 4th bit if we're running an 8 step channel
+				if (count > SEQ_NUM_STEPS)
+					count -= SEQ_NUM_STEPS;
+
 				if (userChannel == 0)
 					userChannel = messagesFromMaster->channel;
 				
@@ -232,7 +228,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -289,7 +287,7 @@ struct WIDGET_NAME : ModuleWidget {
 		
 			char buffer[20];
 			for (int i = 1; i < 8; i++) {
-				sprintf(buffer, "Channel %d (%s)", i, module->knobColours[i]);
+				sprintf(buffer, "Channel %d (%s)", i, CountModulaknobColours[i]);
 				ChannelMenuItem *channelMenuItem = createMenuItem<ChannelMenuItem>(buffer, CHECKMARK(module->userChannel == i));
 				channelMenuItem->module = module;
 				channelMenuItem->channelToUse = i;
@@ -324,11 +322,11 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerInit)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->reset();
 				
 				// cv knobs
 				if (cvInit)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -389,10 +387,10 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerRand)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->randomize();
 				
 				if (cvRand)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings
@@ -464,12 +462,13 @@ struct WIDGET_NAME : ModuleWidget {
 				int cid = ((STRUCT_NAME*)module)->currentChannel;
 				
 				char buffer[50];
-				sprintf(buffer, "res/Components/Knob%s.svg", ((STRUCT_NAME*)module)->knobColours[cid]);
+				sprintf(buffer, "res/Components/Knob%s.svg", CountModulaknobColours[cid]);
 				
 				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(STRUCT_NAME::CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(p))->dirtyValue = -1;
+					CountModulaKnob *p = (CountModulaKnob *)getParam(STRUCT_NAME::CV_PARAMS + i);
+					p->svgFile = CountModulaknobColours[cid];
+					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					p->fb->dirty = true;
 				}
 			}
 		}

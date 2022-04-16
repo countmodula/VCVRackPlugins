@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - PolyLogic (Bernoulli Gate)
-//  Copyright (C) 2020  Adam Verspaget
-//  Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
+//	Copyright (C) 2020  Adam Verspaget
+//	Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -49,7 +49,23 @@ struct PolyLogic : Module {
 	PolyLogic() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
-		configParam(XORMODE_PARAM, 0.0f, 1.0, 0.0f, "XOR mode");
+		configSwitch(XORMODE_PARAM, 0.0f, 1.0, 0.0f, "XOR mode", {"Normal", "1-Hot"});
+
+		configInput(GATE_INPUT, "Polyphonic");
+
+		configOutput(AND_OUTPUT, "AND");
+		configOutput(OR_OUTPUT, "OR");
+		configOutput(XOR_OUTPUT, "XOR");
+		configOutput(NAND_OUTPUT, "NAND");
+		configOutput(NOR_OUTPUT, "NOR");
+		configOutput(XNOR_OUTPUT, "XNOR");
+
+		outputInfos[AND_OUTPUT]->description = "Monophinic output representing the result of a logical AND across the input channels";
+		outputInfos[OR_OUTPUT]->description = "Monophinic output representing the result of a logical OR across the input channels";
+		outputInfos[XOR_OUTPUT]->description = "Monophinic output representing the result of a logical XOR across the input channels";
+		outputInfos[NAND_OUTPUT]->description = "Monophinic output representing the result of a logical NAND across the input channels";
+		outputInfos[NOR_OUTPUT]->description = "Monophinic output representing the result of a logical NOR across the input channels";
+		outputInfos[XNOR_OUTPUT]->description = "Monophinic output representing the result of a logical XNOR across the input channels";
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -161,8 +177,10 @@ struct PolyLogicWidget : ModuleWidget {
 	PolyLogicWidget(PolyLogic *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 		

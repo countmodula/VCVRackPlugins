@@ -1,8 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Gate Delay Module
-//	A shift register style gate delay offering up to 20 seconds of
-//  delay
-//  Copyright (C) 2019  Adam Verspaget
+//	A shift register style gate delay offering up to 20 seconds of delay
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include <queue>
 #include <deque>
@@ -60,8 +59,17 @@ struct GateDelay : Module {
 		for (int i = 0; i < 2; i++) {
 			configParam(CVLEVEL_PARAM + i, -5.0f, 5.0f, 0.0f, "Delay time CV amount", " %", 0.0f, 100.0f, 0.0f);
 			configParam(TIME_PARAM + i, 0.0f, 10.0f, 5.0f, "Delay time");
-			configParam(RANGE_PARAM + i, 0.0f, 4.0f, 0.0f, "Time range");
+			configSwitch(RANGE_PARAM + i, 0.0f, 4.0f, 0.0f, "Time range", {"2.5", "5", "10", "20", "40"});
+
+			configInput(TIME_INPUT + i, "Time CV");
+			configInput(GATE_INPUT + i, "Gate");
+			configOutput(GATE_OUTPUT + i, "Direct");
+			configOutput(DELAYED_OUTPUT + i, "Delayed");
+			configOutput(MIX_OUTPUT + i, "Mix");
 		}
+
+		configBypass(GATE_INPUT, MIX_OUTPUT);
+		configBypass(GATE_INPUT + 1, MIX_OUTPUT + 1);
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -136,7 +144,9 @@ struct GateDelayWidget : ModuleWidget {
 	GateDelayWidget(GateDelay *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

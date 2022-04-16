@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Recording Fade Module Expander
 //	Expander for the fade-in/fade-out module.
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -49,6 +49,18 @@ struct FadeExpander : Module {
 	
 	FadeExpander() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		configOutput(ENV_OUTPUT, "Envelope");
+		configOutput(INV_OUTPUT, "Inverted envelope");
+		configOutput(GATE_OUTPUT, "Run");
+		configOutput(TRIG_OUTPUT, "Start/stop");
+		configOutput(FI_OUTPUT, "Fading in");
+		configOutput(FO_OUTPUT, "Fading out");
+
+		outputInfos[GATE_OUTPUT]->description = "Outputs a gate signal that goes high at the start of fade-in and low at the start of fade out.";
+		outputInfos[TRIG_OUTPUT]->description = "Outputs trigger pulses at the start of fade-in and start of fade-out";
+		outputInfos[FI_OUTPUT]->description = "Gate signal that is high for the duration of fade-in";
+		outputInfos[FO_OUTPUT]->description = "Gate signal that is high for the duration of fade-out";
 
 		// from left module (master)
 		leftExpander.producerMessage = leftMessages[0];
@@ -131,7 +143,9 @@ struct FadeExpanderWidget : ModuleWidget {
 	FadeExpanderWidget(FadeExpander *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

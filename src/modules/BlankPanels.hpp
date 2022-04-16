@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Blank Panel Functionality
 //	Blank Panel
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 
 // set the module name for the theme selection functions
@@ -55,7 +55,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(BlankPanel *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+		
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - SR Flip Flop (Latch) Logic Gate Module
 //	A dual set/reset latch with gate enable
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -100,6 +100,15 @@ struct SRFlipFlop : Module {
 	SRFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		for (int i = 0; i < 2; i++) {
+			configInput(S_INPUT +i, rack::string::f("Flip flop %d set", i +1));
+			configInput(R_INPUT +i, rack::string::f("Flip flop %d reset", i +1));
+			configInput(ENABLE_INPUT +i, rack::string::f("Flip flop %d enable", i +1));
+
+			configOutput(Q_OUTPUT +i, rack::string::f("Flip flop %d Q", i +1));
+			configOutput(NQ_OUTPUT +i, rack::string::f("Flip flop %d not Q", i +1));
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -185,8 +194,10 @@ struct SRFlipFlopWidget : ModuleWidget {
 	SRFlipFlopWidget(SRFlipFlop *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 		
@@ -266,6 +277,13 @@ struct SingleSRFlipFlop : Module {
 	SingleSRFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(S_INPUT, "Set");
+		configInput(R_INPUT, "Reset");
+		configInput(ENABLE_INPUT, "Enable");
+
+		configOutput(Q_OUTPUT, "Q");
+		configOutput(NQ_OUTPUT, "Not Q");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -326,7 +344,9 @@ struct SingleSRFlipFlopWidget : ModuleWidget {
 	SingleSRFlipFlopWidget(SingleSRFlipFlop *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	

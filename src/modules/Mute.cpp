@@ -2,7 +2,7 @@
 //	/^M^\ Count Modula Plugin for VCV Rack - Manual Gate Module
 //	A simple manual gate generator with a nice big button offering gate, latch
 //	extended gate and trigger outputs 
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -46,9 +46,19 @@ struct Mute : Module {
 	Mute() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Hard/Soft Mute");
-		configParam(MUTE_PARAM, 0.0f, 1.0f, 0.0f, "Mute");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mute type", {"Hard", "Soft"});
+		configButton(MUTE_PARAM, "Mute");
 
+		configInput(L_INPUT, "Signal 1");
+		configInput(R_INPUT, "Signal 2");
+		configInput(MUTE_INPUT, "Mute");
+
+		configInput(L_OUTPUT, "Signal 1");
+		configInput(R_OUTPUT, "Signal 2");
+		
+		configBypass(L_INPUT, L_OUTPUT);
+		configBypass(R_INPUT, R_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -132,7 +142,9 @@ struct MuteWidget : ModuleWidget {
 	MuteWidget(Mute *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

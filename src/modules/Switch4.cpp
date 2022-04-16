@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - 4 Input manual switch
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -39,8 +39,14 @@ struct Switch4 : Module {
 	Switch4() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(SELECT_PARAM, 0.0, 1.0, 0.0, "Input select");
-	
+		configButton(SELECT_PARAM, "Source select");
+		configInput(CV_INPUT, "Source 1");
+		configInput(CV_INPUT + 1, "Source 2");
+		configInput(CV_INPUT + 2, "Source 3");
+		configInput(CV_INPUT + 3, "Source 4");
+		
+		configOutput(CV_OUTPUT, "Signal");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"	
 	}
@@ -110,8 +116,10 @@ struct Switch4Widget : ModuleWidget {
 		setModule(module);
 
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"
 

@@ -3,7 +3,7 @@
 //	Complex event generator based on John Blacet's "VCC & Event Arranger" 
 //	article published in Synapse magazine in Feb '78. 
 //	With a twist...
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -225,7 +225,9 @@ struct EventArrangerWidget : ModuleWidget {
 	EventArrangerWidget(EventArranger *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

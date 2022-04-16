@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Bit Crusher Module
 //	Bit and sample rate reducer
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/ClockOscillator.hpp"
@@ -40,7 +40,7 @@ struct Mangler : Module {
 	float bitDepth, bitDepthCV, numBits, bitSize, out, newBits, inputLevel;
 	float sr, srCV, sRate;
 	bool bipolar; 
-
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"	
 	
@@ -52,9 +52,18 @@ struct Mangler : Module {
 		configParam(CRUSH_CV_PARAM, -1.0f, 1.0f, 0.0f, "Crush CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(SLICE_PARAM, 1.0f, 12.0f, 12.0f, "Slice amount");
 		configParam(CRUSH_PARAM, 1.0f, 64.0f, 64.0f, "Crush amount");
-		configParam(RANGE_PARAM, 0.0f, 1.0f, 1.0f, "Range");
-		configParam(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mangle mode");
+		
+		configSwitch(RANGE_PARAM, 0.0f, 1.0f, 1.0f, "Range", {"0-10 Volts", "+/-5 Volts"});
+		configSwitch(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mangle mode", {"Crush", "Blend", "Slice"});
 
+		configInput(SLICE_CV_INPUT, "Slice CV");
+		configInput(CRUSH_CV_INPUT, "Cruch CV");
+		configInput(SIGNAL_INPUT, "Signal");
+
+		configOutput(SIGNAL_OUTPUT, "Signal");
+		
+		configBypass(SIGNAL_INPUT, SIGNAL_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -168,7 +177,9 @@ struct ManglerWidget : ModuleWidget {
 	ManglerWidget(Mangler *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

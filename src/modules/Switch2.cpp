@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack -DPDT manual switch
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -41,9 +41,16 @@ struct Switch2 : Module {
 	
 	Switch2() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		
-		configParam(SELECT_PARAM, 0.0, 1.0, 0.0, "Input select");
-	
+
+		configButton(SELECT_PARAM, "Input select");
+
+		configInput(CVA_INPUT, "A1");
+		configInput(CVA_INPUT+ 1, "A2");
+		configOutput(CVA_OUTPUT, "A");
+		configInput(CVB_INPUT, "B1");
+		configInput(CVB_INPUT + 1, "B2");
+		configOutput(CVB_OUTPUT, "B");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"	
 	}
@@ -116,8 +123,10 @@ struct Switch2Widget : ModuleWidget {
 		setModule(module);
 
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"
 

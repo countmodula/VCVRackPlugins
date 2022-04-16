@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - BarGraph
 //	Bar graph volt meter
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -35,7 +35,8 @@ struct BarGraph : Module {
 	
 	BarGraph() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	
+		configInput(CV_INPUT, "Signal");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"		
 	}
@@ -102,7 +103,9 @@ struct BarGraphWidget : ModuleWidget {
 		setModule(module);
 
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 		
 		// screws
 		#include "../components/stdScrews.hpp"
@@ -113,9 +116,9 @@ struct BarGraphWidget : ModuleWidget {
 		// lights
 		for (int i = 0; i < 21; i++) {
 			if ( i == 10)
-				addChild(createLightCentered<MediumLight<CountModulaRectangleLight<RedLight>>>(Vec(18, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
+				addChild(createLightCentered<MediumLightRectangle<CountModulaRectangleLight<RedLight>>>(Vec(22.5, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
 			else
-				addChild(createLightCentered<MediumLight<CountModulaRectangleLight<GreenLight>>>(Vec(18, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
+				addChild(createLightCentered<MediumLightRectangle<CountModulaRectangleLight<GreenLight>>>(Vec(22.5, STD_ROWS6[STD_ROW1] + (i * 12)), module, BarGraph::BAR_LIGHT + i));
 		}
 	}
 	

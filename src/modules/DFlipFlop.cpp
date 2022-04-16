@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - D Flip Flop Logic Gate Module
 //	A D type flip flop with gate enable
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -90,6 +90,13 @@ struct SingleDFlipFlop : Module {
 	SingleDFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(D_INPUT, "D");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(ENABLE_INPUT, "Enable");
+
+		configOutput(Q_OUTPUT, "Q");
+		configOutput(NQ_OUTPUT, "Not Q");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -150,7 +157,9 @@ struct SingleDFlipFlopWidget : ModuleWidget {
 	SingleDFlipFlopWidget(SingleDFlipFlop *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

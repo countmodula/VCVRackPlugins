@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - G2T Module
 //	Gate To Trigger Module
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -45,6 +45,16 @@ struct G2T : Module {
 	
 	G2T() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+		configInput(GATE_INPUT, "Gate");
+		inputInfos[GATE_INPUT]->description = "Schmitt trigger input with 2.0 volt high and 0.1 volt low thresholds";
+		
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(INV_OUTPUT, "Inverted gate");
+		configOutput(START_OUTPUT, "Gate start trigger");
+		configOutput(END_OUTPUT, "Gate end trigger");
+		configOutput(EDGE_OUTPUT, "Gate start/end trigger");
+
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -124,7 +134,9 @@ struct G2TWidget : ModuleWidget {
 	G2TWidget(G2T *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

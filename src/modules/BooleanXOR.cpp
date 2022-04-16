@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - XOR Logic Gate Module
 //	A 4 input Exclusive-OR (XOR) gate logic module with inverted output
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -89,7 +89,18 @@ struct BooleanXOR : Module {
 	BooleanXOR() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "One-hot mode");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "One-hot mode", {"Off", "On"});
+
+		configInput(A_INPUT, "A");
+		configInput(B_INPUT, "B");
+		configInput(C_INPUT, "C");
+		configInput(D_INPUT, "D");
+		configInput(I_INPUT, "Inverter");
+
+		inputInfos[I_INPUT]->description = "Normalled to XOR output";
+
+		configOutput(XOR_OUTPUT, "Logical XOR");
+		configOutput(INV_OUTPUT, "Inverter");		
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -192,7 +203,9 @@ struct BooleanXORWidget : ModuleWidget {
 	BooleanXORWidget(BooleanXOR *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

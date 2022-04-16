@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Comparator Module
 //	An analogue comparator
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -39,6 +39,12 @@ struct Comparator : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(THRESHOLD_PARAM, -10.0, 10.0, 0.0, "Threshold", " V");
+		
+		configInput(THRESHOLD_INPUT, "Threshold CV");
+		configInput(COMPARE_INPUT, "Comparison CV");
+
+		configOutput(COMPARE_OUTPUT, "Over");
+		configOutput(INV_OUTPUT, "Under");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"	
@@ -99,7 +105,9 @@ struct ComparatorWidget : ModuleWidget {
 	ComparatorWidget(Comparator *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

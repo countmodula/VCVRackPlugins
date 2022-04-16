@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Manual CV Module
 //	A dual manual CV generator
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -15,7 +15,6 @@ struct ManualCV : Module {
 		CV1FINE_PARAM,
 		CV2COARSE_PARAM,
 		CV2FINE_PARAM,
-		MANUAL_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -42,6 +41,9 @@ struct ManualCV : Module {
 		configParam(CV1FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
 		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value", " V");
 		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
+
+		configOutput(CV1_OUTPUT, "CV");
+		configOutput(CV2_OUTPUT, "CV");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -76,7 +78,9 @@ struct ManualCVWidget : ModuleWidget {
 	ManualCVWidget(ManualCV *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

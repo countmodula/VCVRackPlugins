@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Attenuator Module
 //	A basic dual attenuator module with one switchable attenuverter and one 
-//  simple attenuator
-//  Copyright (C) 2019  Adam Verspaget
+//	simple attenuator
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"
@@ -44,7 +44,16 @@ struct Attenuator : Module {
 		
 		configParam(CH1_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation/Attenuversion", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
-		configParam(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Attenuvert");
+		configSwitch(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode",{"Attenuate", "Attenuvert"});
+
+		configInput(CH1_SIGNAL_INPUT, "A");
+		configInput(CH2_SIGNAL_INPUT, "B");
+
+		configOutput(CH1_SIGNAL_OUTPUT, "A");
+		configOutput(CH2_SIGNAL_OUTPUT, "B");
+
+		configBypass(CH1_SIGNAL_INPUT, CH1_SIGNAL_OUTPUT);
+		configBypass(CH2_SIGNAL_INPUT, CH2_SIGNAL_OUTPUT);
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -88,13 +97,11 @@ struct Attenuator : Module {
 			paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = (bipolar ? -1.0f : 0.0f);
 
 			// on change of mode, adjust the control value so it stays in the same position
-			switch (bipolar) {
-				case true:
-					params[CH1_ATTENUATION_PARAM].setValue((att1/1.0f * 2.0f) - 1.0f);
-					break;
-				case false:
-					params[CH1_ATTENUATION_PARAM].setValue((att1 + 1.0f) / 2.0f);
-					break;
+			if (bipolar) {
+				params[CH1_ATTENUATION_PARAM].setValue((att1/1.0f * 2.0f) - 1.0f);
+			}
+			else {
+				params[CH1_ATTENUATION_PARAM].setValue((att1 + 1.0f) / 2.0f);
 			}
 		}
 
@@ -111,8 +118,7 @@ struct Attenuator : Module {
 		}
 		else {
 			// nothing connected, we're acting as a CV source
-			if (bipolar)
-				outputs[CH1_SIGNAL_OUTPUT].setVoltage(10.0f * att1);
+			outputs[CH1_SIGNAL_OUTPUT].setVoltage(10.0f * att1);
 		}
 		
 		// channel 2
@@ -139,8 +145,10 @@ struct AttenuatorWidget : ModuleWidget {
 	AttenuatorWidget(Attenuator *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 

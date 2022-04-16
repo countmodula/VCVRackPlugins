@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Standard 8 Step Sequencer Channel
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 
 #define SEQ_NUM_STEPS	16

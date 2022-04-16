@@ -6,12 +6,28 @@
 #include "CountModula.hpp"
 
 Plugin *pluginInstance;
+int defaultTheme = 0;
+int prevDefaultTheme = -1;
+
 
 void init(Plugin *p) {
 	pluginInstance = p;
 
+	defaultTheme = readDefaultIntegerValue("DefaultTheme");
+	prevDefaultTheme = -1;
+	
 #include "InitialiseModels.hpp"
+}
 
+void setDefaultTheme(int themeToUse, bool previous) {
+	if (previous)
+		prevDefaultTheme = themeToUse;
+	else
+		defaultTheme = themeToUse;
+}
+
+int getDefaultTheme(bool previous) {
+	return previous ? prevDefaultTheme : defaultTheme;
 }
 
 

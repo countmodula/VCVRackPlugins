@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Step Sequencer Module
-//  A classic 8 step CV/Gate sequencer
-//  Copyright (C) 2019  Adam Verspaget
+//	A classic 8 step CV/Gate sequencer
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -71,15 +71,22 @@ struct MatrixCombiner : Module {
 	
 		// step params
 		for (int s = 0; s < 7; s++) {
-			configParam(BUS_A_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus A Select");
-			configParam(BUS_B_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus B Select");
-			configParam(BUS_C_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus C Select");
-			configParam(BUS_D_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus D Select");
-			configParam(BUS_E_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus E Select");
-			configParam(BUS_F_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bus F Select");
+			configSwitch(BUS_A_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with A"});
+			configSwitch(BUS_B_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with B"});
+			configSwitch(BUS_C_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with C"});
+			configSwitch(BUS_D_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with D"});
+			configSwitch(BUS_E_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with E"});
+			configSwitch(BUS_F_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Source %d", s +1), {"N/C", "Combined with F"});
+
+			configInput(GATE_INPUTS + s, rack::string::f("Source %d", s +1));
 		}
 		
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode");
+		char c = 'A';
+		for (int i = 0; i < NUM_OUTPUTS; i++) {
+			configOutput(A_OUTPUT + i, rack::string::f("Destination %c", c++));
+		}
+		
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode", {"Gates", "Triggers"});
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -168,7 +175,9 @@ struct MatrixCombinerWidget : ModuleWidget {
 	MatrixCombinerWidget(MatrixCombiner *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

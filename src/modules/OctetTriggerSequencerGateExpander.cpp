@@ -65,6 +65,11 @@ struct STRUCT_NAME : Module {
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		for (int i = 0; i < 8; i ++) {
+			configOutput(GATEA_OUTPUTS + i, rack::string::f("Channel A Step %d gate", i + 1));
+			configOutput(GATEB_OUTPUTS + i, rack::string::f("Channel B Step %d gate", i + 1));
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 		
@@ -191,7 +196,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

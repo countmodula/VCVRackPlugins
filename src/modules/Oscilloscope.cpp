@@ -85,6 +85,8 @@ struct Oscilloscope : Module {
 	bool showStats = false;
 	int processCount = 16;
 	
+	std::vector<std::string>  scaleLabels = {"5 V", "2 V", "1 V", "500 mV", "200 mV", "100mV", "50 mV", "20 mV", "10 mV", "5 mV", "2 mV", "1 mV"};
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"	
 
@@ -96,27 +98,33 @@ struct Oscilloscope : Module {
 		configParam(CH3_POS_PARAM, -10.0, 10.0, 0.0, "Ch 3 pos");
 		configParam(CH4_POS_PARAM, -10.0, 10.0, 0.0, "Ch 4 pos");
 		
-		configParam(CH1_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 1 scale");
-		configParam(CH2_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 2 scale");
-		configParam(CH3_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 3 scale");
-		configParam(CH4_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 4 scale");
+		configSwitch(CH1_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 1 scale", scaleLabels);
+		configSwitch(CH2_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 2 scale", scaleLabels);
+		configSwitch(CH3_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 3 scale", scaleLabels);
+		configSwitch(CH4_SCALE_PARAM, 0.0, 11.0, 2.0, "Ch 4 scale", scaleLabels);
 
-		configParam(CH1_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 1 zero");
-		configParam(CH2_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 2 zero");
-		configParam(CH3_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 3 zero");
-		configParam(CH4_ZERO_PARAM, 0.0f, 1.0f, 0.0f, "Ch 4 zero");
+		configButton(CH1_ZERO_PARAM, "Ch 1 zero");
+		configButton(CH2_ZERO_PARAM, "Ch 2 zero");
+		configButton(CH3_ZERO_PARAM, "Ch 3 zero");
+		configButton(CH4_ZERO_PARAM, "Ch 4 zero");
 
-		configParam(TRIG_PARAM, 0.0f, 4.0f, 1.0f, "Trigger source");
+		configSwitch(TRIG_PARAM, 0.0f, 4.0f, 1.0f, "Trigger source", {"External", "Channel 1", "Channel 2", "Channel 3", "Channel 4"});
 		configParam(TRIGLEVEL_PARAM, -10.0f, 10.0f, 0.0f, "Trigger level");
 		configParam(HOLDOFF_PARAM, 0.0, 1000.0, 0.0, "Hold-off", "", 0, 0.01f);
 
 		configParam(TIME_PARAM, -4.0, -18.0, -14.0, "Time");
 		
-		configParam(FREEZE_PARAM, 0.0f, 1.0f, 0.0f, "Trace freeze");
-		configParam(DISPLAY_GRID_PARAM, 0.0f, 1.0f, 1.0f, "Show grid");
-		configParam(DISPLAY_GRIDBASELINE_PARAM, 0.0f, 1.0f, 1.0f, "Show grid baseline");
-		configParam(DISPLAY_TRACEBASELINE_PARAM, 0.0f, 1.0f, 0.0f, "show trace baselines");
-		configParam(DISPLAY_STATISTICS_PARAM, 0.0f, 1.0f, 0.0f, "Show statistics");
+		configSwitch(DISPLAY_GRIDBASELINE_PARAM, 0.0, 1.0, 1.0, "Show grid baseline");
+		configSwitch(DISPLAY_GRID_PARAM, 0.0, 1.0, 1.0, "Show grid");
+		configButton(FREEZE_PARAM,"Trace freeze");
+		configButton(DISPLAY_TRACEBASELINE_PARAM, "show trace baselines");
+		configButton(DISPLAY_STATISTICS_PARAM, "Show statistics");
+
+		configInput(CH1_INPUT, "Channel 1");
+		configInput(CH2_INPUT, "Channel 2");
+		configInput(CH3_INPUT, "Channel 3");
+		configInput(CH4_INPUT, "Channel 4");
+		configInput(TRIG_INPUT, "External trigger");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -276,7 +284,7 @@ struct Oscilloscope : Module {
 	}
 };
 
-struct OscilloscopeDisplay : LightWidget {
+struct OscilloscopeDisplay : ModuleLightWidget {
 	Oscilloscope *module;
 	int frame = 0;
 	std::shared_ptr<Font> font;
@@ -327,7 +335,6 @@ struct OscilloscopeDisplay : LightWidget {
 	Stats stats1, stats2, stats3, stats4;
 
 	OscilloscopeDisplay() {
-		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Sudo.ttf"));
 	}
 
 	void drawWaveform(const DrawArgs &args, float *valuesX) {
@@ -409,32 +416,34 @@ struct OscilloscopeDisplay : LightWidget {
 
 		std::string text;
 		text = "PP:";
-		text += isNear(stats->vpp, 0.f, 100.f) ? string::f("% 6.2f", stats->vpp) : "  ---";
+		text += isNear(stats->vpp, 0.f, 100.f) ? rack::string::f("% 6.2f", stats->vpp) : "  ---";
 		nvgText(args.vg, pos.x, pos.y, text.c_str(), NULL);
 		text = "Max:";
-		text += isNear(stats->vmax, 0.f, 100.f) ? string::f("% 6.2f", stats->vmax) : "  ---";
+		text += isNear(stats->vmax, 0.f, 100.f) ? rack::string::f("% 6.2f", stats->vmax) : "  ---";
 		nvgText(args.vg, pos.x + 70, pos.y, text.c_str(), NULL);
 		text = "Min:";
-		text += isNear(stats->vmin, 0.f, 100.f) ? string::f("% 6.2f", stats->vmin) : "  ---";
+		text += isNear(stats->vmin, 0.f, 100.f) ? rack::string::f("% 6.2f", stats->vmin) : "  ---";
 		nvgText(args.vg, pos.x + 145, pos.y, text.c_str(), NULL);
 		
 		nvgText(args.vg, pos.x + 220, pos.y, scale, NULL);
 		
 	}
 
-	void drawBackground(const DrawArgs &args) {
+	void drawBackground(const DrawArgs &args) override {
+		
+		if (module && module->hideGrid) {
+			nvgSave(args.vg);
+			Rect b = Rect(Vec(0, 0), box.size);
+			nvgScissor(args.vg, b.pos.x+1, b.pos.y+1, b.size.x-2, b.size.y-2);
+			nvgBeginPath(args.vg);
+			nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 0.5);
 
-		nvgSave(args.vg);
-		Rect b = Rect(Vec(0, 0), box.size);
-		nvgScissor(args.vg, b.pos.x+1, b.pos.y+1, b.size.x-2, b.size.y-2);
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 0.5);
+			nvgFillColor(args.vg, nvgRGB(0x00, 0x00, 0x00));
+			nvgFill(args.vg);
 
-		nvgFillColor(args.vg, nvgRGB(0x00, 0x00, 0x00));
-		nvgFill(args.vg);
-
-		nvgResetScissor(args.vg);
-		nvgRestore(args.vg);
+			nvgResetScissor(args.vg);
+			nvgRestore(args.vg);
+		}
 	}
 
 	void drawBaseLine(const DrawArgs& args, float value) {
@@ -453,13 +462,18 @@ struct OscilloscopeDisplay : LightWidget {
 		nvgResetScissor(args.vg);
 	}
 
-	void draw (const DrawArgs &args) override {
+	void drawLight (const DrawArgs &args) override {
 		if(module == NULL) 
 			return;
 
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Sudo.ttf"));
+
+		// Disable tinting when rack brightness is decreased
+		nvgGlobalTint(args.vg, color::WHITE);
+
 		// hide the grid if we've chosen to do so
-		if (module->hideGrid)
-			drawBackground(args);
+		// if (module->hideGrid)
+			// drawBackground(args);
 		
 		// show the gid baseline if we've chosen to do so
 		if (module->showGridBaseline) {
@@ -601,7 +615,9 @@ struct OscilloscopeWidget : ModuleWidget {
 	OscilloscopeWidget(Oscilloscope *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 		
 		addChild(createWidget<CountModulaScrew>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<CountModulaScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -666,16 +682,68 @@ struct OscilloscopeWidget : ModuleWidget {
 	// include the theme menu item struct we'll use when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
+	struct TraceLocationMenuItem : MenuItem {
+		Oscilloscope *module;
+		bool centreTraces;
+		
+		void onAction(const event::Action &e) override {
+
+			int numChannels = 0;
+			bool connected[4] = {};
+			for (int c = 0; c < 4; c++) {
+				if (module->inputs[Oscilloscope::CH1_INPUT + c].isConnected()) {
+					connected[c] = true;
+					numChannels++;
+				}
+			}
+
+			float v = 0.0f, d = 0.0f;
+			if (!centreTraces) {
+				switch (numChannels) {
+					case 4:
+						v = 6.0f;
+						d = 4.0f;
+						break;
+					case 3:
+						v = d = 6.0f;
+						break;
+					case 2:
+						v = 5;
+						d = 10;
+						break;
+					default:
+						v = d = 0.0f;
+						break;
+				}
+			}
+			for (int c = 0; c < 4; c++) {
+				if (connected[c]) {
+					module->getParam(Oscilloscope::CH1_POS_PARAM + c).setValue(v);
+					v -= d;
+				}
+			}
+		}
+	};	
+
 	void appendContextMenu(Menu *menu) override {
 		Oscilloscope *module = dynamic_cast<Oscilloscope*>(this->module);
 		assert(module);
 
 		// blank separator
 		menu->addChild(new MenuSeparator());
-		
+			
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 
+		TraceLocationMenuItem *centreMenuItem = createMenuItem<TraceLocationMenuItem>("Centre all traces");
+		centreMenuItem->centreTraces = true;
+		centreMenuItem->module = module;
+		menu->addChild(centreMenuItem);
+			
+		TraceLocationMenuItem *spreadMenuItem = createMenuItem<TraceLocationMenuItem>("Organise traces");
+		spreadMenuItem->centreTraces = false;
+		spreadMenuItem->module = module;
+		menu->addChild(spreadMenuItem);
 	}
 	
 	void step() override{

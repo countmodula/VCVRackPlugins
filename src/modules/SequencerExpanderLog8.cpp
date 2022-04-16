@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Gated Comparator logic expander
-//  Adds logically mixed outputs to the Gated Comparator
-//  Copyright (C) 2019  Adam Verspaget
+//	Adds logically mixed outputs to the Gated Comparator
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -37,6 +37,7 @@ struct SequencerExpanderLog8 : Module {
 		AND_LIGHT,
 		OR_LIGHT,
 		ENUMS(CHANNEL_LIGHTS, SEQUENCER_EXP_MAX_CHANNELS),
+		ENUMS(BIT_PARAM_LIGHTS, SEQ_NUM_STEPS),
 		NUM_LIGHTS
 	};
 	
@@ -74,12 +75,17 @@ struct SequencerExpanderLog8 : Module {
 		
 		// bit params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configParam(BIT_PARAMS + s, 0.0f, 1.0f, 0.0f, "Bit mask");
+			configButton(BIT_PARAMS + s, rack::string::f("Bit %d", s + 1));
 		}
 		
 		// mode switch
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode", {"Gate", "Trigger"});
 
+		configOutput(AND_OUTPUT, "Logical AND");
+		configOutput(OR_OUTPUT, "Logical OR");
+		outputInfos[AND_OUTPUT]->description = "Activated when all of the bits match the On bit mask buttons";
+		outputInfos[OR_OUTPUT]->description = "Activated when any of the bits match the On bit mask buttons";
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -100,18 +106,6 @@ struct SequencerExpanderLog8 : Module {
 		#include "../themes/dataFromJson.hpp"
 	}	
 	
-	float getScale(float range) {		
-		switch ((int)(range)) {
-			case 2:
-				return 0.25f; // 2 volts
-			case 1:
-				return 0.5f; // 4 volts
-			case 0:
-			default:
-				return 1.0f; // 8 volts
-		}
-	}
-
 	void process(const ProcessArgs &args) override {
 
 		// details from master
@@ -286,7 +280,9 @@ struct SequencerExpanderLog8Widget : ModuleWidget {
 	SequencerExpanderLog8Widget(SequencerExpanderLog8 *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -294,7 +290,7 @@ struct SequencerExpanderLog8Widget : ModuleWidget {
 		// row lights and switches
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderLog8::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaToggle2P90>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderLog8::BIT_PARAMS + s));
+			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderLog8::BIT_PARAMS + s, SequencerExpanderLog8::BIT_PARAM_LIGHTS + s));
 		}
 
 		// mode control

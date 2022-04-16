@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Scaler
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -32,7 +32,6 @@ struct VoltageScaler : Module {
 		OVER_LIGHT,
 		NUM_LIGHTS
 	};
-
 	
 	float inMin, inMax, inDiff;
 	float limitA, limitB, diff, cvOut, cvIn;
@@ -49,6 +48,17 @@ struct VoltageScaler : Module {
 		configParam(UPPER_PARAM, -1.0f, 1.0f, 0.0f, "Output limit A", " V", 0.0f, 10.0f, 0.0f);
 		configParam(LOWER_PARAM, -1.0f, 1.0f, 0.0f, "Output limit B", " V", 0.0f, 10.0f, 0.0f);
 
+		configInput(CV_INPUT, "CV");
+		configInput(UPPER_INPUT, "Limit A CV");
+		configInput(LOWER_INPUT, "Limit B CV");
+
+		inputInfos[UPPER_INPUT]->description = "When connected, the Limit A knob acts as an attenuator";
+		inputInfos[LOWER_INPUT]->description = "When connected, the Limit B knob acts as an attenuator";
+
+		configOutput(CV_OUTPUT, "Scaled CV");
+		
+		configBypass(CV_INPUT, CV_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -123,7 +133,9 @@ struct VoltageScalerWidget : ModuleWidget {
 	VoltageScalerWidget(VoltageScaler *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -168,10 +180,10 @@ struct VoltageScalerWidget : ModuleWidget {
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
-			widget->getParam(VoltageScaler::MIN_PARAM)->paramQuantity->setValue(inMin);
-			widget->getParam(VoltageScaler::MAX_PARAM)->paramQuantity->setValue(inMax);
-			widget->getParam(VoltageScaler::UPPER_PARAM)->paramQuantity->setValue(limitA);
-			widget->getParam(VoltageScaler::LOWER_PARAM)->paramQuantity->setValue(limitB);
+			widget->getParam(VoltageScaler::MIN_PARAM)->getParamQuantity()->setValue(inMin);
+			widget->getParam(VoltageScaler::MAX_PARAM)->getParamQuantity()->setValue(inMax);
+			widget->getParam(VoltageScaler::UPPER_PARAM)->getParamQuantity()->setValue(limitA);
+			widget->getParam(VoltageScaler::LOWER_PARAM)->getParamQuantity()->setValue(limitB);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

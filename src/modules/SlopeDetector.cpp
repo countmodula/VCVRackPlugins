@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - SlopeDetector Module
 //	A VCV rack implementation of the CGS Slope Detector designed by Ken Stone
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -52,7 +52,19 @@ struct SlopeDetector : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(SENSE_PARAM, 0.0f, 1.0f, 0.0f, "Sense");
-		configParam(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Sense range");
+		configSwitch(RANGE_PARAM, 0.0f, 1.0f, 0.0f, "Sense range", {"Fast", "Slow"});
+
+		configInput(CV_INPUT, "Signal");
+
+		configOutput(RISING_OUTPUT, "Rising");
+		configOutput(STEADY_OUTPUT, "Steady");
+		configOutput(FALLING_OUTPUT, "Falling");
+		configOutput(MOVING_OUTPUT, "Moving");
+
+		outputInfos[RISING_OUTPUT]->description = "High gate when the input signal is rising";
+		outputInfos[STEADY_OUTPUT]->description = "High gate when the input signal is steady";
+		outputInfos[FALLING_OUTPUT]->description = "High gate when the input signal is falling";
+		outputInfos[MOVING_OUTPUT]->description = "High gate when the input signal is rising or falling";
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -134,8 +146,10 @@ struct SlopeDetectorWidget : ModuleWidget {
 	SlopeDetectorWidget(SlopeDetector *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 		

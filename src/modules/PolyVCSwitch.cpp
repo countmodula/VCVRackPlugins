@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Polyphonic Voltage Controlled Switch Module
 //	A polyphonic 2 in/1 out 1 in/2 out voltage controlled switch
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -49,7 +49,17 @@ struct PolyVCSwitch : Module {
 	PolyVCSwitch() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		configParam(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Manual select");
+		configSwitch(MANUAL_PARAM, 0.0f, 1.0f, 0.0f, "Select", {"A (Red)", "B (Green)"});
+	
+		configInput(CV_INPUT, "Select CV");
+		inputInfos[CV_INPUT]->description = "Disconnects the manual select button";
+		configInput(A_INPUT, "Switch 1");
+		configInput(B1_INPUT, "Switch 2 A");
+		configInput(B2_INPUT, "Switch 2 B");
+	
+		configOutput(A1_OUTPUT, "Switch 1 A");
+		configOutput(A2_OUTPUT, "Switch 1 B");
+		configOutput(B_OUTPUT, "Switch 2");
 	
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -155,7 +165,9 @@ struct PolyVCSwitchWidget : ModuleWidget {
 	PolyVCSwitchWidget(PolyVCSwitch *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

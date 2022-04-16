@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - PolyChances (Bernoulli Gate)
-//  Copyright (C) 2020  Adam Verspaget
-//  Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
+//	Copyright (C) 2020  Adam Verspaget
+//	Logic portions taken from Branches (Bernoulli Gate) by Andrew Belt
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -48,9 +48,17 @@ struct PolyChances : Module {
 	PolyChances() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
-		configParam(THRESH_PARAM, 0.0f, 1.0f, 0.5f, "Chance");
-		configParam(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mode");
-
+		configParam(THRESH_PARAM, 0.0f, 1.0f, 0.5f, "Output B chance", "%", 0.0f, 100.0f, 0.0f);
+		configSwitch(MODE_PARAM, 0.0f, 2.0f, 1.0f, "Mode", {"Toggle", "Normal", "Latch"});
+		
+		configInput(GATE_INPUT, "Gate");
+		configInput(PROB_INPUT, "Probability CV");
+		
+		configOutput(A_OUTPUT, "A");
+		configOutput(B_OUTPUT, "B");
+		
+		configBypass(GATE_INPUT, A_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -182,7 +190,9 @@ struct PolyChancesWidget : ModuleWidget {
 	PolyChancesWidget(PolyChances *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

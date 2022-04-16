@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - CV Spreader Module
 //	Based on the CGS37 CV Cluster by Ken Stone.
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -47,7 +47,22 @@ struct CVSpreader : Module {
 
 		configParam(BASE_PARAM, -1.0f, 1.0f, 0.0f, "Base CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(SPREAD_PARAM, -1.0f, 1.0f, 0.0f, "Spread CV amount", " %", 0.0f, 100.0f, 0.0f);
-		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Odd/Even mode select");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Spread", {"Even", "Odd"});
+
+		configInput(BASE_INPUT, "Base CV");
+		configInput(SPREAD_INPUT, "Spread CV");
+
+		configOutput(A_OUTPUT, "Sum 1");
+		configOutput(B_OUTPUT, "Sum 2");
+		configOutput(C_OUTPUT, "Sum 3");
+		configOutput(D_OUTPUT, "Sum 4");
+		configOutput(E_OUTPUT, "Sum 5");
+		configOutput(F_OUTPUT, "Centre");
+		configOutput(G_OUTPUT, "Difference 1");
+		configOutput(H_OUTPUT, "Difference 2");
+		configOutput(I_OUTPUT, "Difference 3");
+		configOutput(J_OUTPUT, "Difference 4");
+		configOutput(K_OUTPUT, "Difference 5");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -100,7 +115,9 @@ struct CVSpreaderWidget : ModuleWidget {
 	CVSpreaderWidget(CVSpreader *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

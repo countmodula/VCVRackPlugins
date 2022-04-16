@@ -2,7 +2,7 @@
 //	/^M^\ Count Modula Plugin for VCV Rack - Manual Gate Module
 //	A simple manual gate generator with a nice big button offering gate, latch
 //	extended gate and trigger outputs 
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -52,7 +52,15 @@ struct ManualGate : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Output gate length");
-		configParam(GATE_PARAM, 0.0f, 1.0f, 0.0f, "Gate on");
+		configButton(GATE_PARAM, "Gate");
+
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(IGATE_OUTPUT, "Inverted gate");
+		configOutput(EXTENDED_OUTPUT, "Extended gate");
+		configOutput(IEXT_OUTPUT, "Inverted extended gate");
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(LATCH_OUTPUT, "Latch");
+		configOutput(ILATCH_OUTPUT, "Inverted latch");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -134,7 +142,9 @@ struct ManualGateWidget : ModuleWidget {
 	ManualGateWidget(ManualGate *module) {	
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

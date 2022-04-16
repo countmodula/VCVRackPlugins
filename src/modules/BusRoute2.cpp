@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Step Sequencer Module
-//  A classic 8 step CV/Gate sequencer
-//  Copyright (C) 2019  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - Bus Route 2
+//	Another bussing/routing module
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -37,22 +37,27 @@ struct BusRoute2 : Module {
 		ENUMS(BUS_B_PARAM_LIGHT, 7),
 		NUM_LIGHTS
 	};
-
 	
 	GateProcessor gates[7];
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
-	
+
+	const std::string inputLabels[7] = {"Channel 1", "Channel 2", "Channel 3", "Channel 4", "Channel 5", "Channel 6", "Channel 7"};
+
 	BusRoute2() {
 		config(NUM_PARAM, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		// step params
 		for (int s = 0; s < 7; s++) {
-			configParam(BUS_A_PARAM + s, 0.0f, 1.0f, 0.0f, "Bus A Select");
-			configParam(BUS_B_PARAM + s, 0.0f, 1.0f, 0.0f, "Bus B Select");
+			configSwitch(BUS_A_PARAM + s, 0.0f, 1.0f, 0.0f, "Bus A", {"Disconnected", "Connected"});
+			configSwitch(BUS_B_PARAM + s, 0.0f, 1.0f, 0.0f, "Bus B", {"Disconnected", "Connected"});
+			configInput(GATE_INPUTS + s, inputLabels[s]);
 		}
 
+		configOutput(A_OUTPUT, "Bus A");
+		configOutput(B_OUTPUT, "Bus B");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -86,7 +91,6 @@ struct BusRoute2 : Module {
 		bool bOut = false;	
 			
 		for (int i = 0; i < 7; i++) {
-		
 			gates[i].set(inputs[i].getVoltage());
 			
 			// determine the output values
@@ -113,7 +117,9 @@ struct BusRoute2Widget : ModuleWidget {
 	BusRoute2Widget(BusRoute2 *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

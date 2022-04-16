@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Super Arpeggiator
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -30,6 +30,7 @@ struct Arpeggiator : Module {
 		GLIDE_PARAM,
 		OCTAVE_PARAM,
 		NOTE_PARAM,
+		HOLD_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -52,6 +53,10 @@ struct Arpeggiator : Module {
 		POLY_LIGHT,
 		OCTAVE_PARAM_LIGHT,
 		NOTE_PARAM_LIGHT,
+		HOLD_PARAM_LIGHT,
+		ENUMS(PROGRAMME_LIGHTS, 5 * ARP_NUM_STEPS),
+		ENUMS(OCTAVE_LIGHTS, 3 * ARP_NUM_STEPS),
+		ENUMS(MODIFY_LIGHTS, 2 * ARP_NUM_STEPS),
 		NUM_LIGHTS
 	};
 
@@ -86,7 +91,7 @@ struct Arpeggiator : Module {
 		OUTSIDEIN_MODE,
 		FFB_MODE,
 		PROGRAMME_MODE,
-		NUM_MODES		
+		NUM_MODES
 	};
 	
 	GateProcessor gpClock;
@@ -108,7 +113,6 @@ struct Arpeggiator : Module {
 	int numGates = 0;
 	int numCVs = 0;	
 	int maxChannels = -1;
-	bool holdCV = false;
 	bool hold = false;
 	bool waitingForGate = false;
 	
@@ -157,6 +161,11 @@ struct Arpeggiator : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
+	std::string stepLabels[ARP_NUM_STEPS] = {"Step 1 ", "Step 2 ", "Step 3 ", "Step 4 ", "Step 5 ", "Step 6 ", "Step 7 ", "Step 8 "};
+	std::string programmeLabels[5] = {"Next note", "Previous note", "Repeat note", "Rest", "Skip note"};
+	std::string octaveLabels[3] = {"octave shift down", "note octave shift", "octave shift up"};
+	std::string modifyLabels[2] = {"glide", "accent"};
+
 	Arpeggiator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -165,12 +174,37 @@ struct Arpeggiator : Module {
 		}
 
 		configParam(LENGTH_PARAM, 1.0f, 8.0f, 1.0f, "Pattern length");
-		configParam(MODE_PARAM, 0.0f, 7.0f, 0.0f, "Sequence");
-		configParam(SORT_PARAM, 0.0f, 2.0f, 1.0f, "Sort order");
+		configSwitch(MODE_PARAM, 0.0f, 7.0f, 0.0f, "Sequence", {"Forward", "Reveres", "Pendulum", "Random", "Middle-out", "Outside-in", "Skip-N-Back", "Programme"});
+		configSwitch(SORT_PARAM, 0.0f, 2.0f, 1.0f, "Note presort order", {"Descending", "Unsorted", "Ascending"});
 		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide", "", 0.0f, 10.0f, 0.0f);
-		configParam(OCTAVE_PARAM, 0.0f, 1.0f, 1.0f, "Octve processing on/off");
-		configParam(NOTE_PARAM, 0.0f, 1.0f, 1.0f, "Note processing on/off");
+		
+		configSwitch(OCTAVE_PARAM, 0.0f, 1.0f, 1.0f, "Octave processing", {"Off", "On"});
+		configSwitch(NOTE_PARAM, 0.0f, 1.0f, 1.0f, "Modifier processing", {"Off", "On"});
+		configSwitch(HOLD_PARAM, 0.0f, 1.0f, 0.0f, "Hold", {"Off", "On"});
 
+		configInput(GATE_INPUT, "Gate");
+		configInput(CV_INPUT, "CV");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(HOLD_INPUT, "Hold");
+
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(ACCENT_OUTPUT, "Accent");
+
+		int pl = PROGRAMME_LIGHTS;
+		int ol = OCTAVE_LIGHTS;
+		int ml = MODIFY_LIGHTS;
+		for (int s = 0; s < ARP_NUM_STEPS;s ++) {
+			for (int i = 0; i < 5; i++)
+				configLight(pl++ , stepLabels[s] +  programmeLabels[i]);
+		
+			for (int i = 0; i < 3; i++)
+				configLight(ol++ , stepLabels[s] + octaveLabels[i]);
+
+			for (int i = 0; i < 2; i++)
+				configLight(ml++ ,  stepLabels[s] + modifyLabels[i]);
+		}
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -195,7 +229,6 @@ struct Arpeggiator : Module {
 			accent[i] = false;
 		}
 		
-		holdCV = false;
 		hold = false;
 		gate =  false;
 		numCVs = 0;
@@ -363,12 +396,13 @@ struct Arpeggiator : Module {
 		
 		// handle the hold input - this overrides the button
 		if (inputs[HOLD_INPUT].isConnected()) {
-			holdCV = true;
 			hold = gpHold.set(inputs[HOLD_INPUT].getVoltage());
+			params[HOLD_PARAM].setValue(hold ? 1.0f : 0.0f);
 		}
-		else
-			holdCV = false;
-		
+		else {
+			hold = gpHold.set(params[HOLD_PARAM].getValue() > 0.5f ? 10.0f : 0.0f);
+		}
+
 		// are we in hold?
 		if (hold || !clockEdge) {
 			// yes - use the gate and cv data we already have
@@ -380,7 +414,6 @@ struct Arpeggiator : Module {
 			}
 		}
 		else {
-			
 			// no - process the gate and cv inputs
 			gate = false;
 			numGates = inputs[GATE_INPUT].getChannels();
@@ -414,7 +447,6 @@ struct Arpeggiator : Module {
 				// leave as input order
 				break;
 		}
-
 
 		// process the reset input
 		gpReset.set(inputs[RESET_INPUT].getVoltage());
@@ -676,216 +708,352 @@ struct Arpeggiator : Module {
 	}
 };
 
-struct PatternButton : LightWidget {
-	Arpeggiator* module;
+// custom tool tip for the arpeggiator "touch screen" buttons
+struct ArpeggiatorTouchTooltip : ui::Tooltip {
+	ModuleLightWidget* lightWidget;
+
+	// hack to make the mouse-overs look like button tooltips.
+	void step() override {
+		if (lightWidget->module) {
+			engine::LightInfo* lightInfo = lightWidget->getLightInfo();
+			if (!lightInfo)
+				return;
+			// Label
+			text = lightInfo->getName();
+			
+			// Description
+			std::string description = lightInfo->getDescription();
+			if (description != "") {
+				text += description;
+			}
+
+		}
+		Tooltip::step();
+		// Position at bottom-right of parameter
+		box.pos = lightWidget->getAbsoluteOffset(lightWidget->box.size).round();
+		// Fit inside parent (copied from Tooltip.cpp)
+		assert(parent);
+		box = box.nudge(parent->box.zeroPos());
+	}
+};
+
+// special "touch screen" style buttons
+struct ArpeggiatorTouchButton : ModuleLightWidget {
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
+	ui::Tooltip* tooltip = NULL;
 	int value;
 	int row = 0;
+	bool isLit = false;
+	bool isActive = true;
 	
-	void drawLight(const DrawArgs& args) override {
+	
+	~ArpeggiatorTouchButton() {
+		destroyTooltip();
+	}
+	
+	void drawBackground(const DrawArgs &args) override {
 		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
-		if (module)
-			nvgFillColor(args.vg, module->mode == Arpeggiator::PROGRAMME_MODE && row < module->patternLength && module->pattern[row] == value ? activeColor : inactiveColor);
-		else
-			nvgFillColor(args.vg, inactiveColor);
-		
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 1.0);
+		nvgFillColor(args.vg, inactiveColor);
 		nvgFill(args.vg);
 
-		nvgStrokeWidth(args.vg, 1.2);
-		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
+		// add border
+		if (isLit || !isActive) {
+			nvgStrokeWidth(args.vg, 1.0);
+			nvgStrokeColor(args.vg, SCHEME_BLACK);
+		}
+		else {
+			nvgStrokeWidth(args.vg, 0.5);
+			nvgStrokeColor(args.vg, activeColor);
+		}
+
 		nvgStroke(args.vg);
 	}
+	
+	void drawLight(const DrawArgs& args) override {
+		nvgGlobalTint(args.vg, color::WHITE);
+		
+		color = isLit ? activeColor : inactiveColor;
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 1.0);
+		nvgFillColor(args.vg, color);
+		nvgFill(args.vg);
 
+		if (isLit) {
+			nvgStrokeWidth(args.vg, 1.0);
+			nvgStrokeColor(args.vg, SCHEME_BLACK);
+		}
+		else if (isActive) {
+			nvgStrokeWidth(args.vg, 0.5);
+			nvgStrokeColor(args.vg, activeColor);
+		}
+		else {
+			nvgStrokeWidth(args.vg, 1.0);
+			nvgStrokeColor(args.vg, SCHEME_BLACK);
+		}
+		nvgStroke(args.vg);
+	}
+	
+	// hack to customise the tool tips
+	void createTooltip() {
+		if (!settings::tooltips)
+			return;
+		if (this->tooltip)
+			return;
+		// If the LightInfo is null, don't show a tooltip
+		if (!getLightInfo())
+			return;
+		ArpeggiatorTouchTooltip* tooltip = new ArpeggiatorTouchTooltip;
+		tooltip->lightWidget = this;
+		APP->scene->addChild(tooltip);
+		this->tooltip = tooltip;
+	}
+	
+	void destroyTooltip() {
+		if (!this->tooltip)
+			return;
+		APP->scene->removeChild(this->tooltip);
+		delete this->tooltip;
+		this->tooltip = NULL;
+	}	
+	
+	// hack to customise the tooltips
+	void onEnter(const EnterEvent& e) override {
+		this->createTooltip();
+	}
+	
+	void onLeave(const LeaveEvent& e) override {
+		this->destroyTooltip();
+	}	
+	
+	void step() override{
+		if (module) {
+			LightInfo* l = getLightInfo();
+			
+			if (l) {
+				// hack to customise the tooltips
+				l->description = isActive ? isLit ? ": On" : ": Off" : ": Inactive";
+			}
+		}
+		ModuleLightWidget::step();
+	}
+};
+
+struct PatternButton : ArpeggiatorTouchButton {
+	void draw(const DrawArgs& args) override {
+
+		if (module) {
+			Arpeggiator *m = (Arpeggiator*)module;
+			
+			isActive = m->mode == Arpeggiator::PROGRAMME_MODE && row < m->patternLength;
+			isLit = isActive && m->pattern[row] == value;
+		}
+		else {
+			isActive = true;
+		}
+
+		ModuleLightWidget::draw(args);
+	}	
+	
 	void onButton(const event::Button& e) override {
 		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
 			e.stopPropagating();
 			
 			if (e.action ==GLFW_PRESS) {
-				if (row < module->patternLength && module->mode == Arpeggiator::PROGRAMME_MODE) {
+				Arpeggiator *m = (Arpeggiator*)module;
+				if (row < m->patternLength && m->mode == Arpeggiator::PROGRAMME_MODE) {
 					// click when lit toggles the button set to the default of 0
-					if (module->pattern[row] == value)
-						module->pattern[row] = 0;
+					if (m->pattern[row] == value)
+						m->pattern[row] = 0;
 					else 
-						module->pattern[row] = value;
+						m->pattern[row] = value;
 				}
 			}
-					
-			e.consume(this);	
+
+			e.consume(this);
 		}
 		
-		LightWidget::onButton(e);
+		ModuleLightWidget::onButton(e);
 	}
 };
 
-struct OctaveButton : LightWidget {
+struct OctaveButton : ArpeggiatorTouchButton {
+	void draw(const DrawArgs& args) override {
+		if (module) {
+			Arpeggiator *m = (Arpeggiator*)module;
+			isActive = m->octaveProcessingEnabled && row < m->patternLength;
+			isLit = isActive && m->octave[row] == value;
+		}
+		else
+			isActive = true;
+
+		ModuleLightWidget::draw(args);
+	}
+
+	void onButton(const event::Button& e) override {
+		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				Arpeggiator *m = (Arpeggiator*)module;
+				if (m->octaveProcessingEnabled && row < m->patternLength) {
+					// click when lit toggles the button set back the default of 1
+					if (m->octave[row] == value)
+						m->octave[row] = 1;
+					else
+						m->octave[row] = value;
+				}
+			}
+			
+			e.consume(this);
+		}
+		
+		ModuleLightWidget::onButton(e);
+	}
+};
+
+struct GlideButton : ArpeggiatorTouchButton {
+	void draw(const DrawArgs& args) override {
+
+		if (module) {
+			Arpeggiator *m = (Arpeggiator*)module;
+			isActive = m->noteProcessingEnabled && row < m->patternLength;
+			isLit = isActive && m->glide[row];
+		}
+		else
+			isActive = true;
+
+		ModuleLightWidget::draw(args);
+	}
+
+	void onButton(const event::Button& e) override {
+		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				Arpeggiator *m = (Arpeggiator*)module;
+				if (m->noteProcessingEnabled && row < m->patternLength) {
+					m->glide[row] = !m->glide[row];
+				}
+			}
+			
+			e.consume(this);
+		}
+		
+		ModuleLightWidget::onButton(e);
+	}
+};
+
+struct AccentButton : ArpeggiatorTouchButton {
+	void draw(const DrawArgs& args) override {
+		if (module) {
+			Arpeggiator *m = (Arpeggiator*)module;
+			isActive = m->noteProcessingEnabled && row < m->patternLength;
+			isLit = isActive && m->accent[row];
+		}
+		else
+			isActive = true;
+
+		ModuleLightWidget::draw(args);
+	}
+
+	void onButton(const event::Button& e) override {
+		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
+			e.stopPropagating();
+			
+			if (e.action ==GLFW_PRESS) {
+				Arpeggiator *m = (Arpeggiator*)module;
+				if (m->noteProcessingEnabled && row < m->patternLength) {
+					m->accent[row] = !m->accent[row];
+				}
+			}
+			
+			e.consume(this);
+		}
+		
+		ModuleLightWidget::onButton(e);
+	}
+};
+
+struct ArpeggiatorTouchSeparator : ModuleLightWidget {
 	Arpeggiator* module;
 	NVGcolor activeColor;
 	NVGcolor inactiveColor;
+
 	int value;
 	int row = 0;
+	int col = 0;
 	
 	void drawLight(const DrawArgs& args) override {
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
-		if (module && module->octaveProcessingEnabled)
-			nvgFillColor(args.vg, (row < module->patternLength && module->octave[row] == value) ? activeColor : inactiveColor);
-		else
-			nvgFillColor(args.vg, inactiveColor);
 		
-		nvgFill(args.vg);
+		nvgGlobalTint(args.vg, color::WHITE);
 		
-		nvgStrokeWidth(args.vg, 1.2);
-		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
-	}
-
-	void onButton(const event::Button& e) override {
-		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			e.stopPropagating();
-			
-			if (e.action ==GLFW_PRESS) {
-				if (module->octaveProcessingEnabled && row < module->patternLength) {
-					// click when lit toggles the button set back the default of 1
-					if (module->octave[row] == value)
-						module->octave[row] = 1;
-					else
-						module->octave[row] = value;
-				}
+		if (module) {
+			switch (col) {
+				case 1:
+					color = (module->mode == Arpeggiator::PROGRAMME_MODE && row < module->patternLength) ? activeColor : inactiveColor;
+					break;
+				case 2:
+					color = (module->octaveProcessingEnabled && row < module->patternLength) ? activeColor : inactiveColor;
+					break;
+				case 3:
+					color = (module->noteProcessingEnabled && row < module->patternLength) ? activeColor : inactiveColor;
+					break;
+				default:
+					color = inactiveColor;
+					break;
 			}
-			
-			e.consume(this);
 		}
-		
-		LightWidget::onButton(e);
-	}
-};
+		else
+			color = activeColor; // so it shows in the browser
 
-struct GlideButton : LightWidget {
-	Arpeggiator* module;
-	NVGcolor activeColor;
-	NVGcolor inactiveColor;
-	int row = 0;
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 0.5);
+		nvgFillColor(args.vg, color);
+		nvgFill(args.vg);
+	}
 	
-	void drawLight(const DrawArgs& args) override {
+	void drawHalo(const DrawArgs& args) override {
+		// Don't draw halo if rendering in a framebuffer, e.g. screenshots or Module Browser
+		if (args.fb)
+			return;
+
+		const float halo = settings::haloBrightness;
+		if (halo == 0.f)
+			return;
+
+		// If light is off, rendering the halo gives no effect.
+		if (this->color.r == 0.f && this->color.g == 0.f && this->color.b == 0.f)
+			return;
+
+		float br = 30.0; // Blur radius
+		float cr = 5.0; // Corner radius
+		
 		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
-		if (module && module->noteProcessingEnabled)
-			nvgFillColor(args.vg, (row < module->patternLength && module->glide[row]) ? activeColor : inactiveColor);
-		else
-			nvgFillColor(args.vg, inactiveColor);
-		
+		nvgRect(args.vg, -br, -br, this->box.size.x + 2 * br, this->box.size.y + 2 * br);
+		NVGcolor icol = color::mult(color, halo);
+		NVGcolor ocol = nvgRGBA(0, 0, 0, 0);
+		nvgFillPaint(args.vg, nvgBoxGradient(args.vg, 0, 0, this->box.size.x, this->box.size.y, cr, br, icol, ocol));
 		nvgFill(args.vg);
-		
-		nvgStrokeWidth(args.vg, 1.2);
-		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
-	}
-
-	void onButton(const event::Button& e) override {
-		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			e.stopPropagating();
-			
-			if (e.action ==GLFW_PRESS) {
-				if (module->noteProcessingEnabled && row < module->patternLength) {
-					module->glide[row] = !module->glide[row];
-				}
-			}
-			
-			e.consume(this);
-		}
-		
-		LightWidget::onButton(e);
-	}
-};
-
-struct AccentButton : LightWidget {
-	Arpeggiator* module;
-	NVGcolor activeColor;
-	NVGcolor inactiveColor;
-	int row = 0;
-	
-	void drawLight(const DrawArgs& args) override {
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
-		if (module && module->noteProcessingEnabled)
-			nvgFillColor(args.vg, (row < module->patternLength && module->accent[row]) ? activeColor : inactiveColor);
-		else
-			nvgFillColor(args.vg, inactiveColor);
-		
-		nvgFill(args.vg);
-		
-		nvgStrokeWidth(args.vg, 1.2);
-		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
-	}
-
-	void onButton(const event::Button& e) override {
-		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			e.stopPropagating();
-			
-			if (e.action ==GLFW_PRESS) {
-				if (module->noteProcessingEnabled && row < module->patternLength) {
-					module->accent[row] = !module->accent[row];
-				}
-			}
-			
-			e.consume(this);
-		}
-		
-		LightWidget::onButton(e);
-	}
-};
-
-struct HoldButton : LightWidget {
-	Arpeggiator* module;
-	NVGcolor activeColor;
-	NVGcolor inactiveColor;
-
-	void drawLight(const DrawArgs& args) override {
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 3.0);
-		if (module)
-			nvgFillColor(args.vg,module->hold ? activeColor : inactiveColor);
-		else
-			nvgFillColor(args.vg, inactiveColor);
-		
-		nvgFill(args.vg);
-		
-		nvgStrokeWidth(args.vg, 2);
-		nvgStrokeColor(args.vg, module ? module->bezelColor : SCHEME_BLACK);
-		nvgStroke(args.vg);
-	}
-
-	void onButton(const event::Button& e) override {
-		if (e.button == GLFW_MOUSE_BUTTON_LEFT) {
-			e.stopPropagating();
-			if (e.action ==GLFW_PRESS) {
-				if (!module->holdCV)
-					module->hold = !module->hold;
-			}
-			
-			e.consume(this);
-		}
-		
-		LightWidget::onButton(e);
 	}
 };
 
 struct ArpeggiatorWidget : ModuleWidget {
-
+	const NVGcolor BUTTON_GREEN = nvgRGB(0xae, 0xd1, 0x71);
 	const NVGcolor activePatternColors[5] = {SCHEME_GREEN, SCHEME_RED, SCHEME_YELLOW, SCHEME_BLUE, SCHEME_PURPLE};
 	const NVGcolor activeOctaveColors[3] = {SCHEME_RED, SCHEME_GREEN,SCHEME_YELLOW};
-	const NVGcolor inactiveColor = nvgRGB(0x5a, 0x5a, 0x5a);
+	const NVGcolor inactiveColor = nvgRGB(0x2a, 0x2a, 0x2a);
 
 	std::string panelName;
 	
 	ArpeggiatorWidget(Arpeggiator *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 
@@ -903,6 +1071,9 @@ struct ArpeggiatorWidget : ModuleWidget {
 
 		// pattern/octave buttons and lights
 		float offset = 0.0f;
+		int pLid = Arpeggiator::PROGRAMME_LIGHTS;
+		int oLid = Arpeggiator::OCTAVE_LIGHTS;
+		int mLid = Arpeggiator::MODIFY_LIGHTS;
 		for (int i = 0; i < ARP_NUM_STEPS; i++) {
 			addChild(createLightCentered<SmallLight<CountModulaLightRG>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] - 10, CUSTOM_ROWS5[STD_ROW1] + offset), module, Arpeggiator::STEP_LIGHTS + (i* 2)));
 
@@ -917,7 +1088,8 @@ struct ArpeggiatorWidget : ModuleWidget {
 				patternButton->value = j;
 				patternButton->activeColor = activePatternColors[j];
 				patternButton->inactiveColor = inactiveColor;
-				addChild(patternButton);		
+				patternButton->firstLightId = pLid++;
+				addChild(patternButton);
 				k += 20;
 			}
 			
@@ -932,31 +1104,68 @@ struct ArpeggiatorWidget : ModuleWidget {
 				octaveButton->value = j;
 				octaveButton->activeColor = activeOctaveColors[j];
 				octaveButton->inactiveColor = inactiveColor;
-				addChild(octaveButton);		
+				octaveButton->firstLightId = oLid++;
+				addChild(octaveButton);
 				k += 20;
 			}
 			
 			// glide buttons
-			k = 6;
 			GlideButton* glideButton = new GlideButton();
-			glideButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
+			glideButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9] - 1, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
 			glideButton->box.size = Vec(14, 14);
 			glideButton->module = module;
 			glideButton->row = i;
 			glideButton->activeColor = SCHEME_GREEN;
 			glideButton->inactiveColor = inactiveColor;
+			glideButton->firstLightId = mLid++;
 			addChild(glideButton);		
 			
 			// accent buttons
-			k = 4	;
 			AccentButton* accentButton = new AccentButton();
-			accentButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL10] + k - 7, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
+			accentButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL10] -3, CUSTOM_ROWS5[STD_ROW1] - 7 + offset);
 			accentButton->box.size = Vec(14, 14);
 			accentButton->module = module;
 			accentButton->row = i;
 			accentButton->activeColor = SCHEME_GREEN;
 			accentButton->inactiveColor = inactiveColor;
-			addChild(accentButton);		
+			accentButton->firstLightId = mLid++;
+			addChild(accentButton);
+			
+			// separators
+			if (i > 0) {
+				// pattern buttons
+				ArpeggiatorTouchSeparator *patSep = new ArpeggiatorTouchSeparator();
+				patSep->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL3] + 5, CUSTOM_ROWS5[STD_ROW1] - 14 + offset);
+				patSep->box.size = Vec(90, 1);
+				patSep->module = module;
+				patSep->row = i;
+				patSep->col = 1;
+				patSep->activeColor = SCHEME_WHITE;
+				patSep->inactiveColor = inactiveColor;
+				addChild(patSep);
+				
+				// octave buttons
+				ArpeggiatorTouchSeparator *octSep = new ArpeggiatorTouchSeparator();
+				octSep->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL7] - 7, CUSTOM_ROWS5[STD_ROW1] - 14 + offset);
+				octSep->box.size = Vec(50, 1);
+				octSep->module = module;
+				octSep->row = i;
+				octSep->col = 2;
+				octSep->activeColor = SCHEME_WHITE;
+				octSep->inactiveColor = inactiveColor;
+				addChild(octSep);
+				
+				// modify buttons
+				ArpeggiatorTouchSeparator *modSep = new ArpeggiatorTouchSeparator();
+				modSep->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL9], CUSTOM_ROWS5[STD_ROW1] - 14 + offset);
+				modSep->box.size = Vec(40, 1);
+				modSep->module = module;
+				modSep->row = i;
+				modSep->col = 3;
+				modSep->activeColor = SCHEME_WHITE;
+				modSep->inactiveColor = inactiveColor;
+				addChild(modSep);
+			}
 			
 			offset += 27.f;
 		}
@@ -972,13 +1181,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4] + 8, STD_ROWS8[STD_ROW8] + 15), module, Arpeggiator::NOTE_PARAM, Arpeggiator::NOTE_PARAM_LIGHT));
 		
 		// hold button
-		HoldButton* holdButton = new HoldButton();
-		holdButton->box.pos = Vec(STD_COLUMN_POSITIONS[STD_COL2] - 5, STD_ROWS8[STD_ROW1] - 11);
-		holdButton->box.size = Vec(22, 22);
-		holdButton->module = module;
-		holdButton->activeColor = SCHEME_GREEN;
-		holdButton->inactiveColor = inactiveColor;
-		addChild(holdButton);		
+		addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 6, STD_ROWS8[STD_ROW1]), module, Arpeggiator::HOLD_PARAM, Arpeggiator::HOLD_PARAM_LIGHT));
 
 		// cv status lights
 		offset = 10.0f;
@@ -1018,7 +1221,7 @@ struct ArpeggiatorWidget : ModuleWidget {
 		
 		PolyMenuItem *polyMenuItem = createMenuItem<PolyMenuItem>("Polyphonic Outputs", CHECKMARK(module->polyOutputs));
 		polyMenuItem->module = module;
-		menu->addChild(polyMenuItem);		
+		menu->addChild(polyMenuItem);
 	
 	}	
 	
@@ -1030,6 +1233,6 @@ struct ArpeggiatorWidget : ModuleWidget {
 		
 		Widget::step();
 	}	
-};	
+};
 
 Model *modelArpeggiator = createModel<Arpeggiator, ArpeggiatorWidget>("Arpeggiator");

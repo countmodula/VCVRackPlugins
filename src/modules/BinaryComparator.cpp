@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Binary Comparator Module
-//  Copyright (C) 202  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -40,7 +40,6 @@ struct BinaryComparator : Module {
 		NUM_LIGHTS
 	};
 
-	
 	GateProcessor gpA[8];
 	GateProcessor gpB[8];
 
@@ -54,9 +53,21 @@ struct BinaryComparator : Module {
 	BinaryComparator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
+		std::ostringstream  buffer;
 		for (int i = 0; i < 8 ; i++) {
-			configParam(BIT_PARAMS + i, 0.0f, 1.0f, 0.0f, "Compare bit");
+			buffer.str("");
+			buffer << "bit " << i;
+			configButton(BIT_PARAMS + i, "Manual " + buffer.str());
+			configInput(A_INPUTS + i, "A " + buffer.str());
+			configInput(B_INPUTS + i, "B " + buffer.str());
 		}
+
+		configOutput(LT_OUTPUT,"A < B");
+		configOutput(LTE_OUTPUT,"A <= B");
+		configOutput(EQ_OUTPUT,"A = B");
+		configOutput(GTE_OUTPUT,"A >= B");
+		configOutput(GT_OUTPUT,"A > B");
+		configOutput(NE_OUTPUT,"A <> B");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -131,7 +142,9 @@ struct BinaryComparatorWidget : ModuleWidget {
 	BinaryComparatorWidget(BinaryComparator *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

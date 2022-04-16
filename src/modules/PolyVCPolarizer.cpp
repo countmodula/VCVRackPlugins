@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Polarizer Module
 //	AA 2 channel voltage controlled signal polarizer
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"
@@ -41,8 +41,16 @@ struct PolyVCPolarizer : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
-		configParam(MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
-
+		configParam(MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Polarity");
+		
+		configInput(CV_INPUT, "Polarity CV");
+		inputInfos[CV_INPUT]->description = "Summed with the manual polarity amount";
+		configInput(SIGNAL_INPUT, "Signal");
+		
+		configOutput(SIGNAL_OUTPUT, "Signal");
+		
+		configBypass(SIGNAL_INPUT, SIGNAL_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -119,7 +127,9 @@ struct PolyVCPolarizerWidget : ModuleWidget {
 	PolyVCPolarizerWidget(PolyVCPolarizer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

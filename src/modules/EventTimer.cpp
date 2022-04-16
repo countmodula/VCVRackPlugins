@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Event timer
-// A count down timer to generate events at a specific moment
-//  Copyright (C) 2020  Adam Verspaget
+//	A count down timer to generate events at a specific moment
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../components/CountModulaLEDDisplay.hpp"
@@ -56,10 +56,10 @@ struct EventTimer : Module {
 	bool dnButtonStatus[3] = {};
 	
 	int count = 0; 
+	int displayCount = 0; 
 	int length = 0;
 
-	char buffer[10];
-	bool update = true;;
+	bool update = true;
 	bool running = false;
 	bool end = false;
 	
@@ -75,13 +75,25 @@ struct EventTimer : Module {
 		int l = 100;
 		for(int i = 0; i < 3; i++) {
 			sprintf(buttonText, "Increment %d's", l);
-			configParam(UP_PARAMS + i, 0.0f, 1.0f, 0.0f, buttonText);
+			configButton(UP_PARAMS + i, buttonText);
 			sprintf(buttonText, "Decrement %d's", l);
-			configParam(DN_PARAMS + i, 0.0f, 1.0f, 0.0f, buttonText);
+			configButton(DN_PARAMS + i, buttonText);
 			
 			l = l / 10;
 		}
 		
+		configButton(TRIGGER_PARAM, "Manual trigger");
+		configButton(RESET_PARAM, "Manual reset");
+
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(TRIGGER_INPUT, "Trigger");
+
+		configOutput(END_OUTPUT, "End gate");
+		configOutput(ENDT_OUTPUT, "End trigger");
+
+		displayCount = count;
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -93,7 +105,7 @@ struct EventTimer : Module {
 		
 		pgEnd.reset();
 		
-		count = 0;
+		displayCount = count = 0;
 		length = 0;
 		running = false;
 		update = true;
@@ -134,13 +146,13 @@ struct EventTimer : Module {
 
 		if (run) 
 			running = json_boolean_value(run);
-		
+
 		update = false;
-		sprintf(buffer, "%03d", count);
-		divDisplay->text = buffer;		
-		
+		displayCount = count;
+
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
 	}
 	
 	void process(const ProcessArgs &args) override {
@@ -244,8 +256,7 @@ struct EventTimer : Module {
 		
 		// update the display
 		if (update) {
-			sprintf(buffer, "%03d", count);
-			divDisplay->text = buffer;
+			displayCount = count;
 			
 			// reset update flag so we don't update the display until actually need to
 			update = false;
@@ -289,11 +300,14 @@ struct EventTimer : Module {
 struct EventTimerWidget : ModuleWidget {
 
 	std::string panelName;
+	CountModulaLEDDisplayLarge3 *divDisplay;
 	
 	EventTimerWidget(EventTimer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -310,7 +324,7 @@ struct EventTimerWidget : ModuleWidget {
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW4]), module, EventTimer::RESET_INPUT));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS6[STD_ROW5]), module, EventTimer::CLOCK_INPUT));
 	
-		// clock and reset buttons
+		// trigger and reset buttons
 		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW3]), module, EventTimer::TRIGGER_PARAM, EventTimer::TRIGGER_PARAM_LIGHT));
 		addParam(createParamCentered<CountModulaLEDPushButtonMomentary<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW4]), module, EventTimer::RESET_PARAM, EventTimer::RESET_PARAM_LIGHT));
 	
@@ -324,13 +338,11 @@ struct EventTimerWidget : ModuleWidget {
 		addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 13, STD_ROWS6[STD_ROW6] - 19), module, EventTimer::ENDT_LIGHT));
 	
 		// LED display
-		CountModulaLEDDisplayLarge3 *display = new CountModulaLEDDisplayLarge3();
-		display->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
-		display->text =  "   ";
-		addChild(display);
+		divDisplay = new CountModulaLEDDisplayLarge3();
+		divDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_HALF_ROWS6(STD_ROW1)));
+		divDisplay->text =  "000";
+		addChild(divDisplay);
 		
-		if (module)
-			module->divDisplay = display;
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -349,6 +361,10 @@ struct EventTimerWidget : ModuleWidget {
 	
 	void step() override {
 		if (module) {
+			// process any change in count
+			if (module)
+				divDisplay->text = rack::string::f("%03d", ((EventTimer *)(module))->displayCount);
+			
 			// process any change of theme
 			#include "../themes/step.hpp"
 		}

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - OR Logic Gate Module
 //	A 4 input OR gate logic module with inverted output
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -77,6 +77,20 @@ struct BooleanOR : Module {
 	BooleanOR() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(A_INPUT, "A");
+		configInput(B_INPUT, "B");
+		configInput(C_INPUT, "C");
+		configInput(D_INPUT, "D");
+		configInput(I_INPUT, "Inverter");
+		
+		inputInfos[B_INPUT]->description = "Normalled to A Input";
+		inputInfos[C_INPUT]->description = "Normalled to B Input";
+		inputInfos[D_INPUT]->description = "Normalled to C Input";
+		inputInfos[I_INPUT]->description = "Normalled to OR output";
+
+		configOutput(OR_OUTPUT, "Logical OR");
+		configOutput(INV_OUTPUT, "Inverter");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -167,7 +181,9 @@ struct BooleanORWidget : ModuleWidget {
 	BooleanORWidget(BooleanOR *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

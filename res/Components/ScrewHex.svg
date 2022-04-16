@@ -7,6 +7,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="15"
@@ -14,10 +15,54 @@
    viewBox="0 0 3.9687499 3.9687501"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="ScrewHex.svg">
   <defs
-     id="defs2" />
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1385">
+      <stop
+         style="stop-color:#333333;stop-opacity:1;"
+         offset="0"
+         id="stop1381" />
+      <stop
+         style="stop-color:#666666;stop-opacity:1"
+         offset="1"
+         id="stop1383" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient826">
+      <stop
+         style="stop-color:#999999;stop-opacity:1"
+         offset="0"
+         id="stop822" />
+      <stop
+         style="stop-color:#cccccc;stop-opacity:1"
+         offset="1"
+         id="stop824" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient826"
+       id="linearGradient828"
+       x1="1.9887275"
+       y1="295.21472"
+       x2="2.0011997"
+       y2="293.33243"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1385"
+       id="linearGradient1387"
+       x1="1.9979707"
+       y1="293.70361"
+       x2="1.9874837"
+       y2="295.84314"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9562555,0,0,0.9562555,0.08680548,12.905309)" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,9 +70,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="63.356767"
-     inkscape:cx="5.5789514"
-     inkscape:cy="7.4558718"
+     inkscape:zoom="22.4"
+     inkscape:cx="5.3045294"
+     inkscape:cy="5.3886627"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -55,25 +100,25 @@
      id="layer1"
      transform="translate(0,-293.03123)">
     <circle
-       style="opacity:1;fill:#b3b3b3;fill-opacity:1;stroke:#666666;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       style="opacity:1;fill:url(#linearGradient828);fill-opacity:1;stroke:#666666;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="path815"
        cx="1.984375"
        cy="295.01559"
        r="1.65" />
     <path
        sodipodi:type="star"
-       style="opacity:1;fill:#808080;fill-opacity:1;stroke:#808080;stroke-width:0.30000001;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       style="opacity:1;fill:url(#linearGradient1387);fill-opacity:1;stroke:#666666;stroke-width:0.05;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="path819"
        sodipodi:sides="6"
        sodipodi:cx="1.984375"
-       sodipodi:cy="295.01562"
-       sodipodi:r1="1.1398957"
-       sodipodi:r2="0.98717856"
+       sodipodi:cy="295.01561"
+       sodipodi:r1="1.254649"
+       sodipodi:r2="1.0865577"
        sodipodi:arg1="1.5811587"
        sodipodi:arg2="2.1047574"
        inkscape:flatsided="true"
        inkscape:rounded="0"
        inkscape:randomized="0"
-       d="m 1.9725632,296.15546 -0.98121972,-0.58015 0.0118118,-1.13983 0.9930315,-0.55969 0.9812197,0.58015 -0.011812,1.13983 z" />
+       d="m 1.9713741,296.27021 -1.07999916,-0.63855 0.0130009,-1.25458 1.09300005,-0.61604 1.0799992,0.63855 -0.013001,1.25458 z" />
   </g>
 </svg>

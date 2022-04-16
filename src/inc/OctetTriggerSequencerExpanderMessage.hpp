@@ -7,7 +7,7 @@
 
 // utility macros 
 #define isExpanderModule(x) x->model == modelOctetTriggerSequencerCVExpander || x->model == modelOctetTriggerSequencerGateExpander 
-#define isExpandableModule(x) x->model == modelOctetTriggerSequencer || x->model == modelOctetTriggerSequencerCVExpander || x->model == modelOctetTriggerSequencerGateExpander
+#define isExpandableModule(x) x->model == modelOctetTriggerSequencer || x->model == modelNibbleTriggerSequencer || x->model == modelOctetTriggerSequencerCVExpander || x->model == modelOctetTriggerSequencerGateExpander
 
 #define CHANNEL_A 0
 #define CHANNEL_B 1

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Standard Sequencer Engine
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 
 struct STRUCT_NAME : Module {
@@ -67,13 +67,13 @@ struct STRUCT_NAME : Module {
 	int directionMode = FORWARD;
 	bool oneShot = false;
 	bool oneShotEnded = false;
-	float moduleVersion = 0.0f;
+	float moduleVersion = 1.1f;
 	
 	float cv = 0.0f;
 	bool prevGate = false;
 	bool running = false;
 		
-	float lengthCVScale = (float)(SEQ_NUM_STEPS);
+	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
 	
 	SequencerChannelMessage rightMessages[2][1]; // messages to right module (expander)
 	
@@ -85,25 +85,37 @@ struct STRUCT_NAME : Module {
 		
 		// length, direction and address params
 		configParam(LENGTH_PARAM, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), "Length");
-		configParam(DIRECTION_PARAM, 0.0f, 8.0f, 0.0f, "Direction");
+		configSwitch(DIRECTION_PARAM, 0.0f, 8.0f, 0.0f, "Direction", {"Forward", "Pendulum", "Reverse", "Random", "Forward 1-Shot", "Pendulum 1-Shot", "Reverse 1-Shot", "Random 1-Shot", "Voltage addressed"});
 		configParam(ADDR_PARAM, 0.0f, 10.0f, 0.0f, "Address");
 		
 		// cv/gate params
-		char stepText[20];
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			sprintf(stepText, "Step %d select", s + 1);
-			configParam(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, stepText);
-			
-			sprintf(stepText, "Step %d value", s + 1);
-			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, stepText, " V", 0.0f, 8.0f, 0.0f);
+			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
+			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
 		}
 		
 		// range switch
-		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale");
+		configSwitch(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale", {"1 Volt", "2 Volts", "3 Volts", "4 Volts", "5 Volts", "6 Volts", "7 Volts", "8 Volts"} );
 		
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode");
+		configSwitch(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode", {"Trigger", "Off", "Gate"});
 		
+		configInput(RUN_INPUT, "Run");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(LENGTH_INPUT, "Length CV");
+		configInput(DIRECTION_INPUT, "Direction CV");
+		
+		configInput(ADDRESS_INPUT, "Voltage addressed CV");
+		inputInfos[ADDRESS_INPUT]->description = "When connected, this input is attenuated by the Address knob";		
+		
+		configOutput(GATE_OUTPUT, "Gate");
+		configOutput(TRIG_OUTPUT, "Trigger");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
+		
+		configOutput(END_OUTPUT, "1-Shot end");
+		outputInfos[END_OUTPUT]->description = "Gate output, goes high at the end of the 1-Shot cycle";
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -116,7 +128,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
@@ -130,11 +142,15 @@ struct STRUCT_NAME : Module {
 	
 	void dataFromJson(json_t* root) override {
 		
+		json_t *version = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *dir = json_object_get(root, "direction");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
-		
+
+		if (version)
+			moduleVersion = json_number_value(version);			
+
 		if (currentStep)
 			count = json_integer_value(currentStep);
 		
@@ -469,7 +485,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -564,11 +582,11 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerInit)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->reset();
 				
 				// cv knobs
 				if (cvInit)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->reset();
+					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -628,10 +646,10 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerRand)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->randomize();
 				
 				if (cvRand)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->randomize();
+					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings

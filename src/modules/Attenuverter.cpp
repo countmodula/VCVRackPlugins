@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Attenuverter Module
 //	A dual manual CV generator
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -41,8 +41,17 @@ struct Attenuverter : Module {
 	Attenuverter() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(ATTENUATE_PARAM, -1.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+		configParam(ATTENUATE_PARAM, -1.0f, 1.0f, 0.0f, "Level", " %", 0.0f, 100.0f, 0.0f);
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Attenuvert", "Attenuate"});
+		configInput(SIGNAL_INPUT, "Channel A");
+		configInput(SIGNAL_INPUT + 1, "Channel B");
+		configOutput(SIGNAL_OUTPUT, "Channel A");
+		configOutput(SIGNAL_OUTPUT + 1, "Channel B");
+		configOutput(INVERTED_OUTPUT, "Channel A inverted");
+		configOutput(INVERTED_OUTPUT + 1, "Channel B inverted");
+		
+		configBypass(SIGNAL_INPUT, SIGNAL_OUTPUT);
+		configBypass(SIGNAL_INPUT + 1, SIGNAL_OUTPUT + 1);
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -132,7 +141,9 @@ struct AttenuverterWidget : ModuleWidget {
 	AttenuverterWidget(Attenuverter *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

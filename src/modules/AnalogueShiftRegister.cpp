@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Analogue Shift Register Module
 //	A Dual 4 output/ single 8 output analaogue shift register 
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -91,6 +91,20 @@ struct AnalogueShiftRegister : Module {
 	AnalogueShiftRegister() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(CH1_SIGNAL_INPUT, "Signal 1");
+		configInput(CH1_CLOCK_INPUT, "Shift 1");
+		configInput(CH2_SIGNAL_INPUT, "Signal 2");
+		configInput(CH2_CLOCK_INPUT, "Shift 2");
+		
+		configOutput(CH1_A_OUTPUT, "Stage A");
+		configOutput(CH1_B_OUTPUT, "Stage B");
+		configOutput(CH1_C_OUTPUT, "Stage C");
+		configOutput(CH1_D_OUTPUT, "Stage D");
+		configOutput(CH2_A_OUTPUT, "Stage E");
+		configOutput(CH2_B_OUTPUT, "Stage F");
+		configOutput(CH2_C_OUTPUT, "Stage G");
+		configOutput(CH2_D_OUTPUT, "Stage H");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -140,16 +154,17 @@ struct AnalogueShiftRegister : Module {
 };
 
 struct AnalogueShiftRegisterWidget : ModuleWidget {
-
 	std::string panelName;
 	
 	AnalogueShiftRegisterWidget(AnalogueShiftRegister *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
-		#include "../components/stdScrews.hpp"	
+		#include "../components/stdScrews.hpp"
 
 		for (int i = 0; i < 2; i++) {
 			// clock and cv inputs
@@ -174,7 +189,7 @@ struct AnalogueShiftRegisterWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
-	}	
+	}
 	
 	void step() override {
 		if (module) {

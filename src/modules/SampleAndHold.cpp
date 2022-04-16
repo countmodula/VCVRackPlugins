@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Sample & Hold Module
 //	Sample/Track/Pass and Hold
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -50,7 +50,14 @@ struct SampleAndHold : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		// tracking mode switch
-		configParam(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Sample, Track or Pass Mode");
+		configSwitch(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Hold mode",{"Sample & Hold", "Through", "Track & Hold"});
+
+		configInput(SAMPLE_INPUT, "Signal");
+		configInput(TRIG_INPUT, "Trigger");
+		configInput(MODE_INPUT, "Hold mode CV");
+
+		configOutput(SAMPLE_OUTPUT, "Sampled signal");
+		configOutput(INV_OUTPUT, "Inverted sampled signal");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -125,8 +132,10 @@ struct SampleAndHoldWidget : ModuleWidget {
 	SampleAndHoldWidget(SampleAndHold *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 

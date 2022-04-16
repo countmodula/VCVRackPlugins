@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Trigger Sequencer Module
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 struct STRUCT_NAME : Module {
 
@@ -30,7 +30,7 @@ struct STRUCT_NAME : Module {
 		NUM_LIGHTS
 	};
 	
-	float moduleVersion = 1.1f;
+	float moduleVersion = 1.2f;
 	
 	GateProcessor gateClock[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateReset[TRIGSEQ_NUM_ROWS];
@@ -41,7 +41,7 @@ struct STRUCT_NAME : Module {
 	int length[TRIGSEQ_NUM_ROWS] = {};
 	bool running[TRIGSEQ_NUM_ROWS] = {};
 	
-	float lengthCVScale = (float)(TRIGSEQ_NUM_STEPS);
+	float lengthCVScale = (float)(TRIGSEQ_NUM_STEPS - 1);
 	
 	int startUpCounter = 0;
 	
@@ -51,31 +51,41 @@ struct STRUCT_NAME : Module {
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
-		
+
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		char rowText[20];
-		
+		std::vector<std::string> channelLabels[TRIGSEQ_NUM_ROWS] = {{"A", "B"}, {"C", "D"}, {"E", "F"}, {"G", "H"}};
+		std::vector<std::string> outputSelectLabels[TRIGSEQ_NUM_ROWS] = {{"B", "Off", "A"}, {"D", "Off", "C"}, {"F", "Off", "E"}, {"H", "Off", "G"}};
+
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			
 			// length & CV parms
-			sprintf(rowText, "Channel %d length", r + 1);
-			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), rowText);
+			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), rack::string::f( "Channel %d length", r + 1));
 			
 			// row lights and switches
 			int i = 0;
-			char stepText[20];
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
-				sprintf(stepText, "Step %d select", s + 1);
-				configParam(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, stepText);
+				configSwitch(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), outputSelectLabels[r]);
 			}
 			
 			// output lights, mute buttons and jacks
 			for (int i = 0; i < 2; i++) {
-				configParam(MUTE_PARAMS + + (r * 2) + i, 0.0f, 1.0f, 0.0f, "Mute this output");
+				configButton(MUTE_PARAMS + (r * 2) + i, rack::string::f("Mute output %s", channelLabels[r][i].c_str()));
+				configOutput(TRIG_OUTPUTS + (r * 2) + i, rack::string::f("Trigger %s", channelLabels[r][i].c_str()));
+			}
+			
+			configInput(RUN_INPUTS + r, rack::string::f("Channel %d run", r + 1));
+			configInput(CLOCK_INPUTS + r, rack::string::f("Channel %d clock", r + 1));
+			configInput(RESET_INPUTS + r, rack::string::f("Channel %d reset", r + 1));
+			configInput(CV_INPUTS + r, rack::string::f("Channel %d length CV", r + 1));
+			if (r > 0) {
+				inputInfos[RUN_INPUTS + r]->description = rack::string::f("Normalled to channel %d run input", r);
+				inputInfos[CLOCK_INPUTS + r]->description = rack::string::f("Normalled to channel %d clock input", r);
+				inputInfos[RESET_INPUTS + r]->description = rack::string::f("Normalled to channel %d reset input", r);
 			}
 		}
+		
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// expander
@@ -143,12 +153,6 @@ struct STRUCT_NAME : Module {
 				running[i] = gateRun[i].high();
 			}
 		}
-		
-		// older module version, use the old length CV scale
-		if (moduleVersion < 1.1f) {
-			lengthCVScale = (float)(TRIGSEQ_NUM_STEPS - 1);		
-		}
-		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -335,7 +339,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -410,12 +416,12 @@ struct WIDGET_NAME : ModuleWidget {
 			// we're doing the entire channel so do the common controls here
 			if (allInit) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->reset();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->reset();
 			}
 			
 			// triggers/gates
 			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->reset();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -447,12 +453,12 @@ struct WIDGET_NAME : ModuleWidget {
 			// we're doing the entire channel so do the common controls here
 			if (allRand) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->randomize();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->randomize();
 			}
 			
 			// triggers/gates
 			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->randomize();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings

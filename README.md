@@ -4,7 +4,7 @@
 <center>
 <img src="./img/CountModulaLogo.png" alt="Count Modula">
 <h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
-<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v2 by Adam Verspaget (Count Modula)</h2>
 </center>
 </td>
 </tr>
@@ -12,9 +12,9 @@
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
-All source code in this repository is copyright © 2021 Adam Verspaget/Count Modula and licensed under GNU GPLv3
+All source code in this repository is copyright © 2022 Adam Verspaget/Count Modula and licensed under GNU GPLv3
 
-All graphics including the Count Modula logo, panels and components are copyright © 2021 Adam Verspaget/Count Modula and may not be used in derivative works.
+All graphics including the Count Modula logo, panels and components are copyright © 2022 Adam Verspaget/Count Modula and may not be used in derivative works.
 
 <h3>Donate</h3>
 Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
@@ -26,9 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 1.16.0</h3>
-<p>
-FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer t the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
+<h3>Modules - Release 2.1.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -36,6 +34,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <a href="MANUAL.md">User Guides</a>
 </p>
 <ul>
+<li>4 Bit Sequnce Encoder</li>
 <li>Analogue Shift Register</li>
 <li>Attenuator</li>
 <li>Attenuverter</li>
@@ -87,19 +86,20 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <li>Minimus Maximus</li>
 <li>Mixer</li>
 <li>Morph Shaper</li>
-<li>Multiple <font color="red">* New in v1.16.0</font></li>
+<li>Multiple</li>
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>
+<li>Nibble Trigger Sequencer <font color="red">* New in v2.1.0</font></li>
 <li>Octet Trigger Sequencer</li>
 <li>Octet Trigger Sequencer CV Expander</li>
-<li>Octet Trigger Sequencer Gate Expander <font color="red">* New in v1.16.0</font></li>
+<li>Octet Trigger Sequencer Gate Expander </li>
 <li>Offset Generator</li>
 <li>Oscilloscope</li>
 <li>Palette
 <li>Polyphonic Breakout</li>
 <li>Poly Chances</li>
-<li>Poly Gate Modifier <font color="red">* New in v1.16.0</font></li>
+<li>Poly Gate Modifier</li>
 <li>Poly Gate to Trigger</li>
 <li>Poly Logic</li>
 <li>Polyphonic Manual CV</li>
@@ -107,9 +107,10 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <li>Polyphonic Mute</li>
 <li>Poly VC Polarizer</li>
 <li>Poly VC Switch</li>
-<li>Polyrhythmic Generator <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li>Polyrhythmic Generator MkII</li>
 <li>Rack Ears</li>
+<li>Random Access Switch 1-8 <font color="red">* New in v2.1.0</font></li>
+<li>Random Access Switch 8-1 <font color="red">* New in v2.1.0</font></li>
 <li>Rectifier</li>
 <li>Sample & Hold</li>
 <li>Sequencer Expanders
@@ -126,7 +127,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <li>Startup Delay</li>
 <li>Sub Harmonic Generator</li>
 <li>Super Arpeggiator</li>
-<li>Super Sample & Hold <font color="red">* New in v1.16.0</font></li>
+<li>Super Sample & Hold</li>
 <li>Switch 1-8 - 1 To 8 VC Sequential Switch/Router </li>
 <li>Switch 1-16 - 1 To 16 VC Sequential Switch/Router </li>
 <li>Switch 8-1 - 8 To 1 VC Sequential Switch/Selector </li>
@@ -146,7 +147,6 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <li>Trigger Sequencer (8 Step)</li>
 <li>Trigger Sequencer (16 Step)</li>
 <li>Trigger Sequencer Gate Expander</li>
-<li>Voltage Controlled Frequency Divider <font color="red">(Deprecated: please use the MkII version instead. Refer to the MkII manual to find out how to convert your patches.)</font></li>
 <li>Voltage Controlled Frequency Divider MkII</li>
 <li>Voltage Controlled Polarizer</li>
 <li>Voltage Controlled Pulse Divider</li>

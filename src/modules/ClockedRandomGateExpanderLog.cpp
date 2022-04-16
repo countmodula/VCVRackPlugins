@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Clocked Random Gate CV Expander
-//  Adds CV functionality to the Clocked Random Gates module
-//  Copyright (C) 2019  Adam Verspaget
+//	Adds CV functionality to the Clocked Random Gates module
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -88,15 +88,20 @@ struct ClockedRandomGateExpanderLog : Module {
 		rightExpander.consumerMessage = rightMessages[1];	
 		
 		// step params
-		for (int s = 0; s < CRG_EXP_NUM_CHANNELS; s++) {
-			configParam(STEP_LOGIC_PARAMS + s, 0.0f, 1.0f, 0.0f, "Logic value");
+		std::string s;
+		for (int c = 0; c < CRG_EXP_NUM_CHANNELS; c++) {
+			s = "Channel " + std::to_string(c + 1) + " logic";
+			configSwitch(STEP_LOGIC_PARAMS + c, 0.0f, 1.0f, 0.0f, s, {"Ignore", "Compare"});
 		}
 		
 		// trigger source switch
-		configParam(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "Sync Source");
-			
+		configSwitch(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "Sync", {"Off", "Gate", "Trigger", "Gated clock", "Clock"});
+		
 		// trigger channel switch
-		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Sync Channel");
+		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Source channel");
+		
+		configOutput(OR_OUTPUT, "OR");
+		configOutput(AND_OUTPUT,"AND");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -257,7 +262,9 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 	ClockedRandomGateExpanderLogWidget(ClockedRandomGateExpanderLog *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -293,7 +300,7 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->reset();
+				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -313,7 +320,7 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->randomize();
+				widget->getParam(ClockedRandomGateExpanderLog::STEP_LOGIC_PARAMS + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

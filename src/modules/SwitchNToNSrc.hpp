@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Standard Sequencer Engine
-//  Copyright (C) 2020  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - Standard switch Engine
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 
 struct STRUCT_NAME : Module {
@@ -85,11 +85,34 @@ struct STRUCT_NAME : Module {
 		
 		// length, direction and address params
 		configParam(LENGTH_PARAM, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), "Length");
-		configParam(DIRECTION_PARAM, 0.0f, 4.0f, 0.0f, "Direction");
+		configSwitch(DIRECTION_PARAM, 0.0f, 4.0f, 0.0f, "Direction", {"Forward", "Pendulum", "Reverse", "Random", "Voltage addressed"});
 		configParam(ADDR_PARAM, 0.0f, 10.0f, 0.0f, "Address");
 		
 		// hold mode switch
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode");
+		configSwitch(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Sample and hold mode", {"Track & Hold", "Through", "Sample & Hold"});
+		
+		configInput(RUN_INPUT, "Run");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(LENGTH_INPUT, "Length CV");
+		configInput(DIRECTION_INPUT, "Direction CV");
+		configInput(ADDRESS_INPUT, "Address CV");
+		
+#ifdef ONE_TO_N
+		configInput(SIGNAL_INPUT, "Signal");
+#endif
+#ifdef N_TO_ONE
+		configOutput(SIGNAL_OUTPUT, "Signal");
+#endif
+
+	for (int s = 0; s < SEQ_NUM_STEPS; s++) {
+#ifdef ONE_TO_N		
+			configOutput(SIGNAL_OUTPUTS + s, rack::string::f("%d", s+1));
+#endif
+#ifdef N_TO_ONE
+			configInput(SIGNAL_INPUTS + s,rack::string::f("%d", s+1));
+#endif
+		}
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -420,8 +443,10 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 

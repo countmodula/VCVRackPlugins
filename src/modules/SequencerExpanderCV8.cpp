@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Step Sequencer Module
-//  A classic 8 step CV/Gate sequencer
-//  Copyright (C) 2019  Adam Verspaget
+//	A classic 8 step CV/Gate sequencer
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -76,7 +76,10 @@ struct SequencerExpanderCV8 : Module {
 		}
 		
 		// range switch
-		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
+		configSwitch(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"8 Volts", "4 Volts", "2 Volts"});
+
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -248,8 +251,10 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 	SequencerExpanderCV8Widget(SequencerExpanderCV8 *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 
@@ -269,16 +274,16 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW7]), module, SequencerExpanderCV8::CV_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW8]), module, SequencerExpanderCV8::CVI_OUTPUT));
 	}
-	
-	char knobColours[5][50] = {	"res/Components/KnobRed.svg", 
-								"res/Components/KnobGreen.svg", 
-								"res/Components/KnobYellow.svg",  
-								"res/Components/KnobBlue.svg", 
-								"res/Components/KnobGrey.svg"};   	
+	// custom knob colour list for this module
+	const char knobColours[5][50] = {	"Red", 
+										"Green", 
+										"Yellow",  
+										"Blue", 
+										"Grey"};
 							
 	
 	// include the theme menu item struct we'll when we add the theme menu items
-	#include "../themes/ThemeMenuItem.hpp"							
+	#include "../themes/ThemeMenuItem.hpp"
 		
 	void appendContextMenu(Menu *menu) override {
 		SequencerExpanderCV8 *module = dynamic_cast<SequencerExpanderCV8*>(this->module);
@@ -314,10 +319,14 @@ struct SequencerExpanderCV8Widget : ModuleWidget {
 						break;
 				}
 	
+				char buffer[50];
+				sprintf(buffer, "res/Components/Knob%s.svg", knobColours[m]);
+				
 				for (int i = 0; i < SEQ_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(SequencerExpanderCV8::STEP_CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, knobColours[m]))); 
-					((CountModulaKnob *)(p))->dirtyValue = -1;
+					CountModulaKnob *p = (CountModulaKnob *)getParam(SequencerExpanderCV8::STEP_CV_PARAMS + i);
+					p->svgFile = knobColours[m];
+					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					p->fb->dirty = true;					
 				}
 				
 				((SequencerExpanderCV8*)module)->prevChannelID = cid;

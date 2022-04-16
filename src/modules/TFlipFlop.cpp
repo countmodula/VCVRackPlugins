@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - SR Flip Flop (Latch) Logic Gate Module
-//	A dual set/reset latch with gate enable
-//  Copyright (C) 2020  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - T Flip Flop (Latch) Logic Gate Module
+//	A dual toggle latch with gate enable
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -96,6 +96,15 @@ struct TFlipFlop : Module {
 	TFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		for (int i = 0; i < 2; i++) {
+			configInput(T_INPUT + i, rack::string::f("Flip flop %d T", i + 1));
+			configInput(RESET_INPUT + i, rack::string::f("Flip flop %d Reset", i + 1));
+			configInput(ENABLE_INPUT + i, rack::string::f("Flip flop %d Enable", i + 1));
+			
+			configOutput(Q_OUTPUT + i, rack::string::f("Flip flop %d Q", i + 1));
+			configOutput(NQ_OUTPUT + i, rack::string::f("Flip flop %d Not Q", i + 1));
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -181,7 +190,9 @@ struct TFlipFlopWidget : ModuleWidget {
 	TFlipFlopWidget(TFlipFlop *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -261,6 +272,13 @@ struct SingleTFlipFlop : Module {
 	SingleTFlipFlop() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
+		configInput(T_INPUT, "T");
+		configInput(RESET_INPUT, "Reset");
+		configInput(ENABLE_INPUT, "Enable");
+
+		configOutput(Q_OUTPUT, "Q");
+		configOutput(NQ_OUTPUT, "Not Q");
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -321,7 +339,9 @@ struct SingleTFlipFlopWidget : ModuleWidget {
 	SingleTFlipFlopWidget(SingleTFlipFlop *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	

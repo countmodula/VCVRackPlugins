@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Step Sequencer Module
-//  A classic 8 step CV/Gate sequencer
-//  Copyright (C) 2019  Adam Verspaget
+//	A classic 8 step CV/Gate sequencer
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -70,7 +70,12 @@ struct SequencerExpanderOut8 : Module {
 		rightExpander.consumerMessage = rightMessages[1];	
 		
 		// mode switch
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Gate", "Trigger"});
+
+		for (int i = 0; i < SEQ_NUM_STEPS; i++) {
+			configOutput(STEP_GATE_OUTPUTS + i, rack::string::f("Step %d gate/trigger", i + 1));
+
+		}
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -236,7 +241,9 @@ struct SequencerExpanderOut8Widget : ModuleWidget {
 	SequencerExpanderOut8Widget(SequencerExpanderOut8 *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	

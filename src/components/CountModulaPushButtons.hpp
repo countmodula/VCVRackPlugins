@@ -16,7 +16,7 @@ struct CountModulaPBLight : TBase {
 	void drawLight(const widget::Widget::DrawArgs& args) override {
 		nvgBeginPath(args.vg);
 		
-		// set rounded radius at 12% of overal size - closely matches the rounding on grey area of hte underlying button svg
+		// set rounded radius at 12% of overal size - closely matches the rounding on grey area of the underlying button svg
 		float r = std::min( this->box.size.x, this->box.size.y) * 0.12;
 		nvgRoundedRect(args.vg, 0.0, 0.0, this->box.size.x, this->box.size.y, r);
 
@@ -44,28 +44,17 @@ struct CountModulaPBLight : TBase {
 // Base for lit buttons
 struct CountModulaLitPB : SvgSwitch {
 	ModuleLightWidget* light;
-	
+
 	CountModulaLitPB() {
 		momentary = false;
- 		
+
 		// no shadow for buttons
 		shadow->opacity = 0.0f;
 	}
 	
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
-		
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
-	}	
+	void setFirstLightId(int firstLightId, engine::Module* module) {
 
-	void setFirstLightId(int firstLightId) {
-
-		if (paramQuantity)
-			light->module = paramQuantity->module;
+		light->module = module;
 		
 		light->firstLightId = firstLightId;
 		
@@ -77,26 +66,26 @@ struct CountModulaLitPB : SvgSwitch {
 		addChild(light);
 	}
 	
-	void onChange(const event::Change& e) override {
-
-		if (!frames.empty() && paramQuantity) {
-			int index = (int) std::round(paramQuantity->getValue() - paramQuantity->getMinValue());
+	void onChange(const ChangeEvent& e) override {
+		ParamQuantity* pq = getParamQuantity();
+	
+		if (!frames.empty() && pq) {
+			int index = (int) std::round(pq->getValue() - pq->getMinValue());
 			index = math::clamp(index, 0, (int) frames.size() - 1);
 			sw->setSvg(frames[index]);
 
 			light->module->lights[light->firstLightId].setBrightness(index > 0 ? 1.0 : 0.0);
 			fb->dirty = true;
 		}
-		
+
 		ParamWidget::onChange(e);
 	}
-	
-	void step() override{
 
-		if (light->module) {
-			light->module->lights[light->firstLightId].setBrightness(paramQuantity->getValue() > 0.5 ? 1.0 : 0.0);
-		}
-		
+	void step() override{
+		ParamQuantity* pq = getParamQuantity();
+		if (light->module && pq)
+			light->module->lights[light->firstLightId].setBrightness(pq->getValue() > 0.5 ? 1.0 : 0.0);
+
 		SvgSwitch::step();
 	}	
 };
@@ -127,20 +116,6 @@ struct CountModulaLEDPushButtonMomentary : CountModulaLitPBMomentary {
 		light = new LEDBezelLight<TLightBase>;
 
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-	}
-};
-
-// standard push button with mo randomisation function
-template <typename TLightBase = WhiteLight>
-struct CountModulaLEDPushButtonNoRandom :  CountModulaLitPB {
-	CountModulaLEDPushButtonNoRandom() {
-		light = new LEDBezelLight<TLightBase>;
-
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/PushButton_0.svg")));
-	}
-	
-	// no randomise
-	void randomize () override {
 	}
 };
 
@@ -216,7 +191,7 @@ TParamWidget* createParamCentered(math::Vec pos, engine::Module* module, int par
 	TParamWidget* o = createParam<TParamWidget>(pos, module, paramId);
 	o->box.pos = o->box.pos.minus(o->box.size.div(2));
 	
-	o->setFirstLightId(lightId);
+	o->setFirstLightId(lightId, module);
 	
 	return o;
 }
@@ -231,16 +206,6 @@ struct CountModulaPB :  SvgSwitch {
 	CountModulaPB() {
 		// no shadow for switches or buttons
 		shadow->opacity = 0.0f;
-	}
-
-	// override the base randomizer as it sets switches to invalid values.
-	void randomize() override {
-		SvgSwitch::randomize();
-		
-		if (paramQuantity->getValue() > 0.5f)
-			paramQuantity->setValue(1.0f);
-		else
-			paramQuantity->setValue(0.0f);
 	}
 };
 

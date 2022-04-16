@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - StartupDelay Module
 //	Startup Delay Module
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/PulseModifier.hpp"
@@ -45,6 +45,14 @@ struct StartupDelay : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		configParam(DELAY_PARAM, 1.0f, 30.0f, 1.0f, "Delay", " Seconds");		
+
+		configOutput(DELAY_OUTPUT, "Delay gate");
+		configOutput(GATE_OUTPUT, "End of delay gate");
+		configOutput(TRIG_OUTPUT, "End of delay trigger");
+
+		outputInfos[DELAY_OUTPUT]->description = "A gate signal that stays high during the delay phase";
+		outputInfos[GATE_OUTPUT]->description = "A gate signal that goes high at the end of the delay phase";
+		outputInfos[TRIG_OUTPUT]->description = "A trigger signal that fires at the end of the delay phase";
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -113,8 +121,10 @@ struct StartupDelayWidget : ModuleWidget {
 	StartupDelayWidget(StartupDelay *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 

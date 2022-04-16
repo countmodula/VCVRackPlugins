@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Polarizer Module
 //	AA 2 channel voltage controlled signal polarizer
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Polarizer.hpp"
@@ -36,6 +36,13 @@ struct Manifold : Module {
 		configParam(CHANNELS_PARAM, 1.0f, 16.0f, 1.0f, "Number of channels");
 		configParam(CHANNELS_PARAM + 1, 1.0f, 16.0f, 1.0f, "Number of channels");
 		
+		std::string inputLabels[4] = {"A", "B", "C", "D"};
+		for (int i = 0; i < 4; i++) {
+			configInput(SIGNAL_INPUT + i, inputLabels[i]);
+			configOutput(SIGNAL_OUTPUT + i, inputLabels[i]);
+			configBypass(SIGNAL_INPUT + i, SIGNAL_OUTPUT + i);
+		}
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -46,7 +53,7 @@ struct Manifold : Module {
 		json_object_set_new(root, "moduleVersion", json_integer(1));
 		
 		// add the theme details
-		#include "../themes/dataToJson.hpp"		
+		#include "../themes/dataToJson.hpp"
 				
 		return root;
 	}
@@ -96,7 +103,9 @@ struct ManifoldWidget : ModuleWidget {
 	ManifoldWidget(Manifold *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

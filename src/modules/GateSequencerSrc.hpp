@@ -1,8 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - 8 Channel Gate Sequencer Module
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
-
 struct STRUCT_NAME : Module {
 
 	enum ParamIds {
@@ -67,7 +66,9 @@ struct STRUCT_NAME : Module {
 	bool oneShotEnded = false;
 	bool running = false;
 	
-	float lengthCVScale = (float)(GATESEQ_NUM_STEPS);
+	float moduleVersion = 1.1f;
+	
+	float lengthCVScale = (float)(GATESEQ_NUM_STEPS - 1);
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -77,21 +78,32 @@ struct STRUCT_NAME : Module {
 		
 		// length, direction and address params
 		configParam(LENGTH_PARAM, 1.0f, (float)(GATESEQ_NUM_STEPS), (float)(GATESEQ_NUM_STEPS), "Length");
-		configParam(DIRECTION_PARAM, 0.0f, 8.0f, 0.0f, "Direction");
+		configSwitch(DIRECTION_PARAM, 0.0f, 8.0f, 0.0f, "Direction", {"Forward", "Pendulum", "Reverse", "Random", "Forward oneshot", "Pendulum oneshot", "Reverse oneshot", "Random oneshot", "Voltage addressed"});
 		configParam(ADDR_PARAM, 0.0f, 10.0f, 0.0f, "Address");
 		
-		
+		std::string trackName;
 		for (int r = 0; r < GATESEQ_NUM_ROWS; r++) {
+			trackName = "Track " + std::to_string(r + 1);
+			
 			// row lights and switches
-			char stepText[20];
 			for (int s = 0; s < GATESEQ_NUM_STEPS; s++) {
-				sprintf(stepText, "Step %d select", s + 1);
-				configParam(STEP_PARAMS + (r * GATESEQ_NUM_STEPS) + s, 0.0f, 1.0f, 0.0f, stepText);
+				configSwitch(STEP_PARAMS + (r * GATESEQ_NUM_STEPS) + s, 0.0f, 1.0f, 0.0f, trackName + " step " + std::to_string(s + 1), {"Off", "On"});
 			}
 			
 			// output lights, mute buttons and jacks
-			configParam(MUTE_PARAMS + r, 0.0f, 1.0f, 0.0f, "Mute this output");
+			configSwitch(MUTE_PARAMS + r, 0.0f, 1.0f, 0.0f, trackName + " mute", {"Off", "On"});
+			configOutput(GATE_OUTPUTS + r, trackName + " gate");
+			configOutput(TRIG_OUTPUTS + r, trackName + " trigger");
 		}
+			
+		configInput(RUN_INPUT, "Run");
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(LENGTH_INPUT, "Length CV");
+		configInput(DIRECTION_INPUT, "Direction CV");
+		configInput(ADDRESS_INPUT, "Address CV");
+	
+		configOutput(END_OUTPUT, "1-shot end");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -100,7 +112,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "clockState", json_boolean(gateClock.high()));
@@ -114,11 +126,15 @@ struct STRUCT_NAME : Module {
 	
 	void dataFromJson(json_t* root) override {
 		
+		json_t *version = json_object_get(root, "moduleVersion");
 		json_t *currentStep = json_object_get(root, "currentStep");
 		json_t *dir = json_object_get(root, "direction");
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
 
+		if (version)
+			moduleVersion = json_number_value(version);			
+		
 		if (currentStep)
 			count = json_integer_value(currentStep);
 		
@@ -425,7 +441,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -505,7 +523,7 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			// gates
 			for (int c = 0; c < GATESEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->reset();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
 			}
 
 			// history - new settings
@@ -531,7 +549,7 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			///gates
 			for (int c = 0; c < GATESEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->randomize();
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
 			}
 
 			// history - new settings
@@ -557,7 +575,7 @@ struct WIDGET_NAME : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 			
 			for (int c = 0; c < GATESEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->paramQuantity->setValue(pattern[c] ? 1.0f : 0.0f);
+				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * GATESEQ_NUM_STEPS) + c)->getParamQuantity()->setValue(pattern[c] ? 1.0f : 0.0f);
 			}
 
 			// history - new settings

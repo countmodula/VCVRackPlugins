@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Clocked Random Gate CV Expander
-//  Adds CV functionality to the Clocked Random Gates module
-//  Copyright (C) 2019  Adam Verspaget
+//	Adds CV functionality to the Clocked Random Gates module
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -92,13 +92,19 @@ struct ClockedRandomGateExpanderCV : Module {
 		}
 		
 		// trigger source switch
-		configParam(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "Trigger Source");
-			
-		// range switch
-		configParam(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale");
-
+		configSwitch(SOURCE_PARAM, 0.0f, 4.0f, 0.0f, "S&H trigger", {"Off", "Gate", "Trigger", "Gated clock", "Clock"});
+		
 		// trigger channel switch
-		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Trigger Channel");
+		configParam(CHANNEL_PARAM, 1.0f, 8.0f, 1.0f, "Trigger channel");
+		
+		// range switch
+		configSwitch(RANGE_SW_PARAM, 0.0f, 2.0f, 0.0f, "Scale", {"8V", "4V", "2V"});
+
+		configOutput(PULSE_OUTPUT, "Trigger");
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT,"Inverted CV");
+
+		outputInfos[PULSE_OUTPUT]->description = "Outputs the selected S&H trigger";
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -292,8 +298,10 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 	ClockedRandomGateExpanderCVWidget(ClockedRandomGateExpanderCV *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 
@@ -330,7 +338,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->paramQuantity->setValue(0.0f);
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->setValue(0.0f);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -352,7 +360,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->paramQuantity->setValue(binaryWeights[i]);
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->setValue(binaryWeights[i]);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -373,7 +381,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->reset();
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -393,7 +401,7 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->randomize();
+				widget->getParam(ClockedRandomGateExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

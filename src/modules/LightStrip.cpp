@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Light strip
-// LED Light strip blank module
-//  Copyright (C) 2020  Adam Verspaget
+//	LED Light strip blank module
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -226,8 +226,33 @@ struct LightStripWidget : ModuleWidget {
 	template <typename TBase>
 	struct CountModulaLightStrip : TBase {
 		CountModulaLightStrip() {
-			this->box.size = app::mm2px(math::Vec(3.176, 115.0));
+			this->box.size = rack::window::mm2px(math::Vec(3.176, 115.0));
 		}
+				
+		void drawHalo(const DrawArgs& args) override {
+			// Don't draw halo if rendering in a framebuffer, e.g. screenshots or Module Browser
+			if (args.fb)
+				return;
+
+			const float halo = settings::haloBrightness;
+			if (halo == 0.f)
+				return;
+
+			// If light is off, rendering the halo gives no effect.
+			if (this->color.r == 0.f && this->color.g == 0.f && this->color.b == 0.f)
+				return;
+
+			float br = 30.0; // Blur radius
+			float cr = 5.0; // Corner radius
+			
+			nvgBeginPath(args.vg);
+			nvgRect(args.vg, -br, -br, this->box.size.x + 2 * br, this->box.size.y + 2 * br);
+			NVGcolor icol = color::mult(TBase::color, halo);
+			NVGcolor ocol = nvgRGBA(0, 0, 0, 0);
+			nvgFillPaint(args.vg, nvgBoxGradient(args.vg, 0, 0, this->box.size.x, this->box.size.y, cr, br, icol, ocol));
+			nvgFill(args.vg);
+		}
+		
 	};
 
 	//----------------------------------------------------------------
@@ -409,7 +434,9 @@ struct LightStripWidget : ModuleWidget {
 	LightStripWidget(LightStrip *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// light strip
 		if (module) {
@@ -459,11 +486,11 @@ struct LightStripWidget : ModuleWidget {
 				ModuleLightWidget* lightStripWidget = ((LightStrip*)module)->lightStripWidget;
 				
 				if (((LightStrip*)module)->narrowMode) {
-					lightStripWidget->box.size = app::mm2px(math::Vec(1.5, 115.0));
+					lightStripWidget->box.size = rack::window::mm2px(math::Vec(1.5, 115.0));
 					lightStripWidget->box.pos.x = 5.25;
 				}
 				else {
-					lightStripWidget->box.size = app::mm2px(math::Vec(3.176, 115.0));
+					lightStripWidget->box.size = rack::window::mm2px(math::Vec(3.176, 115.0));
 					lightStripWidget->box.pos.x = ((LightStrip*)module)->widePos; 
 				}
 				

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Mixer Module
 //	A 4 input mixer with switchable uni/bi polar mixing capabilities
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/MixerEngine.hpp"
@@ -39,29 +39,44 @@ struct Mixer : Module {
 
 	MixerEngine mixer;
 
+	bool bipolar;
+	bool prevBipolar;
+	float mixLevels[4] = {};
+	float outputLevel = 0.0f;
+	
+	int processCount = 8;
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"	
 	
 	Mixer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		char smeg[10];
-		
 		// mix knobs
+		char c ='A';
+		std::string s;
 		for (int i = 0; i < 4; i++) {
-			sprintf (smeg, "Level %d", i + 1);
-			configParam(R1_LEVEL_PARAM + i, 0.0f, 1.0f, 0.5f, smeg, " %", 0.0f, 100.0f, 0.0f);
+			s = c++;
+			configParam(R1_LEVEL_PARAM + i, 0.0f, 1.0f, 0.5f, "Level " + s, " %", 0.0f, 100.0f, 0.0f);
+			configInput(R1_INPUT + i, s);
 		}
-		
+
 		// output level 
 		configParam(LEVEL_PARAM, 0.0f, 1.0f, 0.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
 		
 		// switches
-		configParam(MODE_PARAM, 0.0f, 1.0f, 1.0f, "Mix mode (Uni/Bipolar)");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Unipolar", "Bipolar"});
+		
+		configOutput(MIX_OUTPUT, "Mix");
+		configOutput(XIM_OUTPUT, "Inverted mix");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
+	
+	void onReset() override {
+		processCount = 8;
+	}	
 	
 	json_t *dataToJson() override {
 		json_t *root = json_object();
@@ -77,17 +92,31 @@ struct Mixer : Module {
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
-	}		
+	}
 	
 	void process(const ProcessArgs &args) override {
-		float out = mixer.process(inputs[R1_INPUT].getNormalVoltage(10.0f), inputs[R2_INPUT].getNormalVoltage(0.0f), inputs[R3_INPUT].getNormalVoltage(0.0f), inputs[R4_INPUT].getNormalVoltage(0.0f), 
-			params[R1_LEVEL_PARAM].getValue(), params[R2_LEVEL_PARAM].getValue(), params[R3_LEVEL_PARAM].getValue(), params[R4_LEVEL_PARAM].getValue(), 
-			params[LEVEL_PARAM].getValue(), params[MODE_PARAM].getValue());
+		
+		if (++processCount > 8) {
+			processCount = 0;
+			
+			mixLevels[0] = params[R1_LEVEL_PARAM].getValue();
+			mixLevels[1] = params[R2_LEVEL_PARAM].getValue();
+			mixLevels[2] = params[R3_LEVEL_PARAM].getValue();
+			mixLevels[3] = params[R4_LEVEL_PARAM].getValue();
+			outputLevel = params[LEVEL_PARAM].getValue();
+					
+			bipolar = params[MODE_PARAM].getValue() > 0.5f;
+		}
+		
+		float out = mixer.process(inputs[R1_INPUT].getNormalVoltage(10.0f), inputs[R2_INPUT].getVoltage(), inputs[R3_INPUT].getVoltage(), inputs[R4_INPUT].getVoltage(), 
+			mixLevels[0],mixLevels[1], mixLevels[2], mixLevels[3], 
+			outputLevel, bipolar);
 			
 		outputs[MIX_OUTPUT].setVoltage(out);
 		outputs[XIM_OUTPUT].setVoltage(-out);
 		
-		lights[OVERLOAD_LIGHT].setSmoothBrightness(mixer.overloadLevel, args.sampleTime);
+		if (processCount == 0)
+			lights[OVERLOAD_LIGHT].setSmoothBrightness(mixer.overloadLevel, args.sampleTime * 4);
 	}
 };
 
@@ -98,7 +127,9 @@ struct MixerWidget : ModuleWidget {
 	MixerWidget(Mixer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -146,7 +177,7 @@ struct MixerWidget : ModuleWidget {
 		}
 		
 		Widget::step();
-	}	
+	}
 };
 
 Model *modelMixer = createModel<Mixer, MixerWidget>("Mixer");

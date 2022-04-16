@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Manual CV Module
-//	A dual manual CV generator
-//  Copyright (C) 2019  Adam Verspaget
+//	/^M^\ Count Modula Plugin for VCV Rack - Poly Manual CV Module
+//	A polyphonic manual CV generator
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -44,8 +44,11 @@ struct ManualCV2 : Module {
 		
 		configParam(CV_PARAM, 0.0f, 10.0f, 0.0f, "Output value", " V");
 		configParam(RANGE_PARAM, 1.0f, 10.0f, 10.0f, "Output range", " V");
-		configParam(POLARITY_PARAM, 0.0f, 1.0f, 0.0f, "Output polarity");
+		configSwitch(POLARITY_PARAM, 0.0f, 1.0f, 0.0f, "Output polarity", {"Unipolar", "Bipolar"});
 		configParam(CHANNELS_PARAM, 1.0f, 16.0f, 1.0f, "Number of channels");
+		
+		configOutput(CV1_OUTPUT, "CV");
+		configOutput(CV2_OUTPUT, "Inverted CV");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -136,7 +139,9 @@ struct ManualCV2Widget : ModuleWidget {
 	ManualCV2Widget(ManualCV2 *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

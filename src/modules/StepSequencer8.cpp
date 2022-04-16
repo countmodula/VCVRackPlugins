@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Step Sequencer Module
-//  A classic 8 step CV/Gate sequencer
-//  Copyright (C) 2019  Adam Verspaget
+//	A classic 8 step CV/Gate sequencer
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -97,38 +97,52 @@ struct STRUCT_NAME : Module {
 	STRUCT_NAME() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		char textBuffer[100];
+		std::string trigSwitchLabels[SEQ_NUM_SEQS] = {"Step %d A/B select", "Step %d E/F select"};
+		std::string gateSwitchLabels[SEQ_NUM_SEQS] = {"Step %d C/D select", "Step %d G/H select"};
+		std::string cvKnobLabels[SEQ_NUM_SEQS] = {"Step %d CV 1/2 value", "Step %d CV 3 value"};
+		std::vector<std::string> trigLabels[SEQ_NUM_SEQS] = {{"Trigger B", "Off", "Trigger A"}, {"Trigger F", "Off", "Trigger E"}};
+		std::vector<std::string> gateLabels[SEQ_NUM_SEQS] = {{"Gate D", "Off", "Trigger C"}, {"Gate H", "Off", "Trigger G"}};
+		std::string scaleSwitchLabels[2] = {"CV 3 Scale", " CV 4 scale"};
 		
+		std::vector<std::string> trigOutputLabels[SEQ_NUM_SEQS] = {{"Trigger A", "Trigger B"}, {"Trigger E", "Trigger F"}};
+		std::vector<std::string> gateOutputLabels[SEQ_NUM_SEQS] = {{"Trigger C", "Gate D"}, {"Trigger G", "Gate H"}};
+		std::vector<std::string> cvOutputLabels[SEQ_NUM_SEQS] = {{"CV 1", "CV 2"}, {"CV 3", "CV 4"}};
+		std::vector<std::string> cviOutputLabels[SEQ_NUM_SEQS] = {{"Inverted CV 1", "Inverted CV 2"}, {"Inverted CV 3", "Inverted CV 4"}};
+
 		for (int r = 0; r < SEQ_NUM_SEQS; r++) {
 			
 			// length params
-			sprintf(textBuffer, "Channel %d length", r + 1);
-			configParam(LENGTH_PARAMS + r, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), textBuffer);
+			configParam(LENGTH_PARAMS + r, 1.0f, (float)(SEQ_NUM_STEPS), (float)(SEQ_NUM_STEPS), rack::string::f( "Channel %d length", r + 1));
 			
 			//  mode params
-			sprintf(textBuffer, "Channel %d direction", r + 1);
-			configParam(MODE_PARAMS + r, 0.0f, 2.0, 0.0f, textBuffer);
+			configSwitch (MODE_PARAMS + r, 0.0f, 2.0, 0.0f, rack::string::f("Channel %d direction", r + 1), {"Forward", "Pendulum", "Reverse"});
 			
 			// row lights and switches
 			int sw = 0;
 			int k = 0;
+			
 			for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-				sprintf(textBuffer, "Select %s", r == 0 ? "Trig A/ Trig B" : "Trig E/ Trig F");
-				configParam(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, textBuffer);
-				
-				sprintf(textBuffer, "Select %s", r == 0 ? "Trig C/ Gate D" : "Trig G/ get H");
-				configParam(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, textBuffer);
+				configSwitch(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, rack::string::f(trigSwitchLabels[r].c_str(), s + 1), trigLabels[r]);
+				configSwitch(STEP_SW_PARAMS + (r * SEQ_NUM_STEPS * 2) + sw++, 0.0f, 2.0f, 1.0f, rack::string::f(gateSwitchLabels[r].c_str(), s + 1), gateLabels[r]);
+				configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, rack::string::f(cvKnobLabels[r].c_str(), s + 1));
+			}
 
-				sprintf(textBuffer, "Step value %s", r == 0 ? "(CV1/2)" : " (CV3)");
-				configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, textBuffer);
+			// step CV iputs
+			if (r == 0) {
+				for (int s = 0; s < SEQ_NUM_STEPS; s++) {
+					configInput(STEP_INPUTS + s, rack::string::f("Step %d CV", s + 1));
+				}
+				
+				inputInfos[STEP_INPUTS]->description = "Apply a polyphonic signal to distrbute each channel across the other step CV inputs";
 			}
 
 			// add second row of knobs to channel 2
 			if (r >  0) {
 				for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-					configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, "Step value (CV4)");
+					configParam(STEP_CV_PARAMS + (r * SEQ_NUM_STEPS) + k++, 0.0f, 8.0f, 0.0f, rack::string::f("Step %d CV4 value", s + 1));
 				}
 			}
+			
 			
 			// mute buttons
 			char muteText[4][20] = {"Mute Trig A/Trig C",
@@ -137,7 +151,7 @@ struct STRUCT_NAME : Module {
 									"Mute Trig F/Gate H"};
 								
 			for (int i = 0; i < 2; i++) {
-				configParam(MUTE_PARAMS + (r * 2) + i, 0.0f, 1.0f, 0.0f, muteText[i + (r * 2)]);
+				configButton(MUTE_PARAMS + (r * 2) + i, muteText[i + (r * 2)]);
 			}
 			
 			// range controls
@@ -146,11 +160,31 @@ struct STRUCT_NAME : Module {
 				// use a single pot on the 1st row of the channel 1 and a switch on channel 2
 				if (r == 0) {
 					if (i == 0)
-						configParam(RANGE_PARAMS + (r * 2) + i, 0.0f, 1.0f, 1.0f, "Range", " %", 0.0f, 100.0f, 0.0f);
+						configParam(RANGE_PARAMS + (r * 2) + i, 0.0f, 1.0f, 1.0f, "CV Range", " %", 0.0f, 100.0f, 0.0f);
 				}
 				else
-					configParam(RANGE_SW_PARAMS + (r * 2) + i, 0.0f, 2.0f, 0.0f, "Scale");
-			}			
+					configSwitch(RANGE_SW_PARAMS + (r * 2) + i, 0.0f, 2.0f, 0.0f, scaleSwitchLabels[i], {"8 Volts", "4 Volts", "2 Volts"});
+			}
+			
+			configInput(RUN_INPUTS + r,   rack::string::f("Channel %d Run", r +1));
+			configInput(CLOCK_INPUTS + r, rack::string::f("Channel %d Clock", r +1));
+			configInput(RESET_INPUTS + r, rack::string::f("Channel %d Reset", r +1));
+			configInput(LENCV_INPUTS + r, rack::string::f("Channel %d Length CV", r +1));
+			configInput(DIRCV_INPUTS + r, rack::string::f("Channel %d Direction CV", r +1));
+			
+			if (r > 0) {
+				inputInfos[CLOCK_INPUTS + r]->description = "Normalled to channel 1 clock input";
+				inputInfos[RUN_INPUTS + r]->description = "Normalled to channel 1 run input";
+				inputInfos[RESET_INPUTS + r]->description = "Normalled to channel 1 run input";
+			}
+			
+			for (int i = 0; i < 2; i++) {
+				configOutput(TRIG_OUTPUTS + (r * 2) + i, trigOutputLabels[r][i]);
+				configOutput(GATE_OUTPUTS + (r * 2) + i, gateOutputLabels[r][i]);
+				
+				configOutput(CV_OUTPUTS + (r * 2) + i, cvOutputLabels[r][i]);
+				configOutput(CVI_OUTPUTS + (r * 2) + i, cviOutputLabels[r][i]);
+			}
 		}
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
@@ -581,7 +615,9 @@ struct WIDGET_NAME : ModuleWidget {
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -718,23 +754,23 @@ struct WIDGET_NAME : ModuleWidget {
 			// both trig and cv indicate we're doing the entire channel so do the common controls here
 			if (triggerInit && cvInit) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->reset();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->reset();
 				
 				// direction
-				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->reset();
+				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->getParamQuantity()->reset();
 				
 				// scale/range/mutes
 				for (int i = 0; i < 2; i++) {
 					// use a single pot on the 1st row of the channel 1 and a switch on channel 2
 					if (channel == 0) {
 						if (i == 0)
-							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->reset();
+							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->getParamQuantity()->reset();
 					}
 					else
-						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->reset();
+						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->getParamQuantity()->reset();
 					
 					// mutes
-					widget->getParam(STRUCT_NAME::MUTE_PARAMS + (channel * 2) + i)->reset();
+					widget->getParam(STRUCT_NAME::MUTE_PARAMS + (channel * 2) + i)->getParamQuantity()->reset();
 				}
 			}
 			
@@ -742,17 +778,17 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerInit) {
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->reset();
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->reset();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->getParamQuantity()->reset();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->getParamQuantity()->reset();
 				}
 				
 				if (cvInit) {
 					// cv row 1
-					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->reset();
+					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
 					
 					// cv row 2 (ch 2 only)
 					if (channel > 0) 
-						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->reset();
+						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->getParamQuantity()->reset();
 				}
 			}
 
@@ -789,20 +825,20 @@ struct WIDGET_NAME : ModuleWidget {
 			// both trig and cv indicate we're doing the entire channel so do the common controls here
 			if (triggerRand && cvRand) {
 				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->randomize();
+				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->randomize();
 				
 				// direction
-				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->randomize();
+				widget->getParam(STRUCT_NAME::MODE_PARAMS + channel)->getParamQuantity()->randomize();
 				
 				// scale/range
 				for (int i = 0; i < 2; i++) {
 					// use a single pot on the 1st row of the channel 1 and a switch on channel 2
 					if (channel == 0) {
 						if (i == 0)
-							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->randomize();
+							widget->getParam(STRUCT_NAME::RANGE_PARAMS + (channel * 2) + i)->getParamQuantity()->randomize();
 					}
 					else
-						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->randomize();
+						widget->getParam(STRUCT_NAME::RANGE_SW_PARAMS + (channel * 2) + i)->getParamQuantity()->randomize();
 				}
 			}
 			
@@ -810,17 +846,17 @@ struct WIDGET_NAME : ModuleWidget {
 			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
 				// triggers/gates
 				if (triggerRand) {
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->randomize();
-					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2))->getParamQuantity()->randomize();
+					widget->getParam(STRUCT_NAME::STEP_SW_PARAMS + (channel * SEQ_NUM_STEPS * 2) + (c * 2) +1)->getParamQuantity()->randomize();
 				}
 				
 				if (cvRand) {
 					// cv row 1
-					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->randomize();
+					widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
 					
 					// cv row 2 (ch 2 only)
 					if (channel > 0) 
-						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->randomize();
+						widget->getParam(STRUCT_NAME::STEP_CV_PARAMS + (channel * SEQ_NUM_STEPS) + SEQ_NUM_STEPS + c)->getParamQuantity()->randomize();
 				}
 			}
 

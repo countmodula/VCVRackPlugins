@@ -4,20 +4,83 @@
 <center>
 <img src="./img/CountModulaLogo.png" alt="Count Modula">
 <h1 style="border-bottom: 0px;font-size:50px;">Count Modula</h1>
-<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v1 by Adam Verspaget (Count Modula)</h2>
+<h2 style="border-bottom: 0px;">Plugin modules for VCV Rack v2 by Adam Verspaget (Count Modula)</h2>
 </center>
 </td>
 </tr>
 </table>
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Change Log:</h3>
-FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator will not be available in the VCV Rack V2 release of the Count Modula collection. Please refer to the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
+FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider and Polyrhythmic Generator are no longer available for new patches in Rack V2 however Old patches should continue to load. Please refer to the manual for details on how to upgrade your patches to use the Mk II versions of these modules.
 <p>
 <table style="width:1000px;">
 <tr valign="top">
 <th align="center" style="width:140px;" width="140">Date</th>
 <th align="center">Release</th>
 <th align="left">Notes</th>
+</tr>
+
+<tr valign="top">
+<td align="center">03-Apr-2022</td>
+<td align="center">v2.1.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Nibble Trigger Sequencer</li>
+<li>Random Access Switch 1-8</li>
+<li>Random Access Switch 8-1</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Fade - Add external control for start/stop</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+General: Make Cable Palette hotkeys function beyond 7 cables
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">15-Jan-2022</td>
+<td align="center">v2.0.3</td>
+<td align="left">
+<ul>
+<b>Issues Resolved:</b>
+Issue #85: Arpeggiator hold button not working 
+Issue #87: Move restriction on number of Cable Palettes from global singleton to patch level to accommodate use in multiple instances with DAWs.
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">13-Sep-2021</td>
+<td align="center">v2.0.0 - v2.0.2</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>4 Bit Sequence Encoder</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>All modules - Update to Rack v2 ABI, add new port/light labels, add bypass routing where applicable, add new switch label options, new knob and jack design</li>
+<li>Colour Palette - New button design to allow buttons to shine when the room brightness is turned down</li>
+<li>Super Arpeggiator - New button design to allow buttons to shine when the room brightness is turned down</li>
+<li>Euclidean Sequencer - New menu option to quantize CV change to the incoming clock</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #78: Attenuator Channel A stuck on last voltage if input is removed.</li>
+<li>Issue #80: USe default theme in module browser</li>
+<li>Fix issue with some corrupted theme panels that were causing the module browser to crash</li>
+<li>Fix issue with sequencers overrunning number of steps when length CV >= 10 Volts</li>
+</ul>
+
+</td>
 </tr>
 
 <tr valign="top">
@@ -41,7 +104,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
-<td align="center">05-Aug-2021</td>
+<td align="center">05-Dec-2021</td>
 <td align="center">v1.15.1</td>
 <td align="left">
 

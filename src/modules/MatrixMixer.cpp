@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Matrix Mixer Module
 //	A 4 x 4 matrix mixer with switchable uni/bi polar mixing capabilities
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/MixerEngine.hpp"
@@ -62,6 +62,15 @@ struct MatrixMixer : Module {
 
 	MixerEngine mixers[4];
 
+	int processCount = 8;
+	
+	float mixLevels1[4] = {};
+	float mixLevels2[4] = {};
+	float mixLevels3[4] = {};
+	float mixLevels4[4] = {};
+	float outputLevels[4] = {};
+	bool bipolarMode[4] = {};
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
@@ -69,25 +78,34 @@ struct MatrixMixer : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
 		char smeg[10];
-		
-		
+		char c = 'A';
 		for (int i = 0; i < 4; i++) {
 			
 			sprintf (smeg, "Level %d", i + 1);
 			
-			// mix `knobs
+			// mix knobs
 			for (int j = 0; j < 4; j++)
-				configParam(C1R1_LEVEL_PARAM + (j * 6) + i, 0.0f, 1.0f, 0.5f, smeg, " %", 0.0f, 100.0f, 0.0f);
+				configParam(C1R1_LEVEL_PARAM + (j * 6) + i, 0.0f, 1.0f, 0.5f, rack::string::f("Input %c mix %d level", c, j + 1), " %", 0.0f, 100.0f, 0.0f);
 			
-			// level knobs
-			configParam(C1_LEVEL_PARAM + (i * 6), 0.0f, 1.0f, 0.0f, "Output level", " %", 0.0f, 100.0f, 0.0f);
+			// output level knobs
+			configParam(C1_LEVEL_PARAM + (i * 6), 0.0f, 1.0f, 0.0f, rack::string::f("Mix %d output level", i + 1), " %", 0.0f, 100.0f, 0.0f);
 			
-			// switches
-			configParam(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, "Channel mode (Uni/Bipolar)");
+			// mode switches
+			configSwitch(C1_MODE_PARAM + (i * 6), 0.0f, 1.0f, 1.0f, rack::string::f("Mix %d mode", i + 1), {"Unipolar", "Bipolar"});
+			
+			// ins and outs
+			configOutput(C1_OUTPUT + i,  rack::string::f("Mix %d", i + 1));
+			configInput(R1_INPUT +i, rack::string::f("%c", c++));
 		}
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+		
+		processCount = 8;
+	}
+	
+	void onReset() override {
+		processCount = 8;
 	}
 	
 	json_t *dataToJson() override {
@@ -104,16 +122,31 @@ struct MatrixMixer : Module {
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
-	}		
+	}
 	
 	void process(const ProcessArgs &args) override {
 		
+		if (++processCount > 0) {
+			processCount = 0;
+			
+			for (int i = 0; i < 4; i++) {
+				mixLevels1[i] = params[C1R1_LEVEL_PARAM + (i * 6)].getValue();
+				mixLevels2[i] = params[C1R2_LEVEL_PARAM + (i * 6)].getValue();
+				mixLevels3[i] = params[C1R3_LEVEL_PARAM + (i * 6)].getValue();
+				mixLevels4[i] = params[C1R4_LEVEL_PARAM + (i * 6)].getValue();
+				outputLevels[i] = params[C1_LEVEL_PARAM + (i * 6)].getValue();
+				bipolarMode[i] = params[C1_MODE_PARAM + (i * 6)].getValue() > 0.5f;
+			}
+		}
+		
+		float st = args.sampleTime * 4.0f;
 		for (int i = 0; i < 4; i++) {
 			outputs[C1_OUTPUT + i].setVoltage(mixers[i].process(inputs[R1_INPUT].getNormalVoltage(0.0f), inputs[R2_INPUT].getNormalVoltage(0.0f), inputs[R3_INPUT].getNormalVoltage(0.0f), inputs[R4_INPUT].getNormalVoltage(0.0f), 
-				params[C1R1_LEVEL_PARAM + (i * 6)].getValue(), params[C1R2_LEVEL_PARAM + (i * 6)].getValue(), params[C1R3_LEVEL_PARAM + (i * 6)].getValue(), params[C1R4_LEVEL_PARAM + (i * 6)].getValue(), 
-				params[C1_LEVEL_PARAM + (i * 6)].getValue(), params[C1_MODE_PARAM + (i * 6)].getValue()));
-				
-			lights[C1_OVERLOAD_LIGHT  + i].setSmoothBrightness(mixers[i].overloadLevel, args.sampleTime);
+				mixLevels1[i], mixLevels2[i], mixLevels3[i], mixLevels4[i], 
+				outputLevels[i], bipolarMode[i]));
+			
+			if (processCount == 0)
+				lights[C1_OVERLOAD_LIGHT  + i].setSmoothBrightness(mixers[i].overloadLevel, st);
 		}
 	}
 };
@@ -125,7 +158,9 @@ struct MatrixMixerWidget : ModuleWidget {
 	MatrixMixerWidget(MatrixMixer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

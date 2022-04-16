@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Morph Shaper
 //	A CV controlled morphing controller based on the Doepfer A-144
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 
@@ -81,6 +81,16 @@ struct MorphShaper : Module {
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Morph CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(MANUAL_PARAM, 0.0f, 10.0f, 0.0f, "Manual morph");
 
+		configInput(CV_INPUT, "Morph CV");
+		
+		char c ='A';
+		std::string s;
+		for (int i = 0; i < 4; i++) {
+			s = c++;
+			configOutput(MORPH_OUTPUT + i, "Morph " + s);
+			configLight(MORPH_LIGHT + i, "Morph " + s);
+		}
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -129,7 +139,9 @@ struct MorphShaperWidget : ModuleWidget {
 	MorphShaperWidget(MorphShaper *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

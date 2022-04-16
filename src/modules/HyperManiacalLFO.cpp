@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Hyper Maniacal LFO Module
-//  Oscillator section based on the VCV VCO by Andrew Belt
-//  Copyright (C) 2020  Adam Verspaget
+//	Oscillator section based on the VCV VCO by Andrew Belt
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/SlewLimiter.hpp"
@@ -231,14 +231,19 @@ struct HyperManiacalLFO : Module {
 		configParam(GLIDE_SH_PARAM, 0.0f, 1.0f, 1.0f, "Glide shape");
 		configParam(GLIDE_PARAM, 0.0f, 1.0f, 0.0f, "Glide rate");
 		
+		std::string oscName;
 		for (int i = 0; i < 6; i++) {
-			configParam(FREQ_PARAMS + i, 0.0f, 8.0f, (float)(i), "LFO rate");
-			configParam(RANGE_SW_PARAMS + i, 0.0f, 2.0f, 1.0f, "LFO range");
-			configParam(WAVE_SEL_PARAMS + i, 0.0f, 4.0f, 3.0f, "Wave select");
+			oscName = "Oscillator " + std::to_string(i + 1);
+			configParam(FREQ_PARAMS + i, 0.0f, 8.0f, (float)(i), oscName + " rate");
+			configSwitch(RANGE_SW_PARAMS + i, 0.0f, 2.0f, 1.0f, oscName + " range", {"Ultra low", "Low", "High"});
+			configSwitch(WAVE_SEL_PARAMS + i, 0.0f, 4.0f, 3.0f, oscName + " wave", {"Off", "Sine", "Saw", "Triangle", "Square"});
 		}
 
 		configParam(LEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Output level");
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Output mode", {"Unipolar", "Bipolar"});
+	
+		configOutput(LFO_OUTPUT, "Maniacal LFO");
+		configOutput(INV_OUTPUT, "Inverted maniacal LFO");
 	
 		for (int i = 0; i < 2; i++) {		
 			float r[] = {random::uniform(), random::uniform(), random::uniform(), random::uniform()};
@@ -404,7 +409,9 @@ struct HyperManiacalLFOWidget : ModuleWidget {
 	HyperManiacalLFOWidget(HyperManiacalLFO *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - XOR Logic Gate Module
 //	A 1-8 8-1 multiplexer module / 1 to 8 router / 8 to 1 switcher
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -12,31 +12,31 @@
 
 struct Multiplexer : Module {
 	enum ParamIds {
-		LENGTH_S_PARAM,
-		LENGTH_R_PARAM,
+		ROUTER_LENGTH_PARAM,
+		SELECTOR_LENGTH_PARAM,
 		HOLD_PARAM,
 		NORMAL_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
-		CLOCK_S_INPUT,
-		CLOCK_R_INPUT,
-		RESET_S_INPUT,
-		RESET_R_INPUT,
-		LENGTH_S_INPUT,
-		LENGTH_R_INPUT,
-		SEND_INPUT,
-		ENUMS(RECEIVE_INPUTS, 8),
+		ROUTER_CLOCK_INPUT,
+		SELECTOR_CLOCK_INPUT,
+		ROUTER_RESET_INPUT,
+		SELECTOR_RESET_INPUT,
+		ROUTER_LENGTH_INPUT,
+		SELECTOR_LENGTH_INPUT,
+		ROUTER_INPUT,
+		ENUMS(SELECTOR_INPUTS, 8),
 		NUM_INPUTS
 	};	
 	enum OutputIds {
-		RECEIVE_OUTPUT,
-		ENUMS(SEND_OUTPUTS, 8),
+		SELECTOR_OUTPUT,
+		ENUMS(ROUTER_OUTPUTS, 8),
 		NUM_OUTPUTS
 	};
 	enum LightIds {
-		ENUMS(SEND_LIGHTS, 8),
-		ENUMS(RECEIVE_LIGHTS, 8),
+		ENUMS(ROUTER_LIGHTS, 8),
+		ENUMS(SELECTOR_LIGHTS, 8),
 		NUM_LIGHTS
 	};
 
@@ -53,35 +53,50 @@ struct Multiplexer : Module {
 		SAMPLEANDHOLD_MODE
 	};
 	
-	int indexS = -1;
-	int indexR = -1;
+	int routerIndex = -1;
+	int selectorIndex = -1;
 	
-	GateProcessor gateClockS;
-	GateProcessor gateClockR;
-	GateProcessor gateResetS;
-	GateProcessor gateResetR;
+	GateProcessor gateRouterClock;
+	GateProcessor gateSelectorClock;
+	GateProcessor gateRouterReset;
+	GateProcessor gateSelectorReset;
 	
 	bool linkedClock = true;
 	
-	int lengthS = 7;
-	int lengthR = 7;
+	int routerLength = 7;
+	int selectorLength = 7;
 	int normallingMode = 1;
 	int holdMode = 1;
 	
-	float sendOutputs[8];
+	float routerOutputs[8];
 
 	// add the variables we'll use when managing themes
-	#include "../themes/variables.hpp"	
+	#include "../themes/variables.hpp"
 	
 	Multiplexer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(LENGTH_S_PARAM, 1.0f, 7.0f, 7.0f, "Number of router steps (Sends)");
-		configParam(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Router sample mode");
+		configSwitch(ROUTER_LENGTH_PARAM, 1.0f, 7.0f, 7.0f, "Number of router steps (Sends)", {"2", "3", "4", "5", "6", "7", "8"});
+		configSwitch(HOLD_PARAM, 0.0f, 2.0f, 1.0f, "Router sample mode",{"Track & Hold", "Through", "Sample & Hold"});
 		
-		configParam(LENGTH_R_PARAM, 1.0f, 8.0f, 8.0f, "Number of selector steps (Receives)");
-		configParam(NORMAL_PARAM, 1.0f, 4.0f, 1.0f, "Selector normalling mode");
+		configSwitch(SELECTOR_LENGTH_PARAM, 1.0f, 8.0f, 8.0f, "Number of selector steps (Receives)",  {"2", "3", "4", "5", "6", "7", "8", "Link to Router"});
+		configSwitch(NORMAL_PARAM, 1.0f, 4.0f, 1.0f, "Selector normalling mode", {"Router input", "0 Volts", "Associated router output", "Selected router output"});
 
+		for (int i = 0; i < 8; i++) {
+			configInput(SELECTOR_INPUTS + i, rack::string::f("Selector recieve %d", i + 1));
+			configOutput(ROUTER_OUTPUTS + i, rack::string::f("Router send %d", i + 1));
+		}
+		
+		configInput(ROUTER_CLOCK_INPUT, "Selector clock");
+		configInput(SELECTOR_CLOCK_INPUT, "Router clock");
+		configInput(ROUTER_RESET_INPUT, "Selector reset");
+		configInput(SELECTOR_RESET_INPUT, "Router reset");
+		configInput(ROUTER_LENGTH_INPUT, "Selector length CV");
+		configInput(SELECTOR_LENGTH_INPUT, "Router length CV");
+		
+		configInput(ROUTER_INPUT, "Router");
+		configOutput(SELECTOR_OUTPUT, "Selector");
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -103,121 +118,120 @@ struct Multiplexer : Module {
 	}		
 	
 	void onReset() override {
-		indexS = -1;
-		indexR = -1;
-		lengthS = 7;
-		lengthR = 7;
+		routerIndex = -1;
+		selectorIndex = -1;
+		routerLength = 7;
+		selectorLength = 7;
 		
-		gateClockS.reset();
-		gateClockR.reset();
-		gateResetS.reset();
-		gateResetR.reset();	
+		gateRouterClock.reset();
+		gateSelectorClock.reset();
+		gateRouterReset.reset();
+		gateSelectorReset.reset();	
 	}
 	
 	void process(const ProcessArgs &args) override {
 		
-		// flag if the send clock also clocks the receives
-		linkedClock = !inputs[CLOCK_R_INPUT].isConnected();
+		// flag if the router clock also clocks the selector
+		linkedClock = !inputs[SELECTOR_CLOCK_INPUT].isConnected();
 		
 		// what hold and normalling modes are selected?
 		normallingMode = ((int)(params[NORMAL_PARAM].getValue())) - 1;
 		holdMode = (int)(params[HOLD_PARAM].getValue());
 		bool doSample = holdMode != SAMPLEANDHOLD_MODE;
 		
-		// determine the sequence lengths
-		lengthS = (int)(params[LENGTH_S_PARAM].getValue());
-		lengthR = (int)(params[LENGTH_R_PARAM].getValue());
-		float cvS = clamp(inputs[LENGTH_S_INPUT].getVoltage(), 0.0f, 10.0f);
-		float cvR = clamp(inputs[LENGTH_R_INPUT].getVoltage(), 0.0f, 10.0f);
+		// determine the sequence routerLength
+		routerLength = (int)(params[ROUTER_LENGTH_PARAM].getValue());
+		selectorLength = (int)(params[SELECTOR_LENGTH_PARAM].getValue());
+		float cvRouterLength = clamp(inputs[ROUTER_LENGTH_INPUT].getVoltage(), 0.0f, 10.0f);
+		float cvSelectorLength = clamp(inputs[SELECTOR_LENGTH_INPUT].getVoltage(), 0.0f, 10.0f);
 		
 		// cv overrides switch position;
-		if(inputs[LENGTH_S_INPUT].isConnected()) {
+		if(inputs[ROUTER_LENGTH_INPUT].isConnected()) {
 			// scale cv input to 1-7
-			lengthS = (int)(1.0f + (cvS * 0.6f));
+			routerLength = (int)(1.0f + (cvRouterLength * 0.6f));
 		}
 
-		if(inputs[LENGTH_R_INPUT].isConnected()) {
+		if(inputs[SELECTOR_LENGTH_INPUT].isConnected()) {
 			// scale cv input to 1-7
-			lengthR = (int)(1.0f + (cvR * 0.6f));
+			selectorLength = (int)(1.0f + (cvSelectorLength * 0.6f));
 		}
 
-		// sync to send has been selected
-		if (lengthR > 7)
-			lengthR = lengthS;
+		// sync to router has been selected
+		if (selectorLength > 7)
+			selectorLength = routerLength;
 		
 		// handle the reset inputs
-		float resetS = inputs[RESET_S_INPUT].getNormalVoltage(0.0f);
-		float resetR = inputs[RESET_R_INPUT].getNormalVoltage(resetS);
-		gateResetS.set(resetS);
-		gateResetR.set(resetR);
+		float routerReset = inputs[ROUTER_RESET_INPUT].getNormalVoltage(0.0f);
+		float selectoReset = inputs[SELECTOR_RESET_INPUT].getNormalVoltage(routerReset);
+		gateRouterReset.set(routerReset);
+		gateSelectorReset.set(selectoReset);
 		
 		// grab the clock input values
+		float routerClock = inputs[ROUTER_CLOCK_INPUT].getVoltage();
+		float selectorClock = linkedClock ? routerClock : inputs[SELECTOR_CLOCK_INPUT].getVoltage();
+		gateRouterClock.set(routerClock);
+		gateSelectorClock.set(selectorClock);
 		
-		float clockS = inputs[CLOCK_S_INPUT].getVoltage();
-		float clockR = linkedClock ? clockS : inputs[CLOCK_R_INPUT].getVoltage();
-		gateClockS.set(clockS);
-		gateClockR.set(clockR);
-		
-		// send reset/clock logic
-		if (gateResetS.high()) {
+		// router reset/clock logic
+		if (gateRouterReset.high()) {
 			// stop all outputs and reset to start
-			indexS = -1;
+			routerIndex = -1;
 		}
 		else {
-			// advance S clock if required
-			if (gateClockS.leadingEdge()) {
-				indexS = (indexS < lengthS ? indexS + 1 : 0);
+			// advance router clock if required
+			if (gateRouterClock.leadingEdge()) {
+				routerIndex = (routerIndex < routerLength ? routerIndex + 1 : 0);
 				doSample = true;	
 			}
 		}
 		
-		// receive reset/clock logic
-		if (gateResetR.high()) {
+		// selector reset/clock logic
+		if (gateSelectorReset.high()) {
 			// stop all outputs and reset to start
-			indexR = -1;
+			selectorIndex = -1;
 		}
 		else {
-			if ((linkedClock && gateClockS.leadingEdge()) || (!linkedClock && gateClockR.leadingEdge())) {
-				// advance R clock if required
-				indexR = (indexR < lengthR ? indexR + 1 : 0);
+			if ((linkedClock && gateRouterClock.leadingEdge()) || (!linkedClock && gateSelectorClock.leadingEdge())) {
+				// advance selector clock if required
+				selectorIndex = (selectorIndex < selectorLength ? selectorIndex + 1 : 0);
 			}	
 		}
 
 		// grab the send input  value	
-		float sendIn = inputs[SEND_INPUT].getVoltage();
+		float sendIn = inputs[ROUTER_INPUT].getVoltage();
 		
-		// now send the input to the appropriate send output and the appropriate receive input to the output
+		// now send the input to the appropriate router output and the appropriate selector input to the output
 		for (int i = 0; i < 8; i ++) {
 			switch (holdMode) {
 				case SAMPLEANDHOLD_MODE:
 					if (doSample) {						
-						sendOutputs[i] = (i == indexS ? sendIn : sendOutputs[i]);
-						outputs[SEND_OUTPUTS + i].setVoltage(i == indexS ? sendIn : sendOutputs[i]);
+						routerOutputs[i] = (i == routerIndex ? sendIn : routerOutputs[i]);
+						outputs[ROUTER_OUTPUTS + i].setVoltage(i == routerIndex ? sendIn : routerOutputs[i]);
 					}
 					break;
 				case TRACKANDHOLD_MODE:
-						sendOutputs[i] = (i == indexS ? sendIn : sendOutputs[i]);
-						outputs[SEND_OUTPUTS + i].setVoltage(i == indexS ? sendIn : sendOutputs[i]);
+						routerOutputs[i] = (i == routerIndex ? sendIn : routerOutputs[i]);
+						outputs[ROUTER_OUTPUTS + i].setVoltage(i == routerIndex ? sendIn : routerOutputs[i]);
 					break;
 				case TRACKONLY_MODE:
 				default:
-					sendOutputs[i] = (i == indexS ? sendIn : 0.0f);
-					outputs[SEND_OUTPUTS + i].setVoltage(i == indexS ? sendIn : 0.0f);
+					routerOutputs[i] = (i == routerIndex ? sendIn : 0.0f);
+					outputs[ROUTER_OUTPUTS + i].setVoltage(i == routerIndex ? sendIn : 0.0f);
 					break;
 			}
-			lights[SEND_LIGHTS + i].setBrightness(i == indexS ? 1.0f : 0.0f);
+			lights[ROUTER_LIGHTS + i].setBrightness(i == routerIndex ? 1.0f : 0.0f);
 		}
 		
 		for (int i = 0; i < 8; i ++) {
 			// receives
-			if (i == indexR) {
+			if (i == selectorIndex) {
 				float normalVal = 0.0f;
 				switch (normallingMode) {
 					case MULTI_MODE:
-						normalVal = sendOutputs[indexS];
+						normalVal = routerOutputs[routerIndex];
 						break;
 					case ASSOC_MODE:
-						normalVal = sendOutputs[i];
+						normalVal = routerOutputs[i];
 						break;
 					case INPUT_MODE:
 						normalVal = sendIn;
@@ -228,20 +242,18 @@ struct Multiplexer : Module {
 						break;
 				}
 				
-				if (inputs[RECEIVE_INPUTS + i].isConnected())
-					outputs[RECEIVE_OUTPUT].setVoltage(inputs[RECEIVE_INPUTS + i].getVoltage());
+				if (inputs[SELECTOR_INPUTS + i].isConnected())
+					outputs[SELECTOR_OUTPUT].setVoltage(inputs[SELECTOR_INPUTS + i].getVoltage());
 				else
-					outputs[RECEIVE_OUTPUT].setVoltage(normalVal);
+					outputs[SELECTOR_OUTPUT].setVoltage(normalVal);
 
-				lights[RECEIVE_LIGHTS + i].setBrightness(1.0f );
+				lights[SELECTOR_LIGHTS + i].setBrightness(1.0f );
 			}
 			else			
-				lights[RECEIVE_LIGHTS + i].setBrightness(0.0f );
+				lights[SELECTOR_LIGHTS + i].setBrightness(0.0f );
 		}
 	}
 };
-
-
 
 struct MultiplexerWidget : ModuleWidget {
 
@@ -250,7 +262,9 @@ struct MultiplexerWidget : ModuleWidget {
 	MultiplexerWidget(Multiplexer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -258,35 +272,35 @@ struct MultiplexerWidget : ModuleWidget {
 		//--------------------------------------------------------
 		// router section
 		//--------------------------------------------------------
-		addParam(createParamCentered<RotarySwitch<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW7)), module, Multiplexer::LENGTH_S_PARAM));
+		addParam(createParamCentered<RotarySwitch<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW7)), module, Multiplexer::ROUTER_LENGTH_PARAM));
 		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_HALF_ROWS8(STD_ROW2)), module, Multiplexer::HOLD_PARAM));
 		
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, Multiplexer::SEND_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, Multiplexer::CLOCK_S_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, Multiplexer::RESET_S_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, Multiplexer::LENGTH_S_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1]), module, Multiplexer::ROUTER_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW4]), module, Multiplexer::ROUTER_CLOCK_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW5]), module, Multiplexer::ROUTER_RESET_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW6]), module, Multiplexer::ROUTER_LENGTH_INPUT));
 			
 		for (int i = 0; i < 8; i++) {
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::SEND_LIGHTS + i));
-			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::SEND_OUTPUTS + i));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::ROUTER_LIGHTS + i));
+			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL4], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::ROUTER_OUTPUTS + i));
 		}
 	
 		//--------------------------------------------------------
 		// selector section
 		//--------------------------------------------------------
 		for (int i = 0; i < 8; i++) {
-			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::RECEIVE_INPUTS + i));
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::RECEIVE_LIGHTS + i));
+			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::SELECTOR_INPUTS + i));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + i]), module, Multiplexer::SELECTOR_LIGHTS + i));
 		}
 
-		addParam(createParamCentered<RotarySwitch<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS8(STD_ROW2)), module, Multiplexer::LENGTH_R_PARAM));
+		addParam(createParamCentered<RotarySwitch<RedKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS8(STD_ROW2)), module, Multiplexer::SELECTOR_LENGTH_PARAM));
 		addParam(createParamCentered<RotarySwitch<OperatingAngle145<YellowKnob>>>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS8(STD_ROW6)), module, Multiplexer::NORMAL_PARAM));
 		
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW1]), module, Multiplexer::LENGTH_R_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW4]), module, Multiplexer::CLOCK_R_INPUT));
-		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW5]), module, Multiplexer::RESET_R_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW1]), module, Multiplexer::SELECTOR_LENGTH_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW4]), module, Multiplexer::SELECTOR_CLOCK_INPUT));
+		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW5]), module, Multiplexer::SELECTOR_RESET_INPUT));
 		
-		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW8]), module, Multiplexer::RECEIVE_OUTPUT));
+		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_ROWS8[STD_ROW8]), module, Multiplexer::SELECTOR_OUTPUT));
 	}
 	
 	// include the theme menu item struct we'll when we add the theme menu items

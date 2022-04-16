@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Pulse Extender Module
 //	A voltage controlled pulse extender
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -62,9 +62,18 @@ struct GateModifier : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(LENGTH_PARAM, 0.0f, 10.0f, 0.0f, "Length");
-		configParam(RANGE_PARAM, 0.0f, 2.0f, 1.0f, "Range");
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+		configSwitch(RANGE_PARAM, 0.0f, 2.0f, 1.0f, "Range", {"Slow", "Medium", "Fast"});
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Retrigger", "One-shot"});
 
+		configInput(CV_INPUT, "Length CV");
+		configInput(TRIGGER_INPUT, "Gate/trigger");
+		configInput(RESET_INPUT, "Reset");
+
+		configOutput(PULSE_OUTPUT, "Modified gate");
+		configOutput(END_OUTPUT, "Gate end");
+		
+		configBypass(TRIGGER_INPUT, PULSE_OUTPUT);
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -176,7 +185,9 @@ struct GateModifierWidget : ModuleWidget {
 	GateModifierWidget(GateModifier *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	

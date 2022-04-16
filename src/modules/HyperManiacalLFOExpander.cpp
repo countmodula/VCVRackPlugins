@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Hyper Maniacal LFO Expander Module 
-//  Copyright (C) 2020  Adam Verspaget
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -42,9 +42,18 @@ struct HyperManiacalLFOExpander : Module {
 	HyperManiacalLFOExpander() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
+		std::string oscName;
+		for (int i=0; i < 6; i++) {
+			oscName = "Oscillator " + std::to_string(i + 1);
+			configOutput(SIN_OUTPUTS + i, oscName + " sine");
+			configOutput(SAW_OUTPUTS + i, oscName + " saw");
+			configOutput(TRI_OUTPUTS + i, oscName + " triangle");
+			configOutput(SQR_OUTPUTS + i, oscName + " square");
+		}
+		
 		// from left module (master)
 		leftExpander.producerMessage = leftMessages[0];
-		leftExpander.consumerMessage = leftMessages[1];				
+		leftExpander.consumerMessage = leftMessages[1];
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -100,8 +109,10 @@ struct HyperManiacalLFOExpanderWidget : ModuleWidget {
 	HyperManiacalLFOExpanderWidget(HyperManiacalLFOExpander *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 

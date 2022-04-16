@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Super Sample & Hold Module
 //	Sample/Track/Pass and Hold with probability
-//  Copyright (C) 2021  Adam Verspaget
+//	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -40,7 +40,6 @@ struct SampleAndHold2 : Module {
 		NUM_LIGHTS
 	};
 
-	
 	enum Modes {
 		SAMPLE,
 		TRACK,
@@ -62,13 +61,22 @@ struct SampleAndHold2 : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		// tracking mode switch
-		configParam(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Sample, Track or Pass Mode");
+		configSwitch(MODE_PARAM, 0.0f, 2.0f, 0.0f, "Hold mode",{"Sample & Hold", "Through", "Track & Hold"});
 
 		// knobs
 		configParam(PROB_PARAM, 0.0f, 1.0f, 1.0f, "Probability", " %", 0.0f, 100.0f, 0.0f);
 		configParam(PROB_CV_PARAM, -1.0f, 1.0f, 0.0f, "Probability CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(LEVEL_PARM, 0.0f, 1.0f, 1.0f, "Input level", " %", 0.0f, 100.0f, 0.0f);
 		configParam(OFFSET_PARAM, -1.0f, 1.0f, 0.0f, "Offset amount", " V", 0.0f, 10.0f, 0.0f);
+		
+		configInput(SAMPLE_INPUT, "Signal");
+		configInput(TRIG_INPUT, "Trigger");
+		configInput(MODE_INPUT, "Hold mode CV");
+		configInput(PROB_INPUT, "Probability CV");
+		configInput(OFFSET_INPUT, "Offset CV");
+		
+		configOutput(SAMPLE_OUTPUT, "Sampled signal");
+		configOutput(INV_OUTPUT, "Inverted sampled signal");
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -243,8 +251,10 @@ struct SampleAndHold2Widget : ModuleWidget {
 	SampleAndHold2Widget(SampleAndHold2 *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"	
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 

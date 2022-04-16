@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Euclidean Sequencer CV Expander
-//  Adds CV functionality to the Euclidean Sequencer module
-//  Copyright (C) 2020  Adam Verspaget
+//	Adds CV functionality to the Euclidean Sequencer module
+//	Copyright (C) 2020  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/Utility.hpp"
@@ -67,15 +67,6 @@ struct EuclidExpanderCV : Module {
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
 	
-	char knobColours[8][50] = {	"Grey", 
-								"Red", 
-								"Orange",  
-								"Yellow", 
-								"Blue", 
-								"Violet",
-								"White",
-								"Green"};	
-	
 	EuclidExpanderCV() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
@@ -93,10 +84,15 @@ struct EuclidExpanderCV : Module {
 		}
 		
 		// trigger source switch
-		configParam(CLOCK_SOURCE_PARAM, 0.0f, 2.0f, 2.0f, "Clock Source");
+		configSwitch(CLOCK_SOURCE_PARAM, 0.0f, 2.0f, 2.0f, "Clock Source", {"Rest pulses", "Clock", "Beat pulses"});
 			
 		// range switch
 		configParam(RANGE_SW_PARAM, 1.0f, 8.0f, 8.0f, "Scale");
+
+		configOutput(CV_OUTPUT, "CV");
+		configOutput(CVI_OUTPUT, "Inverted CV");
+		configOutput(GATE_OUTPUT, "Clock");
+		outputInfos[GATE_OUTPUT]->description = "Follows the selected clocking source";
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -246,15 +242,17 @@ struct EuclidExpanderCV : Module {
 		}			
 	}
 };
-
+								
 struct EuclidExpanderCVWidget : ModuleWidget {
 
 	std::string panelName;
-	
+
 	EuclidExpanderCVWidget(EuclidExpanderCV *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -290,14 +288,14 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 		
 	// channel menu item
 	struct ChannelMenu : MenuItem {
-		EuclidExpanderCV *module;		
+		EuclidExpanderCV *module;
 		
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 		
 			char buffer[20];
 			for (int i = 1; i < 8; i++) {
-				sprintf(buffer, "Channel %d (%s)", i, module->knobColours[i]);
+				sprintf(buffer, "Channel %d (%s)", i, CountModulaknobColours[i]);
 				ChannelMenuItem *channelMenuItem = createMenuItem<ChannelMenuItem>(buffer, CHECKMARK(module->userChannel == i));
 				channelMenuItem->module = module;
 				channelMenuItem->channelToUse = i;
@@ -320,7 +318,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i ++)
-				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->paramQuantity->setValue(0.0f);
+				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->setValue(0.0f);
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -340,7 +338,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i ++)
-				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->reset();
+				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -360,7 +358,7 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i ++)
-				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->randomize();
+				widget->getParam(EuclidExpanderCV::STEP_CV_PARAMS + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -410,12 +408,14 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 			if (((EuclidExpanderCV*)module)->doRedraw) {
 				int cid = ((EuclidExpanderCV*)module)->currentChannel;
 				char buffer[50];
-				sprintf(buffer, "res/Components/Knob%s.svg", ((EuclidExpanderCV*)module)->knobColours[cid]);
+				sprintf(buffer, "res/Components/Knob%s.svg", CountModulaknobColours[cid]);
 				
 				for (int i = 0; i < EUCLID_EXP_NUM_STEPS; i++) {
-					ParamWidget *p = getParam(EuclidExpanderCV::STEP_CV_PARAMS + i);
-					((CountModulaKnob *)(p))->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, buffer))); 
-					((CountModulaKnob *)(p))->dirtyValue = -1;
+					CountModulaKnob *p = (CountModulaKnob *)getParam(EuclidExpanderCV::STEP_CV_PARAMS + i);
+					p->svgFile = CountModulaknobColours[cid];
+					p->setSvg(Svg::load(asset::plugin(pluginInstance, buffer))); 
+					p->fb->dirty = true;
+					
 				}
 			}			
 		}

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - Voltage Controlled Clock/Gate Module
 //	A voltage controlled clock/gate divider (divide by 1 - approx 20)
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/FrequencyDivider.hpp"
@@ -58,13 +58,26 @@ struct ClockedRandomGates : Module {
 	ClockedRandomGates() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode");
+		configSwitch(MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode", {"Multi", "Single"});
 		
-		for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i++) {
-			configParam(PROB_CV_PARAM + i, -1.0f, 1.0f, 0.0f, "Probability CV Amount", " %", 0.0f, 100.0f, 0.0f);
-			configParam(PROB_PARAM + i, 0.0f, 1.0f, 0.5f, "Probability", " %", 0.0f, 100.0f, 0.0f);
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+
+		configOutput(POLY_GATE_OUTPUT, "Polyphonic gate");
+		configOutput(POLY_TRIG_OUTPUT, "Polyphonic trigger");
+		configOutput(POLY_CLOCK_OUTPUT, "Polyphonic gated clock");
+
+		std::string s;
+		for (int c = 0; c < CRG_EXP_NUM_CHANNELS; c++) {
+			s = "Channel " + std::to_string(c + 1);
+			configParam(PROB_CV_PARAM + c, -1.0f, 1.0f, 0.0f, s + " probability CV amount", " %", 0.0f, 100.0f, 0.0f);
+			configParam(PROB_PARAM + c, 0.0f, 1.0f, 0.5f, s + " probability", " %", 0.0f, 100.0f, 0.0f);
+			configInput(PROB_CV_INPUT + c, s + " probability CV");
+			configOutput(GATE_OUTPUT + c, s + " gate");
+			configOutput(TRIG_OUTPUT + c, s + " trigger");
+			configOutput(CLOCK_OUTPUT + c, s + " gated clock");
 		}
-		
+
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -272,8 +285,10 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 	ClockedRandomGatesWidget(ClockedRandomGates *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
 
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
+		
 		// screws
 		#include "../components/stdScrews.hpp"	
 
@@ -320,7 +335,7 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 		
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->reset();
+				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->getParamQuantity()->reset();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();
@@ -340,7 +355,7 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 			h->oldModuleJ = widget->toJson();
 
 			for (int i = 0; i < CRG_EXP_NUM_CHANNELS; i ++)
-				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->randomize();
+				widget->getParam(ClockedRandomGates::PROB_PARAM + i)->getParamQuantity()->randomize();
 
 			// history - new settings
 			h->newModuleJ = widget->toJson();

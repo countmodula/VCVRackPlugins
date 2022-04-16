@@ -113,7 +113,17 @@ struct OctetTriggerSequencer : Module {
 		configParam(PATTERN_B_CV_PARAM, -1.0f, 1.0f, 0.0f, "Pattern B CV amount", " %", 0.0f, 100.0f, 0.0f);
 		configParam(PATTERN_A_PARAM, 0.0f, 255.0f, (float)DEFAULT_PATTERN_A, "Pattern A select");
 		configParam(PATTERN_B_PARAM, 0.0f, 255.0f, (float)DEFAULT_PATTERN_B, "Pattern B select");
-		configParam(CHAIN_PARAM, 0.0f, 1.0f, 0.0f, "Chain patterns");
+		configButton(CHAIN_PARAM, "Chain patterns");
+
+		configInput(CLOCK_INPUT, "Clock");
+		configInput(RESET_INPUT, "Reset");
+		configInput(RUN_INPUT, "Run");
+		configInput(PATTERN_A_CV_INPUT, "Pattern A CV");
+		configInput(PATTERN_B_CV_INPUT, "Pattern B CV");
+		configInput(CHAIN_INPUT, "Chain CV");
+
+		configOutput(TRIG_A_OUTPUT, "Channel A");
+		configOutput(TRIG_B_OUTPUT, "Channel B");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
@@ -425,7 +435,9 @@ struct OctetTriggerSequencerWidget : ModuleWidget {
 	OctetTriggerSequencerWidget(OctetTriggerSequencer *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
@@ -460,8 +472,8 @@ struct OctetTriggerSequencerWidget : ModuleWidget {
 		float pos = float(COLUMN_POSITIONS[STD_COL1]);
 		int led = 0;
 		for (int col = 0; col < 8; col++) {
-			addChild(createLightCentered<MediumLight<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] - 8), module, OctetTriggerSequencer::PATTERN_A_LIGHTS + led));
-			addChild(createLightCentered<MediumLight<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] + 8), module, OctetTriggerSequencer::PATTERN_B_LIGHTS + led));
+			addChild(createLightCentered<MediumLightSquare<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] - 8), module, OctetTriggerSequencer::PATTERN_A_LIGHTS + led));
+			addChild(createLightCentered<MediumLightSquare<CountModulaSquareLight<CountModulaLightRG>>>(Vec(pos, STD_ROWS6[STD_ROW1] + 8), module, OctetTriggerSequencer::PATTERN_B_LIGHTS + led));
 
 			pos += 12.8f;
 			led += 2;

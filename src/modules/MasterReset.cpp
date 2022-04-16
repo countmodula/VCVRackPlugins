@@ -2,7 +2,7 @@
 //	/^M^\ Count Modula Plugin for VCV Rack - Manual Gate Module
 //	A simple manual gate generator with a nice big button offering gate, latch
 //	extended gate and trigger outputs 
-//  Copyright (C) 2019  Adam Verspaget
+//	Copyright (C) 2019  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
 #include "../inc/GateProcessor.hpp"
@@ -44,8 +44,18 @@ struct MasterReset : Module {
 	MasterReset() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(RESET_PARAM, 0.0f, 1.0f, 0.0f, "Reset");
+		configButton(RESET_PARAM, "Reset");
 
+		configInput(RESET_INPUT, "External reset");
+		configOutput(RESET_OUTPUT, "Reset");
+		configBypass(RESET_INPUT, RESET_INPUT);
+		
+		for (int i = 0; i < 4; i++) {
+			configInput(CLOCK_INPUTS + i, rack::string::f("Clock %d", i + 1)),
+			configOutput(CLOCK_OUTPUTS + i, rack::string::f("Clock %d", i + 1));
+			configBypass(CLOCK_INPUTS + i, CLOCK_OUTPUTS + i);
+		}
+		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
 	}
@@ -118,7 +128,9 @@ struct MasterResetWidget : ModuleWidget {
 	MasterResetWidget(MasterReset *module) {	
 		setModule(module);
 		panelName = PANEL_FILE;
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/" + panelName)));
+
+		// set panel based on current default
+		#include "../themes/setPanel.hpp"
 
 		// screws
 		#include "../components/stdScrews.hpp"	
