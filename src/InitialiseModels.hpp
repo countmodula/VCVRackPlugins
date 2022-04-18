@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - initialise models
-//  Copyright (C) 2019  Adam Verspaget
+//  Copyright (C) 2022  Adam Verspaget
 //----------------------------------------------------------------------------
 
 // Add all Models defined throughout the plugin
@@ -39,6 +39,7 @@ p->addModel(modelEuclid);
 p->addModel(modelEuclidExpanderCV);	
 p->addModel(modelEventArranger);	
 p->addModel(modelEventTimer);	
+p->addModel(modelEventTimer2);	
 p->addModel(modelFade);	
 p->addModel(modelFadeExpander);	
 p->addModel(modelG2T);	

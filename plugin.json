@@ -922,8 +922,16 @@
 		},
 		{
 		  "slug": "EventTimer",
-		  "name": "Event Timer",
-		  "description": "Clocked/realtime event timer",
+		  "name": "Countdown",
+		  "description": "Clocked/realtime event counter with 3 digits",
+		  "tags": [
+			"Clock modulator"
+		  ]
+		},
+		{
+		  "slug": "EventTimer2",
+		  "name": "Countdown 5",
+		  "description": "Clocked/realtime event counter with 5 digits",
 		  "tags": [
 			"Clock modulator"
 		  ]
