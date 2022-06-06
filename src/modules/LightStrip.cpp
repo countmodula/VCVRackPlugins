@@ -266,7 +266,6 @@ struct LightStripWidget : ModuleWidget {
 		ColorQuantity(std::string label, float *value, float defValue) {
 			defaultValue = clamp(defValue, 0.0f, 1.0f);
 			colorValue = value;
-			defValue = defValue;
 			text = label;
 		}
 		
