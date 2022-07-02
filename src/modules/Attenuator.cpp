@@ -42,9 +42,9 @@ struct Attenuator : Module {
 	Attenuator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CH1_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation/Attenuversion", " %", 0.0f, 100.0f, 0.0f);
+		configParam(CH1_ATTENUATION_PARAM, -1.0f, 1.0f, 0.0f, "Attenuation/Attenuversion", " %", 0.0f, 100.0f, 0.0f);
 		configParam(CH2_ATTENUATION_PARAM, 0.0f, 1.0f, 0.0f, "Attenuation", " %", 0.0f, 100.0f, 0.0f);
-		configSwitch(CH1_MODE_PARAM, 0.0f, 1.0f, 0.0f, "Mode",{"Attenuate", "Attenuvert"});
+		configSwitch(CH1_MODE_PARAM, 0.0f, 1.0f, 1.0f, "Mode",{"Attenuate", "Attenuvert"});
 
 		configInput(CH1_SIGNAL_INPUT, "A");
 		configInput(CH2_SIGNAL_INPUT, "B");
@@ -60,17 +60,19 @@ struct Attenuator : Module {
 	}
 
 	void onReset() override {
-		prevBipolar = bipolar = false;
-		paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = 0.0f;
+		prevBipolar = bipolar = true;
+		paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = -1.0f;
 	}
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(2));
+		json_object_set_new(root, "moduleVersion", json_integer(3));
 		
+		json_object_set_new(root, "mode", json_boolean(bipolar));
+				
 		// add the theme details
-		#include "../themes/dataToJson.hpp"		
+		#include "../themes/dataToJson.hpp"
 		
 		return root;
 	}
@@ -79,10 +81,14 @@ struct Attenuator : Module {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 		
-		prevBipolar = params[CH1_MODE_PARAM].getValue() > 0.5f;
+		json_t *m = json_object_get(root, "mode");
+
+		if (m) {
+			prevBipolar = json_boolean_value(m);
 		
-		// adjust the min value based on the chosen mode mode
-		paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = (prevBipolar ? -1.0f : 0.0f);
+			// adjust the min value based on the chosen mode mode
+			paramQuantities[Attenuator::CH1_ATTENUATION_PARAM]->minValue = (prevBipolar ? -1.0f : 0.0f);
+		}
 	}		
 	
 	void process(const ProcessArgs &args) override {
