@@ -19,6 +19,7 @@ struct GatedComparator : Module {
 		CV_PARAM,
 		LOOP_EN_PARAM,
 		ENUMS(MELODY_PARAMS, 8),
+		LOOP_MODE_PARAM,
 		NUM_PARAMS
 	};
 	
@@ -54,6 +55,15 @@ struct GatedComparator : Module {
 	
 	float stepValue = 8.0f / 255.0f;
 	
+	int processCount = 8;
+	
+	float threshold = 0.0f;
+	int loopLogicMode = 0;
+	float cvParam = 0.0f;
+	bool melodyBits[8] = {};
+	int bitMap [8] = {1, 2, 4, 8, 16, 32, 64, 128};
+	float bitValues [8] = {1.0f * stepValue, 2.0f * stepValue, 4.0f * stepValue, 8.0f * stepValue, 16.0f * stepValue, 32.0f * stepValue, 64.0f * stepValue, 128.0f * stepValue};
+	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"	
 	
@@ -68,7 +78,8 @@ struct GatedComparator : Module {
 		configParam(CV_PARAM, -1.0f, 1.0f, 0.0f, "Comparator CV amount", " %", 0.0f, 100.0f, 0.0f);
 		
 		configSwitch(LOOP_EN_PARAM, 0.0f, 1.0, 0.0f, "Loop", {"Disabled", "Enabled"});
-		
+		configSwitch(LOOP_MODE_PARAM, 0.0f, 2.0, 0.0f, "Loop logic", {"OR", "AND", "XOR"});
+
 		configInput(CLOCK_INPUT, "Clock");
 		configInput(COMP_INPUT, "Comparator");
 		configInput(CV_INPUT, "Comparator threshold CV");
@@ -95,6 +106,8 @@ struct GatedComparator : Module {
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+		
+		processCount = 8;
 	}
 
 	json_t *dataToJson() override {
@@ -122,6 +135,7 @@ struct GatedComparator : Module {
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		processCount = 8;
 	}
 
 	void onReset() override {
@@ -130,34 +144,58 @@ struct GatedComparator : Module {
 		gpLoopEnabled.reset();
 		loopEnabled = false;
 		shiftReg = 0;
+		processCount = 8;
 	}
 
 	void process(const ProcessArgs &args) override {
+		if (++processCount > 8) {
+			processCount = 0;
+			
+			threshold = params[THRESHOLD_PARAM].getValue();
+			loopEnabled = params[LOOP_EN_PARAM].getValue() > 0.5f;
+			loopLogicMode = params[LOOP_MODE_PARAM].getValue();
+			cvParam = params[CV_PARAM].getValue();
+			
+			for (int i = 0; i < 8; i++) {
+				melodyBits[i] = params[MELODY_PARAMS + i].getValue() > 0.5f;
+			}
+		}
 		
 		// Compute the threshold from the threshold parameter and cv input
-		float threshold = params[THRESHOLD_PARAM].getValue();
-		float cv = inputs[CV_INPUT].getVoltage() * params[CV_PARAM].getValue();
+		float cv = inputs[CV_INPUT].getVoltage() * cvParam;
 		
 		// compare
-		float compare = inputs[COMP_INPUT].getVoltage();
-		bool state = (compare > (threshold + cv));
-
+		bool comp = (inputs[COMP_INPUT].getVoltage() > (threshold + cv));
+		bool state = comp;
+		
 		// is loop enabled? - jack overrides button
-		gpLoopEnabled.set(inputs[LOOP_EN_INPUT].getVoltage());
-		if (inputs[LOOP_EN_INPUT].isConnected())
+		if (inputs[LOOP_EN_INPUT].isConnected()) {
+			gpLoopEnabled.set(inputs[LOOP_EN_INPUT].getVoltage());
 			loopEnabled = gpLoopEnabled.high();
-		else
-			loopEnabled = (params[LOOP_EN_PARAM].getValue() > 0.05f);
+		}
 		
 		// handle the loop input
 		if (loopEnabled) {
+			lights[LOOP_EN_LIGHT].setBrightness(1.0f);
+			
 			gpLoopIn.set(inputs[LOOP_INPUT].getVoltage());
-			state |= gpLoopIn.high();
+			switch (loopLogicMode) {
+				case 1: // AND
+					state &= gpLoopIn.high();
+					break;
+				case 2: // XOR
+					state ^= gpLoopIn.high();
+					break;
+				default: // OR
+					state |= gpLoopIn.high();
+					break;
+			}
 		}
-
+		else 
+			lights[LOOP_EN_LIGHT].setBrightness(0.0f);
+		
 		// process the clock
-		float clock = inputs[CLOCK_INPUT].getVoltage(); 
-		gpClock.set(clock);
+		gpClock.set(inputs[CLOCK_INPUT].getVoltage());
 		
 		// shift the register if we need to
 		if (gpClock.leadingEdge()) {
@@ -168,29 +206,28 @@ struct GatedComparator : Module {
 		}
 		
 		// process the shift register values
-		short bitMask = 0x01;
 		float rm = 0.0f;
 		for (int i = 0; i < 8; i ++) {
 			// outputs and lights
-			bool v = ((shiftReg & bitMask) == bitMask);
-			outputs[Q_OUTPUTS + i].setVoltage(boolToGate(v));
-			lights[Q_LIGHTS + i].setBrightness(boolToLight(v));
-			
-			// determine random melody value for this bit
-			if (v && params[MELODY_PARAMS + i].getValue() > 0.05f)
-				rm += (((float)(bitMask)) * stepValue);
-			
-			// prepare for next bit
-			bitMask = bitMask << 1;
+			if ((shiftReg & bitMap[i]) > 0) {
+				outputs[Q_OUTPUTS + i].setVoltage(10.0f);
+				lights[Q_LIGHTS + i].setBrightness(1.0f);
+				
+				// determine random melody value for this bit
+				if (melodyBits[i])
+					rm += bitValues[i];
+			}
+			else {
+				outputs[Q_OUTPUTS + i].setVoltage(0.0f);
+				lights[Q_LIGHTS + i].setBrightness(0.0f);
+			}
 		}
 		
 		// other outputs and lights
 		outputs[RM_OUTPUT].setVoltage(rm);
 		outputs[RMI_OUTPUT].setVoltage(-rm);
-		outputs[COMP_OUTPUT].setVoltage(boolToGate(state));
+		outputs[COMP_OUTPUT].setVoltage(boolToGate(comp));
 		lights[COMP_LIGHT].setBrightness(boolToLight(state));
-		lights[LOOP_EN_LIGHT].setBrightness(boolToLight(loopEnabled));
-		
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		// set up details for the expander
@@ -216,7 +253,7 @@ struct GatedComparator : Module {
 				rightExpander.module->leftExpander.messageFlipRequested = true;
 			}
 		}
-#endif			
+#endif
 	}
 
 };
@@ -251,6 +288,7 @@ struct GatedComparatorWidget : ModuleWidget {
 		addParam(createParamCentered<CountModulaToggle2P>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_HALF_ROWS6(STD_ROW3)), module, GatedComparator:: LOOP_EN_PARAM));
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6], STD_HALF_ROWS6(STD_ROW3)), module, GatedComparator::LOOP_EN_LIGHT));
 		addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_HALF_ROWS6(STD_ROW3)), module, GatedComparator::LOOP_EN_INPUT));
+		addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL9], STD_HALF_ROWS6(STD_ROW3)), module, GatedComparator:: LOOP_MODE_PARAM));
 
 		// shift register section
 		for (int s = 0; s < 8; s++) {
