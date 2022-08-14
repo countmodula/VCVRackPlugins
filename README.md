@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 2.1.0</h3>
+<h3>Modules - Release 2.2.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -60,11 +60,13 @@ Follow Count Modula on facebook:
 <li>Clocked Random Gate Expander - CV</li>
 <li>Clocked Random Gates Expander - Logic</li>
 <li>Comparator</a></li>
+<li>Countdown 3<font color="red"> * new in v2.2.0</font></li>
+<li>Countdown 5<font color="red"> * new in v2.2.0</font></li>
 <li>D Flip Flop (Single)</li>
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
 <li>Event Arranger</a></li>
-<li>Event Timer</li>
+<li>Event Timer <font color="red">(Renamed to Countdown 3) in v2.2.0</font></li>
 <li>Fade</li>
 <li>Fade Expander</li>
 <li>Gate Delay</li>
@@ -90,7 +92,7 @@ Follow Count Modula on facebook:
 <li>Multiplexer</li>
 <li>Mute</li>
 <li>Mute-iple</li>
-<li>Nibble Trigger Sequencer <font color="red">* New in v2.1.0</font></li>
+<li>Nibble Trigger Sequencer</li>
 <li>Octet Trigger Sequencer</li>
 <li>Octet Trigger Sequencer CV Expander</li>
 <li>Octet Trigger Sequencer Gate Expander </li>
@@ -109,8 +111,8 @@ Follow Count Modula on facebook:
 <li>Poly VC Switch</li>
 <li>Polyrhythmic Generator MkII</li>
 <li>Rack Ears</li>
-<li>Random Access Switch 1-8 <font color="red">* New in v2.1.0</font></li>
-<li>Random Access Switch 8-1 <font color="red">* New in v2.1.0</font></li>
+<li>Random Access Switch 1-8</li>
+<li>Random Access Switch 8-1</li>
 <li>Rectifier</li>
 <li>Sample & Hold</li>
 <li>Sequencer Expanders

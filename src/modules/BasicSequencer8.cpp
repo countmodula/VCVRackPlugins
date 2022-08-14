@@ -573,20 +573,25 @@ struct BasicSequencer8Widget : ModuleWidget {
 		initTrigMenuItem->cvInit = false;
 		menu->addChild(initTrigMenuItem);
 
+		// trigger only init
+		InitMenuItem *initCVTrigMenuItem = createMenuItem<InitMenuItem>("Initialize CV/Gates/Triggers Only");
+		initCVTrigMenuItem->widget = this;
+		menu->addChild(initCVTrigMenuItem);
+
 		// CV only random
-		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("CV Only", "Shitf+Ctrl+C");
+		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only", "Shitf+Ctrl+C");
 		randCVMenuItem->widget = this;
 		randCVMenuItem->triggerRand = false;
 		menu->addChild(randCVMenuItem);
 
 		// gate/trigger only random
-		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only", "Shitf+Ctrl+T");
+		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only", "Shitf+Ctrl+T");
 		randTrigMenuItem->widget = this;
 		randTrigMenuItem->cvRand = false;
 		menu->addChild(randTrigMenuItem);
 
 		// cv/gate/trigger only random
-		RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("CV/Gates/Triggers Only", "Shift+Ctrl+R");
+		RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("Randomize CV/Gates/Triggers Only", "Shift+Ctrl+R");
 		randCVTrigMenuItem->widget = this;
 		menu->addChild(randCVTrigMenuItem);
 	}
