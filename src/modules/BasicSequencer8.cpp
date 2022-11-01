@@ -476,7 +476,7 @@ struct BasicSequencer8Widget : ModuleWidget {
 	
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
-	
+
 	struct InitMenuItem : MenuItem {
 		BasicSequencer8Widget *widget;
 		bool triggerInit = true;
@@ -512,37 +512,42 @@ struct BasicSequencer8Widget : ModuleWidget {
 		}
 	};	
 	
+	
+	void doRandom(bool triggerRand, bool cvRand){
+		// history - current settings
+		history::ModuleChange *h = new history::ModuleChange;
+		if (!triggerRand && cvRand)
+			h->name = "randomize cv";
+		else if (triggerRand && !cvRand)
+			h->name = "randomize gates/triggers";
+		else
+			h->name = "randomize cv/gates/triggers";
+		
+		h->moduleId = this->module->id;
+		h->oldModuleJ = this->toJson();
+
+		// step controls
+		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+			// triggers/gates
+			if (triggerRand)
+				this->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->getParamQuantity()->randomize();
+			
+			if (cvRand)
+				this->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->randomize();
+		}
+
+		// history - new settings
+		h->newModuleJ = this->toJson();
+		APP->history->push(h);	
+	}	
+	
 	struct RandMenuItem : MenuItem {
 		BasicSequencer8Widget *widget;
 		bool triggerRand = true;
 		bool cvRand = true;
 	
 		void onAction(const event::Action &e) override {
-		
-			// history - current settings
-			history::ModuleChange *h = new history::ModuleChange;
-			if (!triggerRand && cvRand)
-				h->name = "randomize CV";
-			else if (triggerRand && !cvRand)
-				h->name = "randomize triggers";
-			else
-				h->name = "randomize";
-			h->moduleId = widget->module->id;
-			h->oldModuleJ = widget->toJson();
-
-			// step controls
-			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-				// triggers/gates
-				if (triggerRand)
-					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->getParamQuantity()->randomize();
-				
-				if (cvRand)
-					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->randomize();
-			}
-
-			// history - new settings
-			h->newModuleJ = widget->toJson();
-			APP->history->push(h);	
+			widget->doRandom(triggerRand, cvRand);
 		}
 	};
 	
@@ -568,17 +573,49 @@ struct BasicSequencer8Widget : ModuleWidget {
 		initTrigMenuItem->cvInit = false;
 		menu->addChild(initTrigMenuItem);
 
+		// trigger only init
+		InitMenuItem *initCVTrigMenuItem = createMenuItem<InitMenuItem>("Initialize CV/Gates/Triggers Only");
+		initCVTrigMenuItem->widget = this;
+		menu->addChild(initCVTrigMenuItem);
+
 		// CV only random
-		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only");
+		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only", "Shitf+Ctrl+C");
 		randCVMenuItem->widget = this;
 		randCVMenuItem->triggerRand = false;
 		menu->addChild(randCVMenuItem);
 
-		// trigger only random
-		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only");
+		// gate/trigger only random
+		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only", "Shitf+Ctrl+T");
 		randTrigMenuItem->widget = this;
 		randTrigMenuItem->cvRand = false;
 		menu->addChild(randTrigMenuItem);
+
+		// cv/gate/trigger only random
+		RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("Randomize CV/Gates/Triggers Only", "Shift+Ctrl+R");
+		randCVTrigMenuItem->widget = this;
+		menu->addChild(randCVTrigMenuItem);
+	}
+
+	void onHoverKey(const event::HoverKey &e) override {
+		if (e.action == GLFW_PRESS && (e.mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
+			
+			switch (e.key) {
+				case GLFW_KEY_C:
+					doRandom(false, true);
+					e.consume(this);
+					break;
+				case GLFW_KEY_R:
+					doRandom(true, true);
+					e.consume(this);
+					break;
+				case GLFW_KEY_T:
+					doRandom(true, false);
+					e.consume(this);
+					break;
+			}
+		}
+
+		ModuleWidget::onHoverKey(e);
 	}
 	
 	void step() override {

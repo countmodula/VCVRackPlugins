@@ -21,6 +21,34 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
+<td align="center">14-Aug-2022</td>
+<td align="center">v2.2.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Countdown 3 - 3 digit counter/timer (Used to be called Event Timer) </li>
+<li>Countdown 5 - 5 digit counter/timer</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Event Time is now called Countdown 3 and now has a retrigger option</li>
+<li>Basic Sequencer - add hotkeys for randomise functions>/li>
+<li>8/16 Step Sequencers and channel expanders - add hotkeys for randomise functions</li>
+<li>Gated Comparator - add logic options to looped input</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>Issue #91: Matrix mixer CV source missing</li>
+<li>Issue #92: Matrix mixer tool tips not reflecting selected mode</li>
+<li>Issue #93: Attenuator Channel 1 not loading correct values in attenuvert mode</li>
+<li>Issue #96: 8/16 to 1 switches causing rack to crash when reset is triggered</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">03-Apr-2022</td>
 <td align="center">v2.1.0</td>
 <td align="left">

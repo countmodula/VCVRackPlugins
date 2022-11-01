@@ -75,21 +75,19 @@ struct CountModulaLEDDisplay : ModuleLightWidget {
 	}
 };
 
-struct CountModulaLEDDisplayLarge2 : CountModulaLEDDisplay {
-	CountModulaLEDDisplayLarge2() {
-		numChars = 2;
+struct CountModulaLEDDisplayLarge : CountModulaLEDDisplay {
+	std::string format;
+	
+	CountModulaLEDDisplayLarge(int digits) {
+		numChars = digits;
 		fontSize = 28;
-		box.size = Vec(50, 40);
+		box.size = Vec(digits * 25, 40);
 		textPos = Vec(3, 34);
+		format = rack::string::f("%c%02dd", '%', digits);
 	}
-};
-
-struct CountModulaLEDDisplayLarge3 : CountModulaLEDDisplay {
-	CountModulaLEDDisplayLarge3() {
-		numChars = 3;
-		fontSize = 28;
-		box.size = Vec(75, 40);
-		textPos = Vec(3, 34);
+	
+	void setText(int n) {
+		text = rack::string::f(format.c_str(), n);
 	}
 };
 

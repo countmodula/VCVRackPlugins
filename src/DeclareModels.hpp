@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - model declarations.
-//  Copyright (C) 2019  Adam Verspaget
+//  Copyright (C) 2022  Adam Verspaget
 //----------------------------------------------------------------------------
 
 extern Model *modelAnalogueShiftRegister;
@@ -38,6 +38,7 @@ extern Model *modelEuclid;
 extern Model *modelEuclidExpanderCV;
 extern Model *modelEventArranger;
 extern Model *modelEventTimer;
+extern Model *modelEventTimer2;
 extern Model *modelFade;
 extern Model *modelFadeExpander;
 extern Model *modelG2T;

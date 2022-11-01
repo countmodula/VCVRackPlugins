@@ -34,7 +34,7 @@ struct StartupDelay : Module {
 
 	bool starting = true;
 	bool ended = false;
-	
+
 	PulseModifier pgStart;
 	dsp::PulseGenerator pgEnd;
 
@@ -56,6 +56,7 @@ struct StartupDelay : Module {
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+
 	}
 	
 	json_t *dataToJson() override {

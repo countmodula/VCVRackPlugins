@@ -409,7 +409,7 @@ struct STRUCT_NAME : Module {
 		}
 #endif
 #ifdef N_TO_ONE
-		if (count > 0) {
+		if (count > 0 && count <= SEQ_NUM_STEPS) {
 			int j = count - 1;
 
 			if (inputs[SIGNAL_INPUTS + j].isConnected()) {
@@ -425,7 +425,7 @@ struct STRUCT_NAME : Module {
 				if (mode == NORMAL_MODE) {
 					outputs[SIGNAL_OUTPUT].setChannels(1);
 					outputs[SIGNAL_OUTPUT].setVoltage(0.0f);
-				}				
+				}
 			}
 		}
 		else {

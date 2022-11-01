@@ -623,38 +623,43 @@ struct WIDGET_NAME : ModuleWidget {
 		}
 	};		
 	
+	void doRandom(bool triggerRand, bool cvRand)
+	{
+		// history - current settings
+		history::ModuleChange *h = new history::ModuleChange;
+		if (!triggerRand && cvRand)
+			h->name = "randomize cv";
+		else if (triggerRand && !cvRand)
+			h->name = "randomize gates/triggers";
+		else
+			h->name = "randomize cv/gates/triggers";
+		
+		h->moduleId = this->module->id;
+		h->oldModuleJ = this->toJson();
+
+		// step controls
+		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+			// triggers/gates
+			if (triggerRand)
+				this->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->randomize();
+			
+			if (cvRand)
+				this->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
+		}
+
+		// history - new settings
+		h->newModuleJ = this->toJson();
+		APP->history->push(h);	
+	}
+	
+	
 	struct RandMenuItem : MenuItem {
 		WIDGET_NAME *widget;
 		bool triggerRand = true;
 		bool cvRand = true;
 	
 		void onAction(const event::Action &e) override {
-		
-			// history - current settings
-			history::ModuleChange *h = new history::ModuleChange;
-			if (!triggerRand && cvRand)
-				h->name = "randomize cv";
-			else if (triggerRand && !cvRand)
-				h->name = "randomize gates/triggers";
-			else
-				h->name = "randomize cv/gates/triggers";
-			
-			h->moduleId = widget->module->id;
-			h->oldModuleJ = widget->toJson();
-
-			// step controls
-			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-				// triggers/gates
-				if (triggerRand)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->randomize();
-				
-				if (cvRand)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
-			}
-
-			// history - new settings
-			h->newModuleJ = widget->toJson();
-			APP->history->push(h);	
+			widget->doRandom(triggerRand, cvRand);
 		}
 	};	
 	
@@ -666,19 +671,19 @@ struct WIDGET_NAME : ModuleWidget {
 			Menu *menu = new Menu;
 
 			// CV only random
-			RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("CV Only");
+			RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("CV Only", "Shitf+Ctrl+C");
 			randCVMenuItem->widget = widget;
 			randCVMenuItem->triggerRand = false;
 			menu->addChild(randCVMenuItem);
 
 			// gate/trigger only random
-			RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only");
+			RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only", "Shitf+Ctrl+T");
 			randTrigMenuItem->widget = widget;
 			randTrigMenuItem->cvRand = false;
 			menu->addChild(randTrigMenuItem);	
 			
-			// gate/trigger only random
-			RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("CV/Gates/Triggers Only");
+			// cv/gate/trigger only random
+			RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("CV/Gates/Triggers Only", "Shift+Ctrl+R");
 			randCVTrigMenuItem->widget = widget;
 			menu->addChild(randCVTrigMenuItem);	
 			
@@ -707,6 +712,29 @@ struct WIDGET_NAME : ModuleWidget {
 		menu->addChild(randMenuItem);
 
 	}
+	
+	void onHoverKey(const event::HoverKey &e) override {
+		if (e.action == GLFW_PRESS && (e.mods & RACK_MOD_MASK) == (RACK_MOD_CTRL | GLFW_MOD_SHIFT)) {
+			
+			switch (e.key) {
+				case GLFW_KEY_C:
+					doRandom(false, true);
+					e.consume(this);
+					break;
+				case GLFW_KEY_R:
+					doRandom(true, true);
+					e.consume(this);
+					break;				
+				case GLFW_KEY_T:
+					doRandom(true, false);
+					e.consume(this);
+					break;				
+			}
+		}
+
+		ModuleWidget::onHoverKey(e);
+	}
+	
 	
 	void step() override {
 		if (module) {

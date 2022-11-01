@@ -145,7 +145,7 @@ struct VCPulseDivider : Module {
 
 struct VCPulseDividerWidget : ModuleWidget {
 	std::string panelName;
-	CountModulaLEDDisplayLarge2 *divDisplay;
+	CountModulaLEDDisplayLarge *divDisplay;
 	
 	VCPulseDividerWidget(VCPulseDivider *module) {
 		setModule(module);
@@ -176,9 +176,9 @@ struct VCPulseDividerWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS6[STD_ROW6]), module, VCPulseDivider::DIVN_LIGHT));
 	
 		// LED display
-		divDisplay = new CountModulaLEDDisplayLarge2();
+		divDisplay = new CountModulaLEDDisplayLarge(2);
 		divDisplay->setCentredPos(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS6[STD_ROW1]));
-		divDisplay->text =  "01";
+		divDisplay->setText(1);
 		addChild(divDisplay);
 		
 	}
@@ -200,8 +200,7 @@ struct VCPulseDividerWidget : ModuleWidget {
 	void step() override {
 		if (module) {
 			VCPulseDivider *m = (VCPulseDivider *)module;
-				
-			divDisplay->text = rack::string::f("%02d", m->length);
+			divDisplay->setText(m->length);
 			
 			// process any change of theme
 			#include "../themes/step.hpp"

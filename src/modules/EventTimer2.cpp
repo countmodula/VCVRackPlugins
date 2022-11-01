@@ -9,16 +9,15 @@
 #include "../inc/GateProcessor.hpp"
 #include "../inc/Utility.hpp"
 
+#define STRUCT_NAME EventTimer2
+#define WIDGET_NAME EventTimer2Widget
+#define MODULE_NAME "EventTimer2"
+#define PANEL_FILE "EventTimer2.svg"
+#define MODEL_NAME	modelEventTimer2
+
 // set the module name for the theme selection functions
-#define THEME_MODULE_NAME EventTimer
+#define THEME_MODULE_NAME EventTimer2
 
-// module specifics names
-#define STRUCT_NAME EventTimer
-#define WIDGET_NAME EventTimerWidget
-#define MODULE_NAME "EventTimer"
-#define PANEL_FILE "EventTimer.svg"
-#define MODEL_NAME	modelEventTimer
-
-#define NUM_DIGITS 3
+#define NUM_DIGITS 5
 
 #include "EventTimer.hpp"
