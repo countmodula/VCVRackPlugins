@@ -29,8 +29,17 @@ struct HyperManiacalLFOExpander : Module {
 	enum LightIds {
 		NUM_LIGHTS
 	};
+	
+	enum OffsetModes {
+		OFFSET_BIPOLAR,
+		OFFSET_UNIPOLAR,
+		OFFSET_FOLLOW,
+		NUM_OFFSET_MODES
+	};
 
 	const float factor = 5.0f/1.2f;
+	
+	int offsetMode = 0;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -57,16 +66,20 @@ struct HyperManiacalLFOExpander : Module {
 		
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
+		
+		offsetMode = OFFSET_BIPOLAR;
 	}
 
 	void onReset() override {
+		offsetMode = OFFSET_BIPOLAR;
 	}
 
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 		
-		json_object_set_new(root, "moduleVersion", json_integer(1));
-			
+		json_object_set_new(root, "moduleVersion", json_integer(2));
+		json_object_set_new(root, "offsetMode", json_integer(offsetMode));	
+		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
 		
@@ -76,14 +89,32 @@ struct HyperManiacalLFOExpander : Module {
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
+		json_t *o = json_object_get(root, "offsetMode");
+		
+		if (o)
+			offsetMode = json_integer_value(o);
 	}
 	
 	void process(const ProcessArgs &args) override {
 
 		if (leftExpander.module && isExpandableModule(leftExpander.module)) {
 			messagesFromMaster = (HyperManiacalLFOExpanderMessage *)(leftExpander.consumerMessage);
+
+			float offset;
+			switch(offsetMode) {
+				case OFFSET_UNIPOLAR:
+					offset = messagesFromMaster->unipolar ? 0.0f : -1.2f;
+					break;
+				case OFFSET_FOLLOW:
+					offset = 0.0f;
+					break;
+				default:
+				case OFFSET_BIPOLAR:
+					offset = messagesFromMaster->unipolar ? 1.2f : 0.0f;
+					break;
+			}
 			
-			float offset = messagesFromMaster->unipolar ? 1.2f : 0.0f;
 			for (int i = 0; i < 6; i++) {
 				outputs[SIN_OUTPUTS + i].setVoltage((messagesFromMaster->sin[i] - offset) * factor);
 				outputs[SAW_OUTPUTS + i].setVoltage((messagesFromMaster->saw[i] - offset) * factor);
@@ -128,6 +159,40 @@ struct HyperManiacalLFOExpanderWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
+
+	//---------------------------------------------------------------------------------------------
+	// offset mode menu
+	//---------------------------------------------------------------------------------------------
+	// offset mode menu item
+	struct OffsetModeMenuItem : MenuItem {
+		HyperManiacalLFOExpander *module;
+		int mode;
+
+		void onAction(const event::Action &e) override {
+			module->offsetMode = mode;
+		}
+	};
+	
+	// offset mode menu
+	struct OffsetModeMenu : MenuItem {
+		HyperManiacalLFOExpander *module;
+
+		const char *menuLabels[HyperManiacalLFOExpander::NUM_OFFSET_MODES] = {"Bipolar", "Unipolar", "Follow LFO" };
+
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			for (int i = 0; i < HyperManiacalLFOExpander::NUM_OFFSET_MODES; i++) {
+				OffsetModeMenuItem *modeMenuItem = createMenuItem<OffsetModeMenuItem>(menuLabels[i], CHECKMARK(module->offsetMode == i));
+				modeMenuItem->module = module;
+				modeMenuItem->mode = i;
+				menu->addChild(modeMenuItem);
+			}
+
+			return menu;
+		}
+	};
+
 	void appendContextMenu(Menu *menu) override {
 		HyperManiacalLFOExpander *module = dynamic_cast<HyperManiacalLFOExpander*>(this->module);
 		assert(module);
@@ -137,6 +202,12 @@ struct HyperManiacalLFOExpanderWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+		
+		
+		// add the output mode menu
+		OffsetModeMenu *modeMenu = createMenuItem<OffsetModeMenu>("Offset mode", RIGHT_ARROW);
+		modeMenu->module = module;
+		menu->addChild(modeMenu);		
 	}	
 	
 	void step() override {
