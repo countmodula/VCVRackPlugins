@@ -1469,6 +1469,9 @@ struct PaletteWidget : ModuleWidget {
 			// add the theme menu items
 			#include "../themes/themeMenus.hpp"
 			
+			menu->addChild(new MenuSeparator());
+			menu->addChild(createMenuLabel("Settings"));	
+		
 			HotKeyMenu *hkMenu = createMenuItem<HotKeyMenu>("Hotkeys", RIGHT_ARROW);
 			hkMenu->module = module;
 			menu->addChild(hkMenu);

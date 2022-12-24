@@ -192,6 +192,9 @@ struct VCFrequencyDividerMkIIWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"		
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));		
+
 		// add legacy mode menu item
 		LegacyModeMenuItem *legacyMenuItem = createMenuItem<LegacyModeMenuItem>("Legacy Mode", CHECKMARK(module->legacyMode));
 		legacyMenuItem->module = module;

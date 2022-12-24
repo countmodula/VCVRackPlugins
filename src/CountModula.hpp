@@ -23,6 +23,11 @@ void saveDefaultIntegerValue(std::string setting, int value);
 void setDefaultTheme(int themeToUse, bool previous);
 int getDefaultTheme(bool previous);
 
+
+// hack for module expanders always to the right or left
+void setModulePosNearestRight(ModuleWidget* mw, math::Vec pos);
+void setModulePosNearestLeft(ModuleWidget* mw, math::Vec pos);
+
 #include "components/CountModulaKnobs.hpp"
 #include "components/CountModulaComponents.hpp"
 #include "components/CountModulaPushButtons.hpp"

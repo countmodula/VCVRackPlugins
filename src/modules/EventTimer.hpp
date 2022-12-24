@@ -378,6 +378,9 @@ struct WIDGET_NAME : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+		
 		// add the retrigger mode selection menu
 		RetrigMenuItem *retrigMenuItem = createMenuItem<RetrigMenuItem>("Retrigger", CHECKMARK(module->retrigger));
 		retrigMenuItem->module = module;

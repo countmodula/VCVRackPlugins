@@ -379,6 +379,9 @@ struct EuclidExpanderCVWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 				
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Sequence"));
+		
 		// add channel menu item
 		ChannelMenu *channelMenuItem = createMenuItem<ChannelMenu>("Channel", RIGHT_ARROW);
 		channelMenuItem->module = module;

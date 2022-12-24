@@ -614,6 +614,9 @@ struct EuclidWidget : ModuleWidget {
 		}
 	};		
 	
+	// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"	
+	
 	void appendContextMenu(Menu *menu) override {
 		Euclid *module = dynamic_cast<Euclid*>(this->module);
 		assert(module);
@@ -624,11 +627,16 @@ struct EuclidWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"	
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+		
 		// quantize option
 		QuantizeMenuItem *quantizeMenuItem = createMenuItem<QuantizeMenuItem>("Quantize", CHECKMARK(module->quantizeChanges));
 		quantizeMenuItem->module = module;
 		menu->addChild(quantizeMenuItem);
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Pattern"));		
 		// pattern only init
 		InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>("Initialize Pattern");
 		initMenuItem->widget = this;
@@ -638,6 +646,16 @@ struct EuclidWidget : ModuleWidget {
 		RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>("Randomize Pattern");
 		randMenuItem->widget = this;
 		menu->addChild(randMenuItem);
+		
+		//add the expander menu item		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+		AddExpanderMenuItem *expMenuItem = createMenuItem<AddExpanderMenuItem>("Add CV expander");
+		expMenuItem->module = module;
+		expMenuItem->model = modelEuclidExpanderCV;
+		expMenuItem->position = box.pos;
+		expMenuItem->expanderName = "CV";
+		menu->addChild(expMenuItem);			
 	}
 	
 	void step() override {

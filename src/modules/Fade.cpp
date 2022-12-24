@@ -487,6 +487,9 @@ struct FadeWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
+	// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"
+
 	void appendContextMenu(Menu *menu) override {
 		Fade *module = dynamic_cast<Fade*>(this->module);
 		assert(module);
@@ -497,11 +500,23 @@ struct FadeWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
-		// add the output mode menu
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+
+		// add the control input mode menu
 		ControlModeMenu *modeMenu = createMenuItem<ControlModeMenu>("Control Input Mode", RIGHT_ARROW);
 		modeMenu->module = module;
 		menu->addChild(modeMenu);
 		
+		//add the expander menu item		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+		AddExpanderMenuItem *expMenuItem = createMenuItem<AddExpanderMenuItem>("Add output expander");
+		expMenuItem->module = module;
+		expMenuItem->model = modelFadeExpander;
+		expMenuItem->position = box.pos;
+		expMenuItem->expanderName = "output";
+		menu->addChild(expMenuItem);			
 	}	
 	
 	void step() override {

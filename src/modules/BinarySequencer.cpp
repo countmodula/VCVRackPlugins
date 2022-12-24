@@ -398,6 +398,11 @@ struct BinarySequencerWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 	
+#ifdef SEQUENCER_EXP_MAX_CHANNELS		
+	// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"		
+#endif
+		
 	void appendContextMenu(Menu *menu) override {
 		BinarySequencer *module = dynamic_cast<BinarySequencer*>(this->module);
 		assert(module);
@@ -408,6 +413,11 @@ struct BinarySequencerWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"	
 
+		
+		// add expander menu
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Sequence"));
+		
 		// CV only init
 		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize Division Mix Only");
 		initCVMenuItem->widget = this;
@@ -417,6 +427,47 @@ struct BinarySequencerWidget : ModuleWidget {
 		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize Division Mix Only");
 		randCVMenuItem->widget = this;
 		menu->addChild(randCVMenuItem);
+
+#ifdef SEQUENCER_EXP_MAX_CHANNELS			
+		// add expander menu
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+	
+		AddExpanderMenuItem *cvMenuItem = createMenuItem<AddExpanderMenuItem>("Add CV expander");
+		cvMenuItem->module = module;
+		cvMenuItem->model = modelSequencerExpanderCV8;
+		cvMenuItem->position = box.pos;
+		cvMenuItem->expanderName = "CV";
+		menu->addChild(cvMenuItem);	
+		
+		AddExpanderMenuItem *outputMenuItem = createMenuItem<AddExpanderMenuItem>("Add output expander");
+		outputMenuItem->module = module;
+		outputMenuItem->model = modelSequencerExpanderOut8;
+		outputMenuItem->position = box.pos;
+		outputMenuItem->expanderName = "output";
+		menu->addChild(outputMenuItem);		
+		
+		AddExpanderMenuItem *trigMenuItem = createMenuItem<AddExpanderMenuItem>("Add trigger expander");
+		trigMenuItem->module = module;
+		trigMenuItem->model = modelSequencerExpanderTrig8;
+		trigMenuItem->position = box.pos;
+		trigMenuItem->expanderName = "trigger";
+		menu->addChild(trigMenuItem);			
+		
+		AddExpanderMenuItem *melodyMenuItem = createMenuItem<AddExpanderMenuItem>("Add random melody expander");
+		melodyMenuItem->module = module;
+		melodyMenuItem->model = modelSequencerExpanderRM8;
+		melodyMenuItem->position = box.pos;
+		melodyMenuItem->expanderName = "random melody";
+		menu->addChild(melodyMenuItem);	
+
+		AddExpanderMenuItem *logicMenuItem = createMenuItem<AddExpanderMenuItem>("Add logic expander");
+		logicMenuItem->module = module;
+		logicMenuItem->model = modelSequencerExpanderLog8;
+		logicMenuItem->position = box.pos;
+		logicMenuItem->expanderName = "logic";
+		menu->addChild(logicMenuItem);				
+#endif		
 	}
 	
 	void step() override {

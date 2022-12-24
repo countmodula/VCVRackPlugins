@@ -422,6 +422,9 @@ struct ClockedRandomGateExpanderCVWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Sequence"));
+		
 		// CV only init
 		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize CV Values Only");
 		initCVMenuItem->widget = this;

@@ -735,12 +735,15 @@ struct OscilloscopeWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 
-		TraceLocationMenuItem *centreMenuItem = createMenuItem<TraceLocationMenuItem>("Centre all traces");
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Traces"));
+		
+		TraceLocationMenuItem *centreMenuItem = createMenuItem<TraceLocationMenuItem>("Centre all");
 		centreMenuItem->centreTraces = true;
 		centreMenuItem->module = module;
 		menu->addChild(centreMenuItem);
 			
-		TraceLocationMenuItem *spreadMenuItem = createMenuItem<TraceLocationMenuItem>("Organise traces");
+		TraceLocationMenuItem *spreadMenuItem = createMenuItem<TraceLocationMenuItem>("Organise");
 		spreadMenuItem->centreTraces = false;
 		spreadMenuItem->module = module;
 		menu->addChild(spreadMenuItem);

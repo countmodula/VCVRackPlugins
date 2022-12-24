@@ -471,6 +471,34 @@ struct HyperManiacalLFOWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
+		// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"
+	struct ExpanderMenu : MenuItem {
+		HyperManiacalLFO *module;
+		Vec position;
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			AddExpanderMenuItem *outputExpMenuItem = createMenuItem<AddExpanderMenuItem>("Output expander");
+			outputExpMenuItem->module = module;
+			outputExpMenuItem->model = modelHyperManiacalLFOExpander;
+			outputExpMenuItem->position = position;
+			outputExpMenuItem->expanderName = "output";
+			menu->addChild(outputExpMenuItem);
+			
+			AddExpanderMenuItem *maniacMenuItem = createMenuItem<AddExpanderMenuItem>("Megalomaniac controller expander");
+			maniacMenuItem->module = module;
+			maniacMenuItem->model = modelMegalomaniac;
+			maniacMenuItem->position = position;
+			maniacMenuItem->expandLeft = true;
+			maniacMenuItem->expanderName = "megalomaniac";
+			menu->addChild(maniacMenuItem);	
+			
+			return menu;	
+		}
+	};	
+
 	void appendContextMenu(Menu *menu) override {
 		HyperManiacalLFO *module = dynamic_cast<HyperManiacalLFO*>(this->module);
 		assert(module);
@@ -480,6 +508,13 @@ struct HyperManiacalLFOWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+		
+		// add expander menu
+		ExpanderMenu *expMenuItem = createMenuItem<ExpanderMenu>("Add expander", RIGHT_ARROW);
+		expMenuItem->module = module;
+		expMenuItem->position = box.pos;
+		menu->addChild(expMenuItem);		
+		
 	}	
 	
 	void step() override {

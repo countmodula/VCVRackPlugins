@@ -175,6 +175,9 @@ struct BarGraphWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+		
 		//scale  menu
 		ScaleMenu *scaleMenu = createMenuItem<ScaleMenu>("Scale", RIGHT_ARROW);
 		scaleMenu->module = module;

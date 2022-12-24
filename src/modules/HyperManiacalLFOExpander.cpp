@@ -203,6 +203,8 @@ struct HyperManiacalLFOExpanderWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
 		
 		// add the output mode menu
 		OffsetModeMenu *modeMenu = createMenuItem<OffsetModeMenu>("Offset mode", RIGHT_ARROW);

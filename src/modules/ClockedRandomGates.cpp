@@ -368,6 +368,9 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
+	// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"	
+
 	void appendContextMenu(Menu *menu) override {
 		ClockedRandomGates *module = dynamic_cast<ClockedRandomGates*>(this->module);
 		assert(module);
@@ -378,6 +381,9 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Probabilities"));
+		
 		// CV only init
 		InitMenuItem *initProbMenuItem = createMenuItem<InitMenuItem>("Initialize Probabilities Only");
 		initProbMenuItem->widget = this;
@@ -387,6 +393,24 @@ struct ClockedRandomGatesWidget : ModuleWidget {
 		RandMenuItem *randProbMenuItem = createMenuItem<RandMenuItem>("Randomize Probabilities Only");
 		randProbMenuItem->widget = this;
 		menu->addChild(randProbMenuItem);	
+	
+		// add expander menu
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+		
+		AddExpanderMenuItem *trigMenuItem = createMenuItem<AddExpanderMenuItem>("Add CV expander");
+		trigMenuItem->module = module;
+		trigMenuItem->model = modelClockedRandomGateExpanderCV;
+		trigMenuItem->position = box.pos;
+		trigMenuItem->expanderName = "CV";
+		menu->addChild(trigMenuItem);	
+		
+		AddExpanderMenuItem *gateMenuItem = createMenuItem<AddExpanderMenuItem>("Add logic expander");
+		gateMenuItem->module = module;
+		gateMenuItem->model = modelClockedRandomGateExpanderLog;
+		gateMenuItem->position = box.pos;
+		gateMenuItem->expanderName = "logic";
+		menu->addChild(gateMenuItem);			
 	}	
 	
 	void step() override {

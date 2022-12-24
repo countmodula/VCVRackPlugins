@@ -464,6 +464,9 @@ struct LightStripWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 	
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+		
 		// colour menu
 		StripSizeMenu *sizeMenu = createMenuItem<StripSizeMenu>("Strip Size", RIGHT_ARROW);
 		sizeMenu->module = module;

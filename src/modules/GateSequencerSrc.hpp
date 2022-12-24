@@ -665,6 +665,9 @@ struct WIDGET_NAME : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+		
 		char textBuffer[100];
 		for (int r = 0; r < GATESEQ_NUM_ROWS; r++) {
 			
