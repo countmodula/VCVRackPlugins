@@ -1145,6 +1145,22 @@
 		  "tags": [
 			"Switch"
 		  ]
+		},
+		{
+		  "slug": "MultiStepSequencer",
+		  "name": "Multi-step Sequencer",
+		  "description": "Step sequencer with repeat and probability per step",
+		  "tags": [
+			"Sequencer"
+		  ]
+		},
+		{
+		  "slug": "Sequencer64",
+		  "name": "64 Step Sequencer",
+		  "description": "64 Step CV/gate sequencer",
+		  "tags": [
+			"Sequencer"
+		  ]
 		}
 	]
 }
