@@ -187,6 +187,19 @@ struct SequenceEncoderWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 	
+	// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"
+	struct ExpanderMenu : MenuItem {
+		SequenceEncoder *module;
+		Vec position;
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+			
+			return menu;	
+		}
+	};	
+	
 	void appendContextMenu(Menu *menu) override {
 		SequenceEncoder *module = dynamic_cast<SequenceEncoder*>(this->module);
 		assert(module);
@@ -196,6 +209,66 @@ struct SequenceEncoderWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+		
+		int expanderSteps = 24;
+		if (module && module->rightExpander.module) {
+			if (module->rightExpander.module->model == modelSequencerChannel8 || module->rightExpander.module->model == modelSequencerGates8 || module->rightExpander.module->model == modelSequencerTriggers8) {
+				expanderSteps = 8;
+			}
+			else {
+				expanderSteps = 16;
+			}
+		}
+		
+		// add expander menu items
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+	
+		if ((expanderSteps & 8) > 0) {
+			AddExpanderMenuItem *channel8MenuItem = createMenuItem<AddExpanderMenuItem>("Add 8-step channel expander");
+			channel8MenuItem->module = module;
+			channel8MenuItem->model = modelSequencerChannel8;
+			channel8MenuItem->position = box.pos;
+			channel8MenuItem->expanderName = "8-step channel";
+			menu->addChild(channel8MenuItem);
+			
+			AddExpanderMenuItem *gate8MenuItem = createMenuItem<AddExpanderMenuItem>("Add 8-step gate expander");
+			gate8MenuItem->module = module;
+			gate8MenuItem->model = modelSequencerGates8;
+			gate8MenuItem->position = box.pos;
+			gate8MenuItem->expanderName = "8-step gate";
+			menu->addChild(gate8MenuItem);	
+				
+			AddExpanderMenuItem *trig8MenuItem = createMenuItem<AddExpanderMenuItem>("Add 8-step trigger expander");
+			trig8MenuItem->module = module;
+			trig8MenuItem->model = modelSequencerTriggers8;
+			trig8MenuItem->position = box.pos;
+			trig8MenuItem->expanderName = "8-step trigger";
+			menu->addChild(trig8MenuItem);		
+		}
+		
+		if ((expanderSteps & 16) > 0) {
+			AddExpanderMenuItem *channel16MenuItem = createMenuItem<AddExpanderMenuItem>("Add 16-step channel expander");
+			channel16MenuItem->module = module;
+			channel16MenuItem->model = modelSequencerChannel16;
+			channel16MenuItem->position = box.pos;
+			channel16MenuItem->expanderName = "16-step channel";
+			menu->addChild(channel16MenuItem);		
+			
+			AddExpanderMenuItem *gate16MenuItem = createMenuItem<AddExpanderMenuItem>("Add 16-step gate expander");
+			gate16MenuItem->module = module;
+			gate16MenuItem->model = modelSequencerGates16;
+			gate16MenuItem->position = box.pos;
+			gate16MenuItem->expanderName = "16-step gate";
+			menu->addChild(gate16MenuItem);				
+		
+			AddExpanderMenuItem *trig16MenuItem = createMenuItem<AddExpanderMenuItem>("Add 16-step trigger expander");
+			trig16MenuItem->module = module;
+			trig16MenuItem->model = modelSequencerTriggers16;
+			trig16MenuItem->position = box.pos;
+			trig16MenuItem->expanderName = "16-step trigger";
+			menu->addChild(trig16MenuItem);		
+		}		
 	}
 	
 	void step() override {
