@@ -94,5 +94,47 @@ void saveDefaultIntegerValue(std::string setting, int value) {
 
 
 
+// hack for module expanders always to the right
+static math::Vec eachNearestGridPosRight(math::Vec pos, std::function<bool(math::Vec pos)> f) {
+	math::Vec leftPos = (pos / RACK_GRID_SIZE).round();
+	math::Vec rightPos = leftPos + math::Vec(1, 0);
+
+	while (true) {
+		if (f(rightPos * RACK_GRID_SIZE))
+			return rightPos * RACK_GRID_SIZE;
+		rightPos.x += 1;
+	}
+
+	assert(false);
+	return math::Vec();
+}
+
+// hack for module expanders always to the left
+void setModulePosNearestRight(ModuleWidget* mw, math::Vec pos) {
+	eachNearestGridPosRight(pos, [&](math::Vec pos) -> bool {
+		return APP->scene->rack->requestModulePos(mw, pos);
+	});
+}
+
+static math::Vec eachNearestGridPosLeft(math::Vec pos, std::function<bool(math::Vec pos)> f) {
+	math::Vec leftPos = (pos / RACK_GRID_SIZE).round();
+
+	while (true) {
+		if (f(leftPos * RACK_GRID_SIZE))
+			return leftPos * RACK_GRID_SIZE;
+		leftPos.x -= 1;
+	}
+
+	assert(false);
+	return math::Vec();
+}
+
+// hack for module expanders always to the left
+void setModulePosNearestLeft(ModuleWidget* mw, math::Vec pos) {
+	eachNearestGridPosLeft(pos, [&](math::Vec pos) -> bool {
+		return APP->scene->rack->requestModulePos(mw, pos);
+	});
+}
+
 
 

@@ -12,9 +12,9 @@
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
-All source code in this repository is copyright © 2022 Adam Verspaget/Count Modula and licensed under GNU GPLv3
+All source code in this repository is copyright © 2023 Adam Verspaget/Count Modula and licensed under GNU GPLv3
 
-All graphics including the Count Modula logo, panels and components are copyright © 2022 Adam Verspaget/Count Modula and may not be used in derivative works.
+All graphics including the Count Modula logo, panels and components are copyright © 2023 Adam Verspaget/Count Modula and may not be used in derivative works.
 
 <h3>Donate</h3>
 Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 2.2.0</h3>
+<h3>Modules - Release 2.3.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -60,8 +60,8 @@ Follow Count Modula on facebook:
 <li>Clocked Random Gate Expander - CV</li>
 <li>Clocked Random Gates Expander - Logic</li>
 <li>Comparator</a></li>
-<li>Countdown 3<font color="red"> * new in v2.2.0</font></li>
-<li>Countdown 5<font color="red"> * new in v2.2.0</font></li>
+<li>Countdown 3</li>
+<li>Countdown 5</li>
 <li>D Flip Flop (Single)</li>
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
@@ -88,6 +88,7 @@ Follow Count Modula on facebook:
 <li>Minimus Maximus</li>
 <li>Mixer</li>
 <li>Morph Shaper</li>
+<li>Muti-step Sequencer <font color="red"> * new in v2.3.0</font></li>
 <li>Multiple</li>
 <li>Multiplexer</li>
 <li>Mute</li>
@@ -143,6 +144,7 @@ Follow Count Modula on facebook:
 <li>16 Step Sequencer Channel Expander</li>
 <li>16 Step Sequencer Gate Expander</li>
 <li>16 Step Sequencer Trigger Expander </li>
+<li>64 Step Sequencer <font color="red"> * new in v2.3.0</font></li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop (Dual)</li>
 <li>T Flip Flop (Single)</li>

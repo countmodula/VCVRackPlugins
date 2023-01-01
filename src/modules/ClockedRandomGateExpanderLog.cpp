@@ -341,6 +341,9 @@ struct ClockedRandomGateExpanderLogWidget : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Logic"));
+		
 		// CV only init
 		InitMenuItem *initLogicMenuItem = createMenuItem<InitMenuItem>("Initialize Logic Values Only");
 		initLogicMenuItem->widget = this;

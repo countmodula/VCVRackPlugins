@@ -21,6 +21,29 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
+<td align="center">01-Jan-2023</td>
+<td align="center">v2.3.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Multi-step Sequencer</li>
+<li>64 Step Sequencer</li>
+</ul>
+
+<ul>
+<b>Module Updates:</b>
+<li>Hyper Maniacal LFO Expander - Add output offset options</li>
+<li>All expandable modules - Option to add expanders via context menu</li>
+</ul>
+
+<ul>
+<b>Issues Resolved:</b>
+<li>#104 Random Access Switches not rendering with default theme settings in module browser</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">14-Aug-2022</td>
 <td align="center">v2.2.0</td>
 <td align="left">

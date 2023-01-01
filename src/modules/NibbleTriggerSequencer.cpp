@@ -462,6 +462,8 @@ struct NibbleTriggerSequencerWidget : ModuleWidget {
 		}
 	};
 	
+	// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"	
 
 	//---------------------------------------------------------------------------------------------
 	// context menu
@@ -474,12 +476,33 @@ struct NibbleTriggerSequencerWidget : ModuleWidget {
 		menu->addChild(new MenuSeparator());
 		
 		// add the theme menu items
-		#include "../themes/themeMenus.hpp"
+		#include "../themes/themeMenus.hpp"	
+		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
 		
 		// add the output mode menu
 		OutputModeMenu *modeMenu = createMenuItem<OutputModeMenu>("Output mode", RIGHT_ARROW);
 		modeMenu->module = module;
 		menu->addChild(modeMenu);
+		
+		// add expander menu
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+		
+		AddExpanderMenuItem *trigMenuItem = createMenuItem<AddExpanderMenuItem>("Add CV expander");
+		trigMenuItem->module = module;
+		trigMenuItem->model = modelOctetTriggerSequencerCVExpander;
+		trigMenuItem->position = box.pos;
+		trigMenuItem->expanderName = "CV";
+		menu->addChild(trigMenuItem);	
+		
+		AddExpanderMenuItem *gateMenuItem = createMenuItem<AddExpanderMenuItem>("Add gate expander");
+		gateMenuItem->module = module;
+		gateMenuItem->model = modelOctetTriggerSequencerGateExpander;
+		gateMenuItem->position = box.pos;
+		gateMenuItem->expanderName = "gate";
+		menu->addChild(gateMenuItem);		
 	}
 	
 	//---------------------------------------------------------------------------------------------

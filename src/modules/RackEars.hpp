@@ -202,6 +202,12 @@ struct WIDGET_NAME : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));	
+		
 		// add panel selection menu item
 		PanelMenu *panelMenuItem = createMenuItem<PanelMenu>("Ear Type", RIGHT_ARROW);
 		panelMenuItem->module = module;
@@ -211,9 +217,6 @@ struct WIDGET_NAME : ModuleWidget {
 		DefaultPanelMenu *defaultPanelMenuItem = createMenuItem<DefaultPanelMenu>("Default Ear Type", RIGHT_ARROW);
 		defaultPanelMenuItem->module = module;
 		menu->addChild(defaultPanelMenuItem);
-		
-		// add the theme menu items
-		#include "../themes/themeMenus.hpp"
 	}
 	
 	void step() override {

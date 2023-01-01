@@ -691,6 +691,21 @@ struct WIDGET_NAME : ModuleWidget {
 		}
 	};
 	
+		// expander addition menu item
+	#include "../inc/AddExpanderMenuItem.hpp"
+	struct ExpanderMenu : MenuItem {
+		STRUCT_NAME *module;
+		Vec position;
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+	
+			
+			return menu;	
+		}
+	};	
+	
 	void appendContextMenu(Menu *menu) override {
 		STRUCT_NAME *module = dynamic_cast<STRUCT_NAME*>(this->module);
 		assert(module);
@@ -700,6 +715,9 @@ struct WIDGET_NAME : ModuleWidget {
 
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+				
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Sequence"));
 		
 		// add initialize menu item
 		InitMenu *initMenuItem = createMenuItem<InitMenu>("Initialize", RIGHT_ARROW);
@@ -711,6 +729,43 @@ struct WIDGET_NAME : ModuleWidget {
 		randMenuItem->widget = this;
 		menu->addChild(randMenuItem);
 
+		// add expander menu items
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Expansion"));
+	
+		AddExpanderMenuItem *channelMenuItem = createMenuItem<AddExpanderMenuItem>("Add channel expander");
+		channelMenuItem->module = module;
+#if SEQ_NUM_STEPS == 8
+		channelMenuItem->model = modelSequencerChannel8;
+#elif SEQ_NUM_STEPS == 16
+		channelMenuItem->model = modelSequencerChannel16;
+#endif
+		channelMenuItem->position = box.pos;
+		channelMenuItem->expanderName = "channel";
+		menu->addChild(channelMenuItem);
+		
+		AddExpanderMenuItem *gateMenuItem = createMenuItem<AddExpanderMenuItem>("Add gate expander");
+		gateMenuItem->module = module;
+#if SEQ_NUM_STEPS == 8
+		gateMenuItem->model = modelSequencerGates8;
+#elif SEQ_NUM_STEPS == 16
+		gateMenuItem->model = modelSequencerGates16;
+#endif
+		gateMenuItem->position = box.pos;
+		gateMenuItem->expanderName = "gate";
+		menu->addChild(gateMenuItem);	
+			
+		AddExpanderMenuItem *trigMenuItem = createMenuItem<AddExpanderMenuItem>("Add trigger expander");
+		trigMenuItem->module = module;
+#if SEQ_NUM_STEPS == 8
+		trigMenuItem->model = modelSequencerTriggers8;
+#elif SEQ_NUM_STEPS == 16
+		trigMenuItem->model = modelSequencerTriggers16;
+#endif
+		trigMenuItem->position = box.pos;
+		trigMenuItem->expanderName = "trigger";
+		menu->addChild(trigMenuItem);				
+			
 	}
 	
 	void onHoverKey(const event::HoverKey &e) override {

@@ -490,10 +490,14 @@ struct WIDGET_NAME : ModuleWidget {
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
 		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Sequence"));	
+		
 		// add channel menu item
 		ChannelMenu *channelMenuItem = createMenuItem<ChannelMenu>("Channel", RIGHT_ARROW);
 		channelMenuItem->module = module;
 		menu->addChild(channelMenuItem);
+		
 		
 		// add initialize menu item
 		InitMenu *initMenuItem = createMenuItem<InitMenu>("Initialize", RIGHT_ARROW);

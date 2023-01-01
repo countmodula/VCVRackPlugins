@@ -282,6 +282,12 @@ struct CarouselWidget : ModuleWidget {
 		// blank separator
 		menu->addChild(new MenuSeparator());
 		
+		// add the theme menu items
+		#include "../themes/themeMenus.hpp"
+		
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
+		
 		// active input selection menu
 		ActiveInputMenu *aiMenuItem = createMenuItem<ActiveInputMenu>("Active Routes", RIGHT_ARROW);
 		aiMenuItem->module = module;	
@@ -291,9 +297,6 @@ struct CarouselWidget : ModuleWidget {
 		InActivePassThroughMenuItem *iaptlMenuItem = createMenuItem<InActivePassThroughMenuItem>("Inactive Routes Passthrough", CHECKMARK(module->inactivePassthrough));
 		iaptlMenuItem->module = module;
 		menu->addChild(iaptlMenuItem);		
-		
-		// add the theme menu items
-		#include "../themes/themeMenus.hpp"
 	}	
 	
 	void step() override {
