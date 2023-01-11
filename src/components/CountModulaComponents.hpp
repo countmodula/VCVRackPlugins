@@ -132,6 +132,11 @@ struct CountModulaJack : SvgPort {
 	}
 };
 
+struct CountModulaJackNoNut : SvgPort {
+	CountModulaJackNoNut() {
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Components/JackNoNut.svg")));
+	}
+};
 
 //-------------------------------------------------------------------
 // Rotary controls

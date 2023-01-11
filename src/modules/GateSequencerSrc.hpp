@@ -471,8 +471,8 @@ struct WIDGET_NAME : ModuleWidget {
 
 		// step lights
 		for (int s = 0; s < GATESEQ_NUM_STEPS; s++) {
-			addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + s] - 5, STD_ROWS8[STD_ROW1] - 15), module, STRUCT_NAME::STEP_LIGHTS + s));
-			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + s] + 5, STD_ROWS8[STD_ROW1] - 15), module, STRUCT_NAME::LENGTH_LIGHTS + s));
+			addChild(createLightCentered<SmallLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + s] - 5, ROW_POSITIONS[STD_ROW1] - 15), module, STRUCT_NAME::STEP_LIGHTS + s));
+			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + s] + 5, ROW_POSITIONS[STD_ROW1] - 15), module, STRUCT_NAME::LENGTH_LIGHTS + s));
 		}
 		
 		// direction and one-shot light
@@ -489,16 +489,16 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			// row lights and switches
 			for (int s = 0; s < GATESEQ_NUM_STEPS; s++) {
-				addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + s], STD_ROWS8[STD_ROW1 + r]), module, STRUCT_NAME::STEP_PARAMS + (r * GATESEQ_NUM_STEPS) + s, STRUCT_NAME::STEP_PARAM_LIGHTS + (r * GATESEQ_NUM_STEPS) + s));
+				addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + s], ROW_POSITIONS[STD_ROW1 + r]), module, STRUCT_NAME::STEP_PARAMS + (r * GATESEQ_NUM_STEPS) + s, STRUCT_NAME::STEP_PARAM_LIGHTS + (r * GATESEQ_NUM_STEPS) + s));
 			}
 			
 			// output lights, mute buttons and jacks
-			addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS] + 15, STD_ROWS8[STD_ROW1 + r]), module, STRUCT_NAME::MUTE_PARAMS + r, STRUCT_NAME::MUTE_PARAM_LIGHTS + r));
+			addParam(createParamCentered<MUTE_BUTTON_STYLE<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS] + 15, ROW_POSITIONS[STD_ROW1 + r]), module, STRUCT_NAME::MUTE_PARAMS + r, STRUCT_NAME::MUTE_PARAM_LIGHTS + r));
 			
-			addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 1] + 15, STD_ROWS8[STD_ROW1 + r]-10), module, STRUCT_NAME::GATE_LIGHTS + r));
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 1] + 15, STD_ROWS8[STD_ROW1 + r]+10), module, STRUCT_NAME::TRIG_LIGHTS + r));
-			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 2] + 15, STD_ROWS8[STD_ROW1 + r]), module, STRUCT_NAME::GATE_OUTPUTS + r));
-			addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 4], STD_ROWS8[STD_ROW1 + r]), module, STRUCT_NAME::TRIG_OUTPUTS + r));
+			addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 2] - 1, ROW_POSITIONS[STD_ROW1 + r]), module, STRUCT_NAME::GATE_LIGHTS + r));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 4] - 16, ROW_POSITIONS[STD_ROW1 + r]), module, STRUCT_NAME::TRIG_LIGHTS + r));
+			addOutput(createOutputCentered<CountModulaJackNoNut>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 2] + 18, ROW_POSITIONS[STD_ROW1 + r]), module, STRUCT_NAME::GATE_OUTPUTS + r));
+			addOutput(createOutputCentered<CountModulaJackNoNut>(Vec(STD_COLUMN_POSITIONS[STD_COL4 + GATESEQ_NUM_STEPS + 4] + 3, ROW_POSITIONS[STD_ROW1 + r]), module, STRUCT_NAME::TRIG_OUTPUTS + r));
 		}
 		
 		// one-shot end

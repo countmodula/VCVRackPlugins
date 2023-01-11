@@ -15,7 +15,11 @@
 #define GATESEQ_NUM_ROWS	8
 #define GATESEQ_NUM_STEPS	8
 
+#define MUTE_BUTTON_STYLE CountModulaLEDPushButton
+
 #define SEQUENCER_EXP_NUM_TRIGGER_OUTS 8
+
+#define ROW_POSITIONS STD_ROWS8
 
 // set the module name for the theme selection functions
 #define THEME_MODULE_NAME GateSequencer8

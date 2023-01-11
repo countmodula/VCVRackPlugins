@@ -34,6 +34,7 @@ extern Model *modelClockedRandomGateExpanderLog;
 extern Model *modelClockedRandomGates;
 extern Model *modelComparator;
 extern Model *modelCVSpreader;
+extern Model *modelGateSequencer16b;
 extern Model *modelEuclid;
 extern Model *modelEuclidExpanderCV;
 extern Model *modelEventArranger;

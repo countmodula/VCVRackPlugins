@@ -1161,6 +1161,14 @@
 		  "tags": [
 			"Sequencer"
 		  ]
+		},
+		{
+		  "slug": "GateSequencer16b",
+		  "name": "12 x 16 Gate Sequencer",
+		  "description": "A 12 Channel 16 Step Gate/Trigger Sequencer",
+		  "tags": [
+			"Sequencer"
+		  ]
 		}
 	]
 }

@@ -35,6 +35,7 @@ p->addModel(modelClockedRandomGateExpanderLog);
 p->addModel(modelClockedRandomGates);	
 p->addModel(modelComparator);	
 p->addModel(modelCVSpreader);	
+p->addModel(modelGateSequencer16b);	
 p->addModel(modelEuclid);	
 p->addModel(modelEuclidExpanderCV);	
 p->addModel(modelEventArranger);	
