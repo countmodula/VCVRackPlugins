@@ -435,6 +435,9 @@ struct StackWidget : ModuleWidget {
 		
 		// add the theme menu items
 		#include "../themes/themeMenus.hpp"
+	
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Settings"));
 		
 		// stack mode
 		ModeMenu *modeMenuItem = createMenuItem<ModeMenu>("Mode", RIGHT_ARROW);
