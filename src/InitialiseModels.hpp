@@ -116,6 +116,7 @@ p->addModel(modelSingleSRFlipFlop);
 p->addModel(modelSingleTFlipFlop);	
 p->addModel(modelSlopeDetector);	
 p->addModel(modelSRFlipFlop);	
+p->addModel(modelStack);
 p->addModel(modelStartupDelay);	
 p->addModel(modelStepSequencer8);	
 p->addModel(modelSubHarmonicGenerator);	

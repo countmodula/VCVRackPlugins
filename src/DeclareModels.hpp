@@ -115,6 +115,7 @@ extern Model *modelSingleSRFlipFlop;
 extern Model *modelSingleTFlipFlop;
 extern Model *modelSlopeDetector;
 extern Model *modelSRFlipFlop;
+extern Model *modelStack;
 extern Model *modelStartupDelay;
 extern Model *modelStepSequencer8;
 extern Model *modelSubHarmonicGenerator;

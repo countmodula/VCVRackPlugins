@@ -1169,6 +1169,15 @@
 		  "tags": [
 			"Sequencer"
 		  ]
+		},
+		{
+		  "slug": "Stack",
+		  "name": "CV Stack",
+		  "description": "Sequential voltage storage stack with First In First Out or Last In First Out operation",
+		  "tags": [
+			"Sequencer",
+			"Sample and hold"
+		  ]
 		}
 	]
 }
