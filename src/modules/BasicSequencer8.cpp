@@ -586,13 +586,13 @@ struct BasicSequencer8Widget : ModuleWidget {
 		menu->addChild(initCVTrigMenuItem);
 
 		// CV only random
-		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only", "Shitf+Ctrl+C");
+		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only", "Shift+Ctrl+C");
 		randCVMenuItem->widget = this;
 		randCVMenuItem->triggerRand = false;
 		menu->addChild(randCVMenuItem);
 
 		// gate/trigger only random
-		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only", "Shitf+Ctrl+T");
+		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only", "Shift+Ctrl+T");
 		randTrigMenuItem->widget = this;
 		randTrigMenuItem->cvRand = false;
 		menu->addChild(randTrigMenuItem);
