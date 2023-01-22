@@ -181,6 +181,8 @@ struct STRUCT_NAME : Module {
 		
 		// conversion to new step select switches
 		if (moduleVersion < 2) {
+			INFO("Converting from module version %d", moduleVersion);
+			
 			for(int i = 0; i < SEQ_NUM_STEPS; i++) {
 				int x = (int)(params[STEP_PARAMS + i].getValue());
 

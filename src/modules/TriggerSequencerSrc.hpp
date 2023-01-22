@@ -9,6 +9,8 @@ struct STRUCT_NAME : Module {
 		ENUMS(LENGTH_PARAMS, TRIGSEQ_NUM_ROWS),
 		ENUMS(CV_PARAMS, TRIGSEQ_NUM_ROWS),
 		ENUMS(MUTE_PARAMS, TRIGSEQ_NUM_ROWS * 2),
+		ENUMS(TRIGGER_PARAMS, TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
+		ENUMS(GATE_PARAMS, TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -27,10 +29,12 @@ struct STRUCT_NAME : Module {
 		ENUMS(TRIG_LIGHTS, TRIGSEQ_NUM_ROWS * 2),
 		ENUMS(LENGTH_LIGHTS,  TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
 		ENUMS(MUTE_PARAM_LIGHTS, TRIGSEQ_NUM_ROWS * 2),
+		ENUMS(TRIGGER_PARAM_LIGHTS, TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
+		ENUMS(GATE_PARAM_LIGHTS, TRIGSEQ_NUM_STEPS * TRIGSEQ_NUM_ROWS),
 		NUM_LIGHTS
 	};
 	
-	float moduleVersion = 1.2f;
+	int moduleVersion = 2;
 	
 	GateProcessor gateClock[TRIGSEQ_NUM_ROWS];
 	GateProcessor gateReset[TRIGSEQ_NUM_ROWS];
@@ -63,10 +67,11 @@ struct STRUCT_NAME : Module {
 			// length & CV parms
 			configParam(LENGTH_PARAMS + r, 1.0f, (float)(TRIGSEQ_NUM_STEPS), (float)(TRIGSEQ_NUM_STEPS), rack::string::f( "Channel %d length", r + 1));
 			
-			// row lights and switches
-			int i = 0;
+			// row switches
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
-				configSwitch(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), outputSelectLabels[r]);
+				configSwitch(STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s, 0.0f, 2.0f, 0.0f, rack::string::f("Step %d select", s + 1), outputSelectLabels[r]);
+				configSwitch(TRIGGER_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s, 0.0f, 1.0f, 1.0f, rack::string::f("Step %d trigger %s select", s + 1, channelLabels[r][0].c_str()), {"Off", "On"});
+				configSwitch(GATE_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d trigger %s select", s + 1, channelLabels[r][1].c_str()), {"Off", "On"});
 			}
 			
 			// output lights, mute buttons and jacks
@@ -100,7 +105,7 @@ struct STRUCT_NAME : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_real(moduleVersion));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 		
 		json_t *currentStep = json_array();
 		json_t *clk = json_array();
@@ -131,6 +136,10 @@ struct STRUCT_NAME : Module {
 		
 		if (version)
 			moduleVersion = json_number_value(version);				
+		else {
+			// no version in file is really old version.
+			moduleVersion = 0;
+		}	
 		
 		for (int i = 0; i < TRIGSEQ_NUM_ROWS; i++) {
 			if (currentStep) {
@@ -153,6 +162,22 @@ struct STRUCT_NAME : Module {
 				running[i] = gateRun[i].high();
 			}
 		}
+		
+		// conversion to new step select switches
+		if (moduleVersion < 2) {
+			INFO("Converting from module version %d", moduleVersion);
+			
+			for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {			
+				for(int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
+					int x = (int)(params[STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s].getValue());
+
+					params[GATE_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s].setValue(x == 0 ? 1.0f : 0.0f);
+					params[TRIGGER_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s].setValue(x == 2 ? 1.0f : 0.0f);
+				}
+			}
+			
+			moduleVersion = 2;
+		}		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -257,22 +282,15 @@ struct STRUCT_NAME : Module {
 				bool stepActive = (c + 1 == count[r]);
 				lights[STEP_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + c].setBrightness(boolToLight(stepActive));
 				
-				// now determine the output values
+				// now determine the output values	
 				if (stepActive) {
-					switch ((int)(params[STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + c].getValue())) {
-						case 0: // lower output
-							outA = false;
-							outB = true;
-							break;
-						case 2: // upper output
-							outA = true;
-							outB = false;
-							break;				
-						default: // off
-							outA = false;
-							outB = false;
-							break;
+					if(params[TRIGGER_PARAMS + (r * TRIGSEQ_NUM_STEPS) + c].getValue() > 0.5f) {
+						outA = true;
 					}
+					
+					if(params[GATE_PARAMS + (r * TRIGSEQ_NUM_STEPS) + c].getValue() > 0.5f) {
+						outB = true;
+					}				
 				}
 			}
 
@@ -329,17 +347,17 @@ struct STRUCT_NAME : Module {
 		}		
 #endif		
 	}
-
 };
 
 struct WIDGET_NAME : ModuleWidget {
 
 	std::string panelName;
-	
+	const std::vector<std::string> channelLabels[TRIGSEQ_NUM_ROWS] = {{"A", "B"}, {"C", "D"}, {"E", "F"}, {"G", "H"}};
+
 	WIDGET_NAME(STRUCT_NAME *module) {
 		setModule(module);
 		panelName = PANEL_FILE;
-
+		
 		// set panel based on current default
 		#include "../themes/setPanel.hpp"	
 
@@ -347,7 +365,6 @@ struct WIDGET_NAME : ModuleWidget {
 		#include "../components/stdScrews.hpp"	
 		
 		// add everything row by row
-		int rowOffset = -10;
 		for (int r = 0; r < TRIGSEQ_NUM_ROWS; r++) {
 			// run input
 			addInput(createInputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL1], STD_ROWS8[STD_ROW1 + (r * 2)]), module, STRUCT_NAME::RUN_INPUTS + r));
@@ -378,18 +395,26 @@ struct WIDGET_NAME : ModuleWidget {
 			}
 			
 			// row lights and switches
-			int i = 0;
+			int col;
 			for (int s = 0; s < TRIGSEQ_NUM_STEPS; s++) {
-				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s] - 15, STD_ROWS8[STD_ROW1 + (r * 2)] + rowOffset), module, STRUCT_NAME::STEP_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + i));
-				addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s]- 5, STD_ROWS8[STD_ROW1 + (r * 2)] + 3), module, STRUCT_NAME::LENGTH_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + i));
-				addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s] - 15, STD_ROWS8[STD_ROW2 + (r * 2)] + rowOffset), module, STRUCT_NAME:: STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + i++));
+				col = STD_COLUMN_POSITIONS[STD_COL6 + s] -15;
+				addChild(createLightCentered<SmallLight<RedLight>>(Vec(col - 5, STD_HALF_ROWS8(STD_ROW1 + (r * 2))), module, STRUCT_NAME::STEP_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + s));
+				addChild(createLightCentered<SmallLight<GreenLight>>(Vec(col + 5, STD_HALF_ROWS8(STD_ROW1 + (r * 2))), module, STRUCT_NAME::LENGTH_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + s));
+				//addParam(createParamCentered<CountModulaToggle3P>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + s] - 15, STD_ROWS8[STD_ROW2 + (r * 2)] + rowOffset), module, STRUCT_NAME:: STEP_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s));
+				
+				addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<RedLight>>>(Vec(col, STD_ROWS8[STD_ROW1 + (r * 2)]), module, STRUCT_NAME:: TRIGGER_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s, STRUCT_NAME:: TRIGGER_PARAM_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + s));
+				addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(col, STD_ROWS8[STD_ROW2 + (r * 2)]), module, STRUCT_NAME:: GATE_PARAMS + (r * TRIGSEQ_NUM_STEPS) + s, STRUCT_NAME:: GATE_PARAM_LIGHTS + (r * TRIGSEQ_NUM_STEPS) + s));
 			}
 			
 			// output lights, mute buttons and jacks
-			for (int i = 0; i < 2; i++) {
-				addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::MUTE_PARAMS + + (r * 2) + i, STRUCT_NAME::MUTE_PARAM_LIGHTS + + (r * 2) + i));
-				addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 1], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::TRIG_LIGHTS + (r * 2) + i));
-				addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 2], STD_ROWS8[STD_ROW1 + (r * 2) + i]), module, STRUCT_NAME::TRIG_OUTPUTS + (r * 2) + i));
+			for (int j = 0; j < 2; j++) {
+				addParam(createParamCentered<CountModulaLEDPushButton<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS], STD_ROWS8[STD_ROW1 + (r * 2) + j]), module, STRUCT_NAME::MUTE_PARAMS + + (r * 2) + j, STRUCT_NAME::MUTE_PARAM_LIGHTS + + (r * 2) + j));
+				if (j == 0)
+					addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 1], STD_ROWS8[STD_ROW1 + (r * 2) + j]), module, STRUCT_NAME::TRIG_LIGHTS + (r * 2) + j));
+				else
+					addChild(createLightCentered<MediumLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 1], STD_ROWS8[STD_ROW1 + (r * 2) + j]), module, STRUCT_NAME::TRIG_LIGHTS + (r * 2) + j));
+				
+				addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL6 + TRIGSEQ_NUM_STEPS + 2], STD_ROWS8[STD_ROW1 + (r * 2) + j]), module, STRUCT_NAME::TRIG_OUTPUTS + (r * 2) + j));
 			}
 		}
 	}
@@ -397,31 +422,50 @@ struct WIDGET_NAME : ModuleWidget {
 	struct InitMenuItem : MenuItem {
 		WIDGET_NAME *widget;
 		int channel = 0;
-		bool allInit = true;
-		
+		int which = 0;
+
 		void onAction(const event::Action &e) override {
-			// // text for history menu item
-			char buffer[100];
-			if (!allInit)
-				sprintf(buffer, "initialize channel %d triggers", channel + 1);
-			else
-				sprintf(buffer, "initialize channel %d", channel + 1);
 			
 			// history - current settings
 			history::ModuleChange *h = new history::ModuleChange;
-			h->name = buffer;
+			switch (which) {
+				case 0:
+					h->name = rack::string::f("initialize channel %d", channel + 1);
+					break;
+				case 1:
+					h->name = rack::string::f("initialize channel %d %s triggers", channel + 1, widget->channelLabels[channel][0].c_str());
+					break;
+				case 2:
+					h->name = rack::string::f("initialize channel %d %s triggers", channel + 1, widget->channelLabels[channel][1].c_str());
+					break;
+			}
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 
-			// we're doing the entire channel so do the common controls here
-			if (allInit) {
-				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->reset();
-			}
-			
-			// triggers/gates
-			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
+			switch (which) {
+				case 0: // entire channel
+				
+					// length param
+					widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->reset();
+					
+					// triggers
+					for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::TRIGGER_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
+						widget->getParam(STRUCT_NAME::GATE_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
+					}
+					break;
+				case 1:
+					// A triggers only
+					for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::TRIGGER_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
+					}
+					break;
+				case 2:
+					// B triggers only
+					for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::GATE_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->reset();
+					}
+					break;
 			}
 
 			// history - new settings
@@ -433,32 +477,50 @@ struct WIDGET_NAME : ModuleWidget {
 	struct RandMenuItem : MenuItem {
 		WIDGET_NAME *widget;
 		int channel = 0;
-		bool allRand = true;
+		int which = 0;
 	
 		void onAction(const event::Action &e) override {
 		
-			// text for history menu item
-			char buffer[100];
-			if (!allRand)
-				sprintf(buffer, "randomize channel %d triggers", channel + 1);
-			else
-				sprintf(buffer, "randomize channel %d", channel + 1);
-			
 			// history - current settings
 			history::ModuleChange *h = new history::ModuleChange;
-			h->name = buffer;
+			switch (which) {
+				case 0:
+					h->name = rack::string::f("randomize channel %d", channel + 1);
+					break;
+				case 1:
+					h->name = rack::string::f("randomize channel %d %s triggers", channel + 1, widget->channelLabels[channel][0].c_str());
+					break;
+				case 2:
+					h->name = rack::string::f("randomize channel %d %s triggers", channel + 1, widget->channelLabels[channel][1].c_str());
+					break;
+			}
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 
-			// we're doing the entire channel so do the common controls here
-			if (allRand) {
-				// length switch
-				widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->randomize();
-			}
-			
-			// triggers/gates
-			for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
-				widget->getParam(STRUCT_NAME::STEP_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
+			switch (which) {
+				case 0: // entire channel
+				
+					// length param
+					widget->getParam(STRUCT_NAME::LENGTH_PARAMS + channel)->getParamQuantity()->randomize();
+					
+					// triggers
+					for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::TRIGGER_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
+						widget->getParam(STRUCT_NAME::GATE_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
+					}
+				break;
+				case 1:
+					// A triggers only
+					for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::TRIGGER_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
+					}
+					break;
+				case 2:
+					// B triggers only
+					for (int c = 0; c < TRIGSEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::GATE_PARAMS + (channel * TRIGSEQ_NUM_STEPS) + c)->getParamQuantity()->randomize();
+					}
+					break;
 			}
 
 			// history - new settings
@@ -478,14 +540,22 @@ struct WIDGET_NAME : ModuleWidget {
 			InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>("Entire Channel");
 			initMenuItem->channel = channel;
 			initMenuItem->widget = widget;
+			initMenuItem->which = 0;
 			menu->addChild(initMenuItem);
 
-			// trigger only init
-			InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Gates/Triggers Only");
-			initTrigMenuItem->channel = channel;
-			initTrigMenuItem->widget = widget;
-			initTrigMenuItem->allInit = false;
-			menu->addChild(initTrigMenuItem);
+			// trigger A only init
+			InitMenuItem *initTrigAMenuItem = createMenuItem<InitMenuItem>(rack::string::f("%s Triggers Only", widget->channelLabels[channel][0].c_str()));
+			initTrigAMenuItem->channel = channel;
+			initTrigAMenuItem->widget = widget;
+			initTrigAMenuItem->which = 1;
+			menu->addChild(initTrigAMenuItem);
+			
+			// trigger B only init
+			InitMenuItem *initTrigBMenuItem = createMenuItem<InitMenuItem>(rack::string::f("%s Triggers Only", widget->channelLabels[channel][1].c_str()));
+			initTrigBMenuItem->channel = channel;
+			initTrigBMenuItem->widget = widget;
+			initTrigBMenuItem->which = 2;
+			menu->addChild(initTrigBMenuItem);			
 			
 			return menu;
 		}
@@ -502,15 +572,24 @@ struct WIDGET_NAME : ModuleWidget {
 			// full channel random
 			RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>("Entire Channel");
 			randMenuItem->channel = channel;
+			randMenuItem->which = 0;
 			randMenuItem->widget = widget;
+			
 			menu->addChild(randMenuItem);
 
-			// trigger only random
-			RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only");
-			randTrigMenuItem->channel = channel;
-			randTrigMenuItem->widget = widget;
-			randTrigMenuItem->allRand = false;
-			menu->addChild(randTrigMenuItem);
+			// trigger A only random
+			RandMenuItem *randTrigAMenuItem = createMenuItem<RandMenuItem>(rack::string::f("%s Triggers Only", widget->channelLabels[channel][0].c_str()));
+			randTrigAMenuItem->channel = channel;
+			randTrigAMenuItem->widget = widget;
+			randTrigAMenuItem->which = 1;
+			menu->addChild(randTrigAMenuItem);
+			
+			// trigger B only random
+			RandMenuItem *randTrigBMenuItem = createMenuItem<RandMenuItem>(rack::string::f("%s Triggers Only", widget->channelLabels[channel][1].c_str()));
+			randTrigBMenuItem->channel = channel;
+			randTrigBMenuItem->widget = widget;
+			randTrigBMenuItem->which = 2;
+			menu->addChild(randTrigBMenuItem);			
 			
 			return menu;
 		}	
