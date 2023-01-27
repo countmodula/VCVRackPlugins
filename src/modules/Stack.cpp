@@ -84,6 +84,7 @@ struct Stack : Module {
 	float empty = 10.0f;
 	float full = 0.0f;
 	int stackSize = 0;
+	bool resetClearsOutputs = false;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -121,6 +122,7 @@ struct Stack : Module {
 
 		json_object_set_new(root, "moduleVersion", json_integer(1));
 		json_object_set_new(root, "mode", json_integer(mode));
+		json_object_set_new(root, "resetMode", json_boolean(resetClearsOutputs));
 
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -130,6 +132,7 @@ struct Stack : Module {
 	void dataFromJson(json_t* root) override {
 
 		json_t *m = json_object_get(root, "mode");
+		json_t *rm = json_object_get(root, "resetMode");
 
 		mode = FIFO;
 		prevMode = -1;
@@ -137,6 +140,11 @@ struct Stack : Module {
 			if (json_integer_value(m) == LIFO) {
 				mode = LIFO;
 			}
+		}
+		
+		resetClearsOutputs = false;
+		if (rm) {
+			resetClearsOutputs = json_boolean_value(rm);
 		}
 
 		// grab the theme details
@@ -155,6 +163,8 @@ struct Stack : Module {
 		
 		prevMode = -1;
 		mode = FIFO;
+		
+		resetClearsOutputs = false;
 	}
 	
 	void clearStack() {	
@@ -210,6 +220,11 @@ struct Stack : Module {
 			
 			underflow = overflow = 0.0f;
 			doLights = true;
+			
+			// reset clears outputs too if required.
+			if (resetClearsOutputs)
+				cvA = cvB = cvC = cvD = 0.0f;
+	
 		}
 		else if (gpReset.low()) {
 			// high reset level inhibits the stack.
@@ -402,6 +417,7 @@ struct StackWidget : ModuleWidget {
 		}
 	};
 	
+	// operational mode menu
 	struct ModeMenu : MenuItem {
 		Stack *module;
 		
@@ -421,7 +437,15 @@ struct StackWidget : ModuleWidget {
 			return menu;
 		}
 	};
-	
+
+	// reset mode menu
+	struct ResetModeMenuItem : MenuItem {
+		Stack *module;
+		
+		void onAction(const event::Action &e) override {
+			module->resetClearsOutputs ^= true;
+		}
+	};
 	
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
@@ -443,6 +467,11 @@ struct StackWidget : ModuleWidget {
 		ModeMenu *modeMenuItem = createMenuItem<ModeMenu>("Mode", RIGHT_ARROW);
 		modeMenuItem->module = module;
 		menu->addChild(modeMenuItem);
+		
+		// reset ouptut mode
+		ResetModeMenuItem *resetModeMenuItem = createMenuItem<ResetModeMenuItem>("Clear outputs on reset", CHECKMARK(module->resetClearsOutputs));
+		resetModeMenuItem->module = module;
+		menu->addChild(resetModeMenuItem);		
 	}	
 	
 	void step() override {
