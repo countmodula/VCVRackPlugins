@@ -12,7 +12,9 @@ struct STRUCT_NAME : Module {
 		DIRECTION_PARAM,
 		ADDR_PARAM,
 		RANGE_SW_PARAM,
-		HOLD_PARAM,		
+		HOLD_PARAM,
+		ENUMS(TRIGGER_PARAMS, SEQ_NUM_STEPS),
+		ENUMS(GATE_PARAMS, SEQ_NUM_STEPS),
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -40,6 +42,8 @@ struct STRUCT_NAME : Module {
 		ENUMS(DIRECTION_LIGHTS, 5),
 		ONESHOT_LIGHT,
 		END_LIGHT,
+		ENUMS(TRIGGER_PARAM_LIGHTS, SEQ_NUM_STEPS),
+		ENUMS(GATE_PARAM_LIGHTS, SEQ_NUM_STEPS),
 		NUM_LIGHTS
 	};
 	
@@ -67,8 +71,9 @@ struct STRUCT_NAME : Module {
 	int directionMode = FORWARD;
 	bool oneShot = false;
 	bool oneShotEnded = false;
-	float moduleVersion = 1.1f;
-	
+
+	int moduleVersion = 2;
+
 	float cv = 0.0f;
 	bool prevGate = false;
 	bool running = false;
@@ -90,7 +95,9 @@ struct STRUCT_NAME : Module {
 		
 		// cv/gate params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"});
+			configSwitch(STEP_PARAMS + s, 0.0f, 2.0f, 1.0f, rack::string::f("Step %d select", s + 1), {"Gate", "Off", "Trigger"}); // for previous version compatibility
+			configSwitch(TRIGGER_PARAMS + s, 0.0f, 1.0f, 1.0f, rack::string::f("Step %d trigger select", s + 1), {"Off", "On"});
+			configSwitch(GATE_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d gate select", s + 1), {"Off", "On"});
 			configParam(CV_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d value", s + 1), " V", 0.0f, 8.0f, 0.0f);
 		}
 		
@@ -148,9 +155,13 @@ struct STRUCT_NAME : Module {
 		json_t *clk = json_object_get(root, "clockState");
 		json_t *run = json_object_get(root, "runState");
 
-		if (version)
-			moduleVersion = json_number_value(version);			
-
+		if (version) 
+			moduleVersion = json_integer_value(version);			
+		else {
+			// no version in file is really old version.
+			moduleVersion = 0;
+		}
+	
 		if (currentStep)
 			count = json_integer_value(currentStep);
 		
@@ -168,6 +179,20 @@ struct STRUCT_NAME : Module {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"		
 		
+		// conversion to new step select switches
+		if (moduleVersion < 2) {
+			INFO("Converting from module version %d", moduleVersion);
+			
+			for(int i = 0; i < SEQ_NUM_STEPS; i++) {
+				int x = (int)(params[STEP_PARAMS + i].getValue());
+
+				params[GATE_PARAMS + i].setValue(x == 0 ? 1.0f : 0.0f);
+				params[TRIGGER_PARAMS + i].setValue(x == 2 ? 1.0f : 0.0f);
+			}
+			
+			moduleVersion = 2;
+		}
+
 		startUpCounter = 20;
 	}	
 	
@@ -425,15 +450,14 @@ struct STRUCT_NAME : Module {
 
 			// process the gate and CV for the current step
 			if (stepActive) {
-				switch ((int)(params[STEP_PARAMS + c].getValue())) {
-					case 0:
-						gate = running;
-						break;
-					case 2:
-						trig = running;
-						break;
+				if(params[TRIGGER_PARAMS + c].getValue() > 0.5f) {
+					trig = running;
 				}
-			
+				
+				if(params[GATE_PARAMS + c].getValue() > 0.5f) {
+					gate = running;
+				}
+
 				// now grab the cv value
 				switch ((int)(params[HOLD_PARAM].getValue())) {
 					case 0: // on trig
@@ -515,8 +539,8 @@ struct WIDGET_NAME : ModuleWidget {
 
 		// step lights
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL8 : STD_COL4], STD_ROWS8[STD_ROW1 + (s % 8)] - 19), module, STRUCT_NAME::LENGTH_LIGHTS + s));
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL9 : STD_COL5] + 15, STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME::STEP_LIGHTS + s));
+			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL8 : STD_COL4] + 15, STD_ROWS8[STD_ROW1 + (s % 8)] - 8), module, STRUCT_NAME::LENGTH_LIGHTS + s));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL8 : STD_COL4] + 15, STD_ROWS8[STD_ROW1 + (s % 8)] + 5), module, STRUCT_NAME::STEP_LIGHTS + s));
 		}
 		
 		// direction and one-shot light
@@ -530,7 +554,10 @@ struct WIDGET_NAME : ModuleWidget {
 		
 		// step switches and pots
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL8 : STD_COL4] + 15, STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: STEP_PARAMS + s));
+
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL8 : STD_COL4] - 5, STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: TRIGGER_PARAMS + s, STRUCT_NAME:: TRIGGER_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL9 : STD_COL5] + 5, STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: GATE_PARAMS + s, STRUCT_NAME:: GATE_PARAM_LIGHTS + s));
+
 			addParam(createParamCentered<Potentiometer<GreenKnob>>(Vec(STD_COLUMN_POSITIONS[s > 7 ? STD_COL10 : STD_COL6] + 15, STD_ROWS8[STD_ROW1 + (s % 8)]), module, STRUCT_NAME:: CV_PARAMS + s));
 		}
 
@@ -562,31 +589,42 @@ struct WIDGET_NAME : ModuleWidget {
 	
 	struct InitMenuItem : MenuItem {
 		WIDGET_NAME *widget;
-		bool triggerInit = true;
-		bool cvInit = true;
-		
+		int which;
+
+		std::string undoLabels[4] = {"initialize cv", "initialize gates", "initialize triggers", "initialize cv/gates/triggers"};
+	
 		void onAction(const event::Action &e) override {
 
-		// history - current settings
+			// history - current settings
 			history::ModuleChange *h = new history::ModuleChange;
-			if (!triggerInit && cvInit)
-				h->name = "initialize cv";
-			else if (triggerInit && !cvInit)
-				h->name = "initialize gates/triggers";
-			else
-				h->name = "initialize cv/gates/triggers";
+			h->name = undoLabels[which];
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
 			// step controls
-			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-				// triggers/gates
-				if (triggerInit)
-					widget->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->reset();
-				
-				// cv knobs
-				if (cvInit)
-					widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->reset();
+			switch (which) {
+				case 0: // cv only
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;					
+				case 1: // gates only
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::GATE_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;				
+				case 2: // triggers
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::TRIGGER_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;				
+				case 3: // cv/gates/triggers
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->reset();
+						widget->getParam(STRUCT_NAME::GATE_PARAMS + c)->getParamQuantity()->reset();
+						widget->getParam(STRUCT_NAME::TRIGGER_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;					
 			}
 
 			// history - new settings
@@ -598,26 +636,17 @@ struct WIDGET_NAME : ModuleWidget {
 	// initialize menu item
 	struct InitMenu : MenuItem {
 		WIDGET_NAME *widget;		
+		std::string initLabels[4] = {"CV only", "Gates only", "Triggers only", "CV/Gates/Triggers only"};
 		
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
 
-			// CV only init
-			InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("CV Only");
-			initCVMenuItem->widget = widget;
-			initCVMenuItem->triggerInit = false;
-			menu->addChild(initCVMenuItem);
-
-			// gate/trigger only init
-			InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Gates/Triggers Only");
-			initTrigMenuItem->widget = widget;
-			initTrigMenuItem->cvInit = false;
-			menu->addChild(initTrigMenuItem);
-
-			// CV/gate/trigger only init
-			InitMenuItem *initCVTrigMenuItem = createMenuItem<InitMenuItem>("CV/Gates/Triggers Only");
-			initCVTrigMenuItem->widget = widget;
-			menu->addChild(initCVTrigMenuItem);
+			for (int i = 0; i < 4; i++) {
+				InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>(initLabels[i]);
+				initMenuItem->widget = widget;
+				initMenuItem->which = i;
+				menu->addChild(initMenuItem);
+			}
 
 			return menu;	
 		}
@@ -653,45 +682,79 @@ struct WIDGET_NAME : ModuleWidget {
 	}
 	
 	
+	std::string undoRandLabels[4] = {"randomize cv", "randomize gates", "randomize triggers", "randomize cv/gates/triggers"};
+	
+	void doRandom(int which) {
+		// history - current settings
+		history::ModuleChange *h = new history::ModuleChange;
+		h->name = undoRandLabels[which];
+		h->moduleId = this->module->id;
+		h->oldModuleJ = this->toJson();
+
+		// step controls
+		switch (which) {
+			case 0: // cv only
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;					
+			case 1: // gates only
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(STRUCT_NAME::GATE_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;				
+			case 2: // triggers
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(STRUCT_NAME::TRIGGER_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;				
+			case 3: // cv/gates/triggers
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
+					this->getParam(STRUCT_NAME::GATE_PARAMS + c)->getParamQuantity()->randomize();
+					this->getParam(STRUCT_NAME::TRIGGER_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;					
+		}
+
+		// history - new settings
+		h->newModuleJ = this->toJson();
+		APP->history->push(h);	
+	}
+
+	// randomize selection menu item
 	struct RandMenuItem : MenuItem {
 		WIDGET_NAME *widget;
-		bool triggerRand = true;
-		bool cvRand = true;
-	
+		int which;
+
 		void onAction(const event::Action &e) override {
-			widget->doRandom(triggerRand, cvRand);
+			widget->doRandom(which);
 		}
-	};	
+	};
 	
 	// randomize menu item
 	struct RandMenu : MenuItem {
 		WIDGET_NAME *widget;
-		
+		std::string randLabels[4] = {"CV only", "Gates only", "Triggers only", "CV/Gates/Triggers only"};
+		std::string randKeys[4] = {"Shitf+Ctrl+C", "Shitf+Ctrl+G", "Shitf+Ctrl+T", "Shitf+Ctrl+R"};
+
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
-
-			// CV only random
-			RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("CV Only", "Shitf+Ctrl+C");
-			randCVMenuItem->widget = widget;
-			randCVMenuItem->triggerRand = false;
-			menu->addChild(randCVMenuItem);
-
-			// gate/trigger only random
-			RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Gates/Triggers Only", "Shitf+Ctrl+T");
-			randTrigMenuItem->widget = widget;
-			randTrigMenuItem->cvRand = false;
-			menu->addChild(randTrigMenuItem);	
 			
-			// cv/gate/trigger only random
-			RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("CV/Gates/Triggers Only", "Shift+Ctrl+R");
-			randCVTrigMenuItem->widget = widget;
-			menu->addChild(randCVTrigMenuItem);	
-			
-			return menu;	
+			for (int i = 0;i < 4; i++) {
+				// CV only random
+				RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>(randLabels[i], randKeys[i]);
+				randMenuItem->widget = widget;
+				randMenuItem->which = i;
+				menu->addChild(randMenuItem);
+			}
+		
+			return menu;
 		}
 	};
+
 	
-		// expander addition menu item
+	// expander addition menu item
 	#include "../inc/AddExpanderMenuItem.hpp"
 	struct ExpanderMenu : MenuItem {
 		STRUCT_NAME *module;
@@ -773,23 +836,26 @@ struct WIDGET_NAME : ModuleWidget {
 			
 			switch (e.key) {
 				case GLFW_KEY_C:
-					doRandom(false, true);
+					doRandom(0);
 					e.consume(this);
 					break;
-				case GLFW_KEY_R:
-					doRandom(true, true);
+				case GLFW_KEY_G:
+					doRandom(1);
 					e.consume(this);
-					break;				
+					break;						
 				case GLFW_KEY_T:
-					doRandom(true, false);
+					doRandom(2);
+					e.consume(this);
+					break;	
+				case GLFW_KEY_R:
+					doRandom(3);
 					e.consume(this);
 					break;				
 			}
 		}
 
 		ModuleWidget::onHoverKey(e);
-	}
-	
+	}	
 	
 	void step() override {
 		if (module) {

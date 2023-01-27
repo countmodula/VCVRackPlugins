@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 2.3.0</h3>
+<h3>Modules - Release 2.4.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -62,6 +62,7 @@ Follow Count Modula on facebook:
 <li>Comparator</a></li>
 <li>Countdown 3</li>
 <li>Countdown 5</li>
+<li>CV Stack <font color="red"> * new in v2.4.0</font></li>
 <li>D Flip Flop (Single)</li>
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
@@ -73,6 +74,7 @@ Follow Count Modula on facebook:
 <li>Gate Modifier</li>
 <li>8 x 8 Gate Sequencer</li>
 <li>8 x 16 Gate Sequencer</li>
+<li>12 x 16 Gate Sequencer<font color="red"> * new in v2.4.0</font></li>
 <li>Gate to Trigger</li>
 <li>Inverter</li>
 <li>Light Strip - LED Blank
@@ -88,7 +90,7 @@ Follow Count Modula on facebook:
 <li>Minimus Maximus</li>
 <li>Mixer</li>
 <li>Morph Shaper</li>
-<li>Muti-step Sequencer <font color="red"> * new in v2.3.0</font></li>
+<li>Muti-step Sequencer</li>
 <li>Multiple</li>
 <li>Multiplexer</li>
 <li>Mute</li>
@@ -144,7 +146,7 @@ Follow Count Modula on facebook:
 <li>16 Step Sequencer Channel Expander</li>
 <li>16 Step Sequencer Gate Expander</li>
 <li>16 Step Sequencer Trigger Expander </li>
-<li>64 Step Sequencer <font color="red"> * new in v2.3.0</font></li>
+<li>64 Step Sequencer</li>
 <li>Tapped Gate Delay</li>
 <li>T Flip Flop (Dual)</li>
 <li>T Flip Flop (Single)</li>
