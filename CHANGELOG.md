@@ -21,7 +21,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
-<td align="center">21-Jan-2023</td>
+<td align="center">27-Jan-2023</td>
 <td align="center">v2.4.0</td>
 <td align="left">
 <ul>
@@ -33,6 +33,7 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <ul>
 <b>Module Updates:</b>
 <li>8/16 Step Sequencers and associated channel expanders - Use independant gate/trigger buttons instead of single toggle switch for gate/trigger selection on each step</li>
+<li>8/16 Step Trigger Sequencers - Use independant trigger buttons instead of single toggle switch for trigger output selection on each step</li>
 </ul>
 
 </td>
