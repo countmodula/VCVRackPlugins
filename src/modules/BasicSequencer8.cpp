@@ -23,6 +23,8 @@ struct BasicSequencer8 : Module {
 		CV_PARAM,
 		RANGE_SW_PARAM,
 		MODE_PARAM,
+		ENUMS(TRIGGER_PARAMS, SEQ_NUM_STEPS),
+		ENUMS(GATE_PARAMS, SEQ_NUM_STEPS),
 		NUM_PARAMS
 	};
 	
@@ -49,6 +51,8 @@ struct BasicSequencer8 : Module {
 		GATE_LIGHT,
 		ENUMS(DIR_LIGHTS, 3),
 		ENUMS(LENGTH_LIGHTS, SEQ_NUM_STEPS),
+		ENUMS(TRIGGER_PARAM_LIGHTS, SEQ_NUM_STEPS),
+		ENUMS(GATE_PARAM_LIGHTS, SEQ_NUM_STEPS),
 		NUM_LIGHTS
 	};
 	
@@ -70,7 +74,7 @@ struct BasicSequencer8 : Module {
 	bool running = false;
 	
 	float lengthCVScale = (float)(SEQ_NUM_STEPS - 1);
-	float moduleVersion = 1.4f;
+	int moduleVersion = 2;
 	
 	// add the variables we'll use when managing themes
 	#include "../themes/variables.hpp"
@@ -92,6 +96,8 @@ struct BasicSequencer8 : Module {
 		std::ostringstream  buffer;
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Step", {"Gate", "Off", "Trigger"});
+			configSwitch(TRIGGER_PARAMS + s, 0.0f, 1.0f, 1.0f, rack::string::f("Step %d trigger select", s + 1), {"Off", "On"});
+			configSwitch(GATE_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d gate select", s + 1), {"Off", "On"});
 			configParam(STEP_CV_PARAMS + s, 0.0f, 8.0f, 0.0f, "Step value");
 			buffer.str("");
 			buffer << "Length = " << s + 1;
@@ -128,7 +134,7 @@ struct BasicSequencer8 : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_real(moduleVersion));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 		json_object_set_new(root, "currentStep", json_integer(count));
 		json_object_set_new(root, "direction", json_integer(direction));
 		json_object_set_new(root, "runState", json_boolean(gateRun.high()));
@@ -146,8 +152,18 @@ struct BasicSequencer8 : Module {
 		json_t *dir = json_object_get(root, "direction");
 		json_t *run = json_object_get(root, "runState");		
 		
-		if (version)
-			moduleVersion = json_number_value(version);		
+		if (version) {
+			float v = json_number_value(version);
+			if (v < 1.9f) {
+				moduleVersion = 1;
+			}
+			else
+				moduleVersion = (int)v;		
+		}
+		else {
+			// no version in file is really old version.
+			moduleVersion = 0;
+		}
 		
 		if (currentStep)
 			count = json_integer_value(currentStep);
@@ -159,6 +175,21 @@ struct BasicSequencer8 : Module {
 			gateRun.preset(json_boolean_value(run));
 		
 		running = gateRun.high();
+		
+		// conversion to new step select switches
+		if (moduleVersion < 2) {
+			INFO("Converting from module version %d", moduleVersion);
+
+			for(int i = 0; i < SEQ_NUM_STEPS; i++) {
+				int x = (int)(params[STEP_SW_PARAMS + i].getValue());
+
+				params[GATE_PARAMS + i].setValue(x == 0 ? 1.0f : 0.0f);
+				params[TRIGGER_PARAMS + i].setValue(x == 2 ? 1.0f : 0.0f);
+			}
+			
+			moduleVersion = 2;
+		}			
+		
 		
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
@@ -346,22 +377,14 @@ struct BasicSequencer8 : Module {
 			
 			// now determine the output values
 			if (stepActive) {
-				// trigger/gate
-				switch ((int)(params[STEP_SW_PARAMS + c].getValue())) {
-					case 0: // lower output
-						trig = false;
-						gate = true;
-						break;
-					case 2: // upper output
-						trig = true;
-						gate = false;
-						break;				
-					default: // off
-						trig = false;
-						gate = false;
-						break;
+				if(params[TRIGGER_PARAMS + c].getValue() > 0.5f) {
+					trig = running;
 				}
-					
+				
+				if(params[GATE_PARAMS + c].getValue() > 0.5f) {
+					gate = running;
+				}				
+				
 				// determine which scale to use
 				scale = getScale(params[RANGE_SW_PARAM].getValue());
 				
@@ -452,9 +475,11 @@ struct BasicSequencer8Widget : ModuleWidget {
 			
 		// row lights and switches
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] - 15, STD_ROWS8[STD_ROW1 + s] - 19), module, BasicSequencer8::LENGTH_LIGHTS + s));
-			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[STD_COL5], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8:: STEP_SW_PARAMS + s));
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL6], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::STEP_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] - 15, STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::TRIGGER_PARAMS + s, BasicSequencer8::TRIGGER_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 25, STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::GATE_PARAMS + s, BasicSequencer8::GATE_PARAM_LIGHTS + s));
+			
+			addChild(createLightCentered<SmallLight<GreenLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 5, STD_ROWS8[STD_ROW1 + s] - 8), module, BasicSequencer8::LENGTH_LIGHTS + s));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL5] + 5, STD_ROWS8[STD_ROW1 + s]+5), module, BasicSequencer8::STEP_LIGHTS + s));
 			addParam(createParamCentered<Potentiometer<WhiteKnob>>(Vec(STD_COLUMN_POSITIONS[STD_COL7], STD_ROWS8[STD_ROW1 + s]), module, BasicSequencer8::STEP_CV_PARAMS + s));
 		}
 			
@@ -479,31 +504,42 @@ struct BasicSequencer8Widget : ModuleWidget {
 
 	struct InitMenuItem : MenuItem {
 		BasicSequencer8Widget *widget;
-		bool triggerInit = true;
-		bool cvInit = true;
-		
+		int which;
+
+		std::string undoLabels[4] = {"initialize cv", "initialize gates", "initialize triggers", "initialize cv/gates/triggers"};
+	
 		void onAction(const event::Action &e) override {
 
 		// history - current settings
 			history::ModuleChange *h = new history::ModuleChange;
-			if (!triggerInit && cvInit)
-				h->name = "initialize CV";
-			else if (triggerInit && !cvInit)
-				h->name = "initialize triggers";
-			else
-				h->name = "initialize module";
+			h->name = undoLabels[which];
 			h->moduleId = widget->module->id;
 			h->oldModuleJ = widget->toJson();
 		
 			// step controls
-			for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-				// triggers/gates
-				if (triggerInit)
-					widget->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->getParamQuantity()->reset();
-				
-				// cv knobs
-				if (cvInit)
-					widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->reset();
+			switch (which) {
+				case 0: // cv only
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;					
+				case 1: // gates only
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(BasicSequencer8::GATE_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;				
+				case 2: // triggers
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(BasicSequencer8::TRIGGER_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;				
+				case 3: // cv/gates/triggers
+					for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+						widget->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->reset();
+						widget->getParam(BasicSequencer8::GATE_PARAMS + c)->getParamQuantity()->reset();
+						widget->getParam(BasicSequencer8::TRIGGER_PARAMS + c)->getParamQuantity()->reset();
+					}
+					break;					
 			}
 
 			// history - new settings
@@ -512,28 +548,59 @@ struct BasicSequencer8Widget : ModuleWidget {
 		}
 	};	
 	
+	// initialize menu item
+	struct InitMenu : MenuItem {
+		BasicSequencer8Widget *widget;		
+		std::string initLabels[4] = {"CV only", "Gates only", "Triggers only", "CV/Gates/Triggers only"};
+		
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			for (int i = 0; i < 4; i++) {
+				InitMenuItem *initMenuItem = createMenuItem<InitMenuItem>(initLabels[i]);
+				initMenuItem->widget = widget;
+				initMenuItem->which = i;
+				menu->addChild(initMenuItem);
+			}
+
+			return menu;	
+		}
+	};		
 	
-	void doRandom(bool triggerRand, bool cvRand){
+	
+	std::string undoRandLabels[4] = {"randomize cv", "randomize gates", "randomize triggers", "randomize cv/gates/triggers"};
+
+	void doRandom(int which) {
 		// history - current settings
 		history::ModuleChange *h = new history::ModuleChange;
-		if (!triggerRand && cvRand)
-			h->name = "randomize cv";
-		else if (triggerRand && !cvRand)
-			h->name = "randomize gates/triggers";
-		else
-			h->name = "randomize cv/gates/triggers";
-		
+		h->name = undoRandLabels[which];
 		h->moduleId = this->module->id;
 		h->oldModuleJ = this->toJson();
 
 		// step controls
-		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-			// triggers/gates
-			if (triggerRand)
-				this->getParam(BasicSequencer8::STEP_SW_PARAMS + c)->getParamQuantity()->randomize();
-			
-			if (cvRand)
-				this->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->randomize();
+		switch (which) {
+			case 0: // cv only
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;					
+			case 1: // gates only
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(BasicSequencer8::GATE_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;				
+			case 2: // triggers
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(BasicSequencer8::TRIGGER_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;				
+			case 3: // cv/gates/triggers
+				for (int c = 0; c < SEQ_NUM_STEPS; c++) {
+					this->getParam(BasicSequencer8::STEP_CV_PARAMS + c)->getParamQuantity()->randomize();
+					this->getParam(BasicSequencer8::GATE_PARAMS + c)->getParamQuantity()->randomize();
+					this->getParam(BasicSequencer8::TRIGGER_PARAMS + c)->getParamQuantity()->randomize();
+				}
+				break;					
 		}
 
 		// history - new settings
@@ -541,15 +608,37 @@ struct BasicSequencer8Widget : ModuleWidget {
 		APP->history->push(h);	
 	}	
 	
+	// randomize selection menu item
 	struct RandMenuItem : MenuItem {
 		BasicSequencer8Widget *widget;
-		bool triggerRand = true;
-		bool cvRand = true;
-	
+		int which;
+
 		void onAction(const event::Action &e) override {
-			widget->doRandom(triggerRand, cvRand);
+			widget->doRandom(which);
 		}
 	};
+	
+	// randomize menu item
+	struct RandMenu : MenuItem {
+		BasicSequencer8Widget *widget;
+		std::string randLabels[4] = {"CV only", "Gates only", "Triggers only", "CV/Gates/Triggers only"};
+		std::string randKeys[4] = {"Shitf+Ctrl+C", "Shitf+Ctrl+G", "Shitf+Ctrl+T", "Shitf+Ctrl+R"};
+
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+			
+			for (int i = 0;i < 4; i++) {
+				// CV only random
+				RandMenuItem *randMenuItem = createMenuItem<RandMenuItem>(randLabels[i], randKeys[i]);
+				randMenuItem->widget = widget;
+				randMenuItem->which = i;
+				menu->addChild(randMenuItem);
+			}
+		
+			return menu;
+		}
+	};	
+	
 	
 #ifdef SEQUENCER_EXP_MAX_CHANNELS		
 	// expander addition menu item
@@ -568,39 +657,16 @@ struct BasicSequencer8Widget : ModuleWidget {
 		
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createMenuLabel("Sequence"));		
-		// CV only init
-		InitMenuItem *initCVMenuItem = createMenuItem<InitMenuItem>("Initialize CV Only");
-		initCVMenuItem->widget = this;
-		initCVMenuItem->triggerInit = false;
-		menu->addChild(initCVMenuItem);
 
-		// trigger only init
-		InitMenuItem *initTrigMenuItem = createMenuItem<InitMenuItem>("Initialize Gates/Triggers Only");
-		initTrigMenuItem->widget = this;
-		initTrigMenuItem->cvInit = false;
-		menu->addChild(initTrigMenuItem);
+		// add initialize menu item
+		InitMenu *initMenuItem = createMenuItem<InitMenu>("Initialize", RIGHT_ARROW);
+		initMenuItem->widget = this;
+		menu->addChild(initMenuItem);
 
-		// trigger only init
-		InitMenuItem *initCVTrigMenuItem = createMenuItem<InitMenuItem>("Initialize CV/Gates/Triggers Only");
-		initCVTrigMenuItem->widget = this;
-		menu->addChild(initCVTrigMenuItem);
-
-		// CV only random
-		RandMenuItem *randCVMenuItem = createMenuItem<RandMenuItem>("Randomize CV Only", "Shift+Ctrl+C");
-		randCVMenuItem->widget = this;
-		randCVMenuItem->triggerRand = false;
-		menu->addChild(randCVMenuItem);
-
-		// gate/trigger only random
-		RandMenuItem *randTrigMenuItem = createMenuItem<RandMenuItem>("Randomize Gates/Triggers Only", "Shift+Ctrl+T");
-		randTrigMenuItem->widget = this;
-		randTrigMenuItem->cvRand = false;
-		menu->addChild(randTrigMenuItem);
-
-		// cv/gate/trigger only random
-		RandMenuItem *randCVTrigMenuItem = createMenuItem<RandMenuItem>("Randomize CV/Gates/Triggers Only", "Shift+Ctrl+R");
-		randCVTrigMenuItem->widget = this;
-		menu->addChild(randCVTrigMenuItem);
+		// add randomize menu item
+		RandMenu *randMenuItem = createMenuItem<RandMenu>("Randomize", RIGHT_ARROW);
+		randMenuItem->widget = this;
+		menu->addChild(randMenuItem);
 		
 #ifdef SEQUENCER_EXP_MAX_CHANNELS			
 		// add expander menu
@@ -649,15 +715,19 @@ struct BasicSequencer8Widget : ModuleWidget {
 			
 			switch (e.key) {
 				case GLFW_KEY_C:
-					doRandom(false, true);
+					doRandom(0);
+					e.consume(this);
+					break;
+				case GLFW_KEY_G:
+					doRandom(1);
+					e.consume(this);
+					break;						
+				case GLFW_KEY_T:
+					doRandom(2);
 					e.consume(this);
 					break;
 				case GLFW_KEY_R:
-					doRandom(true, true);
-					e.consume(this);
-					break;
-				case GLFW_KEY_T:
-					doRandom(true, false);
+					doRandom(3);
 					e.consume(this);
 					break;
 			}

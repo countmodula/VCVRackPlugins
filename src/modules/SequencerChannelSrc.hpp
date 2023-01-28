@@ -130,7 +130,7 @@ struct STRUCT_NAME : Module {
 				params[TRIGGER_PARAMS + i].setValue(x == 2 ? 1.0f : 0.0f);
 			}
 			
-			moduleVersion = 2.0f;
+			moduleVersion = 2;
 		}	
 	
 	
