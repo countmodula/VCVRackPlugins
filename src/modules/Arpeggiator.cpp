@@ -127,6 +127,7 @@ struct Arpeggiator : Module {
 	float octaveOut = 0.0f;
 	int currentDirection = UP_MODE;
 	bool polyOutputs = false;
+	bool monoGateInput = false;
 	
 	int sort = -1;
 	int mode = UP_MODE;
@@ -248,7 +249,7 @@ struct Arpeggiator : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 		
-		json_object_set_new(root, "moduleVersion", json_integer(2));
+		json_object_set_new(root, "moduleVersion", json_integer(3));
 			
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -273,6 +274,7 @@ struct Arpeggiator : Module {
 		json_object_set_new(root, "nc", json_integer(noteCount));
 		json_object_set_new(root, "pc", json_integer(patternCount));
 		json_object_set_new(root, "polyOutputs", json_boolean(polyOutputs));	
+		json_object_set_new(root, "monoGateInput", json_boolean(monoGateInput));	
 		json_object_set_new(root, "pattern", pat);
 		json_object_set_new(root, "octave", oct);		
 		json_object_set_new(root, "glide", gld);		
@@ -292,6 +294,7 @@ struct Arpeggiator : Module {
 		json_t *nc = json_object_get(root, "nc");
 		json_t *pc = json_object_get(root, "pc");
 		json_t *po = json_object_get(root, "polyOutputs");
+		json_t *dg = json_object_get(root, "monoGateInput");
 		
 		json_t *pat = json_object_get(root, "pattern");
 		json_t *oct = json_object_get(root, "octave");
@@ -347,7 +350,10 @@ struct Arpeggiator : Module {
 			patternCount = json_integer_value(pc);
 		
 		if (po)
-			polyOutputs = json_boolean_value(po);
+			polyOutputs = json_boolean_value(po);	
+		
+		if (dg)
+			monoGateInput = json_boolean_value(dg);
 		
 	}
 	
@@ -416,16 +422,33 @@ struct Arpeggiator : Module {
 		else {
 			// no - process the gate and cv inputs
 			gate = false;
-			numGates = inputs[GATE_INPUT].getChannels();
 			numCVs = 0;
-			if (numGates > 0) {
-				for (int c = 0; c < numGates; c++) {
-					if (gpGate[c].set(inputs[GATE_INPUT].getVoltage(c))) {
+			
+			if (monoGateInput) {
+				if (gpGate[0].set(inputs[GATE_INPUT].getVoltage())) {
+					numGates = inputs[CV_INPUT].getChannels();
+					if (numGates > 0) {
 						gate = true;
 						
-						// add CV to the list for later
-						cvListHeld[numCVs] = cvList[numCVs] = inputs[CV_INPUT].getVoltage(c);
-						numCVs++;
+						for (int c = 0; c < numGates; c++) {
+							// add CV to the list for later
+							cvListHeld[numCVs] = cvList[numCVs] = inputs[CV_INPUT].getVoltage(c);
+							numCVs++;
+						}
+					}
+				}
+			}
+			else {
+				numGates = inputs[GATE_INPUT].getChannels();
+				if (numGates > 0) {
+					for (int c = 0; c < numGates; c++) {
+						if (gpGate[c].set(inputs[GATE_INPUT].getVoltage(c))) {
+							gate = true;
+							
+							// add CV to the list for later
+							cvListHeld[numCVs] = cvList[numCVs] = inputs[CV_INPUT].getVoltage(c);
+							numCVs++;
+						}
 					}
 				}
 			}
@@ -1207,6 +1230,15 @@ struct ArpeggiatorWidget : ModuleWidget {
 			module->polyOutputs = !module->polyOutputs;
 		}
 	};
+	
+	// poly/mono selection menu item
+	struct MonoGateMenuItem : MenuItem {
+		Arpeggiator *module;
+		
+		void onAction(const event::Action &e) override {
+			module->monoGateInput = !module->monoGateInput;
+		}
+	};
 
 
 	void appendContextMenu(Menu *menu) override {
@@ -1224,7 +1256,11 @@ struct ArpeggiatorWidget : ModuleWidget {
 		
 		PolyMenuItem *polyMenuItem = createMenuItem<PolyMenuItem>("Polyphonic Outputs", CHECKMARK(module->polyOutputs));
 		polyMenuItem->module = module;
-		menu->addChild(polyMenuItem);
+		menu->addChild(polyMenuItem);		
+		
+		MonoGateMenuItem *monoGateMenuItem = createMenuItem<MonoGateMenuItem>("Monophonic gate input", CHECKMARK(module->monoGateInput));
+		monoGateMenuItem->module = module;
+		menu->addChild(monoGateMenuItem);
 	
 	}	
 	
