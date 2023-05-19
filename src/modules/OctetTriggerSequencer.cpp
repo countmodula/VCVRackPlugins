@@ -285,27 +285,27 @@ struct OctetTriggerSequencer : Module {
 			count = 0;
 			playingChannelB = false;
 		}
-		else {
-			// advance count on positive clock edge or the run edge if it is close to the clock edge
-			if (clockEdge && runHigh) {
-				// flag that we are now actually running
-				running = true;
-				
-				// what mode are we in?
-				chained = chainHigh;
 
-				// ensure we always start with channel A when chaining is first engaged
-				if (!chained)
-					playingChannelB = false; 
+		// advance count on positive clock edge or the run edge if it is close to the clock edge
+		if (clockEdge && runHigh) {
+			// flag that we are now actually running
+			running = true;
+			
+			// what mode are we in?
+			chained = chainHigh;
+
+			// ensure we always start with channel A when chaining is first engaged
+			if (!chained)
+				playingChannelB = false; 
+			
+			if (++count > 8) {
+				count = 1;
 				
-				if (++count > 8) {
-					count = 1;
-					
-					if (chained)
-						playingChannelB ^= true;
-				}
+				if (chained)
+					playingChannelB ^= true;
 			}
 		}
+
 
 		// no need to check for pattern change, and update display at audio rate
 		if (++processCount > 8) {

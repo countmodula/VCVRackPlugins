@@ -254,19 +254,19 @@ struct NibbleTriggerSequencer : Module {
 			count = 0;
 			playingChannelB = false;
 		}
-		else {
-			// advance count on positive clock edge or the run edge if it is close to the clock edge
-			if (clockEdge && runHigh) {
-				// flag that we are now actually running
-				running = true;
-				
-				if (++count > 8) {
-					count = 1;
+	
+		// advance count on positive clock edge or the run edge if it is close to the clock edge
+		if (clockEdge && runHigh) {
+			// flag that we are now actually running
+			running = true;
+			
+			if (++count > 8) {
+				count = 1;
 
-					playingChannelB ^= true;
-				}
+				playingChannelB ^= true;
 			}
 		}
+
 
 		// no need to check for pattern change, and update display at audio rate
 		if (++processCount > 8) {
