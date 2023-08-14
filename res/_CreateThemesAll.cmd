@@ -9,11 +9,11 @@
 @if "%theme%" EQU "" goto all
 
 :specific
-C:\Workspace\Plugins\Tools\ThemeUtility\bin\Debug\ThemeUtility -t:%theme% .\
+C:\Workspace\Tools\ThemeUtility\bin\Debug\ThemeUtility -t:%theme% .\
 @goto end
 
 :all
-C:\Workspace\Plugins\Tools\ThemeUtility\bin\Debug\ThemeUtility .\
+C:\Workspace\Tools\ThemeUtility\bin\Debug\ThemeUtility .\
 
 :end
 @pause

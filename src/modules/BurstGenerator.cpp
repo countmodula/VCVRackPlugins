@@ -1,6 +1,5 @@
 //----------------------------------------------------------------------------
-//	/^M^\ Count Modula Plugin for VCV Rack - Binary Sequencer Module
-//	VCV Rack version of now extinct Blacet Binary Zone Frac Module.
+//	/^M^\ Count Modula Plugin for VCV Rack - Burst Generator Module
 //	Copyright (C) 2021  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"
@@ -116,8 +115,10 @@ struct BurstGenerator : Module {
 		pgEnd.reset();
 		clock.reset();
 		bursting = false;
+#ifdef SEQUENCER_EXP_MAX_CHANNELS	
 		seqBurst = false;
 		seqCount = 0;
+#endif
 		counter = -1;
 	}
 

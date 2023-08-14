@@ -111,6 +111,8 @@ p->addModel(modelSequencerGates8);
 p->addModel(modelSequencerTriggers16);	
 p->addModel(modelSequencerTriggers8);	
 p->addModel(modelShepardGenerator);	
+p->addModel(modelShiftRegister16);	
+p->addModel(modelShiftRegister32);	
 p->addModel(modelSingleDFlipFlop);	
 p->addModel(modelSingleSRFlipFlop);	
 p->addModel(modelSingleTFlipFlop);	

@@ -110,6 +110,8 @@ extern Model *modelSequencerGates8;
 extern Model *modelSequencerTriggers16;
 extern Model *modelSequencerTriggers8;
 extern Model *modelShepardGenerator;
+extern Model *modelShiftRegister16;
+extern Model *modelShiftRegister32;
 extern Model *modelSingleDFlipFlop;
 extern Model *modelSingleSRFlipFlop;
 extern Model *modelSingleTFlipFlop;
