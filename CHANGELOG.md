@@ -21,6 +21,20 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
+<td align="center">TBA</td>
+<td align="center">v2.5.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Burst Generator 64 - 1-64 pulse burst generator</li>
+<li>Shift Register 16 - 16 cell shift register for gates/cv</li>
+<li>Shift Register 32 - 32 cell shift register for gates/cv</li>
+</ul>
+
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">27-Jan-2023</td>
 <td align="center">v2.4.0</td>
 <td align="left">
@@ -38,7 +52,6 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 
 </td>
 </tr>
-
 
 <tr valign="top">
 <td align="center">01-Jan-2023</td>

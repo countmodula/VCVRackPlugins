@@ -1194,6 +1194,15 @@
 		  "tags": [
 			"Sample and Hold"
 		  ]
+		},
+		{
+		  "slug": "BurstGenerator64",
+		  "name": "Burst Generator 64",
+		  "description": "Generates bursts of 1-64 pulses whenever a trigger is received at the trigger input",
+		  "tags": [
+			"Clock modulator",
+			"Sequencer"
+		  ]
 		}
 	]
 }

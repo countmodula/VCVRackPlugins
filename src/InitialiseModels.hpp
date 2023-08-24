@@ -25,6 +25,7 @@ p->addModel(modelBooleanVCNOT);
 p->addModel(modelBooleanXOR);	
 p->addModel(modelBreakout);	
 p->addModel(modelBurstGenerator);	
+p->addModel(modelBurstGenerator64);	
 p->addModel(modelBusRoute);	
 p->addModel(modelBusRoute2);	
 p->addModel(modelCarousel);	

@@ -24,6 +24,7 @@ extern Model *modelBooleanVCNOT;
 extern Model *modelBooleanXOR;
 extern Model *modelBreakout;
 extern Model *modelBurstGenerator;
+extern Model *modelBurstGenerator64;
 extern Model *modelBusRoute;
 extern Model *modelBusRoute2;
 extern Model *modelCarousel;
