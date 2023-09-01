@@ -652,36 +652,6 @@ struct WIDGET_NAME : ModuleWidget {
 		}
 	};		
 	
-	void doRandom(bool triggerRand, bool cvRand)
-	{
-		// history - current settings
-		history::ModuleChange *h = new history::ModuleChange;
-		if (!triggerRand && cvRand)
-			h->name = "randomize cv";
-		else if (triggerRand && !cvRand)
-			h->name = "randomize gates/triggers";
-		else
-			h->name = "randomize cv/gates/triggers";
-		
-		h->moduleId = this->module->id;
-		h->oldModuleJ = this->toJson();
-
-		// step controls
-		for (int c = 0; c < SEQ_NUM_STEPS; c++) {
-			// triggers/gates
-			if (triggerRand)
-				this->getParam(STRUCT_NAME::STEP_PARAMS + c)->getParamQuantity()->randomize();
-			
-			if (cvRand)
-				this->getParam(STRUCT_NAME::CV_PARAMS + c)->getParamQuantity()->randomize();
-		}
-
-		// history - new settings
-		h->newModuleJ = this->toJson();
-		APP->history->push(h);	
-	}
-	
-	
 	std::string undoRandLabels[4] = {"randomize cv", "randomize gates", "randomize triggers", "randomize cv/gates/triggers"};
 	
 	void doRandom(int which) {

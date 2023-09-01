@@ -18,6 +18,8 @@ struct SequencerExpanderTrig8 : Module {
 
 	enum ParamIds {
 		ENUMS(STEP_SW_PARAMS, SEQ_NUM_STEPS),
+		ENUMS(TRIGGER_PARAMS, SEQ_NUM_STEPS),
+		ENUMS(GATE_PARAMS, SEQ_NUM_STEPS),
 		NUM_PARAMS
 	};
 	
@@ -36,6 +38,8 @@ struct SequencerExpanderTrig8 : Module {
 		TRIG_LIGHT,
 		GATE_LIGHT,
 		ENUMS(CHANNEL_LIGHTS, SEQUENCER_EXP_MAX_CHANNELS),
+		ENUMS(TRIGGER_PARAM_LIGHTS, SEQ_NUM_STEPS),
+		ENUMS(GATE_PARAM_LIGHTS, SEQ_NUM_STEPS),
 		NUM_LIGHTS
 	};
 	
@@ -48,6 +52,8 @@ struct SequencerExpanderTrig8 : Module {
 	int channelID = -1;
 	int prevChannelID = -1;
 	bool leftModuleAvailable = false; 
+	
+	int moduleVersion = 2;
 	
 	// 0123
 	// RGYB
@@ -74,6 +80,8 @@ struct SequencerExpanderTrig8 : Module {
 		// step params
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
 			configSwitch(STEP_SW_PARAMS + s, 0.0f, 2.0f, 1.0f, "Select Trig/Gate", {"Gate", "Off", "Trigger"});
+			configSwitch(TRIGGER_PARAMS + s, 0.0f, 1.0f, 1.0f, rack::string::f("Step %d trigger select", s + 1), {"Off", "On"});
+			configSwitch(GATE_PARAMS + s, 0.0f, 1.0f, 0.0f, rack::string::f("Step %d gate select", s + 1), {"Off", "On"});
 		}
 
 		configOutput(TRIG_OUTPUT, "Trigger");
@@ -86,7 +94,7 @@ struct SequencerExpanderTrig8 : Module {
 	json_t *dataToJson() override {
 		json_t *root = json_object();
 
-		json_object_set_new(root, "moduleVersion", json_integer(1));
+		json_object_set_new(root, "moduleVersion", json_integer(moduleVersion));
 		
 			// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -97,6 +105,29 @@ struct SequencerExpanderTrig8 : Module {
 	void dataFromJson(json_t* root) override {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
+		
+		json_t *version = json_object_get(root, "moduleVersion");		
+	
+		if (version)
+			moduleVersion = json_integer_value(version);
+		else {
+			// no version in file is really old version.
+			moduleVersion = 0;
+		}
+	
+		// conversion to new step select switches
+		if (moduleVersion < 2) {
+			INFO("Converting from module version %d", moduleVersion);
+
+			for(int i = 0; i < SEQ_NUM_STEPS; i++) {
+				int x = (int)(params[STEP_SW_PARAMS + i].getValue());
+
+				params[GATE_PARAMS + i].setValue(x == 0 ? 1.0f : 0.0f);
+				params[TRIGGER_PARAMS + i].setValue(x == 2 ? 1.0f : 0.0f);
+			}
+			
+			moduleVersion = 2;
+		}	
 	}	
 	
 	void process(const ProcessArgs &args) override {
@@ -186,21 +217,30 @@ struct SequencerExpanderTrig8 : Module {
 			
 			// now determine the output values
 			if (stepActive) {
-				// trigger/gate
-				switch ((int)(params[STEP_SW_PARAMS + c].getValue())) {
-					case 0: // lower output
-						trig = false;
-						gate = true;
-						break;
-					case 2: // upper output
-						trig = true;
-						gate = false;
-						break;				
-					default: // off
-						trig = false;
-						gate = false;
-						break;
+				
+				if(params[TRIGGER_PARAMS + c].getValue() > 0.5f) {
+					trig = true;
 				}
+				
+				if(params[GATE_PARAMS + c].getValue() > 0.5f) {
+					gate = true;
+				}
+				
+				// // trigger/gate
+				// switch ((int)(params[STEP_SW_PARAMS + c].getValue())) {
+					// case 0: // lower output
+						// trig = false;
+						// gate = true;
+						// break;
+					// case 2: // upper output
+						// trig = true;
+						// gate = false;
+						// break;				
+					// default: // off
+						// trig = false;
+						// gate = false;
+						// break;
+				// }
 			}
 		}
 			
@@ -273,8 +313,10 @@ struct SequencerExpanderTrig8Widget : ModuleWidget {
 
 		// row lights and switches
 		for (int s = 0; s < SEQ_NUM_STEPS; s++) {
-			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::STEP_LIGHTS + s));
-			addParam(createParamCentered<CountModulaToggle3P90>(Vec(STD_COLUMN_POSITIONS[STD_COL3], STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::STEP_SW_PARAMS + s));
+			addChild(createLightCentered<MediumLight<RedLight>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 25, STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::STEP_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<RedLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL2] + 5, STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::TRIGGER_PARAMS + s, SequencerExpanderTrig8::TRIGGER_PARAM_LIGHTS + s));
+			addParam(createParamCentered<CountModulaLEDPushButtonMini<CountModulaPBLight<GreenLight>>>(Vec(STD_COLUMN_POSITIONS[STD_COL3] + 15, STD_ROWS8[STD_ROW1 + s]), module, SequencerExpanderTrig8::GATE_PARAMS + s, SequencerExpanderTrig8::GATE_PARAM_LIGHTS + s));
+			
 		}
 
 		// channel light

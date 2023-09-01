@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 2.4.0</h3>
+<h3>Modules - Release 2.5.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -51,6 +51,7 @@ Follow Count Modula on facebook:
 </ul>
 </li>
 <li>Bar Graph</li>
+<li>Burst Generator 64<font color="red"> * new in v2.5.0</font></li>
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
 <li>Carousel - Rotating router</li>
@@ -62,7 +63,7 @@ Follow Count Modula on facebook:
 <li>Comparator</a></li>
 <li>Countdown 3</li>
 <li>Countdown 5</li>
-<li>CV Stack <font color="red"> * new in v2.4.0</font></li>
+<li>CV Stack</li>
 <li>D Flip Flop (Single)</li>
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
@@ -74,7 +75,7 @@ Follow Count Modula on facebook:
 <li>Gate Modifier</li>
 <li>8 x 8 Gate Sequencer</li>
 <li>8 x 16 Gate Sequencer</li>
-<li>12 x 16 Gate Sequencer<font color="red"> * new in v2.4.0</font></li>
+<li>12 x 16 Gate Sequencer</li>
 <li>Gate to Trigger</li>
 <li>Inverter</li>
 <li>Light Strip - LED Blank
@@ -126,6 +127,8 @@ Follow Count Modula on facebook:
 </ul>
 </li>
 <li>Shepard Generator</li>
+<li>Shift Register 16 <font color="red"> * new in v2.5.0</font></li>
+<li>Shift Register 32 <font color="red"> * new in v2.5.0</font></li>
 <li>Signal Manifold</li>
 <li>SR Flip Flop (Dual)</li>
 <li>SR Flip Flop (Single)</li>
