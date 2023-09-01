@@ -30,16 +30,12 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 <li>Shift Register 16 - 16 cell shift register for gates/cv</li>
 <li>Shift Register 32 - 32 cell shift register for gates/cv</li>
 </ul>
-
 <ul>
 <b>Module Updates:</b>
 <li>Basic Sequencer - Use independant gate/trigger buttons instead of single toggle switch for gate/trigger selection on each step</li>
 <li>Sequencer Trigger Expander - Use independant gate/trigger buttons instead of single toggle switch for gate/trigger selection on each step</li>
 <li>Super Arpeggiator - Add option for monophonic gate operation</li>
 </ul>
-</td>
-</tr>
-
 <ul>
 <b>Issues Resolved:</b>
 <li>#114 Octet Sequencer and Nibble Sequencer not restting correctly</li>
