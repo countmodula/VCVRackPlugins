@@ -151,6 +151,8 @@ struct Euclid : Module {
 		quantizeChanges = true;
 		moduleVersion = 2;
 		
+		startUpCounter = 1;
+		
 		// expander
 		rightExpander.producerMessage = rightMessages[0];
 		rightExpander.consumerMessage = rightMessages[1];
@@ -229,7 +231,7 @@ struct Euclid : Module {
 		// grab the theme details
 		#include "../themes/dataFromJson.hpp"
 		
-		startUpCounter = 20;		
+		startUpCounter = 1;		
 	}
 
 	void onReset() override {
@@ -258,6 +260,8 @@ struct Euclid : Module {
 		lengthCV = 0.0f;
 		shiftCV = 0.0f;
 		hitsCV = 0.0f;
+		
+		startUpCounter = 1;
 	}
 
 	void process(const ProcessArgs &args) override {
@@ -268,19 +272,13 @@ struct Euclid : Module {
 		float f = inputs[RESET_INPUT].getVoltage();
 		gateReset.set(f);
 		
-		// wait a number of cycles before we use the clock and run inputs to allow them propagate correctly after startup
-		if (startUpCounter > 0) {
-			startUpCounter--;
-		}
-		else {
-			// run input
-			f = inputs[RUN_INPUT].getNormalVoltage(10.0f);
-			gateRun.set(f);
+		// run input
+		f = inputs[RUN_INPUT].getNormalVoltage(10.0f);
+		gateRun.set(f);
 
-			// clock
-			f = inputs[CLOCK_INPUT].getVoltage(); 
-			gateClock.set(f);
-		}
+		// clock
+		f = inputs[CLOCK_INPUT].getVoltage(); 
+		gateClock.set(f);
 
 		// process the clock trigger - we'll use this to allow the run input edge to act like the clock if it arrives shortly after the clock edge
 		bool clockEdge = gateClock.leadingEdge();
@@ -297,7 +295,7 @@ struct Euclid : Module {
 			shiftCV = params[SHIFT_CV_PARAM].getValue() * inputs[SHIFT_INPUT].getVoltage() * 0.1f;		
 		}
 
-		if (processControls) {
+		if (processControls || startUpCounter > 0) {
 			
 			if (!quantizeChanges) {
 				lengthCV = fMaxSeqLen * params[LENGTH_CV_PARAM].getValue() * inputs[LENGTH_INPUT].getVoltage();
@@ -306,7 +304,7 @@ struct Euclid : Module {
 			}
 
 			// length
-			length = clamp((int)(params[LENGTH_PARAM].getValue() + lengthCV), 1, EUCLID_SEQ_MAX_LEN);
+			length = clamp((int)roundf(params[LENGTH_PARAM].getValue() + lengthCV), 1, EUCLID_SEQ_MAX_LEN);
 			
 			// hits
 			f = (float)length * (params[HITS_PARAM].getValue() + hitsCV);
@@ -403,11 +401,13 @@ struct Euclid : Module {
 		// update the euclid parameters - flag that a change has occurred so we can update the display
 		processControls = (euclid.set(hits, length, -shift) || startUpCounter > 0 || clockEdge);
 		
-		if (running) {
+		if (running || processControls) {
 			for (int i = 0; i < EUCLID_SEQ_MAX_LEN; i ++) {
 				active = euclid.pattern(i);
-				gate |= (active && i == count);
-				igate = !gate;
+				if (running) {
+					gate |= (active && i == count);
+					igate = !gate;
+				}
 				current = (i == count);
 				last = (i == length -1);
 				if(processControls) {
@@ -466,6 +466,9 @@ struct Euclid : Module {
 				rightExpander.module->leftExpander.messageFlipRequested = true;
 			}
 		}
+		
+		if (startUpCounter > 0)
+			startUpCounter--;
 	}
 };
 
