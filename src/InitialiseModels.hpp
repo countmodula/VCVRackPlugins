@@ -63,6 +63,7 @@ p->addModel(modelMasterReset);
 p->addModel(modelMatrixCombiner);	
 p->addModel(modelMatrixMixer);	
 p->addModel(modelMegalomaniac);	
+p->addModel(modelMiniMix);	
 p->addModel(modelMinimusMaximus);	
 p->addModel(modelMixer);	
 p->addModel(modelMorphShaper);	

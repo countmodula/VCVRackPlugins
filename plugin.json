@@ -1203,6 +1203,15 @@
 			"Clock modulator",
 			"Sequencer"
 		  ]
+		},
+		{
+		  "slug": "MiniMix",
+		  "name": "Mini Mix",
+		  "description": "A no-frills 4 input polyphonic unity mixer with output level control and overload indicator",
+		  "tags": [
+			"Mixer",
+			"Polyphonic"
+		  ]
 		}
 	]
 }

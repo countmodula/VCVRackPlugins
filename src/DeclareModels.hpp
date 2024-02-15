@@ -62,6 +62,7 @@ extern Model *modelMasterReset;
 extern Model *modelMatrixCombiner;
 extern Model *modelMatrixMixer;
 extern Model *modelMegalomaniac;
+extern Model *modelMiniMix;
 extern Model *modelMinimusMaximus;
 extern Model *modelMixer;
 extern Model *modelMorphShaper;
