@@ -124,7 +124,6 @@ struct RandomAccessSwitch18 : Module {
 	
 		// set the output voltages to what they when the patch was saved.
 		if (preset) {
-			DEBUG("Setting preset voltages");
 			for (int i = 0; i < 8 ; i++) {
 				outputs[CV_OUTPUT + i].setVoltage(presetVoltages[i]);
 			}
