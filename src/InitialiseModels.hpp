@@ -12,6 +12,7 @@ p->addModel(modelBarGraph);
 p->addModel(modelBasicSequencer8);	
 p->addModel(modelBinaryComparator);	
 p->addModel(modelBinarySequencer);	
+p->addModel(modelBinarySequencerPlus);	
 p->addModel(modelBlank12HP);	
 p->addModel(modelBlank16HP);	
 p->addModel(modelBlank20HP);	

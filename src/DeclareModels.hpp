@@ -11,6 +11,7 @@ extern Model *modelBarGraph;
 extern Model *modelBasicSequencer8;
 extern Model *modelBinaryComparator;
 extern Model *modelBinarySequencer;
+extern Model *modelBinarySequencerPlus;
 extern Model *modelBlank12HP;
 extern Model *modelBlank16HP;
 extern Model *modelBlank20HP;
