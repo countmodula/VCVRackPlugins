@@ -706,7 +706,7 @@ struct WIDGET_NAME : ModuleWidget {
 	struct RandMenu : MenuItem {
 		WIDGET_NAME *widget;
 		std::string randLabels[4] = {"CV only", "Gates only", "Triggers only", "CV/Gates/Triggers only"};
-		std::string randKeys[4] = {"Shitf+Ctrl+C", "Shitf+Ctrl+G", "Shitf+Ctrl+T", "Shitf+Ctrl+R"};
+		std::string randKeys[4] = {"Shift+Ctrl+C", "Shift+Ctrl+G", "Shift+Ctrl+T", "Shift+Ctrl+R"};
 
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
@@ -726,18 +726,6 @@ struct WIDGET_NAME : ModuleWidget {
 	
 	// expander addition menu item
 	#include "../inc/AddExpanderMenuItem.hpp"
-	struct ExpanderMenu : MenuItem {
-		STRUCT_NAME *module;
-		Vec position;
-		
-		Menu *createChildMenu() override {
-			Menu *menu = new Menu;
-
-	
-			
-			return menu;	
-		}
-	};	
 	
 	void appendContextMenu(Menu *menu) override {
 		STRUCT_NAME *module = dynamic_cast<STRUCT_NAME*>(this->module);

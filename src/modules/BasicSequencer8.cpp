@@ -622,7 +622,7 @@ struct BasicSequencer8Widget : ModuleWidget {
 	struct RandMenu : MenuItem {
 		BasicSequencer8Widget *widget;
 		std::string randLabels[4] = {"CV only", "Gates only", "Triggers only", "CV/Gates/Triggers only"};
-		std::string randKeys[4] = {"Shitf+Ctrl+C", "Shitf+Ctrl+G", "Shitf+Ctrl+T", "Shitf+Ctrl+R"};
+		std::string randKeys[4] = {"Shift+Ctrl+C", "Shift+Ctrl+G", "Shift+Ctrl+T", "Shift+Ctrl+R"};
 
 		Menu *createChildMenu() override {
 			Menu *menu = new Menu;
