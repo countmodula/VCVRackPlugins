@@ -171,8 +171,10 @@ struct PolyChances : Module {
 			 updateLEDMatrix(args.sampleTime);
 		}
 		else {
-			outputs[A_OUTPUT].channels = 0;
-			outputs[B_OUTPUT].channels = 0;
+			outputs[A_OUTPUT].setChannels(1);
+			outputs[A_OUTPUT].setVoltage(0.0f);
+			outputs[B_OUTPUT].setChannels(1);
+			outputs[B_OUTPUT].setVoltage(0.0f);
 			
 			if (count == 0)
 				resetLEDMatrix();

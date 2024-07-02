@@ -104,8 +104,10 @@ struct PolyVCSwitch : Module {
 		}
 		else {
 			aConnected = false;
-			outputs[A1_OUTPUT].channels = 0;
-			outputs[A2_OUTPUT].channels = 0;
+			outputs[A1_OUTPUT].setChannels(1);
+			outputs[A1_OUTPUT].setVoltage(0.0f);
+			outputs[A2_OUTPUT].setChannels(1);
+			outputs[A2_OUTPUT].setVoltage(0.0f);
 		}
 		
 		if (inputs[B1_INPUT].isConnected() && inputs[B2_INPUT].isConnected()) {
@@ -114,7 +116,8 @@ struct PolyVCSwitch : Module {
 		}
 		else {
 			bConnected = false;
-			outputs[B_OUTPUT].channels = 0;
+			outputs[B_OUTPUT].setChannels(1);
+			outputs[B_OUTPUT].setVoltage(0.0f);
 		}
 		
 		for (int c = 0; c < 16; c++) {

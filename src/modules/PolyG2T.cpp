@@ -157,11 +157,16 @@ struct PolyG2T : Module {
 			}
 		}
 		else {
-			outputs[GATE_OUTPUT].channels = 0;
-			outputs[INV_OUTPUT].channels = 0;
-			outputs[START_OUTPUT].channels = 0;
-			outputs[END_OUTPUT].channels = 0;
-			outputs[EDGE_OUTPUT].channels = 0;
+			outputs[GATE_OUTPUT].setChannels(1);
+			outputs[GATE_OUTPUT].setVoltage(0.0f);
+			outputs[INV_OUTPUT].setChannels(1);
+			outputs[INV_OUTPUT].setVoltage(0.0f);
+			outputs[START_OUTPUT].setChannels(1);
+			outputs[START_OUTPUT].setVoltage(0.0f);
+			outputs[END_OUTPUT].setChannels(1);
+			outputs[END_OUTPUT].setVoltage(0.0f);
+			outputs[EDGE_OUTPUT].setChannels(1);
+			outputs[EDGE_OUTPUT].setVoltage(0.0f);
 			
 			if (counter == 0)
 				resetLEDMatrices();

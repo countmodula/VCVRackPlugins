@@ -156,7 +156,7 @@ struct RandomAccessSwitch18 : Module {
 			{
 				lights[SELECT_LIGHT + i].setBrightness(0.0f);
 				if (mode == MODE_PASS_THROUGH)
-					outputs[CV_OUTPUT + i].setVoltage(0.0);
+					outputs[CV_OUTPUT + i].setVoltage(0.0f);
 			}
 		}
 		

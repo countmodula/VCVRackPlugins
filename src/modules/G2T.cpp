@@ -98,12 +98,12 @@ struct G2T : Module {
 		// process the gate outputs
 		if (gate.high()) {
 			outputs[GATE_OUTPUT].setVoltage(10.0f); 
-			outputs[INV_OUTPUT].setVoltage(0.0);
+			outputs[INV_OUTPUT].setVoltage(0.0f);
 			lights[GATE_LIGHT].setBrightness(10.0f);
 		}
 		else {
 			outputs[GATE_OUTPUT].setVoltage(0.0f); 
-			outputs[INV_OUTPUT].setVoltage(10.0); 
+			outputs[INV_OUTPUT].setVoltage(10.0f); 
 			lights[GATE_LIGHT].setBrightness(0.0f);
 		}
 		

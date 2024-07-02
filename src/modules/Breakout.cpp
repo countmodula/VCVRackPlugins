@@ -136,7 +136,8 @@ struct Breakout : Module {
 			}
 		}
 		else {
-			outputs[POLY_OUTPUT].channels = 0;
+			outputs[POLY_OUTPUT].setChannels(1);
+			outputs[POLY_OUTPUT].setVoltage(0.0f);	
 			
 			for (int i = 0; i < 8; i ++)
 				outputs[SEND_OUTPUTS + i].setVoltage(0.0f);
