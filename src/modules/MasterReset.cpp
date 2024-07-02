@@ -108,8 +108,10 @@ struct MasterReset : Module {
 				outputs[CLOCK_OUTPUTS].setVoltage(clk, c);
 			}			
 		}
-		else
-			outputs[CLOCK_OUTPUTS].channels = 0;	
+		else {
+			outputs[CLOCK_OUTPUTS].setChannels(1);
+			outputs[CLOCK_OUTPUTS].setVoltage(0.0f);
+		}			
 		
 		// now do the remaining 3 clocks
 		for (int i = 1; i < 4; i++) {
