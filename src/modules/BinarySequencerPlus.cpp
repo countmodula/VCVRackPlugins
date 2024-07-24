@@ -115,7 +115,7 @@ struct BinarySequencerPlus : Module {
 	bool gate = false;
 	bool prevGate = false;
 	bool trig = false;
-	float out = 0.0f;
+	float cvOut = 0.0f;
 	float cvParams [NUM_DIVS] = {};
 	float lagParamValue = 0.0f;
 	float lagShapeValue = 0.0f;	
@@ -239,7 +239,8 @@ struct BinarySequencerPlus : Module {
 		scale = 0.0f;
 		lagParamValue = 0.0f;
 		lagShapeValue = 0.0f;
-
+		cvOut = 0.0f;
+		
 		for (int c = 0; c < NUM_DIVS; c++) {
 			cvParams [c] = 0.0f;
 			countBits[c] = false;
@@ -314,9 +315,15 @@ struct BinarySequencerPlus : Module {
 		}
 		
 		// calculate the cv value, set the lights and outputs
-		out = 0.0f;
 		prevGate = gate;
-		gate = outputClock;
+		if (outputClock) {
+			gate = gpClock.high();
+		}
+		else {
+			gate = false;
+		}
+			
+		float out = 0.0f;
 		int b = flip ? 7 : 0;
 		for (int c = 0; c < NUM_DIVS; c++) {
 			if (isReset) {
@@ -332,9 +339,10 @@ struct BinarySequencerPlus : Module {
 			if (countBits[b]) {
 				lights[DIV_LIGHTS + b].setBrightness(1.0f);
 
-				out += cvParams[DIV_PARAMS + b];
+				out += cvParams[b];
+				
 				if (!outputClock) {
-					gate = true;
+					gate = gpClock.high();
 				}
 			}
 			else {
@@ -349,22 +357,30 @@ struct BinarySequencerPlus : Module {
 			}
 		}
 		
+		if (!prevGate && gate)  {
+			// perform the S&H function if required
+			if (inputs[SH_INPUT].isConnected()) {
+				scale = clamp(inputs[SH_INPUT].getVoltage(), -10.0f, 10.0f) / 10.0f / 8.0f;
+			}
+			cvOut = out  * scale;
+		}
+		
 		// process the output trigger
-		if (prevGate != gate && gate && gpClock.leadingEdge()) {
+		if (gate && gpClock.leadingEdge()) {
 			trig = true;
 			pgTrig.trigger(1e-3f);
 		}
 		else {
 			trig = pgTrig.process(args.sampleTime);	
 		}
-		
-		// scale the cv output value to the currently selected range and apply lag
-		out = slew.process(out *= scale, lagShapeValue, lagParamValue, lagParamValue, args.sampleTime);
 			
-		outputs[CLOCK_OUTPUT].setVoltage(boolToGate(run && gate && gpClock.high()));
+		// apply lag
+		float cv = slew.process(cvOut, lagShapeValue, lagParamValue, lagParamValue, args.sampleTime);
+		
+		outputs[CLOCK_OUTPUT].setVoltage(boolToGate(run && gate));
 		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(trig));
-		outputs[CV_OUTPUT].setVoltage(out);
-		outputs[INV_OUTPUT].setVoltage(-out);
+		outputs[CV_OUTPUT].setVoltage(cv);
+		outputs[INV_OUTPUT].setVoltage(-cv);
 	}
 };
 
@@ -431,40 +447,21 @@ struct BinarySequencerPlusWidget : ModuleWidget {
 	// include the theme menu item struct we'll when we add the theme menu items
 	#include "../themes/ThemeMenuItem.hpp"
 
-	struct InitMenuItem : MenuItem {
-		BinarySequencerPlusWidget *widget;
-		bool triggerInit = true;
-		bool cvInit = true;
-		
-		void onAction(const event::Action &e) override {
-
-			// history - current settings
-			history::ModuleChange *h = new history::ModuleChange;
-			h->name = "initialize division mix";
-			h->moduleId = widget->module->id;
-			h->oldModuleJ = widget->toJson();
-		
-			for (int i = 0; i < NUM_DIVS; i ++) {
-				widget->getParam(BinarySequencerPlus::DIV_PARAMS + i)->getParamQuantity()->reset();
-			// history - current settings
-			history::ModuleChange *h = new history::ModuleChange;
-			h->name = "randomize division mix";
-			h->moduleId = widget->module->id;
-			h->oldModuleJ = widget->toJson();
-		
-			for (int i = 0; i < NUM_DIVS; i ++) {
-				widget->getParam(BinarySequencerPlus::DIV_PARAMS + i)->getParamQuantity()->randomize();
-			}
-
-			// history - new settings
-			h->newModuleJ = widget->toJson();
-			APP->history->push(h);				}
-
-			// history - new settings
-			h->newModuleJ = widget->toJson();
-			APP->history->push(h);	
+	void doInitialize() {
+		// history - current settings
+		history::ModuleChange *h = new history::ModuleChange;
+		h->name = "initialize division mix";
+		h->moduleId = this->module->id;
+		h->oldModuleJ = this->toJson();
+	
+		for (int i = 0; i < NUM_DIVS; i ++) {
+			this->getParam(BinarySequencerPlus::DIV_PARAMS + i)->getParamQuantity()->reset();
 		}
-	};	
+
+		// history - new settings
+		h->newModuleJ = this->toJson();
+		APP->history->push(h);			
+	}
 	
 	void doRandom() {
 		// history - current settings
@@ -484,12 +481,20 @@ struct BinarySequencerPlusWidget : ModuleWidget {
 	
 	struct RandMenuItem : MenuItem {
 		BinarySequencerPlusWidget *widget;
-		bool cvRand = true;
 	
 		void onAction(const event::Action &e) override {
 			widget->doRandom();
 		}
 	};
+	
+	struct InitMenuItem : MenuItem {
+		BinarySequencerPlusWidget *widget;
+	
+		void onAction(const event::Action &e) override {
+			widget->doInitialize();
+		}
+	};
+	
 
 	void appendContextMenu(Menu *menu) override {
 		BinarySequencerPlus *module = dynamic_cast<BinarySequencerPlus*>(this->module);
