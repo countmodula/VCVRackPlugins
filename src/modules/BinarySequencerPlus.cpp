@@ -104,6 +104,7 @@ struct BinarySequencerPlus : Module {
 	bool countBits[NUM_DIVS] = {};
 	
 	int mode = 0;
+	bool flip = false;
 	float flipCV = 0.0f;
 	float dirCV = 0.0f;
 	float gatemodeCV = 0.0f;
@@ -173,14 +174,21 @@ struct BinarySequencerPlus : Module {
 		}
 
 		std::ostringstream  buffer;
+		int b = flip ? NUM_DIVS-1 : 0;
 		for (int i = 0; i < NUM_DIVS; i++) {
 			buffer.str("");
-			buffer << "Divide by " << outputMask[m][i];
+			buffer << "Divide by " << outputMask[m][b];
 			if (configure) {
 				configParam(DIV_PARAMS + i, -10.0f, 10.0f, 0.0f, buffer.str());
 			}
 			else {
 				paramQuantities[DIV_PARAMS + i]->name = buffer.str();
+			}
+			if (flip) {
+				b--;
+			}
+			else {
+				b++;
 			}
 		}
 	}
@@ -192,6 +200,7 @@ struct BinarySequencerPlus : Module {
 		json_object_set_new(root, "moduleVersion", json_integer(2));
 		json_object_set_new(root, "count", json_integer(count));
 		json_object_set_new(root, "mode", json_integer(mode));
+		json_object_set_new(root, "flip", json_boolean(flip));
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -202,13 +211,17 @@ struct BinarySequencerPlus : Module {
 
 		json_t *cnt = json_object_get(root, "count");
 		json_t *m = json_object_get(root, "mode");
+		json_t *f = json_object_get(root, "flip");
 
 		if (cnt)
 			count = json_integer_value(cnt);
 
 		if (m) {
 			mode = json_integer_value(m);
-			setParamLabels(false);
+		}
+		
+		if (f) {
+			flip = json_boolean_value(f);
 		}
 
 		// grab the theme details
@@ -228,7 +241,8 @@ struct BinarySequencerPlus : Module {
 		pgTrig.reset();
 		
 		count = 512; // reset will set the mode back to binary
-		mode = 0;
+		mode = BINARY_MODE;
+		flip = false;
 		isReset = true;
 		processCount = 8;
 		//outputClock = true;
@@ -253,13 +267,8 @@ struct BinarySequencerPlus : Module {
 			processCount = 0;
 			
 			// what count mode are we using?
-			int prevMode = mode;
 			mode = clamp((int)params[MODE_PARAM].getValue(), 0, maxModes);
-			
-			if (mode != prevMode) {
-				setParamLabels(false);
-			}
-			
+						
 			// grab the count direction param value
 			dirCV = params[DIR_PARAM].getValue() * 10.0f;
 
@@ -282,7 +291,7 @@ struct BinarySequencerPlus : Module {
 		}
 		
 		// process the CV Inputs
-		bool flip = gpFlip.set(inputs[FLIP_INPUT].getNormalVoltage(flipCV));
+		flip = gpFlip.set(inputs[FLIP_INPUT].getNormalVoltage(flipCV));
 		bool outputClock = !gpGatemode.set(inputs[GATEMODE_INPUT].getNormalVoltage(gatemodeCV));
 		bool countUp = gpDir.set(inputs[DIR_INPUT].getNormalVoltage(dirCV));
 	
@@ -378,7 +387,7 @@ struct BinarySequencerPlus : Module {
 		float cv = slew.process(cvOut, lagShapeValue, lagParamValue, lagParamValue, args.sampleTime);
 		
 		outputs[CLOCK_OUTPUT].setVoltage(boolToGate(run && gate));
-		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(trig));
+		outputs[TRIGGER_OUTPUT].setVoltage(boolToGate(run && trig));
 		outputs[CV_OUTPUT].setVoltage(cv);
 		outputs[INV_OUTPUT].setVoltage(-cv);
 	}
@@ -398,6 +407,9 @@ struct BinarySequencerPlusWidget : ModuleWidget {
 	};
 	
 	const int CUSTOM_HALF_ROW3 = 217;
+	
+	bool flip;
+	int mode;	
 	
 	BinarySequencerPlusWidget(BinarySequencerPlus *module) {
 		setModule(module);
@@ -423,8 +435,8 @@ struct BinarySequencerPlusWidget : ModuleWidget {
 		float p = STD_COLUMN_POSITIONS[STD_COL1];
 		float d = (STD_COLUMN_POSITIONS[STD_COL7] - p)/7.0;
 		for (int s = 0; s < NUM_DIVS; s++) {
-				addParam(createLightParamCentered<VCVLightSlider<GreenLight>>(Vec(p, CUSTOM_ROWS[STD_ROW1]), module, BinarySequencerPlus::DIV_PARAMS + s, BinarySequencerPlus::DIV_LIGHTS + s));
-				p += d;
+			addParam(createLightParamCentered<VCVLightSlider<GreenLight>>(Vec(p, CUSTOM_ROWS[STD_ROW1]), module, BinarySequencerPlus::DIV_PARAMS + s, BinarySequencerPlus::DIV_LIGHTS + s));
+			p += d;
 		}
 
 		// other knobs and switches controls
@@ -442,6 +454,9 @@ struct BinarySequencerPlusWidget : ModuleWidget {
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL3], CUSTOM_ROWS[STD_ROW6]), module, BinarySequencerPlus::TRIGGER_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL5], CUSTOM_ROWS[STD_ROW6]), module, BinarySequencerPlus::CV_OUTPUT));
 		addOutput(createOutputCentered<CountModulaJack>(Vec(STD_COLUMN_POSITIONS[STD_COL7], CUSTOM_ROWS[STD_ROW6]), module, BinarySequencerPlus::INV_OUTPUT));
+		
+		flip = false;
+		mode = BinarySequencerPlus::BINARY_MODE;
 	}	
 	
 	// include the theme menu item struct we'll when we add the theme menu items
@@ -535,9 +550,20 @@ struct BinarySequencerPlusWidget : ModuleWidget {
 	
 	
 	void step() override {
+
 		if (module) {
 			// process any change of theme
 			#include "../themes/step.hpp"
+			bool f = ((BinarySequencerPlus*)(module))->flip;
+			int m = ((BinarySequencerPlus*)(module))->mode;
+			
+			// update the slider labels if there's been a change to flip or mode
+			if (m != mode || f != flip) {
+				((BinarySequencerPlus*)(module))->setParamLabels(false);
+			}
+			
+			mode = m;
+			flip = f;
 		}
 		
 		Widget::step();

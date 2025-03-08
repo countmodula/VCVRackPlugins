@@ -162,7 +162,7 @@ struct RotarySwitch : TBase {
 		SvgKnob::onChange(e);
 		
 		this->getParamQuantity()->setValue(roundf(this->getParamQuantity()->getValue()));
-	}
+	}	
 };
 
 // standard rotary potentiometer base
