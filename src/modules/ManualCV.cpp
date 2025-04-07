@@ -37,13 +37,13 @@ struct ManualCV : Module {
 	ManualCV() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CV1COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value", " V");
-		configParam(CV1FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
-		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value", " V");
-		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value", " V");
+		configParam(CV1COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value Ch. 1", " V");
+		configParam(CV1FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value Ch. 1", " V");
+		configParam(CV2COARSE_PARAM, -10.0f, 10.0f, 0.0f, "Coarse value Ch. 2", " V");
+		configParam(CV2FINE_PARAM, -0.5f, 0.5f, 0.0f, "Fine value Ch. 2", " V");
 
-		configOutput(CV1_OUTPUT, "CV");
-		configOutput(CV2_OUTPUT, "CV");
+		configOutput(CV1_OUTPUT, "CV Ch. 1");
+		configOutput(CV2_OUTPUT, "CV Ch. 2");
 
 		// set the theme from the current default value
 		#include "../themes/setDefaultTheme.hpp"
