@@ -47,18 +47,18 @@ struct VCPolarizer : Module {
 	VCPolarizer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		
-		configParam(CH1_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
-		configParam(CH1_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
-		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount", " %", 0.0f, 100.0f, 0.0f);
-		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount");
+		configParam(CH1_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount Ch. 1", " %", 0.0f, 100.0f, 0.0f);
+		configParam(CH1_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount Ch. 1");
+		configParam(CH2_CVAMOUNT_PARAM, 0.0f, 1.0f, 0.0f, "CV Amount Ch. 2", " %", 0.0f, 100.0f, 0.0f);
+		configParam(CH2_MANUAL_PARAM, -2.0f, 2.0f, 0.0f, "Manual Amount Ch. 2");
 
-		configInput(CH1_CV_INPUT, "CV");
-		configInput(CH1_SIGNAL_INPUT, "Signal");
-		configOutput(CH1_SIGNAL_OUTPUT, "Signal");
+		configInput(CH1_CV_INPUT, "CV Ch. 1");
+		configInput(CH1_SIGNAL_INPUT, "Signal Ch. 1");
+		configOutput(CH1_SIGNAL_OUTPUT, "Signal Ch. 1");
 		
-		configInput(CH2_CV_INPUT, "CV");
-		configInput(CH2_SIGNAL_INPUT, "Signal");
-		configOutput(CH2_SIGNAL_OUTPUT, "Signal");
+		configInput(CH2_CV_INPUT, "CV Ch. 2");
+		configInput(CH2_SIGNAL_INPUT, "Signal Ch. 2");
+		configOutput(CH2_SIGNAL_OUTPUT, "Signal Ch. 2");
 		
 		configBypass(CH1_SIGNAL_INPUT, CH1_SIGNAL_OUTPUT);
 		configBypass(CH2_SIGNAL_INPUT, CH2_SIGNAL_OUTPUT);
