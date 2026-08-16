@@ -21,6 +21,24 @@ FINAL REMINDER: The Mk I versions of the Voltage Controlled Frequency Divider an
 </tr>
 
 <tr valign="top">
+<td align="center">16-Aug-2026</td>
+<td align="center">v2.6.0</td>
+<td align="left">
+<ul>
+<b>New Modules:</b>
+<li>Mini Mixer -  Input mini mixer</li>
+<li>Binary Sequencer Plus - Expanded version of the Binary Sequencer with new modes and functions</li>
+</ul>
+<ul>
+<b>Issues Resolved:</b>
+<li>#122 Euclid length control skipping values</li>
+<li>#125 Outputs disabled when cables are removed on certan modules</li>
+<li>#133 Poly Manual CV - Incorrect bahaviour on CV knob when loading</li>
+</ul>
+</td>
+</tr>
+
+<tr valign="top">
 <td align="center">03-Sep-2023</td>
 <td align="center">v2.5.0</td>
 <td align="left">
