@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 //	/^M^\ Count Modula Plugin for VCV Rack - MiniMix Module
-//	A 4 input mini mixer with switchable uni/bi polar mixing capabilities
+//	A 4 input mini mixer
 //	Copyright (C) 2024  Adam Verspaget
 //----------------------------------------------------------------------------
 #include "../CountModula.hpp"

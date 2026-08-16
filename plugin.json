@@ -1218,7 +1218,6 @@
 		  "name": "Binary Sequencer Plus",
 		  "description": "Clock divider based sequencer",
 		  "tags": [
-			"Clock generator",
 			"Sequencer"
 		  ]
 		}

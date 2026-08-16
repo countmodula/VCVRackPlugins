@@ -127,7 +127,7 @@ struct Euclid : Module {
 		configButton(SHIFT_R_PARAM, "Step left");
 		configButton(SHIFT_L_PARAM, "Step right");
 		
-		configSwitch(SHIFT_MODE_PARAM, 0.0f, 3.0f, 0.0f, "Shift source", {"CV", "Step buttons", "Left at end of cylce", "Right at end of Cycle"});
+		configSwitch(SHIFT_MODE_PARAM, 0.0f, 3.0f, 0.0f, "Shift source", {"CV", "Step buttons", "Left at end of cycle", "Right at end of cycle"});
 		
 		configInput(RUN_INPUT, "Run");
 		configInput(CLOCK_INPUT, "Clock");
