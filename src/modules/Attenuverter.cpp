@@ -128,8 +128,10 @@ struct Attenuverter : Module {
 					outputs[INVERTED_OUTPUT + i].setVoltage(-v * cv, c);
 				}
 			}
-			else
-				outputs[SIGNAL_OUTPUT + i].channels = 0;
+			else {
+				outputs[SIGNAL_OUTPUT + i].setChannels(1);
+				outputs[SIGNAL_OUTPUT + i].setVoltage(0.0f);
+			}
 		}
 	}
 };

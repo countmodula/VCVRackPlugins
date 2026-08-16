@@ -12,9 +12,9 @@
 <hr style="width:1000px; border: 1px solid black;"/>
 <h3>Licenses</h3>
 
-All source code in this repository is copyright © 2023 Adam Verspaget/Count Modula and licensed under GNU GPLv3
+All source code in this repository is copyright © 2019-2026 Adam Verspaget/Count Modula and licensed under GNU GPLv3
 
-All graphics including the Count Modula logo, panels and components are copyright © 2023 Adam Verspaget/Count Modula and may not be used in derivative works.
+All graphics including the Count Modula logo, panels and components are copyright © 2019-2026 Adam Verspaget/Count Modula and may not be used in derivative works.
 
 <h3>Donate</h3>
 Whilst these modules are offered free of charge, if you like them or are using them to make money, please consider a small donation to The Count for the effort.
@@ -26,7 +26,7 @@ Follow Count Modula on facebook:
 <p>&nbsp</p>
 <a href="https://www.facebook.com/CountModula/"><img src="./img/facebook.png" alt="Count Modula on facebook"></a>
 
-<h3>Modules - Release 2.5.0</h3>
+<h3>Modules - Release 2.6.0</h3>
 <p>
 <a href="CHANGELOG.md">Change Log</a>
 </p>
@@ -41,6 +41,7 @@ Follow Count Modula on facebook:
 <li>Basic 8 Step Sequencer</li>
 <li>Binary Comparator </li>
 <li>Binary Sequencer</li>
+<li>Binary Sequencer Plus<font color="red"> * new in v2.6.0</font></li>
 <li>Blank Panels</li>
 <li>Boolean Logic Modules
 <ul>
@@ -51,7 +52,7 @@ Follow Count Modula on facebook:
 </ul>
 </li>
 <li>Bar Graph</li>
-<li>Burst Generator 64<font color="red"> * new in v2.5.0</font></li>
+<li>Burst Generator 64</li>
 <li>Bus Route - Switched gate combiner/router </li>
 <li>Bus Route 2 - Switched gate combiner </li>
 <li>Carousel - Rotating router</li>
@@ -68,7 +69,7 @@ Follow Count Modula on facebook:
 <li>Euclidean Sequencer</li>
 <li>Euclidean Sequencer Expander</li>
 <li>Event Arranger</a></li>
-<li>Event Timer <font color="red">(Renamed to Countdown 3) in v2.2.0</font></li>
+<li>Event Timer <font color="red">(Renamed to Countdown 3)/font></li>
 <li>Fade</li>
 <li>Fade Expander</li>
 <li>Gate Delay</li>
@@ -88,6 +89,7 @@ Follow Count Modula on facebook:
 <li>Master Reset Controller</li>
 <li>Matrix Combiner - Gate combiner/switched multiple </li>
 <li>Matrix Mixer</li>
+<li>Mini Mixer<font color="red"> * new in v2.6.0</font><.li>
 <li>Minimus Maximus</li>
 <li>Mixer</li>
 <li>Morph Shaper</li>
@@ -127,8 +129,8 @@ Follow Count Modula on facebook:
 </ul>
 </li>
 <li>Shepard Generator</li>
-<li>Shift Register 16 <font color="red"> * new in v2.5.0</font></li>
-<li>Shift Register 32 <font color="red"> * new in v2.5.0</font></li>
+<li>Shift Register 16</li>
+<li>Shift Register 32</li>
 <li>Signal Manifold</li>
 <li>SR Flip Flop (Dual)</li>
 <li>SR Flip Flop (Single)</li>

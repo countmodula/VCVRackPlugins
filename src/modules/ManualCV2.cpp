@@ -64,8 +64,8 @@ struct ManualCV2 : Module {
 		json_t *root = json_object();
 
 		json_object_set_new(root, "moduleVersion", json_integer(1));
-
 		json_object_set_new(root, "polarity", json_integer(polarity));
+		json_object_set_new(root, "cv", json_real(params[CV_PARAM].getValue())); // save so we can restore the knob position later
 		
 		// add the theme details
 		#include "../themes/dataToJson.hpp"		
@@ -78,12 +78,18 @@ struct ManualCV2 : Module {
 		#include "../themes/dataFromJson.hpp"
 
 		json_t *pol = json_object_get(root, "polarity");
-
 		if (pol) {
 			prevPolarity = json_integer_value(pol);
 
 			// adjust the min value based on the chosen polarity mode
 			paramQuantities[ManualCV2::CV_PARAM]->minValue = (prevPolarity == UNIPOLAR ? 0.0f : -10.0f);
+		}
+		
+		// need to re-set this as, if we're set to bipolar and the cv value is negative, it gets clamped to 0 before we set the minimum value above.
+		json_t *cv = json_object_get(root, "cv");
+		if (cv) {
+			float v = json_number_value(cv);
+			params[CV_PARAM].setValue(v);
 		}
 	}			
 	

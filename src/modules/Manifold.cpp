@@ -89,8 +89,10 @@ struct Manifold : Module {
 							k = 0;
 					}
 				}
-				else
-					outputs[SIGNAL_INPUT + x].channels = 0;
+				else {
+					outputs[SIGNAL_INPUT + x].setChannels(1);
+					outputs[SIGNAL_INPUT + x].setVoltage(0.0f);
+				}
 			}
 		}
 	}

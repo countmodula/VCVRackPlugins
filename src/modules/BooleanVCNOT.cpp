@@ -95,8 +95,10 @@ struct BooleanVCNOT : Module {
 					outputs[INV_OUTPUT + i].setVoltage(inverter.process(inputs[LOGIC_INPUT + i].getVoltage(c), inv), c);
 				}
 			}
-			else
-				outputs[INV_OUTPUT + i].channels = 0;
+			else {
+				outputs[INV_OUTPUT + i].setChannels(1);
+				outputs[INV_OUTPUT + i].setVoltage(0.0f);
+			}				
 		}
 	}	
 	

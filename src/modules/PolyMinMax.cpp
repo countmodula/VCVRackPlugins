@@ -115,8 +115,10 @@ struct PolyMinMax : Module {
 			outputs[MIN_OUTPUT].setVoltage(0.0f);
 			outputs[MEAN_OUTPUT].setVoltage(0.0f);
 			outputs[MAX_OUTPUT].setVoltage(0.0f);
-			outputs[ASC_OUTPUT].channels = 0;
-			outputs[DESC_OUTPUT].channels = 0;
+			outputs[ASC_OUTPUT].setChannels(1);
+			outputs[ASC_OUTPUT].setVoltage(0.0f);
+			outputs[DESC_OUTPUT].setChannels(1);
+			outputs[DESC_OUTPUT].setVoltage(0.0f);
 		}
 	}
 };

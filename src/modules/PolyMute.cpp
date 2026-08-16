@@ -131,7 +131,8 @@ struct PolyMute : Module {
 			}
 		}
 		else {
-			outputs[POLY_OUTPUT].channels = 0;
+			outputs[POLY_OUTPUT].setChannels(1);
+			outputs[POLY_OUTPUT].setVoltage(0.0f);
 		}
 	}
 };

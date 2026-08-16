@@ -105,7 +105,8 @@ struct PolyVCPolarizer : Module {
 		
 		}
 		else {
-			outputs[SIGNAL_OUTPUT].channels = 0;
+			outputs[SIGNAL_OUTPUT].setChannels(1);
+			outputs[SIGNAL_OUTPUT].setVoltage(0.0f);
 
 			if (count == 0) {
 				for (int c = 0; c < 16; c++) {

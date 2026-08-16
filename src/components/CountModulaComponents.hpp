@@ -41,6 +41,13 @@ struct CountModulaLightWB : GrayModuleLightWidget {
 	}
 };
 
+struct CountModulaLightRB : GrayModuleLightWidget {
+	CountModulaLightRB() {
+		addBaseColor(SCHEME_RED);
+		addBaseColor(SCHEME_BLUE);
+	}
+};
+
 /** Based on the size of 3mm LEDs */
 template <typename TBase>
 struct MediumLightSquare : TBase {
@@ -155,7 +162,7 @@ struct RotarySwitch : TBase {
 		SvgKnob::onChange(e);
 		
 		this->getParamQuantity()->setValue(roundf(this->getParamQuantity()->getValue()));
-	}
+	}	
 };
 
 // standard rotary potentiometer base
